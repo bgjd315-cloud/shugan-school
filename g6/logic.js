@@ -252,7 +252,7 @@
     return { kind: 'puzzle', mode: 'odd', ctx: c.ctx, digits, odd, three, ten: digits.length, ans: three ? digits.length * digits.length * odd.length : digits.length * odd.length };
   }
 
-  /* ---------- 十四：民意觀測站（圓形圖、可能性） ---------- */
+  /* ---------- 十四：民意觀測站（圓形圖；可能性是延伸，南一目錄只列圓形圖） ---------- */
   const POLLS = [
     { ctx: '最想去的星球', total: [200, 300, 400, 500], parts: [['月球', 40], ['火星', 35], ['土星', 25]] },
     { ctx: '午餐票選', total: [100, 200, 400], parts: [['麵', 50], ['飯', 30], ['餃子', 20]] },

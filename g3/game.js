@@ -8,16 +8,16 @@ const GAMES = {
   mm: { name: '毫米裁縫島', tip: '量得更準', sem: '三上', need: 0 },
   angle: { name: '角角山', tip: '角和長方形', sem: '三上', need: 0 },
   div: { name: '分分海灘', tip: '除法與餘數', sem: '三上・三下', need: 0 },
-  rule: { name: '規律花園', tip: '找出規律', sem: '三上', need: 0 },
+  meas: { name: '量量市集', tip: '公升、公斤、時間', sem: '三上・三下', need: 0 },
   frac: { name: '分數烘焙坊', tip: '幾分之幾', sem: '三上・三下', need: 0 },
   circle: { name: '圓圓天文台', tip: '圓心和半徑', sem: '三上', need: 0 },
+  rule: { name: '規律花園', tip: '找出規律', sem: '三下', need: 0 },
   area: { name: '面積牧場', tip: '平方公分', sem: '三下', need: 0 },
   deci: { name: '小數碼頭', tip: '認識 0.1', sem: '三下', need: 0 },
-  meas: { name: '量量市集', tip: '公升、公斤、時間', sem: '三下', need: 0 },
 };
 const availKeys = () => Object.keys(GAMES).filter(k => S.unit >= GAMES[k].need);
 const ROUNDS_TO_SAVE = 3; // 每個地方玩幾回合就把居民救回來
-const BOSS_ORDER = ['port', 'ship', 'fact', 'div', 'rule', 'frac'];
+const BOSS_ORDER = ['port', 'ship', 'fact', 'div', 'meas', 'frac'];
 const ART = ['liang', 'liang_cheer', 'liang_think', 'mimi', 'mimi_happy', 'wanwan', 'piece', 'chest', 'sky_dark', 'sky_bright', 'finale', 'seal', 'turtle', 'octopus', 'crab', 'goat', 'otter', 'bee', 'rabbit', 'fox', 'sheep', 'pelican', 'raccoon', 'isl_port', 'isl_ship', 'isl_fact', 'isl_mm', 'isl_angle', 'isl_div', 'isl_rule', 'isl_frac', 'isl_circle', 'isl_area', 'isl_deci', 'isl_meas'];
 const HAS = {}; // 圖還沒收齊時，畫面照樣能玩
 const artUrl = n => `assets/${n}.webp`;
@@ -33,9 +33,16 @@ function load() {
   try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s) return s; } catch (e) {}
   return null;
 }
-const PIECE_KEYS = ['port', 'ship', 'fact', 'mm', 'angle', 'div', 'rule', 'frac', 'circle']; // 九塊碎片的島，集滿才開最後一關
+const PIECE_KEYS = ['port', 'ship', 'fact', 'mm', 'angle', 'div', 'meas', 'frac', 'circle']; // 九塊碎片的島＝南一三上九個單元，集滿才開最後一關（2026-11-02 照南一學期調整）
 const S = Object.assign({ stars: 0, unit: 5, sound: true, rec: {}, log: [], opened: false, prog: {}, bossDone: false, bossSeen: false, stamps: {}, fast: {}, learned: {}, seenCpt: {}, doneCpt: {}, lessonSeen: {} }, load() || {});
 S.unit = 20; // 全部單元開放
+if (!S.sv) { // 2026-11-02 以前的存檔：規律花園原本是第 7 塊碎片、量量市集在三下。已在規律花園拿到的碎片照算，算在量量市集那一格
+  if ((S.prog.rule || 0) >= ROUNDS_TO_SAVE && (S.prog.meas || 0) < ROUNDS_TO_SAVE) S.pieceFrom = { meas: 'rule' };
+  S.sv = 2; save();
+}
+const pieceGot = k => (S.prog[k] || 0) >= ROUNDS_TO_SAVE || !!(S.pieceFrom && S.pieceFrom[k] && (S.prog[S.pieceFrom[k]] || 0) >= ROUNDS_TO_SAVE); // 這一格碎片拿到了沒
+// 三上段的量量市集只出公升和毫升（三上第 7 單元）；找到萬萬、第二季開始後才進時間、公斤和公克、表格（三下）
+const genUnit = r => r.game === 'meas' && !S.bossDone && r.fixedLv === undefined && !r.daily ? 9 : S.unit;
 function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
 const rec = g => S.rec[g] || (S.rec[g] = { lv: 0, up: 0, down: 0 });
 
@@ -124,7 +131,7 @@ function nextQ() {
   if (R.i >= ROUND) return endRound();
   if (R.order) R.game = R.order[R.i];
   let q, guard = 0;
-  do { q = Logic.gen(R.game, R.fixedLv !== undefined ? R.fixedLv : rec(R.game).lv, S.unit); } while (R.lastKey === JSON.stringify(q) && guard++ < 8);
+  do { q = Logic.gen(R.game, R.fixedLv !== undefined ? R.fixedLv : rec(R.game).lv, genUnit(R)); } while (R.lastKey === JSON.stringify(q) && guard++ < 8);
   R.lastKey = JSON.stringify(q);
   R.q = q; R.tries = 0;
   conceptThen(q, () => VIEWS[R.game](q));
@@ -154,7 +161,8 @@ function setMsg(html, cls) {
 }
 function semOf(q) { // 這一題屬於哪一學期
   if (!q) return '';
-  if (['area', 'deci', 'meas'].includes(q.kind)) return '三下';
+  if (q.kind === 'meas' && (q.u1 === '公升' || q.fam === 'vol')) return '三上'; // 公升和毫升是三上第 7 單元
+  if (['area', 'deci', 'meas', 'rule'].includes(q.kind)) return '三下'; // 找規律是三下第 2 單元
   if ((q.kind === 'fact' && q.mode === 'two') || (q.kind === 'div' && ['split', 'missing'].includes(q.mode)) || (q.kind === 'frac' && ['cmp', 'add', 'sub'].includes(q.mode))) return '三下';
   return '三上';
 }
@@ -266,7 +274,7 @@ function viewClues() {
   $app.innerHTML = `<div class="top"><button class="icon-btn" id="home" aria-label="回小鎮">⌂</button><h2 class="page-h">星星本</h2></div>
     <p class="tag">碎片上的字，排起來是什麼？</p>
     <div class="clues">${availKeys().map(k => {
-      const has = (S.prog[k] || 0) >= ROUNDS_TO_SAVE, c = STORY[k].clue;
+      const has = PIECE_KEYS.includes(k) ? pieceGot(k) : (S.prog[k] || 0) >= ROUNDS_TO_SAVE, c = STORY[k].clue;
       return `<div class="clue ${has ? '' : 'off'}">${has ? artImg('piece', 'clue-img') : '<div class="clue-q">？</div>'}<div><b>${has ? c.name : '還沒找到'}</b><small>${has ? c.text : `幫${STORY[k].whoName}的忙就會找到`}</small></div></div>`;
     }).join('')}</div>`;
   document.getElementById('home').onclick = () => go('');
@@ -287,12 +295,12 @@ function practiceTopics() {
     ['mm', 1, '讀毫米', 4], ['mm', 2, '剪出毫米', 4], ['mm', 3, '公分換毫米', 4], ['mm', 4, '毫米換公分', 4], ['mm', 5, '長度量感', 4],
     ['angle', 0, '比角的大小', 1], ['angle', 2, '銳角、直角、鈍角', 5], ['angle', 3, '正方形和長方形', 5], ['angle', 4, '沿著邊走一圈', 5], ['angle', 5, '每邊加起來', 5], ['angle', 6, '拉直比長短', 5],
     ['div', 1, '除法', 6], ['div', 2, '有餘數的除法', 6], ['div', 3, '偶數和奇數', 6], ['div', 5, '先分大的再分小的', 11], ['div', 6, '找出 □', 18],
-    ['rule', 0, '每次多多少', 1], ['rule', 1, '每次少多少', 1], ['rule', 3, '相差會變', 7], ['rule', 4, '花瓣規律', 7],
+    ['rule', 0, '每次多多少', 12], ['rule', 1, '每次少多少', 12], ['rule', 3, '相差會變', 12], ['rule', 4, '花瓣規律', 12],
     ['frac', 1, '幾分之幾', 8], ['frac', 2, '做出分數', 8], ['frac', 3, '分數累加', 8], ['frac', 4, '同分母比大小', 17], ['frac', 5, '分數加法', 17], ['frac', 6, '分數減法', 17],
     ['circle', 1, '半徑和直徑', 9], ['circle', 2, '半徑的 2 倍', 9],
     ['area', 1, '數格子', 15], ['area', 3, '缺一角的面積', 15], ['area', 4, '三角形是一半', 15],
     ['deci', 1, '幾個 0.1', 19], ['deci', 2, '小數比大小', 19], ['deci', 4, '小數加減', 19],
-    ['meas', 0, '公升和毫升', 12], ['meas', 2, '容量、時間、重量換算', 13],
+    ['meas', 0, '公升和毫升', 7], ['meas', 2, '容量、時間、重量換算', 13],
   ];
   return T.filter(t => u >= t[3]);
 }
@@ -1161,7 +1169,7 @@ const LESSONS = {
     ],
   },
   vol: {
-    title: '容量', sem: '三下', icon: '🥛', who: 'raccoon', name: '秤秤',
+    title: '容量', sem: '三上', icon: '🥛', who: 'raccoon', name: '秤秤',
     say: '公升和毫升能裝多少？點卡片，感覺一下！',
     cards: [
       { e: '💧', u: '毫升', t: '很少的水量用毫升。量藥水的小杯常標毫升刻度；一小瓶養樂多大約 100 毫升，可以看包裝上的標示。' },
@@ -1554,7 +1562,7 @@ const CONCEPTS = [
     note: v => v === 4 ? '6×4＝24，剛好 4 袋' : `6×${v}＝${6 * v}，還不到 24 顆`,
     found: '一袋一袋加，試到 4 袋剛好 24 顆。用 24÷6 也能直接算出 4。', name: `6×□＝24，可以用 24÷6 求出 □ 是 4，再用 6×4＝24 檢查。乘和除可以互相還原，叫${cT('乘除互逆')}。`, loop: [2],
     check: { q: '□×5＝35，用乘除互逆，□ 怎麼算？', pic: () => c3s(c3t(160, 80, '□×5＝35', 44)), opts: ['35÷5', '35×5', '35－5'], a: 0, why: '反過來用除的：35 裡面有幾個 5？', ok: '對了！35÷5＝7，再用 7×5＝35 檢查，沒錯。' } },
-  { key: 'pattern', title: '規律', terms: ['規律'], sem: '三上', game: 'rule', hook: '花盆的號碼', when: ['rule:seq', 'rule:grow'],
+  { key: 'pattern', title: '規律', terms: ['規律'], sem: '三下', game: 'rule', hook: '花盆的號碼', when: ['rule:seq', 'rule:grow'],
     ask: '花盆號碼是 3、6、9。如果每次都多 3，接下來該寫幾號？', tryIt: '拖一拖，再多放幾盆。', states: [4, 5, 6],
     pic: (v, n) => { const c = Math.floor(v + .01); let o = ''; for (let i = 0; i < c; i++) { o += c3e(30 + i * 52, 60, '🌷', 34) + c3t(30 + i * 52, 106, 3 * (i + 1), 22, i >= 3 ? '#d6476b' : '#33405a'); if (i) o += c3t(4 + i * 52, 84, '+3', 13, '#2f9e6a'); } return c3s(o, n ? [['規律', 160, 145, 'stick']] : []); },
     note: v => `第 ${v} 盆是 ${3 * v} 號，比前一盆多 3`,
@@ -1599,7 +1607,7 @@ const CONCEPTS = [
     note: v => ['比 4 公分長，比 5 公分短', '放大看：1 公分裡平均分成 10 小格', '超過 4 公分 3 小格'][v],
     found: '這把尺每 1 公分平均分成 10 小格，用小格量才準。', name: `這把尺每 1 公分平均分成 10 小格，每小格長 1 ${cT('毫米')}，10 毫米＝1 公分。緞帶長 4 公分 3 毫米。`, loop: [1, 2],
     check: { q: '橡皮擦長 5 公分 2 毫米，是幾毫米？', pic: () => c3s(c3e(160, 80, '🧽', 70)), opts: ['7 毫米', '52 毫米', '502 毫米'], a: 1, why: '1 公分＝10 毫米。5 公分是幾毫米？再加上 2 毫米。', ok: '對了！5 公分是 5 個 10 毫米，50 毫米，再加 2 毫米，是 52 毫米。' } },
-  { key: 'ml', title: '公升和毫升', terms: ['公升', '毫升'], sem: '三下', game: 'meas', hook: '兩桶水', when: ['meas:to', 'meas:from', 'meas:pick'], need: q => /公升|毫升/.test(JSON.stringify(q)),
+  { key: 'ml', title: '公升和毫升', terms: ['公升', '毫升'], sem: '三上', game: 'meas', hook: '兩桶水', when: ['meas:to', 'meas:from', 'meas:pick'], need: q => /公升|毫升/.test(JSON.stringify(q)),
     ask: '哥哥和妹妹都說：「我的桶裝了 5 杯水。」兩桶水一樣多嗎？', tryIt: '拖一拖，倒水看看。', states: [1, 3, 5],
     pic: (v, n) => c3s(c3bucket(40, v * .18) + c3bucket(190, v * .05) + '<rect x="66" y="8" width="38" height="44" rx="4" fill="#dfeafa" stroke="#33405a" stroke-width="3"/>' + c3e(235, 34, '🥛', 22), n ? [['公升', 85, 110, 'stick'], ['毫升', 235, 110, 'stick']] : []),
     note: v => v === 5 ? '都是 5 杯，水卻差很多' : `兩人都倒了 ${v} 杯`,
@@ -1759,7 +1767,31 @@ const quizShell = (title, back, body) => {
   $app.innerHTML = `<div class="top"><button class="icon-btn" id="qback" aria-label="回上一頁">⌂</button><h2 class="page-h">${title}</h2></div>${body}`;
   document.getElementById('qback').onclick = back;
 };
+/* 題目圖：一般文字圖照原樣；有「｜」的行畫成表格，欄位才對得齊 */
+function picHtml(p) {
+  if (!p) return '';
+  if (!p.includes('｜')) return `<div class="q-pic">${esc(p)}</div>`;
+  const rows = p.split(String.fromCharCode(10)).filter(r => r.trim());
+  const tr = rows.filter(r => r.includes('｜')).map(r => `<tr>${r.split('｜').map(c => `<td>${nums(esc(c.trim()))}</td>`).join('')}</tr>`).join('');
+  const notes = rows.filter(r => !r.includes('｜')).map(r => `<div class="q-tnote">${nums(esc(r.trim()))}</div>`).join('');
+  return `<div class="q-tbl"><table>${tr}</table>${notes}</div>`;
+}
+// 依南一單元對調過冊序（三年級 3a-7 與 3b-2；六年級 6b-2 與 6b-6），舊成績跟著單元搬一次
+function quizMigrate() {
+  if (!S.quiz || S.quizMig >= 1) return;
+  const ids = ((window.QUIZ && QUIZ.books) || []).map(b => b.id);
+  const swap = (a, b) => ['basic', 'adv', 'fun', 'pose'].forEach(l => {
+    const x = S.quiz[`${a}-${l}`], y = S.quiz[`${b}-${l}`];
+    delete S.quiz[`${a}-${l}`]; delete S.quiz[`${b}-${l}`];
+    if (y !== undefined) S.quiz[`${a}-${l}`] = y;
+    if (x !== undefined) S.quiz[`${b}-${l}`] = x;
+  });
+  if (ids.includes('3a') && ids.includes('3b')) swap('3a-7', '3b-2');
+  if (ids.includes('6b')) swap('6b-2', '6b-6');
+  S.quizMig = 1; save();
+}
 function viewQuizBooks() {
+  quizMigrate();
   const books = (window.QUIZ && QUIZ.books) || [];
   quizShell('單元測驗', () => go(''), `<p class="tag">每個單元都有基礎、進階和益智題。</p><div class="lessons">${books.map((b, i) => {
     const total = b.units.reduce((n, U) => n + quizLevels(U).length, 0), done = b.units.reduce((n, U) => n + quizLevels(U).filter(l => quizBest(`${b.id}-${U.u}-${l}`) !== undefined).length, 0);
@@ -1780,7 +1812,7 @@ function runQuiz(b, U, lv, only) {
     const q = all[list[i]];
     let tries = 0;
     quizShell(`${QUIZ_LV[lv][0]}`, back, `<div class="q-bar"><i style="width:${i / list.length * 100}%"></i></div><div class="trail">${nums(`第 ${i + 1} 題，共 ${list.length} 題`)}</div>
-      <div class="prompt" id="prompt">${nums(esc(q.q))}</div>${q.pic ? `<div class="q-pic">${esc(q.pic)}</div>` : ''}<div class="msg" id="msg"></div><div class="actions" id="actions"></div>${q.t === 'num' ? `<div id="pad">${q.unit ? `<div class="trail">${esc(q.unit)}</div>` : ''}${keypadHtml()}</div>` : ''}`);
+      <div class="prompt" id="prompt">${nums(esc(q.q))}</div>${picHtml(q.pic)}<div class="msg" id="msg"></div><div class="actions" id="actions"></div>${q.t === 'num' ? `<div id="pad">${q.unit ? `<div class="trail">${esc(q.unit)}</div>` : ''}${keypadHtml()}</div>` : ''}`);
     const done = ok => {
       if (ok && tries === 0) { right++; S.stars += QUIZ_STAR; } else if (tries === 0 || !ok) wrong.push(list[i]);
       save();
@@ -1816,23 +1848,69 @@ function runQuiz(b, U, lv, only) {
   ask();
 }
 
-/* ---------- 應用題（讀題驗收）：先自己試；需要時才打開讀題幫手或提示，提示由少到多；答對後換情境再試一題 ---------- */
-const WP_ORDER = ['scene', 'goal', 'roles', 'plan', 'check'];
+
+/* ---------- 應用題（讀題驗收） ----------
+   依《南一版一到六年級_應用題分類與引導語整合稿》第 7 節：
+   先給完整題目，孩子選「我想先試試」或「幫我讀題」；幫手第一步一律先確認最後要找什麼，一次一個問題，選到合理的就前進。
+   作答後才顯示完整解析，再請孩子把答案放回題目檢查（check 步驟），然後出換情境的遷移題。
+   紀錄：自己完成／經提示完成／仍需協助（看過做法，或遷移題沒過）；卡住的層分開記：
+   目標理解 goal、資料選取 roles、關係表示 scene/plan、計算（讀題幫手全對但答案錯）、檢查 check。計算失誤不算讀題失敗。
+   題目的 meta（南一學期、單元、關係標籤）可以缺；缺的放「其他」，也不顯示破題問句。 */
+const WP_ORDER = ['goal', 'roles', 'scene', 'plan']; // 幫手的順序：先確認目標，再找資料，再看關係；check 移到作答後
 const WP_STAGE = { scene: '這題發生什麼事', goal: '最後要找什麼', roles: '數字各代表什麼', plan: '先求出什麼', check: '答案合不合理' };
-const WP_NEXT = { scene: '先不看數字，說說看是誰在做什麼事。', goal: '再讀一次最後一句，找出要知道的是誰的什麼。', roles: '把每個數字和它後面的單位連起來，看它在說誰的什麼。', plan: '問自己：要回答最後一問，題目還沒直接告訴你的是什麼？', check: '把答案放回題目裡，看看說不說得通。' };
+const WP_NEXT = { scene: '先不看數字，說說看是誰在做什麼事。', goal: '再讀一次最後一句，找出要知道的是誰的什麼。', roles: '把每個數字和它後面的單位連起來，看它在說誰的什麼。', plan: '問自己：要回答最後一問，題目還沒直接告訴你的是什麼？', check: '把答案放回題目裡，從頭讀一次，看看說不說得通。' };
+const WP_LAYER = { goal: '目標理解', roles: '資料選取', rel: '關係表示', calc: '計算', check: '檢查' };
+const WP_LAYER_ORDER = ['goal', 'roles', 'rel', 'calc', 'check'];
+const wpLayerOf = s => (s === 'scene' || s === 'plan' ? 'rel' : s);
+const WP_RES = { self: '自己完成', hinted: '經提示完成', need: '仍需協助' };
 const wpSay = t => { if (typeof say === 'function') say(String(t).replace(/<[^>]+>/g, '')); }; // 只有一年級有朗讀
 const wpList = () => (window.QUIZ && Array.isArray(QUIZ.wp) && QUIZ.wp.length ? QUIZ.wp : null);
 const wpAll = () => (S.wp && typeof S.wp === 'object' ? S.wp : (S.wp = {})); // 舊存檔沒有 S.wp
 const wpRec = id => wpAll()[id];
 function wpPut(id, patch) { const all = wpAll(); all[id] = Object.assign({}, all[id] || {}, patch); save(); return all[id]; }
-function wpStatus(r) {
-  if (!r) return '還沒做';
-  const a = [r.selfEver ? '自己完成' : r.doneEver ? '經提示完成' : '看過做法'];
-  if (r.tfEver) a.push('換情境也會');
-  return a.join('・');
+/* 三種紀錄。舊紀錄（selfEver/doneEver/shown）也換算得出來 */
+function wpResult(r) {
+  if (!r) return '';
+  const base = r.base || (r.shown ? 'need' : r.self || r.selfEver ? 'self' : r.doneEver ? 'hinted' : 'need');
+  return base === 'need' || r.tfPass === false ? 'need' : base;
+}
+function wpStatus(r) { return r ? WP_RES[wpResult(r)] : '還沒做'; }
+/* 列表上的補充說明：換情境有沒有過、卡在哪幾層 */
+function wpNote(r) {
+  if (!r) return '';
+  const a = [], L = WP_LAYER_ORDER.filter(k => (r.layers || []).includes(k));
+  if (r.tfPass) a.push('換情境也會');
+  if (L.length) a.push(`卡在：${L.map(k => WP_LAYER[k]).join('、')}`);
+  return a.length ? `<small class="wp-lay">${a.join('；')}</small>` : '';
 }
 const wpBrief = s => { const c = [...String(s).replace(/\s+/g, ' ').trim()]; return c.length > 18 ? c.slice(0, 17).join('') + '⋯' : c.join(''); };
 const wpAnsText = a => a.t === 'num' ? `${a.a} ${a.unit || ''}`.trim() : a.a.map(n => a.o[n]).join('、');
+/* 破題問句：題目 meta.relation_tags 的第一個標籤，對到索引 types[].student_prompt（build 時嵌進 QUIZ.wp_types）；一次只給一句 */
+function wpCue(q) {
+  const tags = q.meta && q.meta.relation_tags, T = (window.QUIZ && QUIZ.wp_types) || {};
+  if (!Array.isArray(tags) || !tags.length) return '';
+  const m = String(tags[0]).match(/[A-Z]\d+/);
+  return (m && T[m[0]]) || '';
+}
+/* 依南一學期、單元分組；沒有 meta 的放「其他」 */
+function wpGroups(L) {
+  const U = (window.QUIZ && QUIZ.wp_units) || {}, G = new Map();
+  const semOf = s => (/上/.test(s || '') ? '上' : /下/.test(s || '') ? '下' : '');
+  L.forEach((q, i) => {
+    const m = q.meta || {}, u = Array.isArray(m.nanyi_units) && m.nanyi_units.length ? String(m.nanyi_units[0]) : '';
+    const p = u.match(/^\s*(\d+)\s*([上下])\s*[-－–、]?\s*(\d+)\s*(.*)$/);
+    let key, name, ord;
+    if (p) {
+      const sem = p[2], n = +p[3]; key = `${+p[1]}${sem}-${n}`;
+      name = `${sem}學期 第 ${n} 單元　${(U[key] || p[4] || '').replace(/^[\s・:：]+/, '')}`.trim(); ord = (sem === '上' ? 0 : 1000) + n;
+    } else if (u) { const sem = semOf(m.semester); key = 'u:' + u; name = u; ord = (sem === '上' ? 0 : sem === '下' ? 1000 : 2000) + 500; }
+    else if (semOf(m.semester)) { const sem = semOf(m.semester); key = 's:' + sem; name = `${sem}學期　其他單元`; ord = (sem === '上' ? 0 : 1000) + 999; }
+    else { key = 'other'; name = '其他'; ord = 9999; }
+    if (!G.has(key)) G.set(key, { name, ord, items: [] });
+    G.get(key).items.push(i);
+  });
+  return [...G.values()].sort((a, b) => a.ord - b.ord);
+}
 function wpEntry() {
   const L = wpList(); if (!L) return '';
   const done = L.filter(q => wpRec(q.id)).length;
@@ -1841,7 +1919,7 @@ function wpEntry() {
 function viewWpList() {
   const L = wpList() || [];
   try { if (typeof cptQuizList !== 'undefined') cptQuizList = null; } catch (e) {} // 二年級的小故事按鈕不跟進來
-  quizShell('應用題', viewQuizBooks, `<p class="tag">先自己讀題、作答；需要時可以打開讀題幫手或提示。</p><div class="lessons">${L.map((q, i) => `<button class="lesson wp-item" data-w="${i}"><span class="l-t"><b>${nums(`第 ${i + 1} 題`)}</b><small>${nums(esc(wpBrief(q.prompt)))}</small></span><em class="sem wp-st">${wpStatus(wpRec(q.id))}</em></button>`).join('')}</div>`);
+  quizShell('應用題', viewQuizBooks, `<p class="tag">每一題都可以先自己試，也可以請幫手陪你讀題。</p>${wpGroups(L).map(g => `<h3 class="wp-gt"><span>${nums(esc(g.name))}</span><small>${nums(`${g.items.length} 題`)}</small></h3><div class="lessons">${g.items.map(i => `<button class="lesson wp-item" data-w="${i}"><span class="l-t"><b>${nums(`第 ${i + 1} 題`)}</b><small>${nums(esc(wpBrief(L[i].prompt)))}</small>${wpNote(wpRec(L[i].id))}</span><em class="sem wp-st">${wpStatus(wpRec(L[i].id))}</em></button>`).join('')}</div>`).join('')}`);
   document.querySelectorAll('[data-w]').forEach(x => x.onclick = () => runWp(+x.dataset.w));
 }
 /* 一到兩格答案，依序作答。h.wrong(格, 孩子答的, 是否多選) / h.right(格) / h.done() */
@@ -1875,15 +1953,23 @@ function wpAnswer(answers, h) {
 }
 function runWp(i) {
   const L = wpList(), q = L[i];
-  const steps = WP_ORDER.filter(s => q.steps && q.steps[s]), hints = q.hints || [];
-  const st = { hints: 0, hOpen: true, helper: false, gi: 0, picked: {}, miss: [], wrong: 0 };
+  const steps = WP_ORDER.filter(s => q.steps && q.steps[s]), hints = q.hints || [], chk = q.steps && q.steps.check, cue = wpCue(q);
+  const st = { hints: 0, hOpen: true, helper: false, gi: 0, picked: {}, miss: [], wrong: 0, calc: 0, chkMiss: false, ans: false, finished: false };
+  const sayBtn = typeof say === 'function' ? '<button class="btn alt" id="wpsay" aria-label="再唸一次">🗣️</button>' : '';
   quizShell('應用題', viewWpList, `<div class="trail">${nums(`第 ${i + 1} 題，共 ${L.length} 題`)}</div>
-    <div class="prompt" id="prompt">${nums(esc(q.prompt))}</div>${q.pic ? `<div class="q-pic">${esc(q.pic)}</div>` : ''}
-    <div class="wp-tools" id="wpt">${typeof say === 'function' ? '<button class="btn alt" id="wpsay" aria-label="再唸一次">🗣️</button>' : ''}${steps.length ? '<button class="btn alt" id="wpgb">讀題幫手</button>' : ''}${hints.length ? '<button class="btn alt" id="wphb">提示</button>' : ''}</div>
-    <div class="wp-hints" id="wph" hidden></div><div class="wp-guide" id="wpg" hidden></div>
-    <div class="msg" id="msg"></div><div id="wpa"></div>`);
-  const $g = document.getElementById('wpg'), $h = document.getElementById('wph'), $a = document.getElementById('wpa');
+    <div class="prompt" id="prompt">${nums(esc(q.prompt))}</div>${picHtml(q.pic)}
+    <div class="wp-start" id="wps">${sayBtn}<button class="btn" id="wptry">我想先試試</button><button class="btn alt" id="wphelp">幫我讀題</button></div>
+    <div class="wp-tools" id="wpt" hidden>${steps.length ? '<button class="btn alt" id="wpgb">幫我讀題</button>' : ''}${hints.length ? '<button class="btn alt" id="wphb">提示</button>' : ''}</div>
+    <div class="wp-hints" id="wph" hidden></div>${cue ? `<div class="wp-cue" id="wpc" hidden>${nums(esc(cue))}</div>` : ''}<div class="wp-guide" id="wpg" hidden></div>
+    <div class="msg" id="msg"></div><div id="wpa" hidden></div>`);
+  const $g = document.getElementById('wpg'), $h = document.getElementById('wph'), $a = document.getElementById('wpa'), $c = document.getElementById('wpc');
   const gb = document.getElementById('wpgb'), hb = document.getElementById('wphb'), sb = document.getElementById('wpsay');
+  const layersNow = () => {
+    const s = new Set(st.miss.map(wpLayerOf));
+    if (st.calc) s.add('calc');
+    if (st.chkMiss) s.add('check');
+    return WP_LAYER_ORDER.filter(k => s.has(k));
+  };
   /* 提示：按一次給一層；整塊可以收起、再打開 */
   const drawHints = () => {
     $h.hidden = !st.hints;
@@ -1891,9 +1977,10 @@ function runWp(i) {
     document.getElementById('wphx').onclick = () => { st.hOpen = !st.hOpen; drawHints(); };
     if (hb) { hb.textContent = st.hints < hints.length ? (st.hints ? '下一層提示' : '提示') : '提示都給了'; hb.disabled = st.hints >= hints.length; }
   };
-  if (hb) hb.onclick = () => { if (st.hints >= hints.length) return; st.hints++; st.hOpen = true; drawHints(); wpSay(hints[st.hints - 1]); };
-  /* 讀題幫手：一次一步，選錯說明並給下一步，可以改選 */
-  const guideOpen = on => { $g.hidden = !on; $a.hidden = on && st.gi < steps.length; if (gb) gb.classList.toggle('lit', on); };
+  const moreHint = () => { if (st.hints >= hints.length) return; st.hints++; st.hOpen = true; drawHints(); wpSay(hints[st.hints - 1]); };
+  if (hb) hb.onclick = moreHint;
+  /* 讀題幫手：第一步一律是「最後要找什麼」；一次一個問題，選到合理的就前進；選錯說明並給下一步，可以改選 */
+  const guideOpen = on => { $g.hidden = !on; if ($c) $c.hidden = !on; $a.hidden = on && st.gi < steps.length; if (gb) gb.classList.toggle('lit', on); };
   const guide = () => {
     st.helper = true; guideOpen(true); setMsg('');
     if (st.gi >= steps.length) {
@@ -1903,10 +1990,10 @@ function runWp(i) {
     }
     const s = steps[st.gi], c = q.steps[s];
     $g.innerHTML = `<div class="wp-gh"><b>讀題幫手</b><span class="wp-dots">${steps.map((x, j) => `<i class="${j < st.gi ? 'd' : j === st.gi ? 'now' : ''}"></i>`).join('')}</span></div>
-      <div class="wp-sq" id="wpsq"><small>${nums(`第 ${st.gi + 1} 步，共 ${steps.length} 步`)}</small>${nums(esc(c.q))}</div>
+      <div class="wp-sq" id="wpsq"><small>${nums(`第 ${st.gi + 1} 步，共 ${steps.length} 步：${WP_STAGE[s]}`)}</small>${nums(esc(c.q))}</div>
       <div class="choices col">${c.o.map((o, n) => `<button class="choice" data-g="${n}">${nums(esc(o))}</button>`).join('')}</div>
       <div class="actions" id="wpga"><button class="btn alt" id="wpgx">先作答</button></div>`;
-    wpSay(c.q + '。' + c.o.join('。'));
+    wpSay((st.gi === 0 && cue ? cue + '。' : '') + c.q + '。' + c.o.join('。'));
     document.getElementById('wpgx').onclick = () => { guideOpen(false); $a.hidden = false; };
     $g.querySelectorAll('[data-g]').forEach(b => b.onclick = () => {
       const n = +b.dataset.g;
@@ -1921,7 +2008,7 @@ function runWp(i) {
       b.classList.add('ok');
       setMsg(`對。${nums(esc(c.why))}`, 'good');
       const last = st.gi + 1 >= steps.length;
-      document.getElementById('wpga').innerHTML = `<button class="btn" id="wpgn">${last ? '回到答案格' : '繼續'}</button>`;
+      document.getElementById('wpga').innerHTML = `<button class="btn" id="wpgn">${last ? '去作答' : '下一步'}</button>`;
       document.getElementById('wpgn').onclick = () => {
         st.gi++; guide();
         if (last) { $a.hidden = false; setMsg('讀題幫手走完了。照著讀到的，在答案格作答。', 'good'); reveal('#wpa'); }
@@ -1930,30 +2017,66 @@ function runWp(i) {
     });
     reveal('#wpg');
   };
+  /* 開始：兩個並列按鈕擇一；之後工具列留「幫我讀題」「提示」 */
+  const begin = help => {
+    const s0 = document.getElementById('wps'), t = document.getElementById('wpt');
+    if (sb) t.insertBefore(sb, t.firstChild);
+    s0.remove(); t.hidden = !t.children.length;
+    if (!st.ans) { st.ans = true; wpAnswer(q.answers, H); }
+    if (help && steps.length) guide();
+    else if (help) { $a.hidden = false; moreHint(); }
+    else { $a.hidden = false; wpSay(q.answers[0].label); reveal('#wpa'); }
+  };
+  document.getElementById('wptry').onclick = () => begin(false);
+  document.getElementById('wphelp').onclick = () => begin(true);
   if (gb) gb.onclick = () => { if (!$g.hidden) { guideOpen(false); $a.hidden = false; } else guide(); };
   if (sb) sb.onclick = () => wpSay(!$g.hidden && st.gi < steps.length ? plainText(document.getElementById('wpsq')) : plainText(document.getElementById('prompt')) + '。' + q.answers.map(a => a.label).join('。'));
+  const save1 = patch => wpPut(q.id, Object.assign({ layers: layersNow(), hints: st.hints, helper: st.helper, miss: st.miss, wrong: st.wrong, calc: st.calc, t: Date.now() }, patch));
+  /* 作答後：完整解析 → 把答案放回題目檢查 → 遷移題 */
   const finishView = (lead, cls) => {
-    const t = document.getElementById('wpt'); if (t) t.querySelectorAll('#wpgb, #wphb').forEach(x => x.remove());
+    st.finished = true;
+    const t = document.getElementById('wpt'); if (t) { t.querySelectorAll('#wpgb, #wphb').forEach(x => x.remove()); t.hidden = !t.children.length; }
     guideOpen(false); $a.hidden = false; if (st.hints) { st.hOpen = false; drawHints(); }
     setMsg(`${lead}${q.explain ? nums(esc(q.explain)) : ''}<div class="wp-think">怎麼想的：${nums(esc(q.think))}</div>`, cls);
     const tf = q.transfer && q.transfer.prompt;
-    $a.innerHTML = `<div class="actions">${tf ? '<button class="btn" id="wptf">試一題</button>' : ''}<button class="btn alt" id="wpbk">回題目列表</button></div>${tf ? '<p class="tag wp-tip">換一個情境，看看同一個做法還用得上嗎。</p>' : ''}`;
-    if (tf) document.getElementById('wptf').onclick = () => runWpTransfer(i);
-    document.getElementById('wpbk').onclick = viewWpList;
-    reveal('#wpa');
+    const tail = () => {
+      const e = document.getElementById('wpend');
+      e.innerHTML = `${tf ? '<p class="tag wp-tip">換一個情境，看看同一個做法還用得上嗎。</p>' : ''}<div class="actions">${tf ? '<button class="btn" id="wptf">試一題</button>' : ''}<button class="btn alt" id="wpbk">回題目列表</button></div>`;
+      if (tf) document.getElementById('wptf').onclick = () => runWpTransfer(i);
+      document.getElementById('wpbk').onclick = viewWpList;
+      reveal('#wpend');
+    };
+    $a.innerHTML = `<div class="wp-check" id="wpk"><b>把答案放回題目檢查</b>${chk ? `<div class="wp-sq" id="wpkq">${nums(esc(chk.q))}</div><div class="choices col">${chk.o.map((o, n) => `<button class="choice" data-wk="${n}">${nums(esc(o))}</button>`).join('')}</div><div class="wp-km" id="wpkm"></div>` : `<div class="wp-sq" id="wpkq">${nums(esc(WP_NEXT.check))}</div>`}</div><div id="wpend"></div>`;
+    if (!chk) { wpSay('把答案放回題目檢查。' + WP_NEXT.check); return tail(); }
+    wpSay('把答案放回題目檢查。' + chk.q + '。' + chk.o.join('。'));
+    $a.querySelectorAll("[data-wk]").forEach(b => b.onclick = () => {
+      const n = +b.dataset.wk, km = document.getElementById('wpkm');
+      if (!chk.a.includes(n)) {
+        b.classList.add('no'); b.disabled = true; sfx.retry();
+        if (!st.chkMiss) { st.chkMiss = true; wpPut(q.id, { layers: layersNow() }); }
+        km.className = 'wp-km hint'; km.innerHTML = `${nums(esc(chk.why))}<br>下一步：${nums(esc(chk.hint || WP_NEXT.check))}`;
+        return;
+      }
+      sfx.ok(); b.classList.add('ok'); $a.querySelectorAll("[data-wk]").forEach(x => { x.disabled = true; });
+      km.className = 'wp-km good'; km.innerHTML = `對。${nums(esc(chk.why))}`;
+      tail();
+    });
+    reveal('#wpk');
   };
-  /* 看做法：試了三次還沒對，可以直接看說明，再去試換情境的題目 */
+  /* 看做法：試了三次還沒對，可以直接看說明；記為「仍需協助」 */
   const showWay = () => {
     const old = wpRec(q.id) || {};
-    wpPut(q.id, { self: false, shown: true, hints: st.hints, helper: st.helper, miss: st.miss, wrong: st.wrong, n: (old.n || 0) + 1, t: Date.now() });
+    save1({ base: 'need', shown: true, tfPass: undefined, n: (old.n || 0) + 1 });
     finishView(`答案：${q.answers.map(a => nums(esc(wpAnsText(a)))).join('；')}。`, 'hint');
   };
-  wpAnswer(q.answers, {
+  const H = {
     wrong: (k, said, multi) => {
       st.wrong++; sfx.retry();
-      const a = q.answers[k];
-      let next = multi ? '有該選的沒選，或多選了。一個一個選項回到題目裡對照。' : `${esc(said)} 還不是「${esc(a.label)}」。`;
-      if (steps.length && st.gi < steps.length) next += '可以打開讀題幫手，一步一步把題目讀清楚。';
+      const a = q.answers[k], readOk = steps.length && st.gi >= steps.length && !st.miss.length; // 幫手全對才可能歸到計算
+      if (readOk) st.calc++;
+      let next = multi ? '有該選的沒選，或多選了。一個一個選項回到題目裡對照。' : `${esc(said)} 和答案不一樣。`;
+      if (readOk) next += '讀題的每一步都選對了，這次多半是計算時算錯了。把每一步算出的數和它代表的量寫下來，再算一次。';
+      else if (steps.length && st.gi < steps.length) next += '可以按「幫我讀題」，一步一步把題目讀清楚。';
       else if (st.hints < hints.length) next += '按「提示」，看下一層。';
       else next += '照著提示的示範，把下一段接著做完。';
       setMsg(nums(next) + (st.wrong >= 3 ? '<div class="actions"><button class="btn alt" id="wpway">看做法</button></div>' : ''), 'hint');
@@ -1962,39 +2085,44 @@ function runWp(i) {
     },
     right: k => { if (k + 1 < q.answers.length) { sfx.ok(); setMsg(nums(`對，${esc(q.answers[k].label)}是 ${esc(wpAnsText(q.answers[k]))}。接著回答下一格。`), 'good'); } },
     done: () => {
-      const self = !st.helper && !st.hints, old = wpRec(q.id) || {};
-      wpPut(q.id, { self, hints: st.hints, helper: st.helper, miss: st.miss, wrong: st.wrong, shown: false, selfEver: !!(old.selfEver || self), doneEver: true, n: (old.n || 0) + 1, t: Date.now() });
-      if (self && !st.wrong) sfx.good(); else sfx.ok();
+      const base = st.helper || st.hints ? 'hinted' : 'self', old = wpRec(q.id) || {};
+      save1({ base, shown: false, tfPass: undefined, self: base === 'self', selfEver: !!(old.selfEver || base === 'self'), doneEver: true, n: (old.n || 0) + 1 });
+      if (base === 'self' && !st.wrong) sfx.good(); else sfx.ok();
       finishView('對。', 'good');
     },
-  });
+  };
 }
-/* 換情境的題目：沒有幫手和提示，看做法能不能帶過去 */
+/* 換情境的題目：沒有幫手和提示，看做法能不能帶過去。看了答案、或靠多次嘗試才答對，記為沒過 */
 function runWpTransfer(i) {
   const q = wpList()[i], tq = q.transfer, ans = tq.answers || [];
   let wrong = 0;
   quizShell('應用題：換情境', viewWpList, `<div class="trail">${nums(`第 ${i + 1} 題的換情境題`)}</div>
-    <div class="prompt" id="prompt">${nums(esc(tq.prompt))}</div>${tq.pic ? `<div class="q-pic">${esc(tq.pic)}</div>` : ''}
+    <div class="prompt" id="prompt">${nums(esc(tq.prompt))}</div>${picHtml(tq.pic)}
     <div class="msg" id="msg"></div><div id="wpa"></div>`);
   const end = (ok, lead) => {
-    const old = wpRec(q.id) || {};
-    wpPut(q.id, { tf: ok, tfEver: !!(old.tfEver || ok), tfWrong: wrong });
+    if (ans.length) wpPut(q.id, { tfPass: ok, tf: ok, tfEver: !!((wpRec(q.id) || {}).tfEver || ok), tfWrong: wrong });
     setMsg(lead + (tq.explain ? nums(esc(tq.explain)) : ''), ok ? 'good' : 'hint');
-    document.getElementById('wpa').innerHTML = `<div class="actions">${i + 1 < wpList().length ? '<button class="btn" id="wpnx">繼續</button>' : ''}<button class="btn alt" id="wpbk">回題目列表</button></div>`;
+    document.getElementById('wpa').innerHTML = `<div class="actions">${i + 1 < wpList().length ? '<button class="btn" id="wpnx">下一題</button>' : ''}<button class="btn alt" id="wpbk">回題目列表</button></div>`;
     const nx = document.getElementById('wpnx'); if (nx) nx.onclick = () => runWp(i + 1);
     document.getElementById('wpbk').onclick = viewWpList;
     reveal('#wpa');
   };
   if (!ans.length) return end(false, '');
+  const NEXT = ['回到這題的最後一句：要找的是什麼？', '要回答它，還缺哪個量？先把那個量求出來。', '把答案放回題目裡讀一次，數量對得起來嗎？'];
   wpAnswer(ans, {
     wrong: (k, said, multi) => {
       wrong++; sfx.retry();
-      const w = multi ? '有該選的沒選，或多選了。' : `${esc(said)} 還不是「${esc(ans[k].label)}」。`;
-      setMsg(nums(w + '回想原來那題：最後要找什麼、先求了什麼；在這題裡，要用的數字在哪裡？') + (wrong >= 3 ? '<div class="actions"><button class="btn alt" id="wpway">看答案</button></div>' : ''), 'hint');
-      const b = document.getElementById('wpway'); if (b) b.onclick = () => { document.getElementById('wpa').innerHTML = ''; end(false, `答案：${ans.map(a => nums(esc(wpAnsText(a)))).join('；')}。`); };
+      const w = multi ? '有該選的沒選，或多選了。' : `${esc(said)} 和答案不一樣。`;
+      setMsg(nums(w + NEXT[Math.min(wrong, 3) - 1]) + (wrong >= 3 ? '<div class="actions"><button class="btn alt" id="wpway">看答案</button></div>' : ''), 'hint');
+      const b = document.getElementById('wpway'); if (b) b.onclick = () => { document.getElementById('wpa').innerHTML = ''; end(false, `答案：${ans.map(a => nums(esc(wpAnsText(a)))).join('；')}。這題先記為「仍需協助」，之後可以再做一次。`); };
     },
     right: k => { if (k + 1 < ans.length) { sfx.ok(); setMsg(nums(`對，${esc(ans[k].label)}是 ${esc(wpAnsText(ans[k]))}。接著回答下一格。`), 'good'); } },
-    done: () => { if (!wrong) sfx.good(); else sfx.ok(); end(!wrong, wrong ? '對。這次中間答錯過，換情境的紀錄先不算；之後可以再做一次。' : '對。換了情境，一樣先找出最後要問的是什麼，再用題目給的數字求出來。'); },
+    done: () => {
+      // 選擇題可以靠刪去法選到，所以答錯過就不算過；數字題容許一次算錯（計算失誤不當成讀題失敗）
+      const pass = wrong <= (ans.some(a => a.t !== 'num') ? 0 : 1);
+      if (!wrong) sfx.good(); else sfx.ok();
+      end(pass, pass ? '對。換了情境，一樣先找出最後要問的是什麼，再用題目給的數字求出來。' : '對。這題試了幾次才找到，先記為「仍需協助」，之後可以再做一次。');
+    },
   });
 }
 /* ---------- 首頁 ---------- */
@@ -2024,17 +2152,20 @@ function viewHome() {
   if (S.bossDone && !S.s2Seen) { S.s2Seen = true; save(); return comic(SEASON2.bg, SEASON2.lines, viewHome); }
   const keys = availKeys();
   const saved = k => (S.prog[k] || 0) >= ROUNDS_TO_SAVE;
-  const allSaved = PIECE_KEYS.every(saved), nSaved = keys.filter(saved).length, nPieces = PIECE_KEYS.filter(saved).length;
+  const allSaved = PIECE_KEYS.every(pieceGot), nSaved = keys.filter(saved).length, nPieces = PIECE_KEYS.filter(pieceGot).length;
   const bossNow = allSaved && !S.bossDone;
-  const nextKey = bossNow ? null : keys.find(k => !saved(k) && S.prog[k]) || keys.find(k => !saved(k));
-  const line = S.bossDone && !nextKey ? '夜空亮了！一萬顆星都在閃。' : S.bossDone ? `還有小星星迷路，下一站：${STORY[nextKey].place}！` : bossNow ? '碎片都到齊了，去找萬萬吧！' : nSaved === 0 && !S.prog[nextKey] ? `船長，先去${STORY[nextKey].place}！` : `下一站：${STORY[nextKey].place}，${STORY[nextKey].mission}！`;
-  const ROW = 150, rows = keys.length + 1, pts = [];
-  for (let i = 0; i < rows; i++) pts.push([i % 2 ? 70 : 30, ROW * i + 70]);
+  const seg1 = keys.filter(k => PIECE_KEYS.includes(k)), seg2 = keys.filter(k => !PIECE_KEYS.includes(k)); // 三上段、三下段
+  const pool = S.bossDone ? [...seg2, ...seg1] : seg1, need = k => S.bossDone ? !saved(k) : !pieceGot(k); // 找到萬萬以前只帶去三上的島；第二季先帶去三下新島
+  const nextKey = bossNow ? null : pool.find(k => need(k) && S.prog[k]) || pool.find(need) || null;
+  const line = S.bossDone && !nextKey ? '夜空亮了！一萬顆星都在閃。' : S.bossDone ? (seg2.includes(nextKey) ? `還有小星星迷路，下一站：${STORY[nextKey].place}！` : `${STORY[nextKey].place}還在等你，${STORY[nextKey].mission}！`) : bossNow ? '碎片都到齊了，去找萬萬吧！' : nSaved === 0 && !S.prog[nextKey] ? `船長，先去${STORY[nextKey].place}！` : `下一站：${STORY[nextKey].place}，${STORY[nextKey].mission}！`;
+  const ROW = 150, HEAD = 46, rows = keys.length + 1, nb = seg1.length; // 段落標題各占 HEAD 高
+  const ys = Array.from({ length: rows }, (_, i) => HEAD + ROW * i + (i > nb ? HEAD : 0)), H = ys[rows - 1] + ROW;
+  const pts = ys.map((y, i) => [i % 2 ? 70 : 30, y + 70]);
   const pathD = pts.map((q, i) => i === 0 ? `M${q[0]} ${q[1]}` : `C${pts[i - 1][0]} ${q[1] - 70} ${q[0]} ${pts[i - 1][1] + 70} ${q[0]} ${q[1]}`).join('');
   const stop = (k, i) => {
     const pr = Math.min(S.prog[k] || 0, ROUNDS_TO_SAVE), st = STORY[k], done = pr >= ROUNDS_TO_SAVE, now = k === nextKey && !done;
     const pips = Array.from({ length: ROUNDS_TO_SAVE }, (_, n) => `<i class="${n < pr ? 'on' : ''}"></i>`).join('');
-    return `<button class="stop ${i % 2 ? 'right' : 'left'} ${done ? 'done' : ''} ${now ? 'now' : ''}" data-g="${k}" style="top:${ROW * i}px">
+    return `<button class="stop ${i % 2 ? 'right' : 'left'} ${done ? 'done' : ''} ${now ? 'now' : ''}" data-g="${k}" style="top:${ys[i]}px">
       <span class="medal" style="${bgStyle(st.bg)}"><span class="fog f${pr}"></span>${artImg(st.who, 'medal-who')}${done ? '<span class="badge">✓</span>' : ''}</span>
       <span class="plate"><b>${GAMES[k].name}</b><em class="sem">${GAMES[k].sem}</em><span class="lvl">${pips}</span></span>
       ${now ? artImg('liang', 'guide') : ''}
@@ -2048,13 +2179,16 @@ function viewHome() {
     </header>
     <button class="lesson-entry" id="lessons"><span>📏🥛⚖️⏱️</span><b>單位教室</b><small>${Object.keys(S.learned || {}).length} / 5</small></button>
     <button class="quiz-entry" id="quiz"><span>📝</span><b>單元測驗</b><small>基礎・進階・益智</small></button>
-    <div class="map-trail" style="height:${ROW * rows + 8}px">
-      <svg viewBox="0 0 100 ${ROW * rows}" preserveAspectRatio="none" aria-hidden="true"><path d="${pathD}" fill="none" stroke="#fff6e3" stroke-width="5" stroke-dasharray="3 11" stroke-linecap="round" vector-effect="non-scaling-stroke" opacity=".9"/></svg>
-      ${keys.map(stop).join('')}
-      <button class="stop ${keys.length % 2 ? 'right' : 'left'} cave ${allSaved && !S.bossDone ? 'now' : ''}" data-g="boss" ${allSaved ? '' : 'disabled'} style="top:${ROW * keys.length}px">
+    <div class="map-trail" style="height:${H + 8}px">
+      <svg viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${pathD}" fill="none" stroke="#fff6e3" stroke-width="5" stroke-dasharray="3 11" stroke-linecap="round" vector-effect="non-scaling-stroke" opacity=".9"/></svg>
+      <div class="seg-h" style="top:0"><b>三上</b>找九塊碎片</div>
+      ${seg1.map(stop).join('')}
+      <button class="stop ${nb % 2 ? 'right' : 'left'} cave ${allSaved && !S.bossDone ? 'now' : ''}" data-g="boss" ${allSaved ? '' : 'disabled'} style="top:${ys[nb]}px">
         <span class="medal" style="${bgStyle(BOSS.bg)}"><span class="fog ${S.bossDone ? 'f3' : allSaved ? 'f1' : 'f0'}"></span>${allSaved ? artImg(S.bossDone ? 'mimi_happy' : 'mimi', 'medal-who') : '<span class="lock">？</span>'}</span>
         <span class="plate"><b>${S.bossDone ? '和萬萬玩' : '找到萬萬'}</b><small>${allSaved ? (S.bossDone ? '再挑戰一次' : '把碎片拼回去') : `先找齊碎片（${nPieces}/9）`}</small></span>
       </button>
+      ${seg2.length ? `<div class="seg-h" style="top:${ys[nb + 1] - HEAD}px"><b>三下</b>找三顆小星星</div>` : ''}
+      ${seg2.map((k, j) => stop(k, nb + 1 + j)).join('')}
     </div>
     <nav class="dock">
       <button id="daily" class="${S.stamps[today()] ? 'stamped' : 'hot'}"><b>${S.stamps[today()] ? '✔' : '★'}</b>今日任務<small>${Object.keys(S.stamps).length} 個章</small></button>
@@ -2070,7 +2204,7 @@ function viewHome() {
 }
 
 /* ---------- 家長頁 ---------- */
-const UNITS = { 1: '三上1 數到10000', 2: '三上2 四位數的加減', 3: '三上3 乘法', 4: '三上4 幾毫米', 5: '三上5 角、正方形和長方形', 6: '三上6 除法', 7: '三上7 找規律', 8: '三上8 分數', 9: '三上9 圓', 11: '三下1 除法', 12: '三下2 公升和毫升', 13: '三下3 時間', 14: '三下4 兩步驟的計算', 15: '三下5 面積', 16: '三下6 公斤和公克', 17: '三下7 分數的加減', 18: '三下8 乘除的應用', 19: '三下9 小數', 20: '三下10 報讀表格' };
+const UNITS = { 1: '三上1 數到10000', 2: '三上2 四位數的加減', 3: '三上3 乘法', 4: '三上4 幾毫米', 5: '三上5 角、正方形和長方形', 6: '三上6 除法', 7: '三上7 公升和毫升', 8: '三上8 分數', 9: '三上9 圓', 11: '三下1 除法', 12: '三下2 找規律', 13: '三下3 時間', 14: '三下4 兩步驟的計算', 15: '三下5 面積', 16: '三下6 公斤和公克', 17: '三下7 分數的加減', 18: '三下8 乘除的應用', 19: '三下9 小數', 20: '三下10 報讀表格' };
 function summarize(g) {
   const L = S.log.filter(x => x.g === g), last = L.slice(-30);
   if (!last.length) return { n: 0, rate: '—', note: '還沒玩' };
@@ -2109,7 +2243,7 @@ function viewParent() {
   </div>`;
   document.getElementById('snd').onchange = e => { S.sound = e.target.checked; save(); };
   document.getElementById('reset').onclick = () => {
-    if (confirm('確定清除所有星星和紀錄？')) { S.stars = 0; S.rec = {}; S.log = []; S.prog = {}; S.opened = false; S.bossDone = false; S.bossSeen = false; S.s2Seen = false; S.stamps = {}; S.fast = {}; S.seenCpt = {}; S.doneCpt = {}; S.lessonSeen = {}; S.quiz = {}; S.learned = {}; save(); viewParent(); }
+    if (confirm('確定清除所有星星和紀錄？')) { S.stars = 0; S.rec = {}; S.log = []; S.prog = {}; S.opened = false; S.bossDone = false; S.bossSeen = false; S.s2Seen = false; S.stamps = {}; S.fast = {}; S.seenCpt = {}; S.doneCpt = {}; S.lessonSeen = {}; S.quiz = {}; S.pieceFrom = {}; S.learned = {}; save(); viewParent(); }
   };
   document.getElementById('out').onclick = () => go('');
 }

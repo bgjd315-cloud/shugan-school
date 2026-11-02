@@ -263,13 +263,13 @@
   }
   const UNIT_QUIZ = Object.fromEntries(Object.keys(UNIT_ITEMS).map(k => [k, UNIT_ITEMS[k].map(x => unitQuestion(k, x))]));
 
-  /* ---------- 十二：量量市集（三下第 2、3、6、10 單元） ---------- */
+  /* ---------- 十二：量量市集（三上第 7 單元公升和毫升；三下第 3、6、10 單元時間、公斤和公克、報讀表格） ---------- */
   function genMeas(lv, unit) {
     const types = ['ml'];
     if (unit >= 13) types.push('time');
     if (unit >= 16) types.push('g', 'dial');
     if (unit >= 20) types.push('table');
-    if (Math.random() < 0.3) { const u = unitQuestion(pick(['vol', 'weight', 'time'])); return { kind: 'meas', mode: 'pick', text: u.q, e: u.e, ans: u.a, options: shuffle(u.opts), why: u.why }; }
+    if (Math.random() < 0.3) { const fam = pick(['vol', ...(unit >= 13 ? ['time'] : []), ...(unit >= 16 ? ['weight'] : [])]), u = unitQuestion(fam); return { kind: 'meas', mode: 'pick', fam, text: u.q, e: u.e, ans: u.a, options: shuffle(u.opts), why: u.why }; }
     const t = lv <= 0 ? 'ml' : pick(types), big = ri(1, 5), small = ri(1, 9) * 100 + pick([0, 0, 50]);
     if (t === 'ml') return Math.random() < 0.5 || lv === 0 ? { kind: 'meas', mode: 'to', big, small, per: 1000, u1: '公升', text: `${big} 公升 ${small} 毫升`, unit: '毫升', ans: big * 1000 + small, why: `1 公升是 1000 毫升。` } : { kind: 'meas', mode: 'from', per: 1000, text: `${big * 1000 + small} 毫升`, u1: '公升', u2: '毫升', steps: [big, small], why: '每 1000 毫升是 1 公升。' };
     if (t === 'g') return Math.random() < 0.5 ? { kind: 'meas', mode: 'to', big, small, per: 1000, u1: '公斤', text: `${big} 公斤 ${small} 公克`, unit: '公克', ans: big * 1000 + small, why: '1 公斤是 1000 公克。' } : { kind: 'meas', mode: 'from', per: 1000, text: `${big * 1000 + small} 公克`, u1: '公斤', u2: '公克', steps: [big, small], why: '每 1000 公克是 1 公斤。' };
@@ -287,11 +287,11 @@
     if (game === 'mm') return unit >= 4 ? 5 : 0;
     if (game === 'angle') return 6;
     if (game === 'div') return unit >= 18 ? 6 : unit >= 11 ? 5 : unit >= 6 ? 4 : 0;
-    if (game === 'rule') return unit >= 7 ? 4 : 1;
+    if (game === 'rule') return unit >= 12 ? 4 : 1; // 找規律是三下第 2 單元
     if (game === 'frac') return unit >= 17 ? 6 : unit >= 8 ? 3 : 0;
     if (game === 'area') return 4;
     if (game === 'deci') return 4;
-    if (game === 'meas') return unit >= 13 ? 3 : 0;
+    if (game === 'meas') return unit >= 13 ? 3 : unit >= 7 ? 1 : 0; // 三上第 7 單元起可以出毫升換回公升
     return unit >= 9 ? 3 : 0;
   }
   const GEN = { port: genPort, ship: genShip, fact: genFact, mm: genMm, angle: genAngle, div: genDiv, rule: genRule, frac: genFrac, circle: genCircle, area: genArea, deci: genDeci, meas: genMeas };
