@@ -1764,8 +1764,9 @@ function viewQuizBooks() {
   quizShell('單元測驗', () => go(''), `<p class="tag">每個單元都有基礎、進階和益智題。</p><div class="lessons">${books.map((b, i) => {
     const total = b.units.reduce((n, U) => n + quizLevels(U).length, 0), done = b.units.reduce((n, U) => n + quizLevels(U).filter(l => quizBest(`${b.id}-${U.u}-${l}`) !== undefined).length, 0);
     return `<button class="lesson" data-b="${i}"><span class="l-t"><b>${b.name}</b><small>${b.units.length} 個單元</small></span><em class="sem">${done} / ${total}</em></button>`;
-  }).join('')}</div>`);
+  }).join('')}</div>${wpEntry()}`);
   document.querySelectorAll('[data-b]').forEach(x => x.onclick = () => viewQuizUnits(books[+x.dataset.b]));
+  const wi = document.getElementById('wpin'); if (wi) wi.onclick = viewWpList;
 }
 function viewQuizUnits(b) {
   quizShell(b.name, viewQuizBooks, `<div class="q-units">${b.units.map((U, i) => `<div class="q-unit"><b>${nums(`${U.u}. ${U.title}`)}</b><small>${esc(U.sense)}</small><div class="q-lv">${quizLevels(U).map(l => { const best = quizBest(`${b.id}-${U.u}-${l}`); return `<button data-u="${i}" data-l="${l}"><span>${QUIZ_LV[l][0]}</span><small>${best === undefined ? `${QUIZ_LV[l][1]} 題` : `最佳 ${best} 分`}</small></button>`; }).join('')}</div></div>`).join('')}</div>`);
@@ -1813,6 +1814,188 @@ function runQuiz(b, U, lv, only) {
     document.getElementById('rb').onclick = back;
   }
   ask();
+}
+
+/* ---------- 應用題（讀題驗收）：先自己試；需要時才打開讀題幫手或提示，提示由少到多；答對後換情境再試一題 ---------- */
+const WP_ORDER = ['scene', 'goal', 'roles', 'plan', 'check'];
+const WP_STAGE = { scene: '這題發生什麼事', goal: '最後要找什麼', roles: '數字各代表什麼', plan: '先求出什麼', check: '答案合不合理' };
+const WP_NEXT = { scene: '先不看數字，說說看是誰在做什麼事。', goal: '再讀一次最後一句，找出要知道的是誰的什麼。', roles: '把每個數字和它後面的單位連起來，看它在說誰的什麼。', plan: '問自己：要回答最後一問，題目還沒直接告訴你的是什麼？', check: '把答案放回題目裡，看看說不說得通。' };
+const wpSay = t => { if (typeof say === 'function') say(String(t).replace(/<[^>]+>/g, '')); }; // 只有一年級有朗讀
+const wpList = () => (window.QUIZ && Array.isArray(QUIZ.wp) && QUIZ.wp.length ? QUIZ.wp : null);
+const wpAll = () => (S.wp && typeof S.wp === 'object' ? S.wp : (S.wp = {})); // 舊存檔沒有 S.wp
+const wpRec = id => wpAll()[id];
+function wpPut(id, patch) { const all = wpAll(); all[id] = Object.assign({}, all[id] || {}, patch); save(); return all[id]; }
+function wpStatus(r) {
+  if (!r) return '還沒做';
+  const a = [r.selfEver ? '自己完成' : r.doneEver ? '經提示完成' : '看過做法'];
+  if (r.tfEver) a.push('換情境也會');
+  return a.join('・');
+}
+const wpBrief = s => { const c = [...String(s).replace(/\s+/g, ' ').trim()]; return c.length > 18 ? c.slice(0, 17).join('') + '⋯' : c.join(''); };
+const wpAnsText = a => a.t === 'num' ? `${a.a} ${a.unit || ''}`.trim() : a.a.map(n => a.o[n]).join('、');
+function wpEntry() {
+  const L = wpList(); if (!L) return '';
+  const done = L.filter(q => wpRec(q.id)).length;
+  return `<div class="lessons wp-in"><button class="lesson" id="wpin"><span class="l-t"><b>應用題</b><small>${nums(`讀題驗收・${L.length} 題`)}</small></span><em class="sem">${nums(`${done} / ${L.length}`)}</em></button></div>`;
+}
+function viewWpList() {
+  const L = wpList() || [];
+  try { if (typeof cptQuizList !== 'undefined') cptQuizList = null; } catch (e) {} // 二年級的小故事按鈕不跟進來
+  quizShell('應用題', viewQuizBooks, `<p class="tag">先自己讀題、作答；需要時可以打開讀題幫手或提示。</p><div class="lessons">${L.map((q, i) => `<button class="lesson wp-item" data-w="${i}"><span class="l-t"><b>${nums(`第 ${i + 1} 題`)}</b><small>${nums(esc(wpBrief(q.prompt)))}</small></span><em class="sem wp-st">${wpStatus(wpRec(q.id))}</em></button>`).join('')}</div>`);
+  document.querySelectorAll('[data-w]').forEach(x => x.onclick = () => runWp(+x.dataset.w));
+}
+/* 一到兩格答案，依序作答。h.wrong(格, 孩子答的, 是否多選) / h.right(格) / h.done() */
+function wpAnswer(answers, h) {
+  let k = 0;
+  const box = document.getElementById('wpa');
+  const show = () => {
+    const a = answers[k];
+    const head = `<div class="trail wp-lab" id="wplab">${answers.length > 1 ? nums(`第 ${k + 1} 格，共 ${answers.length} 格：`) : ''}${nums(esc(a.label))}${a.t === 'num' && a.unit ? `（${esc(a.unit)}）` : ''}${a.t === 'multi' ? '（可以選不只一個，選好按確定）' : ''}</div>`;
+    if (a.t === 'num') {
+      box.innerHTML = head + `<div id="pad">${keypadHtml()}</div>`;
+      bindKeypad((v, clear) => { if (v === a.a) return ok(); clear(); h.wrong(k, `${v}${a.unit ? ' ' + a.unit : ''}`); });
+    } else {
+      box.innerHTML = head + `<div class="choices col wp-ch">${a.o.map((o, n) => `<button class="choice" data-c="${n}">${nums(esc(o))}</button>`).join('')}</div>${a.t === 'multi' ? '<div class="actions"><button class="btn" id="wpok">確定</button></div>' : ''}`;
+      const cs = [...box.querySelectorAll('[data-c]')];
+      if (a.t === 'pick') cs.forEach(c => c.onclick = () => { const n = +c.dataset.c; if (a.a.includes(n)) { c.classList.add('ok'); return ok(); } c.classList.add('no'); c.disabled = true; h.wrong(k, `「${a.o[n]}」`); });
+      else {
+        cs.forEach(c => c.onclick = () => c.classList.toggle('on'));
+        document.getElementById('wpok').onclick = () => {
+          const pick = cs.filter(c => c.classList.contains('on')).map(c => +c.dataset.c);
+          if (!pick.length) { setMsg('先選選項，再按確定。', 'hint'); sfx.retry(); return; }
+          if (pick.length === a.a.length && pick.every(n => a.a.includes(n))) return ok();
+          h.wrong(k, pick.map(n => `「${a.o[n]}」`).join(''), true);
+        };
+      }
+    }
+    if (k > 0) wpSay(a.label);
+  };
+  const ok = () => { h.right(k); k++; if (k < answers.length) show(); else { box.innerHTML = ''; h.done(); } };
+  show();
+}
+function runWp(i) {
+  const L = wpList(), q = L[i];
+  const steps = WP_ORDER.filter(s => q.steps && q.steps[s]), hints = q.hints || [];
+  const st = { hints: 0, hOpen: true, helper: false, gi: 0, picked: {}, miss: [], wrong: 0 };
+  quizShell('應用題', viewWpList, `<div class="trail">${nums(`第 ${i + 1} 題，共 ${L.length} 題`)}</div>
+    <div class="prompt" id="prompt">${nums(esc(q.prompt))}</div>${q.pic ? `<div class="q-pic">${esc(q.pic)}</div>` : ''}
+    <div class="wp-tools" id="wpt">${typeof say === 'function' ? '<button class="btn alt" id="wpsay" aria-label="再唸一次">🗣️</button>' : ''}${steps.length ? '<button class="btn alt" id="wpgb">讀題幫手</button>' : ''}${hints.length ? '<button class="btn alt" id="wphb">提示</button>' : ''}</div>
+    <div class="wp-hints" id="wph" hidden></div><div class="wp-guide" id="wpg" hidden></div>
+    <div class="msg" id="msg"></div><div id="wpa"></div>`);
+  const $g = document.getElementById('wpg'), $h = document.getElementById('wph'), $a = document.getElementById('wpa');
+  const gb = document.getElementById('wpgb'), hb = document.getElementById('wphb'), sb = document.getElementById('wpsay');
+  /* 提示：按一次給一層；整塊可以收起、再打開 */
+  const drawHints = () => {
+    $h.hidden = !st.hints;
+    $h.innerHTML = `<div class="wp-gh"><b>${nums(`提示 ${st.hints} / ${hints.length}`)}</b><button class="wp-x" id="wphx">${st.hOpen ? '收起' : '打開'}</button></div>${st.hOpen ? `<ol>${hints.slice(0, st.hints).map(t => `<li>${nums(esc(t))}</li>`).join('')}</ol>` : ''}`;
+    document.getElementById('wphx').onclick = () => { st.hOpen = !st.hOpen; drawHints(); };
+    if (hb) { hb.textContent = st.hints < hints.length ? (st.hints ? '下一層提示' : '提示') : '提示都給了'; hb.disabled = st.hints >= hints.length; }
+  };
+  if (hb) hb.onclick = () => { if (st.hints >= hints.length) return; st.hints++; st.hOpen = true; drawHints(); wpSay(hints[st.hints - 1]); };
+  /* 讀題幫手：一次一步，選錯說明並給下一步，可以改選 */
+  const guideOpen = on => { $g.hidden = !on; $a.hidden = on && st.gi < steps.length; if (gb) gb.classList.toggle('lit', on); };
+  const guide = () => {
+    st.helper = true; guideOpen(true); setMsg('');
+    if (st.gi >= steps.length) {
+      $g.innerHTML = `<div class="wp-gh"><b>讀題幫手：讀到的</b><button class="wp-x" id="wpgx">收起</button></div><ul class="wp-sum">${steps.map(s => `<li><small>${WP_STAGE[s]}</small>${nums(esc(q.steps[s].o[st.picked[s]]))}</li>`).join('')}</ul>`;
+      document.getElementById('wpgx').onclick = () => guideOpen(false);
+      return;
+    }
+    const s = steps[st.gi], c = q.steps[s];
+    $g.innerHTML = `<div class="wp-gh"><b>讀題幫手</b><span class="wp-dots">${steps.map((x, j) => `<i class="${j < st.gi ? 'd' : j === st.gi ? 'now' : ''}"></i>`).join('')}</span></div>
+      <div class="wp-sq" id="wpsq"><small>${nums(`第 ${st.gi + 1} 步，共 ${steps.length} 步`)}</small>${nums(esc(c.q))}</div>
+      <div class="choices col">${c.o.map((o, n) => `<button class="choice" data-g="${n}">${nums(esc(o))}</button>`).join('')}</div>
+      <div class="actions" id="wpga"><button class="btn alt" id="wpgx">先作答</button></div>`;
+    wpSay(c.q + '。' + c.o.join('。'));
+    document.getElementById('wpgx').onclick = () => { guideOpen(false); $a.hidden = false; };
+    $g.querySelectorAll('[data-g]').forEach(b => b.onclick = () => {
+      const n = +b.dataset.g;
+      if (!c.a.includes(n)) {
+        if (!st.miss.includes(s)) st.miss.push(s);
+        b.classList.add('no'); b.disabled = true; sfx.retry();
+        setMsg(`${nums(esc(c.why))}<br>下一步：${nums(esc(c.hint || WP_NEXT[s]))}`, 'hint');
+        reveal('#msg'); return;
+      }
+      st.picked[s] = n; sfx.ok();
+      $g.querySelectorAll('[data-g]').forEach(x => { x.disabled = true; });
+      b.classList.add('ok');
+      setMsg(`對。${nums(esc(c.why))}`, 'good');
+      const last = st.gi + 1 >= steps.length;
+      document.getElementById('wpga').innerHTML = `<button class="btn" id="wpgn">${last ? '回到答案格' : '繼續'}</button>`;
+      document.getElementById('wpgn').onclick = () => {
+        st.gi++; guide();
+        if (last) { $a.hidden = false; setMsg('讀題幫手走完了。照著讀到的，在答案格作答。', 'good'); reveal('#wpa'); }
+      };
+      reveal('#wpga');
+    });
+    reveal('#wpg');
+  };
+  if (gb) gb.onclick = () => { if (!$g.hidden) { guideOpen(false); $a.hidden = false; } else guide(); };
+  if (sb) sb.onclick = () => wpSay(!$g.hidden && st.gi < steps.length ? plainText(document.getElementById('wpsq')) : plainText(document.getElementById('prompt')) + '。' + q.answers.map(a => a.label).join('。'));
+  const finishView = (lead, cls) => {
+    const t = document.getElementById('wpt'); if (t) t.querySelectorAll('#wpgb, #wphb').forEach(x => x.remove());
+    guideOpen(false); $a.hidden = false; if (st.hints) { st.hOpen = false; drawHints(); }
+    setMsg(`${lead}${q.explain ? nums(esc(q.explain)) : ''}<div class="wp-think">怎麼想的：${nums(esc(q.think))}</div>`, cls);
+    const tf = q.transfer && q.transfer.prompt;
+    $a.innerHTML = `<div class="actions">${tf ? '<button class="btn" id="wptf">試一題</button>' : ''}<button class="btn alt" id="wpbk">回題目列表</button></div>${tf ? '<p class="tag wp-tip">換一個情境，看看同一個做法還用得上嗎。</p>' : ''}`;
+    if (tf) document.getElementById('wptf').onclick = () => runWpTransfer(i);
+    document.getElementById('wpbk').onclick = viewWpList;
+    reveal('#wpa');
+  };
+  /* 看做法：試了三次還沒對，可以直接看說明，再去試換情境的題目 */
+  const showWay = () => {
+    const old = wpRec(q.id) || {};
+    wpPut(q.id, { self: false, shown: true, hints: st.hints, helper: st.helper, miss: st.miss, wrong: st.wrong, n: (old.n || 0) + 1, t: Date.now() });
+    finishView(`答案：${q.answers.map(a => nums(esc(wpAnsText(a)))).join('；')}。`, 'hint');
+  };
+  wpAnswer(q.answers, {
+    wrong: (k, said, multi) => {
+      st.wrong++; sfx.retry();
+      const a = q.answers[k];
+      let next = multi ? '有該選的沒選，或多選了。一個一個選項回到題目裡對照。' : `${esc(said)} 還不是「${esc(a.label)}」。`;
+      if (steps.length && st.gi < steps.length) next += '可以打開讀題幫手，一步一步把題目讀清楚。';
+      else if (st.hints < hints.length) next += '按「提示」，看下一層。';
+      else next += '照著提示的示範，把下一段接著做完。';
+      setMsg(nums(next) + (st.wrong >= 3 ? '<div class="actions"><button class="btn alt" id="wpway">看做法</button></div>' : ''), 'hint');
+      if (gb && st.gi < steps.length) gb.classList.add('lit');
+      const w = document.getElementById('wpway'); if (w) w.onclick = showWay;
+    },
+    right: k => { if (k + 1 < q.answers.length) { sfx.ok(); setMsg(nums(`對，${esc(q.answers[k].label)}是 ${esc(wpAnsText(q.answers[k]))}。接著回答下一格。`), 'good'); } },
+    done: () => {
+      const self = !st.helper && !st.hints, old = wpRec(q.id) || {};
+      wpPut(q.id, { self, hints: st.hints, helper: st.helper, miss: st.miss, wrong: st.wrong, shown: false, selfEver: !!(old.selfEver || self), doneEver: true, n: (old.n || 0) + 1, t: Date.now() });
+      if (self && !st.wrong) sfx.good(); else sfx.ok();
+      finishView('對。', 'good');
+    },
+  });
+}
+/* 換情境的題目：沒有幫手和提示，看做法能不能帶過去 */
+function runWpTransfer(i) {
+  const q = wpList()[i], tq = q.transfer, ans = tq.answers || [];
+  let wrong = 0;
+  quizShell('應用題：換情境', viewWpList, `<div class="trail">${nums(`第 ${i + 1} 題的換情境題`)}</div>
+    <div class="prompt" id="prompt">${nums(esc(tq.prompt))}</div>${tq.pic ? `<div class="q-pic">${esc(tq.pic)}</div>` : ''}
+    <div class="msg" id="msg"></div><div id="wpa"></div>`);
+  const end = (ok, lead) => {
+    const old = wpRec(q.id) || {};
+    wpPut(q.id, { tf: ok, tfEver: !!(old.tfEver || ok), tfWrong: wrong });
+    setMsg(lead + (tq.explain ? nums(esc(tq.explain)) : ''), ok ? 'good' : 'hint');
+    document.getElementById('wpa').innerHTML = `<div class="actions">${i + 1 < wpList().length ? '<button class="btn" id="wpnx">繼續</button>' : ''}<button class="btn alt" id="wpbk">回題目列表</button></div>`;
+    const nx = document.getElementById('wpnx'); if (nx) nx.onclick = () => runWp(i + 1);
+    document.getElementById('wpbk').onclick = viewWpList;
+    reveal('#wpa');
+  };
+  if (!ans.length) return end(false, '');
+  wpAnswer(ans, {
+    wrong: (k, said, multi) => {
+      wrong++; sfx.retry();
+      const w = multi ? '有該選的沒選，或多選了。' : `${esc(said)} 還不是「${esc(ans[k].label)}」。`;
+      setMsg(nums(w + '回想原來那題：最後要找什麼、先求了什麼；在這題裡，要用的數字在哪裡？') + (wrong >= 3 ? '<div class="actions"><button class="btn alt" id="wpway">看答案</button></div>' : ''), 'hint');
+      const b = document.getElementById('wpway'); if (b) b.onclick = () => { document.getElementById('wpa').innerHTML = ''; end(false, `答案：${ans.map(a => nums(esc(wpAnsText(a)))).join('；')}。`); };
+    },
+    right: k => { if (k + 1 < ans.length) { sfx.ok(); setMsg(nums(`對，${esc(ans[k].label)}是 ${esc(wpAnsText(ans[k]))}。接著回答下一格。`), 'good'); } },
+    done: () => { if (!wrong) sfx.good(); else sfx.ok(); end(!wrong, wrong ? '對。這次中間答錯過，換情境的紀錄先不算；之後可以再做一次。' : '對。換了情境，一樣先找出最後要問的是什麼，再用題目給的數字求出來。'); },
+  });
 }
 /* ---------- 首頁 ---------- */
 let titleShown = false;

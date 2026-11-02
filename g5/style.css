@@ -909,3 +909,28 @@ button.hc4 { padding: 0; border: 0; border-radius: 0; min-height: 28px; }
 .q-bar i { display: block; height: 100%; background: var(--leaf); }
 .q-pic { white-space: pre-line; text-align: left; width: fit-content; max-width: 100%; margin-left: auto !important; margin-right: auto !important; font-size: 26px; line-height: 1.35; font-family: system-ui, sans-serif; margin: 8px 0; word-break: break-all; }
 .choices.col .choice { width: 100%; }
+/* 應用題（讀題驗收） */
+.wp-in { margin-top: 10px; }
+.wp-item .sem { font-size: 14px; white-space: normal; text-align: right; max-width: 42%; font-style: normal; }
+.wp-tools { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 6px 0; }
+.wp-tools .btn { min-width: 0; min-height: 46px; padding: 4px 16px; font-size: 19px; }
+.wp-tools .btn.lit { background: #fff1c2; border-color: var(--sun); }
+.wp-tools .btn[disabled] { opacity: .45; }
+.wp-hints, .wp-guide { background: #fffaf0; border: 2px dashed var(--sun); border-radius: 14px; padding: 8px 10px; margin: 6px 0; text-align: left; }
+.wp-hints[hidden], .wp-guide[hidden], #wpa[hidden] { display: none !important; }
+.wp-gh { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 17px; }
+.wp-x { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 2px 12px; font-size: 16px; min-height: 34px; }
+.wp-hints ol { margin: 6px 0 0; padding-left: 1.5em; font-size: 18px; line-height: 1.7; }
+.wp-sq { font-size: 20px; line-height: 1.6; margin: 6px 0; }
+.wp-sq small { display: block; color: var(--soft); font-size: 15px; }
+.wp-dots i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #e3dccb; margin-left: 4px; }
+.wp-dots i.d { background: var(--good); } .wp-dots i.now { background: var(--sun); }
+.wp-guide .choices.col, .wp-ch { margin: 4px auto; }
+.wp-guide .choice, .wp-ch .choice { font-size: 19px; line-height: 1.45; padding: 6px 8px; max-width: none; }
+.wp-guide .choice.ok, .wp-ch .choice.ok { background: #d9f3e4; border-color: var(--good); opacity: 1; }
+.wp-ch .choice.on { background: #fff1c2; border-color: var(--sun); }
+.wp-sum { margin: 6px 0 0; padding-left: 1.2em; font-size: 18px; line-height: 1.6; }
+.wp-sum small { color: var(--soft); margin-right: 6px; }
+.wp-lab { margin-top: 6px; }
+.wp-think { margin-top: 6px; color: var(--ink); font-size: .9em; text-align: left; }
+.wp-tip { text-align: center; font-size: 17px; }
