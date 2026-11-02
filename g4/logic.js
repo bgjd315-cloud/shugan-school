@@ -49,7 +49,7 @@
     if (lv <= 0) { const v = bigNum(); return { kind: 'big', mode: 'build', v, word: toZh(v) }; }
     if (lv === 1) {
       const v = bigNum(), ds = String(v), z = ds.indexOf('0'); // 錯誤選項：多念或少念零
-      const bad = [toZh(v).replace(/零/g, ''), toZh(v + (v % 10000 >= 1000 ? 1000 : 10000)), toZh(Math.floor(v / 10) * 10 + (v % 10 ? 0 : 1))].filter(x => x !== toZh(v));
+      const bad = [toZh(v).replace(/零/g, ''), toZh(v + (v % 10000 >= 1000 ? 1000 : 10000) * (v >= 99990000 ? -1 : 1)), toZh(Math.floor(v / 10) * 10 + (v % 10 ? 0 : 1))].filter(x => x !== toZh(v));
       return { kind: 'big', mode: 'read', v, word: toZh(v), options: shuffle([toZh(v), ...[...new Set(bad)].slice(0, 2)]), z };
     }
     if (lv === 2) {
@@ -63,7 +63,7 @@
     }
     if (lv === 4) {
       const a = ri(1000, 9999) * 10000 + ri(0, 9) * 1000, cut = pick([10000, 100000, 1000000, 1000]);
-      let b = a + pick([-1, 1]) * cut * ri(1, 3); if (b <= 0 || b >= 100000000) b = a + cut;
+      let b = a + pick([-1, 1]) * cut * ri(1, 3); if (b <= 0 || b >= 100000000) b = a - cut;
       return { kind: 'big', mode: 'cmp', l: a, r: b, ans: a > b ? 'L' : 'R' };
     }
     const w1 = ri(10, 60), r1 = ri(1, 40) * 100, w2 = ri(10, 30), r2 = ri(1, 40) * 100, sub = Math.random() < .4 && r1 >= r2;
@@ -109,7 +109,7 @@
   /* ---------- 三角機翼廠（四上 5） ---------- */
   const TRIS = [
     { n: '正三角形', k: '銳角', sides: [6, 6, 6], ang: [60, 60, 60], pts: [[60, 8], [8, 98], [112, 98]] },
-    { n: '等腰三角形', k: '銳角', sides: [7, 7, 4], ang: [33, 74, 73], pts: [[60, 4], [32, 104], [88, 104]] },
+    { n: '等腰三角形', k: '銳角', sides: [7, 7, 4], ang: [33, 74, 73], pts: [[60, 4], [33.2, 104], [86.8, 104]] },
     { n: '等腰三角形', k: '鈍角', sides: [5, 5, 8], ang: [37, 37, 106], pts: [[6, 88], [114, 88], [60, 42]] },
     { n: '等腰三角形', k: '直角', sides: [6, 6, 8], ang: [90, 45, 45], pts: [[20, 16], [20, 104], [108, 104]] },
     { n: '一般三角形', k: '直角', sides: [3, 4, 5], ang: [90, 37, 53], pts: [[20, 24], [20, 100], [118, 100]] },
@@ -243,7 +243,7 @@
   /* ---------- 概數估算室（四下 4） ---------- */
   const roundTo = (v, u) => Math.round(v / u) * u, upTo = (v, u) => Math.ceil(v / u) * u, downTo = (v, u) => Math.floor(v / u) * u;
   function genEst(lv) {
-    if (lv <= 0) { let v; do v = ri(1, 9) * 1000 + ri(101, 899); while (v % 100 === 0); return { kind: 'est', mode: 'near', v, u: 100, ans: roundTo(v, 100), lo: downTo(v, 100), hi: upTo(v, 100) }; }
+    if (lv <= 0) { let v; do v = ri(1, 9) * 1000 + ri(101, 899); while (v % 100 === 0 || v % 100 === 50); return { kind: 'est', mode: 'near', v, u: 100, ans: roundTo(v, 100), lo: downTo(v, 100), hi: upTo(v, 100) }; }
     if (lv === 1) { const each = pick([10, 100]), box = ri(2, 9), r = ri(1, each - 1), n = each * box + r; return { kind: 'est', mode: 'up', n, each, ans: box + 1 }; }
     if (lv === 2) { const each = pick([100, 1000]), cnt = ri(2, 9), r = ri(1, each - 1), n = each * cnt + r; return { kind: 'est', mode: 'down', n, each, ans: cnt }; }
     if (lv === 3) { const u = pick([1000, 10000]), v = ri(11, 99) * u + ri(1, u - 1), how = pick(['四捨五入', '無條件進入', '無條件捨去']), ans = how === '四捨五入' ? roundTo(v, u) : how === '無條件進入' ? upTo(v, u) : downTo(v, u); return { kind: 'est', mode: 'how', v, u, how, ans, lo: downTo(v, u), hi: upTo(v, u) }; }
