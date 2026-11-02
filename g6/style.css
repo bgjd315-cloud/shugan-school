@@ -927,7 +927,7 @@ button.hc4 { padding: 0; border: 0; border-radius: 0; min-height: 28px; }
 .stage { overflow: hidden; }
 .g5 { height: auto; }
 
-.skip6 { display: block; margin: 8px auto 0; background: none; border: 0; color: var(--soft); text-decoration: underline; font-family: inherit; font-size: 15px; min-height: 36px; }
+.skip6 { display: block; margin: 8px auto 0; background: none; border: 0; color: var(--soft); text-decoration: underline; font-family: inherit; font-size: 15px; min-height: 44px; }
 .cname { position: relative; padding-top: 44px; }
 .tag6 { position: absolute; top: 0; left: 50%; transform: translateX(-50%) rotate(-3deg); background: #ffd65a; border: 2px solid #a9702a; border-radius: 8px; padding: 2px 12px; font-size: 20px; white-space: nowrap; z-index: 2; animation: tag6in .45s ease-out; }
 @keyframes tag6in { from { transform: translateX(-50%) scale(2.2) rotate(8deg); opacity: 0; } }
@@ -1018,7 +1018,7 @@ button.hc4 { padding: 0; border: 0; border-radius: 0; min-height: 28px; }
 .btn.ghost { background: var(--card); color: var(--ink); border: 2px solid var(--line); }
 .choice.sel { outline: 3px solid var(--sun); }
 .rel6 { font-size: 14px; color: var(--soft); text-align: center; margin: 0 0 4px; }
-.rel6b { background: none; border: 1px solid var(--line); border-radius: 99px; font-family: inherit; font-size: 14px; color: var(--ink); padding: 2px 8px; margin: 2px; min-height: 32px; }
+.rel6b { background: none; border: 1px solid var(--line); border-radius: 99px; font-family: inherit; font-size: 14px; color: var(--ink); padding: 2px 8px; margin: 2px; min-height: 40px; }
 .cs6 { display: block; font-size: 12px; color: var(--soft); }
 .cs6.ok { color: var(--good); }
 .cmp6 { border-bottom: 1px dashed var(--line); margin-bottom: 4px; }
@@ -1053,7 +1053,7 @@ button.hc4 { padding: 0; border: 0; border-radius: 0; min-height: 28px; }
 .wp-hints, .wp-guide { background: #fffaf0; border: 2px dashed var(--sun); border-radius: 14px; padding: 8px 10px; margin: 6px 0; text-align: left; }
 .wp-hints[hidden], .wp-guide[hidden], #wpa[hidden] { display: none !important; }
 .wp-gh { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 17px; }
-.wp-x { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 2px 12px; font-size: 16px; min-height: 34px; }
+.wp-x { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 2px 12px; font-size: 16px; min-height: 40px; }
 .wp-hints ol { margin: 6px 0 0; padding-left: 1.5em; font-size: 18px; line-height: 1.7; }
 .wp-sq { font-size: 20px; line-height: 1.6; margin: 6px 0; }
 .wp-sq small { display: block; color: var(--soft); font-size: 15px; }
