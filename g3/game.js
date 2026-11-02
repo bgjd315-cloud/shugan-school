@@ -588,7 +588,7 @@ function viewShip(q) {
   let pos = q.s, done = false; const path = [];
   const draw = () => {
     document.getElementById('rt').innerHTML = routeSvg(q, pos, expr);
-    const ds = String(pos).padStart(4, '0').slice(-4);
+    const p4 = String(pos).padStart(4, '0'), ds = p4.length > 4 ? [p4.slice(0, -3), ...p4.slice(-3)] : [...p4]; // 超過 9999 時千位顯示 10，不要只顯示後四位
     document.getElementById('odo').innerHTML = [1000, 100, 10, 1].map((h, i) => `<div class="wheel c${i}"><button class="num" data-h="${h}" aria-label="加 ${h}">+${h}</button><b class="num">${ds[i]}</b><small>${name[i]}</small><button class="num dn" data-h="${-h}" aria-label="減 ${h}">−${h}</button></div>`).join('');
     document.getElementById('trail').innerHTML = path.length ? nums(path.map(sgn).join(' ') + `（${path.length} 段）`) : '還沒出發';
     document.querySelectorAll('#odo [data-h]').forEach(b => { if (done) { b.disabled = true; b.style.opacity = .35; } b.onclick = () => go(+b.dataset.h); });

@@ -74,10 +74,10 @@
   function genShip(lv) {
     const L = Math.min(lv, 4);
     if (L === 0) { const s = ri(1, 6) * 1000 + ri(1, 4) * 100 + ri(10, 40); return shipQ(s, s + ri(1, 2) * 1000 + ri(1, 3) * 100 + ri(1, 3) * 10); }
-    if (L === 1) { const s = ri(1, 7) * 1000 + ri(1, 8) * 100 + ri(1, 89); return shipQ(s, s + pick([999, 1999, 990, 1100, 900, 1900, 2990])); }
+    if (L === 1) { const s = ri(1, 6) * 1000 + ri(1, 8) * 100 + ri(1, 89); return shipQ(s, s + pick([999, 1999, 990, 1100, 900, 1900, 2990])); }
     if (L === 2) { const s = ri(4, 9) * 1000 + ri(1, 8) * 100 + ri(1, 89); return shipQ(s, s - pick([999, 1999, 990, 1100, 900, 1900, 2990])); }
     if (L === 3) {
-      const a = ri(12, 75) * 100 + pick([0, ri(1, 9) * 10, ri(1, 9)]), b = pick([998, 999, 1999, 1001, 2001, 2998, 990, 2010]);
+      const a = ri(12, 69) * 100 + pick([0, ri(1, 9) * 10, ri(1, 9)]), b = pick([998, 999, 1999, 1001, 2001, 2998, 990, 2010]);
       if (Math.random() < 0.5) return { ...shipQ(a, a + b), mode: 'expr', expr: `${a}＋${b}` };
       const big = a + 3000; return { ...shipQ(big, big - b), mode: 'expr', expr: `${big}－${b}` };
     }
