@@ -11,6 +11,8 @@ const T = ms => ms * (window.__TS === undefined ? 1 : window.__TS);
 const wait = ms => new Promise(r => setTimeout(r, T(ms)));
 function load() { try { return JSON.parse(localStorage.getItem(SAVE_KEY)); } catch (e) { return null; } }
 const S = Object.assign({ voice: true, prog: {}, lv: {}, stars: {}, fast: {}, seen: {}, did: {}, quiz: {}, opened: false, halfSeen: false, endSeen: false }, load() || {});
+// 修正舊版題庫把 S.stars（各站燈籠）誤加成字串的存檔：玩過的站至少有 1 盞燈
+if (!S.stars || typeof S.stars !== 'object') S.stars = Object.fromEntries(Object.keys(S.prog || {}).filter(k => S.prog[k]).map(k => [k, 1]));
 function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
 
 /* ---------- 音效與語音：語音不能用時一樣能玩 ---------- */
@@ -967,7 +969,7 @@ const quizShell = (title, back, body) => {
 };
 function viewQuizBooks() {
   const books = (window.QUIZ && QUIZ.books) || [];
-  quizShell('小測驗', () => go(''), `<p class="tag">每一關都有三種題目。</p><div class="lessons">${books.map((b, i) => {
+  quizShell('小測驗', () => go(''), `<p class="tag">每一關都有四種題目。</p><div class="lessons">${books.map((b, i) => {
     const total = b.units.reduce((n, U) => n + quizLevels(U).length, 0), done = b.units.reduce((n, U) => n + quizLevels(U).filter(l => quizBest(`${b.id}-${U.u}-${l}`) !== undefined).length, 0);
     return `<button class="lesson" data-b="${i}"><span class="l-t"><b>${b.name}</b><small>${b.units.length} 關</small></span><em class="sem">${done} / ${total}</em></button>`;
   }).join('')}</div>${wpEntry()}`);
@@ -988,7 +990,7 @@ function runQuiz(b, U, lv, only) {
     quizShell(`${QUIZ_LV[lv][0]}`, back, `<div class="q-bar"><i style="width:${i / list.length * 100}%"></i></div><div class="trail">${nums(`第 ${i + 1} 題，共 ${list.length} 題`)}</div>
       <div class="prompt" id="prompt">${nums(esc(q.q))}</div>${q.pic ? `<div class="q-pic">${esc(q.pic)}</div>` : ''}<div class="msg" id="msg"></div><div class="actions" id="actions"></div>${q.t === 'num' ? `<div id="pad">${q.unit ? `<div class="trail">${esc(q.unit)}</div>` : ''}${keypadHtml()}</div>` : ''}`);
     const done = ok => {
-      if (ok && tries === 0) { right++; S.stars += QUIZ_STAR; } else if (tries === 0 || !ok) wrong.push(list[i]);
+      if (ok && tries === 0) { right++; } else if (tries === 0 || !ok) wrong.push(list[i]);
       save();
       setMsg(`${ok ? '對了。' : '一起看看怎麼想：'}${nums(esc(q.why))}`, ok ? 'good' : 'hint');
       if (ok && tries === 0) sfx.good(); else if (ok) sfx.ok();

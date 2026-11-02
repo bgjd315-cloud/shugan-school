@@ -262,7 +262,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .comic-top .skip { margin-left: auto; margin-right: 8px; }
 .try.lying svg { transform: rotate(90deg); }
 .plate.sel { border-color: var(--sun); box-shadow: 0 0 0 4px #f2b63266; }
-.top { gap: 5px; } .top .icon-btn { width: 44px; height: 44px; } .top .skip { white-space: nowrap; flex: none; padding: 4px 9px; }
+.top { gap: 5px; flex-wrap: wrap; row-gap: 6px; } .top .icon-btn { width: 44px; height: 44px; } .top .skip { white-space: nowrap; flex: none; padding: 4px 9px; }
 .lay2 { background: #f4ebc9; border-radius: 13px; padding: 6px 8px; } .lay-svg { display: block; width: 100%; height: auto; }
 
 /* 單元數感測驗 */
@@ -291,7 +291,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .wp-hints, .wp-guide { background: #fffaf0; border: 2px dashed var(--sun); border-radius: 14px; padding: 8px 10px; margin: 6px 0; text-align: left; }
 .wp-hints[hidden], .wp-guide[hidden], #wpa[hidden] { display: none !important; }
 .wp-gh { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 17px; }
-.wp-x { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 2px 12px; font-size: 16px; min-height: 34px; }
+.wp-x { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 2px 12px; font-size: 16px; min-height: 40px; }
 .wp-hints ol { margin: 6px 0 0; padding-left: 1.5em; font-size: 18px; line-height: 1.7; }
 .wp-sq { font-size: 20px; line-height: 1.6; margin: 6px 0; }
 .wp-sq small { display: block; color: var(--soft); font-size: 15px; }

@@ -165,7 +165,7 @@ const GEN = {
     },
     same(lv) {
       let a = ri(1, lvn(lv, 5, 6, 8)), b = ri(1, Math.max(1, 9 - a)); if (a === b) b = b > 1 ? b - 1 : b + 1;
-      const r = `${b} ＋ ${a}`, w1 = `${a} ＋ ${b + 1}`, w2 = `${Math.max(1, a - 1)} ＋ ${b}`;
+      const r = `${b} ＋ ${a}`, w1 = `${a} ＋ ${b + 1}`, w2 = a > 1 ? `${a - 1} ＋ ${b}` : `${a} ＋ ${b - 1}`;
       return [pickT(`誰和 ${a} ＋ ${b} 一樣多？`, { s: 'two', a: { item: 'duckling', n: a }, b: { item: 'duckling', n: b }, sign: '＋' }, [r, w1, w2], r, { val: a + b })];
     },
   },
