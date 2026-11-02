@@ -527,6 +527,14 @@ body { line-height: 1.75; }
 .c-st { display: inline-block; margin-left: 6px; font-style: normal; font-size: 14px; padding: 0 8px; border-radius: 10px; background: #eee; color: var(--soft); }
 .c-st.op { background: #fff3cf; color: #8a5a00; }
 .c-st.ok { background: #d9f3e4; color: var(--good); }
+/* 單元測驗、應用題清單的卡片（和三年級相同；原本漏了，按鈕看起來像純文字） */
+.lessons { display: flex; flex-direction: column; gap: 9px; }
+.lesson { position: relative; display: flex; align-items: center; gap: 12px; text-align: left; background: var(--card); border: 2px solid var(--line); border-bottom-width: 5px; border-radius: 16px; padding: 10px 12px; min-height: 76px; }
+.l-t { flex: 1; min-width: 0; }
+.l-t b { display: block; font-size: 21px; }
+.l-t small { display: block; font-size: 15px; color: var(--soft); }
+.wp-in { margin-top: 12px; }
+
 /* 應用題（讀題驗收） */
 .wp-in { margin-top: 10px; }
 .wp-item .sem { font-size: 14px; white-space: normal; text-align: right; max-width: 42%; font-style: normal; }
