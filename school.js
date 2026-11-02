@@ -30,5 +30,5 @@ document.getElementById('cards').innerHTML = G.map(x => {
 document.getElementById('rows').innerHTML = G.map(x => `<tr><td>${x.zh}</td><td><a href="${url(x)}">${x.name}</a></td><td>${x.units}</td><td>${x.books * 70} 題</td><td>${quizDone(load(x.key))} / ${x.books * 4}</td></tr>`).join('');
 document.querySelectorAll('[data-g]').forEach(a => a.addEventListener('click', () => last(a.dataset.g)));
 const L = G.find(x => String(x.g) === last());
-if (L) { const c = document.getElementById('cont'); c.hidden = false; c.href = url(L); c.innerHTML = zy('繼續玩 ' + L.name); }
+if (L) { const c = document.getElementById('cont'); c.hidden = false; c.href = url(L); c.textContent = '繼續玩 ' + L.name; }
 document.querySelectorAll('[data-zy]').forEach(e => { e.innerHTML = zy(e.textContent); });
