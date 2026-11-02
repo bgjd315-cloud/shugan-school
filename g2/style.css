@@ -537,7 +537,7 @@ body { line-height: 1.75; }
 .wp-hints, .wp-guide { background: #fffaf0; border: 2px dashed var(--sun); border-radius: 14px; padding: 8px 10px; margin: 6px 0; text-align: left; }
 .wp-hints[hidden], .wp-guide[hidden], #wpa[hidden] { display: none !important; }
 .wp-gh { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 17px; }
-.wp-x { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 2px 12px; font-size: 16px; min-height: 34px; }
+.wp-x { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 2px 12px; font-size: 16px; min-height: 40px; }
 .wp-hints ol { margin: 6px 0 0; padding-left: 1.5em; font-size: 18px; line-height: 1.7; }
 .wp-sq { font-size: 20px; line-height: 1.6; margin: 6px 0; }
 .wp-sq small { display: block; color: var(--soft); font-size: 15px; }

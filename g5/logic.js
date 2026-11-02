@@ -64,7 +64,7 @@
     if (lv === 2) { const a = ri(2, 9), ctx = pick([['號誌燈', '秒', '亮一次', '💡'], ['接駁車', '分鐘', '來一班', '🚌'], ['灑水器', '分鐘', '灑一次', '💦']]), k = ri(5, 9); return { kind: 'factor', mode: 'multi', a, ctx, lim: Math.min(40, a * 5), k, ans: a * k }; }
     if (lv === 3) {
       const [a, b] = pick([[12, 18], [8, 12], [16, 24], [18, 24], [12, 30], [20, 30], [15, 25], [9, 15], [14, 21], [24, 36], [10, 15], [16, 20]]);
-      const ctx = pick([['紅磚', '藍磚', '排成一樣多的排，每排同色、沒有剩', '塊'], ['紅繩', '藍繩', '各自剪成同樣長的小段（整數公分）、都沒有剩', '公分'], ['蘋果', '橘子', '分給一樣多的人，每人都拿得一樣、沒有剩', '顆']]);
+      const ctx = pick([['紅磚', '藍磚', '排成一樣多的排，每排同色、沒有剩', '塊'], ['紅繩', '藍繩', '各自剪成同樣長的小段（整數公分）、都沒有剩', '公分', '每段最長幾公分？'], ['蘋果', '橘子', '分給一樣多的人，每人都拿得一樣、沒有剩', '顆']]);
       return { kind: 'factor', mode: 'comf', a, b, ctx, fa: factors(a), fb: factors(b), com: factors(a).filter(x => b % x === 0), ans: gcd(a, b) };
     }
     if (lv === 4) { const [a, b] = pick([[2, 3], [3, 4], [4, 6], [6, 8], [3, 5], [2, 5], [4, 5], [6, 9], [4, 10], [6, 10], [5, 6]]); const ctx = pick([['紅燈', '綠燈', '秒', '亮一次', '同時亮'], ['甲線車', '乙線車', '分鐘', '來一班', '同時到站']]); return { kind: 'factor', mode: 'lamp', a, b, ctx, ans: lcm(a, b) }; }
@@ -271,7 +271,7 @@
 
   /* ---------- 十一：農場分糧處（分數的計算） ---------- */
   function genFcalc(lv) {
-    if (lv <= 0) { const p = ri(3, 8), cand = [1, 2, 3, 4, 5].filter(x => x < p), n = pick(cand), f = pick([['蔥油餅', '張', '人'], ['披薩', '個', '人'], ['糧餅', '塊', '隻小動物']]); return { kind: 'fcalc', mode: 'share', n, p, f }; }
+    if (lv <= 0) { const p = ri(3, 8), cand = [1, 2, 3, 4, 5].filter(x => x < p), n = pick(cand), f = pick([['蔥油餅', '張', '人'], ['披薩', '個', '人'], ['糧餅', '片', '隻小動物']]); return { kind: 'fcalc', mode: 'share', n, p, f }; }
     if (lv === 1) { let a, b; do { a = ri(2, 9); b = ri(2, 5); } while (gcd(a, b) > 1 || a === b); const c = pick([['水', '公升', '瓶'], ['肥料', '公斤', '袋'], ['繩子', '公尺', '段']]); return { kind: 'fcalc', mode: 'pack', a, b, c, whole: Math.floor(a / b), r: a % b }; }
     if (lv === 2) { const d = pick([2, 3, 4, 5, 6]), a = pick(coprimeTo(d)), k = ri(2, 6), n = d * k, c = pick([['顆蘋果', '顆'], ['隻雞', '隻'], ['棵菜苗', '棵']]); return { kind: 'fcalc', mode: 'of', d, a, k, n, c, ans: a * k }; }
     if (lv === 3) { const n = pick([3, 4, 5, 6, 8]), a = pick(coprimeTo(n)), k = ri(2, 6), [sa, sn] = simp(a * k, n), c = pick([['每袋飼料', '公斤', '袋'], ['每桶牛奶', '公升', '桶'], ['每段水管', '公尺', '段']]); return { kind: 'fcalc', mode: 'times', n, a, k, S: a * k, sa, sn, c }; }
@@ -289,7 +289,7 @@
       const ok = fmtBig(n), options = shuffle([ok, fmtBig(n * 10), fmtBig(Math.floor(n / 10))]);
       return { kind: 'decimal', mode: 'chunk', n, s: String(n), word: ok, options, what, cuts: Math.ceil(String(n).length / 4) - 1 };
     }
-    if (lv === 1) { const v = ri(11, 999); return { kind: 'decimal', mode: 'thou', v, s: (v / 1000).toFixed(3), ans: v, ctx: pick(['金屬片厚', '導線粗', '藥水重']), unit: pick(['公分', '公尺']) }; }
+    if (lv === 1) { const v = ri(11, 999); return { kind: 'decimal', mode: 'thou', v, s: (v / 1000).toFixed(3), ans: v, ...pick([{ ctx: '金屬片厚', unit: '公分' }, { ctx: '導線粗', unit: '公分' }, { ctx: '藥水重', unit: '公斤' }]) }; }
     if (lv === 2) {
       let ds, i, place, p, t = 0;
       do { ds = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, 4); i = ri(0, 3); place = pick(Object.keys(PLACE_OFF)); p = i + PLACE_OFF[place]; } while ((p < 1 || p > 3) && t++ < 200);
@@ -372,7 +372,7 @@
     const ctx = pick([['度電', '戶', '度'], ['公升燃料', '台機器', '公升'], ['公尺電線', '段', '公尺']]);
     if (lv <= 0) { const n = pick([2, 4, 5, 8, 10, 20, 25]), a = pick(Array.from({ length: Math.min(n - 1, 9) }, (_, i) => i + 1).filter(x => decimalPlaces(dec(x / n)) <= 3)), ans = dec(a / n), pl = decimalPlaces(ans), u = 10 ** pl; return { kind: 'ddiv', mode: 'one', a, n, ans, pl, u, cnt: Math.round(ans * u), ctx }; }
     if (lv === 1) { const n = ri(2, 6), q = ri(11, 49), pl = pick([1, 1, 2]), t = q * n; const a = dec(t / 10 ** pl); return { kind: 'ddiv', mode: 'dec', n, q, pl, T: t, a, ans: dec(q / 10 ** pl), ctx, deal: dealPlaces(a, n) }; }
-    if (lv === 2) { const n = pick([4, 5, 8, 2]), q = ri(101, 399), T = q / 100 * n, a = dec(T); if (decimalPlaces(a) > 2 || a * 100 % 1 > 1e-9) { return { kind: 'ddiv', mode: 'long', n: 4, a: 5, cnt: 500, q: 125, ans: 1.25, ctx, deal: dealPlaces(5, 4) }; } return { kind: 'ddiv', mode: 'long', n, a, cnt: Math.round(a * 100), q, ans: dec(q / 100), ctx, deal: dealPlaces(a, n) }; }
+    if (lv === 2) { const n = pick([4, 5, 8, 2]), q = ri(101, 399), T = q / 100 * n, a = dec(T); if (decimalPlaces(a) > 2 || Math.abs(a * 100 - Math.round(a * 100)) > 1e-6) { return { kind: 'ddiv', mode: 'long', n: 4, a: 5, cnt: 500, q: 125, ans: 1.25, ctx, deal: dealPlaces(5, 4) }; } return { kind: 'ddiv', mode: 'long', n, a, cnt: Math.round(a * 100), q, ans: dec(q / 100), ctx, deal: dealPlaces(a, n) }; }
     if (lv === 3) { const n = pick([2, 4, 5, 8]), a = pick(coprimeTo(n)); return { kind: 'ddiv', mode: 'frac', a, n, ans: dec(a / n), f: pick(['餅', '布', '巧克力']) }; }
     const [a, n] = pick([[10, 3], [20, 3], [7, 3], [5, 6], [11, 6], [2, 3], [13, 6], [10, 7], [16, 7], [25, 3], [50, 6], [100, 7]]), to = pick([1, 2]), v = a / n, ans = +v.toFixed(to), d3 = Math.floor(v * 1000) / 1000, lo = Math.floor(v * 10 ** to) / 10 ** to, hi = dec(lo + 1 / 10 ** to);
     return { kind: 'ddiv', mode: 'round', a, n, to, ans, d3, lo: dec(lo), hi, ctx };

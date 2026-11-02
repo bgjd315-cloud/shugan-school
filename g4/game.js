@@ -71,7 +71,7 @@ function speak(text) {
   try {
     if (!window.speechSynthesis) return;
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, '').replace(/×/g, '乘以').replace(/＋/g, '加').replace(/－/g, '減').replace(/□/g, '多少'));
+    const u = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, '').replace(/×/g, '乘以').replace(/＋/g, '加').replace(/－/g, '減').replace(/÷/g, '除以').replace(/(\d+)\s*\/\s*(\d+)/g, '$2分之$1').replace(/□/g, '多少'));
     u.lang = 'zh-TW'; u.rate = .9;
     speechSynthesis.speak(u);
   } catch (e) {}
@@ -116,7 +116,7 @@ function annotate(root) {
     n.replaceWith(t.content);
   });
 }
-const plainText = el => { const c = el.cloneNode(true); c.querySelectorAll('.bp').forEach(b => b.remove()); return c.textContent; };
+const plainText = el => { const c = el.cloneNode(true); c.querySelectorAll('.bp').forEach(b => b.remove()); c.querySelectorAll('.frac').forEach(f => { const [a, n] = f.querySelectorAll('i'); if (a && n) f.textContent = `${n.textContent}分之${a.textContent}`; }); c.querySelectorAll('.mixed > b').forEach(b => { if (b.nextElementSibling) b.textContent += '又'; }); c.querySelectorAll('br').forEach(b => b.replaceWith(' ')); return c.textContent; }; // 分數念成「幾分之幾」，不要念成連在一起的數字
 
 /* ---------- 回合 ---------- */
 let R = null; // 目前這一回合
@@ -360,7 +360,7 @@ function pickOne(html, right, why, ok, detail) {
     b.onclick = () => {
       if (+b.dataset.i === right) return finish(R.tries === 0 ? 2 : R.tries === 1 ? 1 : 0, detail, nums(ok));
       R.tries++; b.classList.add('no'); b.disabled = true; sfx.retry();
-      if (R.tries >= 2) { document.querySelectorAll('[data-i]').forEach(x => x.disabled = true); return finish(0, { wrong: b.textContent.slice(0, 12), ans: right }, nums(ok)); }
+      if (R.tries >= 2) { document.querySelectorAll('[data-i]').forEach(x => x.disabled = true); return finish(0, { wrong: b.textContent.slice(0, 12), ans: document.querySelectorAll('[data-i]')[right].textContent.slice(0, 12) }, nums(ok)); }
       setMsg(nums(why), 'hint');
     };
   });
@@ -1333,7 +1333,7 @@ function viewEqv(q) {
   if (q.mode === 'candy') {
     const groups = k => Array.from({ length: q.n }, (_, i) => `<span class="pack ${i < k ? 'on' : ''}">${'🍬'.repeat(q.per)}</span>`).join('');
     frame(`${q.total} 顆糖平分成 ${q.n} 包，<br>${fracHtml(q.a, q.n)} 就是拿 ${q.a} 包，是幾顆？`, `<div class="packs" id="pk">${groups(0)}</div><div class="trail" id="ct">每包 ${q.per} 顆</div>${padHidden()}`);
-    return gate(q, '拿一包', q.a, k => { setEl('pk', groups(k)); setEl('ct', `拿了 ${k} 包，${k * q.per} 顆`); }, () => stepKeypad(['幾顆？'], [q.ans], `${q.a}×${q.per}。`, `對了！${q.ans} 顆，也就是 ${q.ans}/${q.total} 盒，和 ${q.a}/${q.n} 一樣多。`, 'candy'));
+    return gate(q, '拿一包', q.a, k => { setEl('pk', groups(k)); setEl('ct', `拿了 ${k} 包，${k * q.per} 顆`); }, () => stepKeypad(['幾顆？'], [q.ans], `${q.a}×${q.per}。`, `對了！${q.ans} 顆，也就是全部的 ${q.ans}/${q.total}，和 ${q.a}/${q.n} 一樣多。`, 'candy'));
   }
   if (q.mode === 'cmp') {
     frame(`兩片一樣大的巧克力。<br>上面吃 ${fracHtml(q.a, q.n)} 片，下面吃 ${fracHtml(q.c, q.m)} 片，誰吃得多？`, `<div id="s1">${strip(q.n, q.a, 'choc')}</div><div id="s2">${strip(q.m, q.c, 'choc alt')}</div><div class="trail" id="t">上面的格子比較大，不好比</div>`);
@@ -2560,7 +2560,7 @@ function recentMisses() {
     if (d.l) return `${n}：${d.l} 和 ${d.r}`;
     if (d.a) return `${n}：每排 ${d.a} 顆、${d.b} 排（${{ count: '數全部', more: '多一排', less: '少一排', split: '切開', pack: '分裝', share: '平分' }[d.m]}），答 ${d.wrong}，正解 ${d.ans}`;
     if (d.dist !== undefined) return `${n}：差全長 ${d.dist}%`;
-    if (d.ans !== undefined) return `${n}：答 ${d.wrong}，正解 ${d.ans}`;
+    if (d.ans !== undefined) return d.wrong !== undefined ? `${n}：答 ${d.wrong}，正解 ${d.ans}` : n;
     return n;
   });
 }

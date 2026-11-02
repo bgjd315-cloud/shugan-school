@@ -27,6 +27,7 @@
       const unit = span >= 1000 ? 100 : span >= 200 ? 10 : 5;
       q.unit = unit;
       q.v = Math.max(c.a + unit, Math.min(c.b - unit, Math.round(v / unit) * unit));
+      if (c.marks.includes(q.v)) q.v += q.v + unit < c.b ? unit : -unit; // 旗子不要剛好插在已標數字的刻度上
       const gap = span * 0.2, opts = new Set([q.v]);
       let guard = 0;
       while (opts.size < 3 && guard++ < 50) {
@@ -104,7 +105,7 @@
   function genFrog(lv, unit) {
     const L = Math.min(lv, unit < 2 ? 3 : maxLevel('frog', unit));
     if (L === 6) { // 二下：千以內
-      const s = ri(120, 780);
+      const s = ri(120, 690); // 終點最大 690＋310＝1000，不超過二下的千以內
       return frogQ(s, s + pick([100, 200, 99, 199, 201, 110, 190, 299, 310]));
     }
     if (L === 7) {
@@ -200,7 +201,7 @@
     }
     if (L === 2) {
       const a = pick([19, 29, 39, 18, 28, 48]), b = ri(12, 35), d = 10 - a % 10;
-      const t = pick(['same', 'more', 'swap']);
+      const t = pick(a === b ? ['same', 'more'] : ['same', 'more', 'swap']); // 兩數相同時換位置看不出差別
       if (t === 'same') return maybeSwap(cmpQ(`${a}＋${b}`, a + b, `${a + d}＋${b - d}`, a + b, `${b} 分 ${d} 給 ${a}，總數沒變，所以一樣重。`));
       if (t === 'more') return maybeSwap(cmpQ(`${a}＋${b}`, a + b, `${a + d}＋${b}`, a + d + b, `${a + d} 比 ${a} 多，另一個數一樣，所以 ${a + d}＋${b} 比較重。`));
       return maybeSwap(cmpQ(`${a}＋${b}`, a + b, `${b}＋${a}`, a + b, '兩個數一樣，只是換位置，合起來還是一樣多。'));

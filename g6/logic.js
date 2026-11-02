@@ -52,7 +52,7 @@
     if (lv === 2) { let d, a, b; do { d = ri(5, 12); b = ri(1, 3); a = b * ri(2, 4); } while (a >= d); return { ...base, mode: 'same', a, b, d, ans: a / b }; }
     if (lv === 3) { const [a, b, x, y] = pick(UNLIKE), D = lcm(b, y); return { ...base, mode: 'unlike', a, b, x, y, D, A: a * D / b, X: x * D / y, ans: (a * D / b) / (x * D / y) }; }
     if (lv === 4) { const [a, b, x, y] = pick(PARTIAL), D = lcm(b, y), A = a * D / b, X = x * D / y, [sa, sn] = simp(A, X); return { ...base, mode: 'partial', a, b, x, y, D, A, X, sa, sn }; }
-    if (lv === 5) { const [X, Y] = pick([[2, 3], [2, 5], [3, 5], [3, 4], [2, 7], [3, 7], [4, 5]]), a = ri(1, 5), b = pick([2, 3, 4, 5, 7]); const [fa, fb] = simp(a, b); const [sa, sn] = simp(fa * Y, fb * X); return { ...base, mode: 'flip', a: fa, b: fb, x: X, y: Y, sa, sn }; }
+    if (lv === 5) { const [X, Y] = pick([[2, 3], [2, 5], [3, 5], [3, 4], [2, 7], [3, 7], [4, 5]]); let fa, fb; do { [fa, fb] = simp(ri(1, 5), pick([2, 3, 4, 5, 7])); } while (fb === 1); const [sa, sn] = simp(fa * Y, fb * X); return { ...base, mode: 'flip', a: fa, b: fb, x: X, y: Y, sa, sn }; }
     const N = pick([12, 18, 24, 30, 36]), f = pick([.5, .25, 2, 3, 1 / 3]); const label = f === .5 ? [1, 2] : f === .25 ? [1, 4] : f === 2 ? [2, 1] : f === 3 ? [3, 1] : [1, 3];
     return { ...base, mode: 'bigger', N, f: label, R: N * label[1] / label[0], ans: label[0] < label[1] ? '變大' : '變小' };
   }
@@ -237,7 +237,7 @@
   const HEN = [{ ctx: '雞兔', A: '雞', B: '兔', ea: '🐔', eb: '🐰', la: 2, lb: 4, part: '腳', un: '隻' }, { ctx: '兩輪車和四輪車', A: '兩輪車', B: '四輪車', ea: '🛵', eb: '🚗', la: 2, lb: 4, part: '輪子', un: '輛' }, { ctx: '三腳架和四腳桌', A: '三腳架', B: '四腳桌', ea: '📷', eb: '🪑', la: 3, lb: 4, part: '腳', un: '個' }];
   const SD = [{ ctx: '兩箱補給', A: '甲箱', B: '乙箱', un: '公斤' }, { ctx: '兩人存錢', A: '哥哥', B: '弟弟', un: '元' }];
   const CHASE = [{ ctx: '飛船追趕', A: '貨船', B: '快船', un: '公里', t: '分鐘', e: '🚀' }, { ctx: '操場追趕', A: '弟弟', B: '哥哥', un: '公尺', t: '分鐘', e: '🏃' }];
-  const STREAM = [{ ctx: '河上的船', e: '🚤', flow: '水流', un: '公里', t: '小時' }, { ctx: '逆風的飛船', e: '🚀', flow: '太陽風', un: '公里', t: '小時' }];
+  const STREAM = [{ ctx: '河上的船', e: '🚤', flow: '水流', un: '公里', t: '小時' }, { ctx: '太陽風裡的飛船', e: '🚀', flow: '太陽風', un: '公里', t: '小時' }];
   const OUTFIT = [{ ctx: '搭衣服', a: '上衣', b: '裙子', ua: '件', ub: '件', ea: '👕', eb: '👗' }, { ctx: '配套餐', a: '主餐', b: '飲料', ua: '種', ub: '種', ea: '🍱', eb: '🥤' }, { ctx: '選航線', a: '去程', b: '回程', ua: '條', ub: '條', ea: '🚀', eb: '🛸' }];
   function genPuzzle(lv) {
     if (lv <= 0) { const h = pick(HEN), n = ri(6, 10), b = ri(2, n - 2); return { kind: 'puzzle', mode: 'hen', ctx: h.ctx, h, n, b, a: n - b, legs: (n - b) * h.la + b * h.lb, all: n * h.la, gap: h.lb - h.la, ans: b }; }

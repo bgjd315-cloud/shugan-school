@@ -538,7 +538,7 @@ body { line-height: 1.75; }
 
 /* 單位例子與練習 */
 .u-ex { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
-.u-ex span { font-size: 16px; }
+.u-ex > span { font-size: 16px; }
 .lesson-row { display: flex; gap: 6px; align-items: stretch; }
 .lesson-row .lesson { flex: 1; min-width: 0; }
 .drill-btn { flex: none; width: 74px; background: var(--leaf); color: #fff; border-radius: 16px; border-bottom: 4px solid #2c7a56; font-size: 18px; }
@@ -610,7 +610,7 @@ body { line-height: 1.75; }
 .quiz-entry { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,253,247,.97); border-radius: 16px; border-bottom: 4px solid #d8c9a6; padding: 8px 14px; margin-bottom: 10px; min-height: 58px; }
 .quiz-entry b { font-size: 21px; flex: 0 0 auto; white-space: nowrap; text-align: left; }
 .quiz-entry small { font-size: 15px; color: var(--soft); flex: 1; min-width: 0; text-align: right; }
-.quiz-entry span { font-family: system-ui, sans-serif; font-size: 22px; }
+.quiz-entry > span { font-family: system-ui, sans-serif; font-size: 22px; }
 .q-units { display: flex; flex-direction: column; gap: 10px; }
 .q-unit { background: var(--card); border: 2px solid var(--line); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 5px; }
 .q-unit > b { font-size: 20px; }
@@ -632,7 +632,7 @@ body { line-height: 1.75; }
 .wp-hints, .wp-guide { background: #fffaf0; border: 2px dashed var(--sun); border-radius: 14px; padding: 8px 10px; margin: 6px 0; text-align: left; }
 .wp-hints[hidden], .wp-guide[hidden], #wpa[hidden] { display: none !important; }
 .wp-gh { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 17px; }
-.wp-x { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 2px 12px; font-size: 16px; min-height: 34px; }
+.wp-x { background: var(--card); border: 2px solid var(--line); border-radius: 10px; padding: 2px 12px; font-size: 16px; min-height: 40px; }
 .wp-hints ol { margin: 6px 0 0; padding-left: 1.5em; font-size: 18px; line-height: 1.7; }
 .wp-sq { font-size: 20px; line-height: 1.6; margin: 6px 0; }
 .wp-sq small { display: block; color: var(--soft); font-size: 15px; }

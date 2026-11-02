@@ -68,7 +68,7 @@ function speak(text) {
   try {
     if (!window.speechSynthesis) return;
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, '').replace(/×/g, '乘以').replace(/＋/g, '加').replace(/－/g, '減').replace(/□/g, '多少'));
+    const u = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, '').replace(/×/g, '乘以').replace(/＋/g, '加').replace(/－/g, '減').replace(/÷/g, '除以').replace(/(\d+)\/(\d+)/g, '$2分之$1').replace(/(\d)：(\d)/g, '$1比$2').replace(/□/g, '多少'));
     u.lang = 'zh-TW'; u.rate = .9;
     speechSynthesis.speak(u);
   } catch (e) {}
@@ -113,7 +113,7 @@ function annotate(root) {
     n.replaceWith(t.content);
   });
 }
-const plainText = el => { const c = el.cloneNode(true); c.querySelectorAll('.bp').forEach(b => b.remove()); return c.textContent; };
+const plainText = el => { const c = el.cloneNode(true); c.querySelectorAll('.bp').forEach(b => b.remove()); c.querySelectorAll('.frac').forEach(f => { const [a, n] = [...f.querySelectorAll('i')].map(i => i.textContent); f.replaceWith(`${a}/${n}`); }); return c.textContent; };
 
 /* ---------- 回合 ---------- */
 let R = null; // 目前這一回合
@@ -558,10 +558,10 @@ function viewPrime(q) {
 function viewFdiv(q) {
   const { un, verb, box } = q.c;
   if (q.mode === 'whole') {
-    frame(`${q.n} ${un}${q.ctx}，每${box} ${fracHtml(1, q.d)} ${un}，<br>可以${verb}幾${box}？一 ${un}一 ${un}${verb}。`, `<div id="bb"></div><div class="trail" id="ct">一條是 1 ${un}</div>${padHidden()}`);
+    frame(`${q.n} ${un}${q.ctx}，每${box} ${fracHtml(1, q.d)} ${un}，<br>可以${verb}幾${box}？一${un}一${un}${verb}。`, `<div id="bb"></div><div class="trail" id="ct">一條是 1 ${un}</div>${padHidden()}`);
     const draw = (cut, done) => { let h = ''; for (let i = 0; i < q.n; i++) h += barRow(cut ? q.d : 1, cut ? q.d : 1, j => i < done ? groupCol(1)(j) : '#dfe5ee'); setEl('bb', h); };
     draw(false, 0);
-    return gate(q, [`每 1 ${un}切成 ${q.d} 份`, ...Array.from({ length: q.n }, (_, i) => `${verb}完第 ${i + 1} ${un}`)], q.n + 1, k => { draw(true, k - 1); setEl('ct', k === 1 ? `每一小份就是 1/${q.d} ${un}` : `${verb}了 ${(k - 1) * q.d} ${box}`); }, () => stepKeypad([`1 ${un}可以${verb}幾${box}？`, `${q.n} ${un}可以${verb}幾${box}？`], [q.d, q.ans], `看每一條切成幾份，再看有幾條。`, `對了！${q.n}÷1/${q.d}＝${q.ans} ${box}。1 裡面有 ${q.d} 個 1/${q.d}：每 ${un}${q.d} ${box}×${q.n} ${un}。`, 'whole'));
+    return gate(q, [`每 1 ${un}切成 ${q.d} 份`, ...Array.from({ length: q.n }, (_, i) => `${verb}完第 ${i + 1} ${un}`)], q.n + 1, k => { draw(true, k - 1); setEl('ct', k === 1 ? `每一小份就是 1/${q.d} ${un}` : `${verb}了 ${(k - 1) * q.d} ${box}`); }, () => stepKeypad([`1 ${un}可以${verb}幾${box}？`, `${q.n} ${un}可以${verb}幾${box}？`], [q.d, q.ans], `看每一條切成幾份，再看有幾條。`, `對了！${q.n}÷1/${q.d}＝${q.ans} ${box}。1 裡面有 ${q.d} 個 1/${q.d}：每${un} ${q.d} ${box}×${q.n} ${un}。`, 'whole'));
   }
   if (q.mode === 'intfrac') {
     frame(`${q.n} ${un}${q.ctx}，每${box} ${fracHtml(q.a, q.d)} ${un}，<br>可以${verb}幾${box}？`, `<div id="bb"></div><div class="trail" id="ct"></div>${padHidden()}`);
@@ -588,9 +588,9 @@ function viewFdiv(q) {
     return gate(q, [`切成 ${q.y} 份`, `每 ${q.x} 份圈一${box}`], 2, k => { if (k === 1) { setEl('bb', barRow(q.y, q.y, '#a9d0f0')); setEl('ct', `每份 1/${q.y} ${un}`); } else { setEl('bb', barRow(q.y, q.y, groupCol(q.x))); setEl('ct', `${q.y} 份，每 ${q.x} 份一${box}：1 ${un}是 ${q.y}/${q.x} ${box}`); } }, () => stepKeypad([`1 ${un}可以${verb} □/${q.x} ${box}，□ 是？`, `${q.a}/${q.b} ${un}是 1 ${un}的 ${q.a}/${q.b} 倍。約分後答案的分子是？`, '分母是？'], [q.y, q.sa, q.sn], `1 ${un}是 ${q.y}/${q.x} ${box}，再乘 ${q.a}/${q.b}。`, `對了！${q.a}/${q.b}÷${q.x}/${q.y}＝${q.a}/${q.b}×${q.y}/${q.x}＝${q.sa}/${q.sn}。除以一個分數，等於乘以它上下顛倒的數，就是它的倒數。`, 'flip'));
   }
   const FS = [[1, 4], [1, 3], [1, 2], [1, 1], [2, 1], [3, 1]];
-  frame(`${q.N} ${un}${q.ctx}，每${box} ${fracHtml(q.f[0], q.f[1])} ${un}。<br>拖黃鈕換別的數除，看商怎麼變。`, `<div id="bb"></div><div class="trail" id="ct"></div><div id="sl"></div>`);
+  frame(`${q.N} ${un}${q.ctx}，每${box} ${q.f[1] === 1 ? q.f[0] : fracHtml(q.f[0], q.f[1])} ${un}。<br>拖黃鈕換別的數除，看商怎麼變。`, `<div id="bb"></div><div class="trail" id="ct"></div><div id="sl"></div>`);
   const draw = i => { const [a, n] = FS[i], r = q.N * n / a, W = q.N * 4; setEl('bb', `<svg class="g5" viewBox="0 0 320 60"><rect x="6" y="4" width="${300 * q.N / W}" height="22" fill="#f7dc8c" stroke="#33405a"/><rect x="6" y="34" width="${300 * r / W}" height="22" fill="${a < n ? '#f4a9a0' : '#3fae5a'}" stroke="#33405a"/></svg>`); setEl('ct', `${q.N}÷${n === 1 ? a : `${a}/${n}`}＝${r}`); };
-  explore(q, { id: 'sl', lo: 0, hi: 5, need: 3, start: 3, show: FS.findIndex(f => f[0] === q.f[0] && f[1] === q.f[1]), draw, ask: () => pick6(['變大', '變小'], q.ans === '變大' ? 0 : 1, '看紅條和黃條：比 1 小的數切得細，切出來的個數多。', `對了！${q.N}÷${q.f[0]}/${q.f[1]}＝${q.R}。除以比 1 小的數，商會比被除數大；除不一定變小。`, 'bigger') });
+  explore(q, { id: 'sl', lo: 0, hi: 5, need: 3, start: 3, show: FS.findIndex(f => f[0] === q.f[0] && f[1] === q.f[1]), draw, ask: () => pick6(['變大', '變小'], q.ans === '變大' ? 0 : 1, '看紅條和黃條：比 1 小的數切得細，切出來的個數多。', `對了！${q.N}÷${q.f[1] === 1 ? q.f[0] : `${q.f[0]}/${q.f[1]}`}＝${q.R}。除以比 1 小的數，商會比被除數大；除不一定變小。`, 'bigger') });
 }
 
 /* ---------- 三：精密裁切台 ---------- */
@@ -942,7 +942,7 @@ function viewPrism(q) {
     return gate(q, '再疊一層', q.h - 1, k => { setEl('bb', isoSvg(q.a, q.b, q.h, q.a * q.b * (k + 1))); setEl('ct', `疊了 ${k + 1} 層`); }, () => stepKeypad(['每一層是幾立方公分？', `${q.h} 層是幾立方公分？`], [q.base2, q.ans], `底面積就是一層，每層的量×層數。`, `對了！${q.base2}×${q.h}＝${q.ans} 立方公分。體積＝底面積×高，就是每層的量×層數。`, 'stack'), { el: document.getElementById('bb'), map: x => x * (q.h - .6) });
   }
   if (q.mode === 'tri') {
-    frame(`${e} ${q.ctx}的底面是直角三角形，兩邊 ${q.w} 公分、${q.d} 公分，高 ${q.h} 公分。<br>有多大？先看底面。`, `<div id="bb">${triStack(0, q.h, 0)}</div><div class="trail" id="ct">補成長方形比較好看</div>${padHidden()}`);
+    frame(`${e} ${q.ctx}的底面是直角三角形，兩條直角邊 ${q.w} 公分、${q.d} 公分，高 ${q.h} 公分。<br>有多大？先看底面。`, `<div id="bb">${triStack(0, q.h, 0)}</div><div class="trail" id="ct">補成長方形比較好看</div>${padHidden()}`);
     return gate(q, ['沿對角線切一半', '往上疊到高'], 2, k => { setEl('bb', k === 1 ? triStack(0, q.h, 1) : triStack(q.h, q.h, 2)); setEl('ct', k === 1 ? `長方形 ${q.whole} 平方公分，切一半才是底面` : `每一層都是這個三角形，疊了 ${q.h} 層`); }, () => stepKeypad(['底面積是幾平方公分？', '體積是幾立方公分？'], [q.base2, q.ans], `三角形是長方形的一半；底面積×高。`, `對了！${q.base2}×${q.h}＝${q.ans} 立方公分。不管底面什麼形狀，體積都是底面積×高。`, 'tri'));
   }
   if (q.mode === 'cyl') {
@@ -1749,7 +1749,7 @@ Object.assign(CONCEPTS, {
       { t: 'say', say: '先回想弧長：扇形彎彎那條邊的長。', pic: () => sectorSvg(1) },
       { t: 'guess', say: '半徑 6 公分、圓心角 90 度的扇形，要沿著它的邊貼一圈緞帶。要貼哪些邊？', o: ['彎邊和兩條半徑', '只有彎邊', '兩條半徑'] },
       { t: 'act', id: 'd', who: 'demo', say: '沿著扇形的邊走一圈：點一下走一段。', n: 3, pic: k => `<span class="${k < 3 ? 'hot6' : ''} whl6">${sectorSvg(k)}</span>`, cap: k => ['', '彎邊：6×2×3.14×90/360＝9.42 公分', '一條半徑：6 公分', '另一條半徑：6 公分'][k], done: '扇形的周長＝9.42＋6＋6＝21.42 公分。' },
-      { t: 'act', id: 's', say: '半徑 3 公分、圓心角 120 度的扇形，弧長是 6.28 公分。選出周長的算式。', tip: '數一數：扇形的邊有幾條？', n: 1, pic: k => sectorSvg(3) + (k ? '' : chips6(['6.28＋3＋3', '6.28', '6.28＋3'], (_, i) => i === 0, (_, i) => i === 1 ? '只算了彎邊，少了兩條半徑。' : '扇形有兩條半徑，少算了一條。')), cap: k => k ? '6.28＋3＋3＝12.28 公分' : '', done: '6.28＋3＋3＝12.28 公分。' },
+      { t: 'act', id: 's', say: '半徑 3 公分、圓心角 120 度的扇形，弧長是 6.28 公分。選出周長的算式。', tip: '數一數：扇形的邊有幾條？', n: 1, pic: k => sectorSvg6(120, { arc: true, radii: true, h: 150 }) + (k ? '' : chips6(['6.28＋3＋3', '6.28', '6.28＋3'], (_, i) => i === 0, (_, i) => i === 1 ? '只算了彎邊，少了兩條半徑。' : '扇形有兩條半徑，少算了一條。')), cap: k => k ? '6.28＋3＋3＝12.28 公分' : '', done: '6.28＋3＋3＝12.28 公分。' },
       { t: 'say', id: 'map', say: '彎邊加兩條半徑。', pic: () => sym6([['9.42', '弧長', K1], '＋', [6, '半徑', K2], '＋', [6, '半徑', K2], '＝', ['21.42', '周長', K3]]) },
       { t: 'name', say: '整理一下。', name: '<b>扇形的周長</b>＝弧長＋半徑×2。', pic: () => sectorSvg(3) },
       { t: 'check', o: ['扇形的周長＝弧長＋2 條半徑', '扇形的周長＝弧長'], a: 0, why: [, '弧長只是彎邊；兩條半徑也圍在外面。'] },

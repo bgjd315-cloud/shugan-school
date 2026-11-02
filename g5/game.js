@@ -119,7 +119,7 @@ function annotate(root) {
     n.replaceWith(t.content);
   });
 }
-const plainText = el => { const c = el.cloneNode(true); c.querySelectorAll('.bp').forEach(b => b.remove()); return c.textContent; };
+const plainText = el => { const c = el.cloneNode(true); c.querySelectorAll('.bp').forEach(b => b.remove()); c.querySelectorAll('.mixed > b').forEach(b => { b.textContent += '又'; }); c.querySelectorAll('.frac').forEach(f => { const p = f.querySelectorAll(':scope > i'); if (p.length === 2) f.textContent = `${p[1].textContent}分之${p[0].textContent}`; }); c.querySelectorAll('.fr5').forEach(f => { const n = [...f.childNodes], k = n.findIndex(x => x.nodeName === 'I'), s = x => x.map(y => y.textContent).join('').trim(); if (k > 0) f.textContent = `${s(n.slice(k + 1))}分之${s(n.slice(0, k))}`; }); return c.textContent; }; // 分數唸成「幾分之幾」，不要把分子分母連成一個數
 
 /* ---------- 回合 ---------- */
 let R = null; // 目前這一回合
@@ -556,7 +556,7 @@ function viewLine(q) {
     frame(`${q.e} ${q.what}。<br>哪一段${q.verb}最多？<br>拖過去看每一段。`, `<div id="ch"></div><div class="trail" id="ct">線越陡，變得越多</div>`);
     setEl('ch', lineChart(q));
     const ask = () => pickOne(opts, q.best, '看哪一段往上爬得最陡，算一算差幾格。', `對了！${opts[q.best]}多了 ${q.ans} ${q.unit}，線也最陡。`, 'trend');
-    return gate(q, ['看第 1 段', '看第 2 段', '看第 3 段', '看第 4 段'], 4, k => { const i = k - 1; setEl('ch', lineChart(q, { hiSeg: i })); const d = (q.g[i + 1] - q.g[i]) * q.step; setEl('ct', `${opts[i]}：${d > 0 ? `${q.verb} ${d}` : d < 0 ? `少了 ${-d}` : '沒變'} ${q.unit}`); }, ask, { el: document.getElementById('ch'), map: x => x * 4.4 });
+    return gate(q, ['看第 1 段', '看第 2 段', '看第 3 段', '看第 4 段'], 4, k => { const i = k - 1; setEl('ch', lineChart(q, { hiSeg: i })); const d = (q.g[i + 1] - q.g[i]) * q.step; setEl('ct', `${opts[i]}：${d > 0 ? `${q.verb} ${d} ${q.unit}` : d < 0 ? `少了 ${-d} ${q.unit}` : '沒變'}`); }, ask, { el: document.getElementById('ch'), map: x => x * 4.4 });
   }
   if (q.mode === 'which') {
     const c = { lo: 0, step: 1, top: 10, xs: ['甲', '乙', '丙', '丁', '戊'], g: q.g };
@@ -565,7 +565,7 @@ function viewLine(q) {
     return gate(q, ['畫成折線圖', '畫成長條圖再看一次'], 2, k => setEl('ch', lineChart(c, { bars: k === 2 })), () => pickOne(['折線圖', '長條圖'], q.a === '折線圖' ? 0 : 1, '先問：這些資料是跟著時間在變，還是一樣一樣分開的東西？', `對了！${q.why}`, 'which'));
   }
   frame(`${q.e} ${q.what}。<br>刻度從 0 開始，線幾乎是平的，看不出來！<br>往右拖，把用不到的下半截切掉。`, `<div id="ch"></div>${padHidden()}`);
-  const ask = () => stepKeypad(['現在一格是多少公分？', '最高的點是多少公分？'], [q.step, q.ans], `看刻度上相鄰的兩個數。紅色鋸齒是省略符號，表示下面省略了。`, `對了！最高是 ${q.ans} 公分。鋸齒表示 0 到 ${q.lo} 省略了，變化才看得清楚。`, 'broken');
+  const ask = () => stepKeypad(['現在一格是多少公分？', '最高的點是多少公分？'], [q.step, q.ans], `看刻度上相鄰的兩個數，它們中間有 2 格。紅色鋸齒是省略符號，表示下面省略了。`, `對了！最高是 ${q.ans} 公分。鋸齒表示 0 到 ${q.lo} 省略了，變化才看得清楚。`, 'broken');
   slideTo(q, 'ch', '加上省略符號', t => setEl('ch', lineChart(q, t >= 1 ? {} : { flat: true })), ask);
 }
 
@@ -621,7 +621,7 @@ function viewFactor(q) {
   if (q.mode === 'comf') {
     const [A, B, how, un] = q.ctx;
     frame(`${q.a} ${un}${A}和 ${q.b} ${un}${B}，要${how}。<br>上下兩列都有的數字才行，把它們點出來。`, `<div class="trail">${q.a} 可以分成：</div><div class="chips" id="c1">${q.fa.map(x => `<button class="chip" data-v="${x}">${x}</button>`).join('')}</div><div class="trail">${q.b} 可以分成：</div><div class="chips" id="c2">${q.fb.map(x => `<span class="chip dim2" data-w="${x}">${x}</span>`).join('')}</div>${padHidden()}`);
-    const ask = () => stepKeypad(['最大可以分成幾份？'], [q.ans], '兩列都有的數字裡，找最大的。', `對了！${q.com.join('、')} 都是公因數，最大的是 ${q.ans}。`, 'comf');
+    const ask = () => stepKeypad([q.ctx[4] || '最大可以分成幾份？'], [q.ans], '兩列都有的數字裡，找最大的。', `對了！${q.com.join('、')} 都是公因數，最大的是 ${q.ans}。`, 'comf');
     const mark = v => { document.querySelectorAll(`[data-v="${v}"],[data-w="${v}"]`).forEach(x => x.classList.add('on')); };
     if (isFast(q)) { q.com.forEach(mark); return afterAct(ask); }
     let got = 0;
@@ -737,7 +737,7 @@ function viewPoly(q) {
     draw(0);
     return gate(q, '圍一邊', q.n, draw, () => stepKeypad(['全部是幾公尺？'], [q.ans], `每邊一樣長，有 ${q.n} 邊。`, `對了！${q.a}×${q.n}＝${q.ans} 公尺。每邊一樣長，每個角也一樣大，才叫正多邊形。`, 'regular'));
   }
-  const SH = { 菱形: [[160, 20], [240, 100], [160, 180], [80, 100]], 長方形: [[60, 50], [260, 50], [260, 150], [60, 150]], 正方形: [[90, 30], [230, 30], [230, 170], [90, 170]], 正六邊形: Array.from({ length: 6 }, (_, i) => { const t = (i * 60 - 90) * Math.PI / 180; return [160 + 80 * Math.cos(t), 100 + 80 * Math.sin(t)]; }), 正三角形: Array.from({ length: 3 }, (_, i) => { const t = (i * 120 - 90) * Math.PI / 180; return [160 + 90 * Math.cos(t), 115 + 90 * Math.sin(t)]; }) }[q.name];
+  const SH = { 菱形: [[160, 10], [212, 100], [160, 190], [108, 100]], 長方形: [[60, 50], [260, 50], [260, 150], [60, 150]], 正方形: [[90, 30], [230, 30], [230, 170], [90, 170]], 正六邊形: Array.from({ length: 6 }, (_, i) => { const t = (i * 60 - 90) * Math.PI / 180; return [160 + 80 * Math.cos(t), 100 + 80 * Math.sin(t)]; }), 正三角形: Array.from({ length: 3 }, (_, i) => { const t = (i * 120 - 90) * Math.PI / 180; return [160 + 90 * Math.cos(t), 115 + 90 * Math.sin(t)]; }) }[q.name];
   frame(`這塊地磚叫${q.name}。<br>它算「正多邊形」嗎？先量邊，再量角。`, `<div id="fn"></div><div class="trail" id="ct"></div>`);
   const pic = (sides, angs) => { const n = SH.length; let s = `<svg class="g5" viewBox="0 0 320 200"><polygon points="${polyStr(SH)}" fill="#fff0cf" stroke="#7a5b2e" stroke-width="3"/>`; const c = [SH.reduce((a, p) => a + p[0], 0) / n, SH.reduce((a, p) => a + p[1], 0) / n]; SH.forEach((p, i) => { const r = SH[(i + 1) % n], l = SH[(i + n - 1) % n], m = [(p[0] + r[0]) / 2, (p[1] + r[1]) / 2]; if (sides) s += `<text x="${m[0] + (m[0] - c[0]) * .12}" y="${m[1] + (m[1] - c[1]) * .12 + 5}" text-anchor="middle" class="ax">${Math.round(Math.hypot(p[0] - r[0], p[1] - r[1]) / 10)}</text>`; if (angs) s += `<text x="${p[0] + (c[0] - p[0]) * .3}" y="${p[1] + (c[1] - p[1]) * .3 + 5}" text-anchor="middle" class="tv3">${Math.round(ptAng(l, p, r))}°</text>`; }); return s + '</svg>'; };
   setEl('fn', pic(false, false));
@@ -967,8 +967,8 @@ function viewMix(q) {
     return;
   }
   const add = q.sub === 'add';
-  frame(add ? `天平平衡：${q.ctx}（□ 公克）加 ${q.a} 公克的砝碼，和 ${q.c} 公克一樣重。<br>□ 是多少？` : `天平平衡：${q.n} 個一樣的${q.ctx}（每個 □ 公克），和 ${q.c} 公克一樣重。<br>□ 是多少？`, `<div id="sc"></div><div class="trail" id="ct"></div><div class="odo two"><button class="turn" id="lf">${add ? `只拿走左邊 ${q.a}` : '只分左邊'}</button><button class="turn" id="bt">${add ? `兩邊都拿走 ${q.a}` : `兩邊都分成 ${q.n} 份`}</button></div>${padHidden()}`);
-  const L0 = add ? `□＋${q.a}` : `${'□'.repeat(q.n)}`, end = () => { setEl('sc', scaleSvg('□', add ? q.c - q.a : `${q.c}÷${q.n}`, 0)); setEl('ct', '還是平衡的！'); document.getElementById('lf').parentNode.hidden = true; afterAct(() => stepKeypad(['□ 是多少公克？'], [q.ans], add ? `右邊也拿走 ${q.a}，${q.c}－${q.a}。` : `右邊也分成 ${q.n} 份，${q.c}÷${q.n}。`, add ? `對了！□＋${q.a}＝${q.c}，兩邊都減 ${q.a}，□＝${q.ans}。` : `對了！□×${q.n}＝${q.c}，兩邊都分 ${q.n} 份，□＝${q.ans}。`, 'scale')); };
+  frame(add ? `天平平衡：${q.ctx}（□ 公斤）加 ${q.a} 公斤的砝碼，和 ${q.c} 公斤一樣重。<br>□ 是多少？` : `天平平衡：${q.n} 個一樣的${q.ctx}（每個 □ 公斤），和 ${q.c} 公斤一樣重。<br>□ 是多少？`, `<div id="sc"></div><div class="trail" id="ct"></div><div class="odo two"><button class="turn" id="lf">${add ? `只拿走左邊 ${q.a}` : '只分左邊'}</button><button class="turn" id="bt">${add ? `兩邊都拿走 ${q.a}` : `兩邊都分成 ${q.n} 份`}</button></div>${padHidden()}`);
+  const L0 = add ? `□＋${q.a}` : `${'□'.repeat(q.n)}`, end = () => { setEl('sc', scaleSvg('□', add ? q.c - q.a : `${q.c}÷${q.n}`, 0)); setEl('ct', '還是平衡的！'); document.getElementById('lf').parentNode.hidden = true; afterAct(() => stepKeypad(['□ 是多少公斤？'], [q.ans], add ? `右邊也拿走 ${q.a}，${q.c}－${q.a}。` : `右邊也分成 ${q.n} 份，${q.c}÷${q.n}。`, add ? `對了！□＋${q.a}＝${q.c}，兩邊都減 ${q.a}，□＝${q.ans}。` : `對了！□×${q.n}＝${q.c}，兩邊都分 ${q.n} 份，□＝${q.ans}。`, 'scale')); };
   setEl('sc', scaleSvg(L0, q.c, 0));
   if (isFast(q)) return end();
   setMsg('左右一樣重才平衡。試試看兩個按鈕。');
@@ -1048,7 +1048,7 @@ function viewTtime(q) {
   if (q.mode === 'cut') {
     const [T, big, small, nm] = q.u, frTxt = fracHtml(q.a, q.n);
     frame(`${q.ctx}要 ${frTxt} ${nm}，是幾${small}？<br>把鐘面切成 ${q.n} 等分。`, `<div class="vs" id="ck">${clockCut(1, 0, 'm')}</div><div class="trail" id="ct"></div>${padHidden()}`);
-    const asks = q.a === 1 ? [`${frTxt.replace(/<[^>]+>/g, ' ').trim().split(' ').join('/')} ${nm}是幾${small}？`.replace(/\s+/, '')] : [`1 份是幾${small}？`, `${q.a} 份是幾${small}？`], steps = q.a === 1 ? [q.each] : [q.each, q.ans];
+    const asks = q.a === 1 ? [`${frTxt.replace(/<[^>]+>/g, ' ').trim().split(/\s+/).join('/')} ${nm}是幾${small}？`.replace(/\s+/, '')] : [`1 份是幾${small}？`, `${q.a} 份是幾${small}？`], steps = q.a === 1 ? [q.each] : [q.each, q.ans];
     return gate(q, ['切開', '塗上要的份數'], 2, k => { setEl('ck', clockCut(q.n, k === 2 ? q.a : 0, 'm')); setEl('ct', k === 1 ? `切成 ${q.n} 份，一整圈 ${T} ${small}` : `塗了 ${q.a} 份`); }, () => stepKeypad(asks, steps, `一整圈 ${T} ${small}，平分成 ${q.n} 份。`, `對了！1 ${big}＝${T} ${small}，${T}÷${q.n}＝${q.each}。${q.a} 份是 ${q.ans} ${small}。`, 'cut'), { el: document.getElementById('ck'), map: x => x * 2.4 });
   }
   if (q.mode === 'dec') {
@@ -1329,7 +1329,7 @@ function viewVmul(q) {
   frame(`${what} ${q.a} ${un}，${u2 === '包' ? `${q.b} 包` : `${q.b} ${u2}`}是多少${un}？<br>寫成直式：靠右對齊，一格一格放。`, `<div id="vg"></div><div class="trail" id="ct">先不管小數點，當整數乘</div>${padHidden()}`);
   const fast = isFast(q);
   const prod = String(q.raw).padStart(q.pl + 1, '0');
-  const rowsAt = (st, tap, pt) => { const out = [{ c: rightAlign(q.A, W), pt: ptA }, { c: rightAlign(q.B, W), pt: ptB }]; out[1].c[0] = out[1].c[0] || '×';
+  const rowsAt = (st, tap, pt) => { const out = [{ c: rightAlign(q.A, W), pt: ptA }, { c: rightAlign(q.pb && q.B < 10 ? '0' + q.B : q.B, W), pt: ptB }]; out[1].c[0] = out[1].c[0] || '×';
     if (q.sub === 'one') { const c = new Array(W).fill(''); if (st >= 1) c[W - 1] = q.steps[0]; if (st >= 2) rightAlign(q.raw, W).forEach((x, i) => { if (x !== '') c[i] = x; }); if (tap) rightAlign(prod, W).forEach((x, i) => { if (x !== '') c[i] = x; }); out.push({ c, ln: true, tap, pt }); }
     else { out.push({ c: st >= 1 ? rightAlign(q.p1, W) : [], ln: true }); out.push({ c: st >= 2 ? rightAlign(q.p2, W, 1) : [] }); const c = tap ? rightAlign(prod, W) : st >= 3 ? rightAlign(q.raw, W) : []; out.push({ c, ln: true, tap, pt }); }
     return out; };
