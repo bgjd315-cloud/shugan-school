@@ -404,7 +404,7 @@ body { line-height: 1.75; }
 .q-lv button small { font-size: 13px; color: var(--soft); }
 .q-bar { height: 8px; background: #eef0f4; border-radius: 99px; overflow: hidden; margin-bottom: 6px; }
 .q-bar i { display: block; height: 100%; background: var(--leaf); }
-.q-pic { white-space: pre-line; text-align: center; font-size: 26px; line-height: 1.35; font-family: system-ui, sans-serif; margin: 8px 0; word-break: break-all; }
+.q-pic { white-space: pre-line; text-align: left; width: fit-content; max-width: 100%; margin-left: auto !important; margin-right: auto !important; font-size: 26px; line-height: 1.35; font-family: system-ui, sans-serif; margin: 8px 0; word-break: break-all; }
 .choices.col .choice { width: 100%; }
 
 /* 新概念小故事 */

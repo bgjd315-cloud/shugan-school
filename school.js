@@ -22,12 +22,12 @@ const url = x => `g${x.g}/`;
 function quizDone(s) { return s && s.quiz ? Object.keys(s.quiz).length : 0; }
 document.getElementById('pins').innerHTML = G.map(x => `<a class="pin" href="${url(x)}" data-g="${x.g}" style="--mx:${x.m[0]}%;--my:${x.m[1]}%;--wx:${x.w[0]}%;--wy:${x.w[1]}%" aria-label="${x.zh} ${x.name}"><img src="assets/badge${x.g}.webp" alt=""><b>${x.g}</b></a>`).join('');
 document.getElementById('cards').innerHTML = G.map(x => {
-  const s = load(x.key), d = quizDone(s), all = x.books * 3;
+  const s = load(x.key), d = quizDone(s), all = x.books * 4;
   return `<a class="card" href="${url(x)}" data-g="${x.g}"><div class="pic"><img loading="lazy" src="assets/world${x.g}.webp" alt=""><img class="bdg" src="assets/badge${x.g}.webp" alt=""></div>
   <div class="c-t"><small>${label(x, x.zh)}</small><h3>${label(x, x.name)}</h3><p>${label(x, x.tip)}</p>
   <div class="bar"><i style="width:${Math.min(100, d / all * 100)}%"></i></div><span class="st">${label(x, s ? `完成測驗 ${d} / ${all}` : '還沒開始')}</span></div></a>`;
 }).join('');
-document.getElementById('rows').innerHTML = G.map(x => `<tr><td>${x.zh}</td><td><a href="${url(x)}">${x.name}</a></td><td>${x.units}</td><td>${x.books * 60} 題</td><td>${quizDone(load(x.key))} / ${x.books * 3}</td></tr>`).join('');
+document.getElementById('rows').innerHTML = G.map(x => `<tr><td>${x.zh}</td><td><a href="${url(x)}">${x.name}</a></td><td>${x.units}</td><td>${x.books * 70} 題</td><td>${quizDone(load(x.key))} / ${x.books * 4}</td></tr>`).join('');
 document.querySelectorAll('[data-g]').forEach(a => a.addEventListener('click', () => last(a.dataset.g)));
 const L = G.find(x => String(x.g) === last());
 if (L) { const c = document.getElementById('cont'); c.hidden = false; c.href = url(L); c.innerHTML = zy('繼續玩 ' + L.name); }

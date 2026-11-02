@@ -850,6 +850,41 @@ button.hc4 { padding: 0; border: 0; border-radius: 0; min-height: 28px; }
 .term { white-space: nowrap; }
 .numgrid span.ng { display: flex; align-items: center; justify-content: center; }
 
+/* 鷹架版小故事 */
+.k5 { display: inline-block; min-width: 1.4em; padding: 0 4px; border: 2.5px solid; border-radius: 8px; background: #fff; font: 700 1.1em system-ui, sans-serif; text-align: center; }
+.eq5 { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 26px; margin: 6px 0; }
+.fr5 { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; } .fr5 i { display: block; width: 100%; height: 2px; background: #33405a; }
+.em5 { font-family: system-ui, sans-serif; font-size: 24px; letter-spacing: 1px; word-break: break-all; }
+.rows6 { display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 40px; }
+.row6 { background: #fff8e6; border: 1.5px dashed #c9a56a; border-radius: 6px; padding: 0 6px; }
+.pile6 { text-align: center; margin-top: 6px; min-height: 36px; }
+.big6 { font-size: 36px; }
+.tap5w, .tap5 { cursor: pointer; }
+.tap5w { display: inline-block; border-radius: 10px; outline: 3px dashed #ffd65a; outline-offset: 2px; }
+.glow5 { animation: glow5 .8s ease-in-out infinite alternate; }
+@keyframes glow5 { to { filter: drop-shadow(0 0 8px #ffb300); outline-color: #ff8a00; } }
+.tag5 { display: inline-block; background: #33405a; color: #fff; border-radius: 12px; padding: 0 8px; font-size: 14px; vertical-align: middle; }
+.prev5 { transform: scale(.62); transform-origin: top center; opacity: .75; margin-bottom: -30px; pointer-events: none; }
+.arr5 { text-align: center; color: var(--soft); font-size: 14px; }
+.bins5 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.bin5 { border: 2px dashed var(--line); border-radius: 10px; min-height: 90px; padding: 4px; text-align: center; cursor: pointer; }
+.bin5 b { display: block; font-size: 15px; } .binin { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
+.cards5 { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-top: 8px; }
+.card5 { border: 2px solid var(--sky); background: #fff; border-radius: 10px; padding: 6px 10px; font-size: 16px; font-family: inherit; color: var(--ink); }
+.card5.sel { background: #ffd65a; } .card5:disabled { opacity: 1; border-color: var(--good); font-size: 13px; padding: 3px 6px; }
+.pie.big6 { width: 150px; height: 150px; }
+.cp .pie { width: 130px; height: 130px; }
+.prow5 { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 4px 0; } .prow5 small { width: 44px; font-size: 13px; color: var(--soft); }
+.binin .card5 { pointer-events: none; }
+.lines5 div { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; margin: 2px 0; }
+.lines5 i { font-style: normal; width: 22px; height: 22px; line-height: 22px; text-align: center; font-size: 12px; border-radius: 5px; background: #f4f6fa; }
+.lines5 i.r { background: #f4a9a0; } .lines5 i.g { background: #b7e0a8; }
+.tray5 { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+.trow { display: flex; gap: 6px; align-items: center; } .trow small { font-size: 13px; } .trow.g2 { justify-content: center; margin-top: 6px; border-top: 2px dashed var(--line); padding-top: 4px; }
+.sols5 { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+.sol5 { background: #fff; border: 2px solid var(--line); border-radius: 10px; padding: 2px; width: 80px; font-family: inherit; }
+.sol5.on { background: #ffd65a; } .sol5 small { display: block; font-size: 13px; } .solmini { max-height: 64px !important; }
+
 /* 單元數感測驗 */
 .quiz-entry { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,253,247,.97); border-radius: 16px; border-bottom: 4px solid #d8c9a6; padding: 8px 14px; margin-bottom: 10px; min-height: 58px; }
 .quiz-entry b { font-size: 21px; flex: 1; text-align: left; }
@@ -864,5 +899,5 @@ button.hc4 { padding: 0; border: 0; border-radius: 0; min-height: 28px; }
 .q-lv button small { font-size: 13px; color: var(--soft); }
 .q-bar { height: 8px; background: #eef0f4; border-radius: 99px; overflow: hidden; margin-bottom: 6px; }
 .q-bar i { display: block; height: 100%; background: var(--leaf); }
-.q-pic { white-space: pre-line; text-align: center; font-size: 26px; line-height: 1.35; font-family: system-ui, sans-serif; margin: 8px 0; word-break: break-all; }
+.q-pic { white-space: pre-line; text-align: left; width: fit-content; max-width: 100%; margin-left: auto !important; margin-right: auto !important; font-size: 26px; line-height: 1.35; font-family: system-ui, sans-serif; margin: 8px 0; word-break: break-all; }
 .choices.col .choice { width: 100%; }
