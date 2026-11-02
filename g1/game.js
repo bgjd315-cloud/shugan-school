@@ -10,7 +10,7 @@ function nums(s) { return String(s).replace(/\d+/g, m => N(m)); }
 const T = ms => ms * (window.__TS === undefined ? 1 : window.__TS);
 const wait = ms => new Promise(r => setTimeout(r, T(ms)));
 function load() { try { return JSON.parse(localStorage.getItem(SAVE_KEY)); } catch (e) { return null; } }
-const S = Object.assign({ voice: true, prog: {}, lv: {}, stars: {}, fast: {}, seen: {}, quiz: {}, opened: false, halfSeen: false, endSeen: false }, load() || {});
+const S = Object.assign({ voice: true, prog: {}, lv: {}, stars: {}, fast: {}, seen: {}, did: {}, quiz: {}, opened: false, halfSeen: false, endSeen: false }, load() || {});
 function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
 
 /* ---------- 音效與語音：語音不能用時一樣能玩 ---------- */
@@ -24,6 +24,8 @@ function beep(list) {
 const sfx = { good: () => beep([[523, 0], [659, .1], [784, .2]]), ok: () => beep([[523, 0], [659, .1]]), hop: () => beep([[440, 0]]), retry: () => beep([[330, 0]]) };
 const speakable = t => String(t).replace(/<[^>]+>/g, '').replace(/＋/g, '加').replace(/－/g, '減').replace(/＝/g, '等於').replace(/？(?=[^。！？]*$)/, '？').replace(/□/g, '多少');
 let lastSaid = '';
+// 估計唸完要多久（毫秒）：自動換下一步之前，讓回饋先唸完
+const speakMs = t => { if (!S.voice || !('speechSynthesis' in window)) return 0; const n = speakable(t).replace(/[^一-鿿\d]/g, '').length; return n * 300; };
 function say(text, keepLast) {
   if (!keepLast) lastSaid = text;
   if (!S.voice) return;
@@ -101,12 +103,13 @@ function bindKeypad(onOk) {
 let CTX = null; // { dots:[…], sem, skip }
 function topBar() {
   const c = CTX || {};
-  return `<div class="top"><button class="icon-btn" id="home" aria-label="回森林">⌂</button>${c.dots ? `<div class="dots">${c.dots.map(g => `<i class="${g === null ? '' : 'g' + g}"></i>`).join('')}</div>` : '<div class="dots"></div>'}${c.sem ? `<span class="sem">${c.sem}</span>` : ''}${c.skip ? '<button class="skip" id="skip">跳過</button>' : ''}<button class="icon-btn vc" id="vc" aria-label="${S.voice ? '關掉聲音' : '打開聲音'}">${S.voice ? '🔊' : '🔇'}</button></div>`;
+  return `<div class="top"><button class="icon-btn" id="home" aria-label="回森林">⌂</button>${c.dots ? `<div class="dots">${c.dots.map(g => `<i class="${g === null ? '' : 'g' + g}"></i>`).join('')}</div>` : '<div class="dots"></div>'}${c.sem ? `<span class="sem">${c.sem}</span>` : ''}${c.back ? '<button class="icon-btn" id="back1" aria-label="上一步">◀</button>' : ''}${c.skip ? '<button class="skip" id="skip">跳過</button>' : ''}<button class="icon-btn vc" id="vc" aria-label="${S.voice ? '關掉聲音' : '打開聲音'}">${S.voice ? '🔊' : '🔇'}</button></div>`;
 }
 function bindTop() {
   const h = $('home'); if (h) h.onclick = () => { R = null; CTX = null; go(''); };
   $('vc').onclick = toggleVoice;
   const sk = $('skip'); if (sk && CTX && CTX.skip) sk.onclick = CTX.skip;
+  const bk = $('back1'); if (bk && CTX && CTX.back) bk.onclick = CTX.back;
 }
 function stage(st) {
   window.scrollTo(0, 0);
@@ -120,12 +123,13 @@ function setM(text, cls, noSay) { const e = $('mg'); if (!e) return; e.className
 
 /* 依序跑一題的每個步驟 */
 let CUR = null, R = null;
-function runSteps(q, steps, onDone) {
-  let i = 0, tries = 0, gave = false;
-  const ctx = {};
+function runSteps(q, steps, onDone, ctx0) {
+  let i = 0, tries = 0, gave = false, stepGave = false;
+  const ctx = ctx0 || {};
   const next = () => {
     if (i >= steps.length) return onDone(gave ? 0 : tries ? 1 : 2);
     const st = steps[i++], last = i >= steps.length;
+    stepGave = false;
     CUR = { q, st, i, ctx, last, steps };
     if (st.dynSplit && ctx.split) Object.assign(st, Logic.splitPick(st.n, ctx.split[0]));
     stage(st);
@@ -133,21 +137,22 @@ function runSteps(q, steps, onDone) {
     WID[st.t](st, {
       ctx,
       miss() { tries++; sfx.retry(); },
-      giveUp() { gave = true; },
+      giveUp() { gave = true; stepGave = true; },
       tries: () => tries,
       done(text) {
         if (CUR !== myCur) return;
         sfx.good();
-        setM(text || pickPraise(), 'good');
+        const t = (!stepGave && st.ok) || text || pickPraise();
+        setM(t, stepGave ? 'hint' : 'good');
         const go2 = () => { if (CUR === myCur) next(); };
-        if (last) { $('actions').innerHTML = '<button class="btn big" id="nx" aria-label="下一題">➜</button>'; $('nx').onclick = go2; reveal('#actions'); }
-        else setTimeout(go2, T(1100));
+        if (last) { $('actions').innerHTML = '<button class="btn big" id="nx" aria-label="下一步">➜</button>'; $('nx').onclick = go2; reveal('#actions'); }
+        else setTimeout(go2, T(Math.max(1100, Math.min(4500, speakMs(t) + 300))));
       },
     });
   };
   next();
 }
-const pickPraise = () => ['對了！', '你好棒！', '答對了！', '好厲害！'][Math.floor(Math.random() * 4)];
+const pickPraise = () => '對了。';
 
 /* ---------- 回合 ---------- */
 function startRound(k) {
@@ -210,26 +215,30 @@ function comicList(bg, lines, who, done, opt = {}) {
   show();
 }
 
-/* 新概念小故事：小麻煩 → 動手試 → 說出新詞 → 換東西再試 */
+/* 新概念小故事：小麻煩 → 動手試 → 說出新詞 → 換東西再試
+   S.seen[k]＝看過（跳過也算看過）；S.did[k]＝每個動手步驟都做完。兩個分開記，跳過不算做完。 */
 function runLesson(k, done) {
-  const L = LESSONS[k], st = STATIONS[k];
+  const L = LESSONS[k], st = STATIONS[k], lctx = {};
   let i = 0;
-  const finish = () => { S.seen[k] = true; save(); CTX = null; CUR = null; done(); };
+  const leave = full => { S.seen[k] = true; if (full) S.did[k] = true; save(); CTX = null; CUR = null; done(); };
+  const skip = () => leave(false);
+  const back = () => { i = Math.max(0, i - 2); beat(); };
   const beat = () => {
-    if (i >= L.beats.length) return finish();
+    if (i >= L.beats.length) return leave(true);
     const b = L.beats[i++];
     if (b.t) {
-      CTX = { sem: '小故事', skip: finish, dots: L.beats.map((_, n) => n < i - 1 ? 2 : null) };
+      CTX = { sem: '小故事', skip, back: i > 1 ? back : null, dots: L.beats.map((_, n) => n < i - 1 ? 2 : null) };
       CUR = null;
-      runSteps({ st: k, m: 'lesson', key: 'lesson' }, [JSON.parse(JSON.stringify(b))], () => beat());
+      runSteps({ st: k, m: 'lesson', key: 'lesson' }, [JSON.parse(JSON.stringify(b))], () => beat(), lctx);
     } else {
       window.scrollTo(0, 0);
       CUR = { lessonTalk: true };
-      $app.innerHTML = `<div class="comic lesson" style="${bgStyle(st.img)}"><div class="comic-top"><button class="skip" id="skip">跳過</button><button class="icon-btn vc" id="vc" aria-label="聲音">${S.voice ? '🔊' : '🔇'}</button></div><img class="comic-who" src="assets/${st.who}.webp" alt="">${b.word ? `<div class="word-card pop">${nums(esc(b.word))}</div>` : ''}<div class="bubble"><button class="spk" id="spk" aria-label="再唸一次">🗣️</button><div class="bubble-t">${nums(esc(b.say))}</div></div><button class="btn big" id="nx" aria-label="下一步">➜</button></div>`;
+      $app.innerHTML = `<div class="comic lesson" style="${bgStyle(st.img)}"><div class="comic-top">${i > 1 ? '<button class="icon-btn" id="back1" aria-label="上一步">◀</button>' : ''}<button class="skip" id="skip">跳過</button><button class="icon-btn vc" id="vc" aria-label="聲音">${S.voice ? '🔊' : '🔇'}</button></div><img class="comic-who" src="assets/${st.who}.webp" alt="">${b.word ? `<div class="word-card pop">${nums(esc(b.word))}</div>` : ''}<div class="bubble"><button class="spk" id="spk" aria-label="再唸一次">🗣️</button><div class="bubble-t">${nums(esc(b.say))}</div></div><button class="btn big" id="nx" aria-label="下一步">➜</button></div>`;
       say(b.say);
       $('spk').onclick = () => say(b.say);
       $('vc').onclick = toggleVoice;
-      $('skip').onclick = finish;
+      $('skip').onclick = skip;
+      if ($('back1')) $('back1').onclick = back;
       $('nx').onclick = beat;
     }
   };
@@ -241,12 +250,15 @@ function enterStation(k) {
   if (!S.seen[k]) return comicList(STATIONS[k].img, [STORY[k].talk], STATIONS[k].who, () => runLesson(k, () => startRound(k)));
   viewStation(k);
 }
+// 小故事的紀錄：看過但跳過，提醒可以回來做完
+const lessonNote = k => S.did[k] ? '小故事：每一步都做過了。' : S.seen[k] ? '小故事：看過了，還沒有每一步都做完。' : '';
 function viewStation(k) {
   const s = STATIONS[k];
   CTX = null;
   window.scrollTo(0, 0);
-  $app.innerHTML = `${topBar()}<div class="st-page"><div class="st-img" style="${bgStyle(s.img)}"><img src="assets/${s.who}.webp" alt=""></div><h2 class="st-name"><span class="num">${s.n}</span> ${esc(s.name)}<span class="sem">${s.sem}</span></h2><p class="st-say">${nums(esc(STORY[k].talk))}</p><div class="actions"><button class="btn big" id="play">開始玩</button><button class="btn alt" id="lesson">再看小故事</button></div></div>`;
+  $app.innerHTML = `${topBar()}<div class="st-page"><div class="st-img" style="${bgStyle(s.img)}"><img src="assets/${s.who}.webp" alt=""></div><h2 class="st-name"><span class="num">${s.n}</span> ${esc(s.name)}<span class="sem">${s.sem}</span></h2><p class="st-say">${nums(esc(STORY[k].talk))}</p>${lessonNote(k) ? `<button class="ls-note" id="lsn">${lessonNote(k)}</button>` : ''}<div class="actions"><button class="btn big" id="play">開始玩</button><button class="btn alt" id="lesson">再看小故事</button></div></div>`;
   bindTop();
+  if ($('lsn')) $('lsn').onclick = () => say(lessonNote(k));
   say(STORY[k].talk);
   $('play').onclick = () => startRound(k);
   $('lesson').onclick = () => runLesson(k, () => viewStation(k));
@@ -277,8 +289,8 @@ function viewCover() {
   $('st').onclick = () => { S.opened = true; save(); comicList('sky_dark', STORY.open, 'baby', viewHome); };
 }
 function viewParent() {
-  const rows = KEYS.map(k => `<tr><td>${STATIONS[k].sem} ${STATIONS[k].n}. ${STATIONS[k].name}</td><td>${S.prog[k] || 0} 回</td><td>${S.lv[k] || 0}</td><td>${S.seen[k] ? '看過' : '—'}</td></tr>`).join('');
-  $app.innerHTML = `<div class="parent"><button class="icon-btn" id="home" aria-label="回森林">⌂</button><h2>給大人看</h2><p>聲音：${'speechSynthesis' in window ? '這台裝置可朗讀（可用右上角喇叭關閉）' : '這台裝置不支援朗讀，仍可遊玩'}</p><table><tr><th>小站</th><th>玩過</th><th>難度</th><th>小故事</th></tr>${rows}</table><p>「長度」只比較個別單位；乘法不教。</p><button class="btn alt" id="reset">全部重來</button></div>`;
+  const rows = KEYS.map(k => `<tr><td>${STATIONS[k].sem} ${STATIONS[k].n}. ${STATIONS[k].name}</td><td>${S.prog[k] || 0} 回</td><td>${S.lv[k] || 0}</td><td>${S.seen[k] ? '看過' : '—'}</td><td>${S.did[k] ? '做完' : S.seen[k] ? '跳過部分' : '—'}</td></tr>`).join('');
+  $app.innerHTML = `<div class="parent"><button class="icon-btn" id="home" aria-label="回森林">⌂</button><h2>給大人看</h2><p>聲音：${'speechSynthesis' in window ? '這台裝置可朗讀（可用右上角喇叭關閉）' : '這台裝置不支援朗讀，仍可遊玩'}</p><table><tr><th>小站</th><th>玩過</th><th>難度</th><th>小故事</th><th>操作</th></tr>${rows}</table><p>「長度」只比較個別單位；乘法不教。「看過」表示打開過小故事（按跳過也算）；「做完」表示每個動手步驟都完成。看過不等於學會。</p><button class="btn alt" id="reset">全部重來</button></div>`;
   $('home').onclick = viewHome;
   $('reset').onclick = () => { if (confirm('確定清除紀錄？')) { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} location.reload(); } };
 }
@@ -324,6 +336,9 @@ const ICON = {
   ICON['tin_' + c] = V(`<rect x="14" y="10" width="36" height="46" rx="4" fill="${col[c]}"/><ellipse cx="32" cy="11" rx="18" ry="5" fill="#d7dde4" stroke="#8f9aa6" stroke-width="2"/><path d="M14 26h36M14 42h36" stroke="#fff" stroke-width="3"/>`);
 });
 const ic = n => ICON[n] || '';
+// 每種東西的量詞，回饋句用
+const UNIT = { fly: '隻', bird: '隻', pine: '顆', apple: '顆', pear: '顆', bead: '顆', mush: '朵', honey: '罐', stick: '根' };
+const un = (st, item) => st.u || UNIT[item || st.item] || '個';
 const ani = (a, st = '') => `<img class="ani" src="assets/${a}.webp" alt="" draggable="false" style="${st}">`;
 const COIN = { 1: ['#c6ccd3', 1], 5: ['#b9c3cc', 5], 10: ['#e0b64c', 10], 50: ['#e8c23a', 50] };
 const coin = v => { const c = COIN[v][0], R0 = v === 1 ? 20 : v === 5 ? 24 : v === 10 ? 27 : 30; return `<svg class="coin" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="${R0 + 2}" fill="${c}" stroke="#7d7768" stroke-width="2"/><text x="32" y="${32 + 8}" text-anchor="middle" font-size="${v >= 10 ? 22 : 24}" font-weight="700" fill="#3d3a30">${v}</text></svg>`; };
@@ -396,6 +411,19 @@ function scene(s) {
     case 'path': return `<div class="paths">${s.rows.map(n => `<div class="path-r">${Array.from({ length: n }, () => it(ic(s.unit))).join('')}${s.join ? `<i class="joint"></i>${Array.from({ length: s.join }, () => it(ic(s.unit))).join('')}` : ''}</div>`).join('')}</div>`;
     case 'path2': return `<div class="paths"><div class="path-r foot" style="--w:${s.foot * 3}">${Array.from({ length: s.foot }, () => it(ic('foot'))).join('')}</div><div class="path-road"></div><div class="path-r clip" style="--w:${s.clip}">${Array.from({ length: s.clip }, () => it(ic('clip'))).join('')}</div></div>`;
     case 'puzzle': return `<svg class="puz" viewBox="0 0 240 240">${s.slots.map(x => `<polygon points="${x.pts}" fill="${x.c}" stroke="#fff" stroke-width="3"/>`).join('')}</svg>`;
+    case 'spread': return `<div class="items spread sz${szOf(s.n)}">${Array.from({ length: s.n }, () => it(ic(s.item), 1, 'on')).join('')}</div>`;
+    case 'frameLoose': return `${frameHtml(Math.min(10, s.a), s.item)}<div class="loose-row">${Array.from({ length: s.b }, () => it(ic(s.item))).join('')}</div>`;
+    case 'frames2': {
+      // 十格框和框外一排：拿走的畫成淡色，看得出拿走的是外面幾個、框裡幾個
+      const cells = (n, gone) => Array.from({ length: n }, (_, i) => `<span class="cell">${i < n - gone ? it(ic(s.item)) : `<span class="gone">${ic(s.item)}</span>`}</span>`).join('');
+      return `<div class="frame">${cells(10, s.goneIn)}</div><div class="loose-row">${Array.from({ length: s.out }, (_, i) => i < s.out - s.goneOut ? it(ic(s.item)) : `<span class="gone">${ic(s.item)}</span>`).join('')}</div>`;
+    }
+    case 'lay2': {
+      // 同一條路（300 長）：一條一根接一根排滿，一條中間留空；迴紋針一樣長，都從左邊起點開始
+      const clip = (x, y) => `<path d="M${x + 3} ${y + 3}h48a9 9 0 0 1 0 18h-42a6 6 0 0 1 0-12h36" stroke="#5f6f84" stroke-width="3.2" fill="none" stroke-linecap="round"/>`;
+      const row = (r, y) => { const w = 60, gap = r.gap ? (300 - r.n * w) / (r.n - 1) : 0; let g = ''; for (let i = 0; i < r.n; i++) g += clip(10 + i * (w + gap), y); return `${g}<rect x="10" y="${y + 27}" width="300" height="7" rx="3" fill="#bda26a"/>`; };
+      return `<div class="lay2">${s.rows.map((r, i) => `<div class="lay-r"><b class="lay-t">${esc(r.label)}</b><svg viewBox="0 0 320 40" class="lay-svg">${row(r, 2)}<rect x="8" y="0" width="3" height="38" fill="#d6476b"/><rect x="309" y="0" width="3" height="38" fill="#d6476b"/></svg></div>`).join('')}</div>`;
+    }
     case 'tally': return `<div class="tally">${s.rows.map(r => `<div class="t-row"><b>${esc(r.label)}</b>${r.ics.map(i => it(ic(i))).join('')}</div>`).join('')}</div>`;
   }
   return '';
@@ -462,12 +490,12 @@ const WID = {
       if (busy) return;
       if (+b.dataset.o === st.a) { w.querySelectorAll('.opt').forEach(x => x.disabled = true); b.classList.add('yes'); return api.done(); }
       b.classList.add('no'); b.disabled = true; wrong++; api.miss(); busy = true;
-      const sc = $('scene');
-      if (sc.querySelector('.it')) await countOut(sc); else await wait(300);
+      const sc = $('scene'), counted = !st.noCount && sc.querySelector('.it');
+      if (counted) await countOut(sc); else await wait(300);
       busy = false;
-      if (!$('work')) return;
-      if (wrong >= 2) { const y = w.querySelector(`[data-o="${st.a}"]`); y.classList.add('yes'); w.querySelectorAll('.opt').forEach(x => x.disabled = true); api.giveUp(); setM('答案在這裡。', 'hint'); api.done('答案在這裡。'); }
-      else setM('再選一次。', 'hint');
+      if (!w.isConnected) return;
+      if (wrong >= 2) { const y = w.querySelector(`[data-o="${st.a}"]`); y.classList.add('yes'); w.querySelectorAll('.opt').forEach(x => x.disabled = true); api.giveUp(); api.done(st.why || '答案在這裡。'); }
+      else setM(st.hint || (counted ? '一個一個數，再選一次。' : '再看一次圖，再選一次。'), 'hint');
     });
   },
   // 一下才有的大按鈕 0～9
@@ -481,7 +509,7 @@ const WID = {
       const sc = $('scene');
       if (sc.querySelector('.it')) await countOut(sc); else await wait(300);
       busy = false;
-      if (!$('work')) return;
+      if (!$('kp')) return;
       if (wrong >= 2) { $('kpv').textContent = st.val; $('kp').classList.add('done'); api.giveUp(); api.done(`答案是 ${st.val}。`); }
       else setM('再按一次。', 'hint');
     });
@@ -494,7 +522,7 @@ const WID = {
     w.querySelectorAll('.lightme').forEach(b => b.onclick = () => {
       if (b.classList.contains('on')) return;
       c++; b.classList.add('on'); b.insertAdjacentHTML('beforeend', `<i class="bdg">${c}</i>`); say(String(c), true); sfx.hop();
-      if (c === st.n) api.done(`${st.n} 隻都亮了！`);
+      if (c === st.n) api.done(`每隻點一次，最後數到 ${st.n}。`);
     });
   },
   // 拖到框內，放到指定數量
@@ -508,10 +536,10 @@ const WID = {
     let wrong = 0;
     okBtn().onclick = () => {
       const k = inn.children.length;
-      if (k === st.n) { $('actions').innerHTML = ''; w.querySelectorAll('.di').forEach(e => e.style.pointerEvents = 'none'); return api.done(`放好 ${st.n} 顆了！`); }
+      if (k === st.n) { $('actions').innerHTML = ''; w.querySelectorAll('.di').forEach(e => e.style.pointerEvents = 'none'); return api.done(`數到 ${st.n} 就停下來，籃子裡有 ${st.n} ${un(st)}。`); }
       api.miss(); wrong++;
-      setM(k > st.n ? `太多了。要 ${st.n} 顆。` : `還不夠。要 ${st.n} 顆。`, 'hint');
-      if (wrong >= 2) { while (inn.children.length > st.n) toggle(inn.lastElementChild); while (inn.children.length < st.n) toggle(pile.firstElementChild); api.giveUp(); $('actions').innerHTML = ''; api.done(`這樣是 ${st.n} 顆。`); }
+      setM(k > st.n ? `太多了，要 ${st.n} ${un(st)}。點籃子裡的，拿回去一些。` : `還不夠，要 ${st.n} ${un(st)}。再放進去一些。`, 'hint');
+      if (wrong >= 2) { while (inn.children.length > st.n) toggle(inn.lastElementChild); while (inn.children.length < st.n) toggle(pile.firstElementChild); api.giveUp(); $('actions').innerHTML = ''; api.done(`這樣是 ${st.n} ${un(st)}。`); }
     };
   },
   // 果子分兩盤
@@ -522,15 +550,18 @@ const WID = {
     const nA = () => pa.querySelector('.dz-in').children.length, nB = () => pb.querySelector('.dz-in').children.length;
     const check = () => {
       if (pile.children.length) return;
-      if (!nA() || !nB()) return setM('兩個盤子都要有喔。', 'hint');
+      if (!nA() || !nB()) return setM(`兩盤都要有${st.item === 'apple' || st.item === 'pear' ? '果子' : '東西'}。點一個拿回來，放到空盤子。`, 'hint');
+      if (st.avoid && api.ctx.split && api.ctx.split[0] === nA() && api.ctx.split[1] === nB()) { const a0 = nA(), b0 = nB(); w.querySelectorAll('.plate .di').forEach(e => pile.appendChild(e)); return setM(`剛才分過 ${a0} 和 ${b0} 了。先點一個盤子，再點果子，換一種分法。`, 'hint'); }
       w.querySelectorAll('.di').forEach(e => e.style.pointerEvents = 'none');
       api.ctx.split = [nA(), nB()];
-      api.done(`${st.n} 顆分成 ${nA()} 顆和 ${nB()} 顆！`);
+      api.done(`${st.n} ${un(st)}分成 ${nA()} ${un(st)}和 ${nB()} ${un(st)}。`);
     };
-    let turn = 0;
+    // 點盤子選好要放哪一盤，再點果子；沒選盤子就輪流放
+    let turn = 0, target = null;
+    [pa, pb].forEach(p => p.addEventListener('click', ev => { if (ev.target.closest('.di')) return; target = p; pa.classList.toggle('sel', p === pa); pb.classList.toggle('sel', p === pb); }));
     w.querySelectorAll('.di').forEach(el => draggable(el, {
       zones: () => [pa, pb],
-      onTap: e => { if (e.parentElement !== pile) { pile.appendChild(e); } else { (turn++ % 2 ? pb : pa).querySelector('.dz-in').appendChild(e); sfx.hop(); check(); } },
+      onTap: e => { if (e.parentElement !== pile) { pile.appendChild(e); } else { (target || (turn++ % 2 ? pb : pa)).querySelector('.dz-in').appendChild(e); sfx.hop(); check(); } },
       onDrop: (e, z) => { if (z) { z.querySelector('.dz-in').appendChild(e); sfx.hop(); check(); } else if (e.parentElement !== pile) pile.appendChild(e); },
     }));
   },
@@ -542,13 +573,14 @@ const WID = {
     const qs = [...w.querySelectorAll('.q-a')];
     qs.forEach(b => b.onclick = async () => {
       if (busy) return;
-      if (+b.dataset.i === st.ans) { qs.forEach(x => x.disabled = true); b.classList.add('yes'); return api.done(`對！就是${st.line[st.ans].label}。`); }
+      if (+b.dataset.i === st.ans) { qs.forEach(x => x.disabled = true); b.classList.add('yes'); return api.done(`對了，是${st.line[st.ans].label}。`); }
       api.miss(); wrong++; busy = true; b.classList.add('no');
       const order = st.from === 'back' ? qs.slice().reverse() : qs, stop = st.from === 'back' ? st.line.length - st.ans : st.ans + 1;
       w.querySelectorAll('.bdg').forEach(x => x.remove());
       for (let i = 0; i < stop; i++) { order[i].insertAdjacentHTML('beforeend', `<i class="bdg">${i + 1}</i>`); say(String(i + 1), true); await wait(480); }
       busy = false;
-      if (wrong >= 2) { qs.forEach(x => x.disabled = true); qs[st.ans].classList.add('yes'); api.giveUp(); api.done('在這裡。'); } else setM('再點一次。', 'hint');
+      if (!w.isConnected) return;
+      if (wrong >= 2) { qs.forEach(x => x.disabled = true); qs[st.ans].classList.add('yes'); api.giveUp(); api.done(`從${st.from === 'back' ? '後面' : '「前」'}數到 ${stop}，是${st.line[st.ans].label}。`); } else setM(`從${st.from === 'back' ? '最後面' : '「前」這一頭'}開始，一隻一隻數，再點一次。`, 'hint');
     });
   },
   // 一對一連線
@@ -602,7 +634,7 @@ const WID = {
         const mv = ev => { const d = (st.v ? ev.clientY : ev.clientX) - s0; cur = st.v ? Math.min(0, c0 + d) : Math.max(0, c0 + d); el.style.transform = st.v ? `translateY(${cur}px)` : `translateX(${cur}px)`; };
         const up = () => {
           window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up);
-          if (Math.abs(cur) < 22) { cur = 0; el.style.transform = st.v ? 'translateY(0)' : 'translateX(0)'; el.classList.add('snap'); left.delete(i); sfx.hop(); if (!left.size) api.done('排好了，可以比了！'); }
+          if (Math.abs(cur) < 22) { cur = 0; el.style.transform = st.v ? 'translateY(0)' : 'translateX(0)'; el.classList.add('snap'); left.delete(i); sfx.hop(); if (!left.size) api.done(st.v ? '腳都踩在地上了，可以比了。' : '尾巴都對齊起跑線了，可以比了。'); }
         };
         window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up);
       });
@@ -617,13 +649,13 @@ const WID = {
     const place = (e, z) => {
       if (z.dataset.id === e.dataset.tag) {
         e.classList.remove('sel'); z.querySelector('.dz-in').appendChild(e); e.style.pointerEvents = 'none'; sfx.hop(); sel = null;
-        if (!$('pile').children.length) api.done('都放好了！');
+        if (!$('pile').children.length) api.done('都放好了。');
       } else {
         if (!wrongOnce) { wrongOnce = true; api.miss(); } else sfx.retry();
         e.classList.add('shake'); setTimeout(() => e.classList.remove('shake'), 400);
         const right = bins.find(b => b.dataset.id === e.dataset.tag);
         right.classList.add('flash'); setTimeout(() => right.classList.remove('flash'), T(900));
-        setM('不是這一個，看亮亮的那一個。', 'hint');
+        setM(st.hint || '不是這一桶。看在閃的那一桶。', 'hint');
       }
     };
     w.querySelectorAll('.di').forEach(el => draggable(el, { zones: () => bins, onTap: e => { if (sel) sel.classList.remove('sel'); sel = e; e.classList.add('sel'); }, onDrop: (e, z) => { if (z) place(e, z); } }));
@@ -649,10 +681,22 @@ const WID = {
     });
     let wrong = 0;
     okBtn().onclick = () => {
-      if (h === st.h && half === !!st.half) { $('actions').innerHTML = ''; return api.done(st.half ? `${st.h} 點半！` : `${st.h} 點！`); }
+      if (h === st.h && half === !!st.half) { $('actions').innerHTML = ''; return api.done(st.half ? `${st.h} 點半，長針指 6，短針在 ${st.h} 和 ${st.h % 12 + 1} 中間。` : `${st.h} 點，短針指 ${st.h}，長針指 12。`); }
       api.miss(); wrong++;
-      if (wrong >= 2) { h = st.h; half = !!st.half; draw(); api.giveUp(); $('actions').innerHTML = ''; return api.done(st.half ? `這是 ${st.h} 點半。長針指 6。` : `這是 ${st.h} 點。長針指 12。`); }
-      setM(st.half ? `長針要指 6，短針在 ${st.h} 和 ${st.h % 12 + 1} 中間。` : `短針指 ${st.h}，長針指 12。`, 'hint');
+      if (wrong >= 2) { h = st.h; half = !!st.half; draw(); api.giveUp(); $('actions').innerHTML = ''; return api.done(st.half ? `這是 ${st.h} 點半。長針指 6，短針在 ${st.h} 和 ${st.h % 12 + 1} 中間。` : `這是 ${st.h} 點。短針指 ${st.h}，長針指 12。`); }
+      setM(st.half ? `把長針拖到 6，短針拖到 ${st.h} 和 ${st.h % 12 + 1} 中間。` : `把短針拖到 ${st.h}，長針拖到 12。`, 'hint');
+    };
+  },
+  // 讓鐘走半圈：長針從 12 走到 6，短針同時走到兩個數中間
+  clockRun(st, api) {
+    const w = $('work');
+    w.innerHTML = clockSvg(st.h, false, 'dial');
+    const svg = $('dial');
+    okBtn('讓鐘走').onclick = async () => {
+      $('actions').innerHTML = '';
+      for (let k = 1; k <= 30; k++) { svg.querySelector('.mh').setAttribute('transform', `rotate(${k * 6} 130 130)`); svg.querySelector('.hh').setAttribute('transform', `rotate(${(st.h % 12) * 30 + k * .5} 130 130)`); await wait(70); }
+      if (!svg.isConnected) return;
+      api.done(`長針走到 6，短針走到 ${st.h} 和 ${st.h % 12 + 1} 的中間。`);
     };
   },
   // 依序點
@@ -663,7 +707,7 @@ const WID = {
     w.querySelectorAll('.card1').forEach(b => b.onclick = () => {
       if (b.classList.contains('used')) return;
       if (+b.dataset.r === at) { at++; b.classList.add('used'); b.insertAdjacentHTML('beforeend', `<i class="bdg">${at}</i>`); sfx.hop(); if (at === st.cards.length) api.done('順序對了！'); }
-      else { if (!oops) { oops = true; api.miss(); } else sfx.retry(); b.classList.add('shake'); setTimeout(() => b.classList.remove('shake'), 400); const r = w.querySelector(`[data-r="${at}"]`); r.classList.add('flash'); setTimeout(() => r.classList.remove('flash'), T(900)); setM('這一件要先做。看亮亮的那張。', 'hint'); }
+      else { if (!oops) { oops = true; api.miss(); } else sfx.retry(); b.classList.add('shake'); setTimeout(() => b.classList.remove('shake'), 400); const r = w.querySelector(`[data-r="${at}"]`); r.classList.add('flash'); setTimeout(() => r.classList.remove('flash'), T(900)); setM('這一件要先做。看在閃的那一張。', 'hint'); }
     });
   },
   // 月曆點選
@@ -673,12 +717,12 @@ const WID = {
     const need = new Set(st.ans); let oops = 0;
     w.querySelectorAll('.cal-d').forEach(b => b.onclick = () => {
       const d = +b.dataset.day;
-      if (need.has(d)) { need.delete(d); b.classList.add('mk'); sfx.hop(); if (!need.size) { w.querySelectorAll('.cal-d').forEach(x => x.disabled = true); api.done('找到了！'); } }
+      if (need.has(d)) { need.delete(d); b.classList.add('mk'); sfx.hop(); if (!need.size) { w.querySelectorAll('.cal-d').forEach(x => x.disabled = true); api.done('找到了。'); } }
       else if (!b.classList.contains('mk')) {
         if (!oops) api.miss(); else sfx.retry();
         oops++;
         need.forEach(x => { const r = w.querySelector(`[data-day="${x}"]`); r.classList.add('flash'); setTimeout(() => r.classList.remove('flash'), T(900)); });
-        setM('不是這一天，看亮亮的格子。', 'hint');
+        setM(st.hint || '不是這一天。看在閃的格子。', 'hint');
       }
     });
   },
@@ -688,21 +732,22 @@ const WID = {
     w.innerHTML = `${st.thing ? `<div class="thing">${ic(st.thing)}<span class="tag"><span class="num">${st.target}</span> 元</span></div>` : st.showBig ? `<div class="thing">${coin(st.showBig)}</div>` : ''}<div class="dz tray" id="tray"><div class="dz-in" id="trayIn"></div></div><div class="bank">${st.avail.map(v => `<button class="cb" data-v="${v}">${coin(v)}</button>`).join('')}</div>`;
     const tray = $('tray'), inn = $('trayIn');
     const combo = () => [...inn.children].map(c => +c.dataset.v).sort((a, b) => a - b).join(',');
+    const said = () => { const c = {}; [...inn.children].forEach(x => c[x.dataset.v] = (c[x.dataset.v] || 0) + 1); return Object.keys(c).sort((a, b) => b - a).map(v => `${c[v]} 個 ${v} 元`).join('和 '); };
     const addCoin = v => { const s = document.createElement('button'); s.className = 'tc'; s.dataset.v = v; s.innerHTML = coin(v); s.onclick = () => s.remove(); inn.appendChild(s); sfx.hop(); };
     w.querySelectorAll('.cb').forEach(el => draggable(el, { zones: () => [tray], onTap: e => addCoin(+e.dataset.v), onDrop: (e, z) => { if (z) addCoin(+e.dataset.v); } }));
     let wrong = 0;
     okBtn('付錢').onclick = () => {
       const sum = [...inn.children].reduce((s, c) => s + +c.dataset.v, 0);
       if (sum === st.target && st.avoid && combo() === api.ctx.lastCombo) return setM('這一種用過了，換別的錢。', 'hint');
-      if (sum === st.target) { api.ctx.lastCombo = combo(); $('actions').innerHTML = ''; return api.done(`剛好 ${st.target} 元！`); }
+      if (sum === st.target) { api.ctx.lastCombo = combo(); $('actions').innerHTML = ''; return api.done(`用 ${said()}，剛好 ${st.target} 元。`); }
       api.miss(); wrong++;
-      setM(sum > st.target ? `太多了。現在有 ${sum} 元，要 ${st.target} 元。` : `還不夠。現在有 ${sum} 元，要 ${st.target} 元。`, 'hint');
+      setM(sum > st.target ? `太多了。現在有 ${sum} 元，要 ${st.target} 元。點盤子裡的錢，拿回來一些。` : `還不夠。現在有 ${sum} 元，要 ${st.target} 元。再放一些錢。`, 'hint');
       if (wrong >= 2) {
         inn.innerHTML = ''; let rest = st.target;
         const avail = st.avail.slice().sort((a, b) => b - a), last = (api.ctx.lastCombo || '');
         avail.forEach(v => { while (rest >= v) { addCoin(v); rest -= v; } });
         if (st.avoid && combo() === last && st.avail.includes(1)) { inn.innerHTML = ''; for (let i = 0; i < st.target; i++) addCoin(1); }
-        api.giveUp(); api.ctx.lastCombo = combo(); $('actions').innerHTML = ''; api.done(`這樣就是 ${st.target} 元。`);
+        api.giveUp(); api.ctx.lastCombo = combo(); $('actions').innerHTML = ''; api.done(`用 ${said()}，就是 ${st.target} 元。`);
       }
     };
   },
@@ -716,7 +761,7 @@ const WID = {
     const sum = () => [...inn.children].reduce((s, c) => s + +c.dataset.v, 0);
     let wrong = 0;
     okBtn().onclick = async () => {
-      if (sum() === st.n) { $('actions').innerHTML = ''; return api.done(`${st.n} 根，拼好了！`); }
+      if (sum() === st.n) { $('actions').innerHTML = ''; return api.done(`${Math.floor(st.n / 10)} 捆和 ${st.n % 10} 根，是 ${st.n} 根。`); }
       api.miss(); wrong++;
       const now = sum();
       setM(`你拼的是 ${now} 根，要 ${st.n} 根。`, 'hint');
@@ -733,8 +778,7 @@ const WID = {
       b.remove(); row.insertAdjacentHTML('beforeend', `<span class="cellb">${ic(st.item)}</span>`); cur++; sfx.hop();
       say(String(made * 10 + cur), true);
       if (cur === 10) { made++; cur = 0; if (stick) row.innerHTML = `<span class="tied">${ic('bundle')}</span>`; else row.classList.add('tied'); say(stick ? `${made} 捆` : `${made} 串`, true); }
-      if (!$('pile').children.length) api.done(stick ? `${made} 捆又 ${st.n % 10} 根。` : `${made} 串又 ${st.n % 10} 顆。`);
-      else if (!w.querySelectorAll('.sb').length) {}
+      if (!$('pile').children.length) api.done(stick ? `${made} 捆和 ${st.n % 10} 根，一共 ${st.n} 根。` : `${made} 串和 ${st.n % 10} 顆，一共 ${st.n} 顆。`);
     });
     // 不滿 10 的留在外面：滿了之後剩下的自動停在外面才合理，所以最後一串不用排滿
   },
@@ -746,7 +790,7 @@ const WID = {
       $('bb').remove();
       const o = $('ones');
       for (let i = 1; i <= 10; i++) { o.insertAdjacentHTML('beforeend', `<span class="it" data-v="1">${ic('stick')}<i class="bdg">${i}</i></span>`); say(String(i), true); await wait(260); }
-      api.done('打開有 10 根！');
+      api.done('打開了，一根一根數到 10，有 10 根。');
     };
   },
   // 搬到十格盤
@@ -758,7 +802,7 @@ const WID = {
       const c = [...fm.children].find(x => !x.children.length);
       if (!c) return;
       c.appendChild(e); e.style.pointerEvents = 'none'; e.classList.remove('di'); e.classList.add('fi'); sfx.hop();
-      if (![...fm.children].find(x => !x.children.length)) { $('pile').querySelectorAll('.di').forEach(x => x.style.pointerEvents = 'none'); api.done(`滿 10 格了！外面還有 ${st.a + st.b - 10} 個。`); }
+      if (![...fm.children].find(x => !x.children.length)) { $('pile').querySelectorAll('.di').forEach(x => x.style.pointerEvents = 'none'); api.done(`框裡滿 10 ${un(st)}了，外面還有 ${st.a + st.b - 10} ${un(st)}。`); }
     };
     w.querySelectorAll('.di').forEach(el => draggable(el, { zones: () => [fm], onTap: put, onDrop: (e, z) => { if (z) put(e); } }));
   },
@@ -773,10 +817,10 @@ const WID = {
         el.onclick = () => {
           if (el.classList.contains('out')) return;
           const big = el.classList.contains('bdl');
-          if ((big && !mt) || (!big && !mo)) { if (!oops) { oops = true; api.miss(); } setM(big ? '整捆夠了，再點單根。' : '單根夠了，再點整捆。', 'hint'); return; }
+          if ((big && !mt) || (!big && !mo)) { if (!oops) { oops = true; api.miss(); } setM(big ? `整捆已經搬走 ${st.mt} 捆了，再點單根。` : `單根已經搬走 ${st.mo} 根了，再點整捆。`, 'hint'); return; }
           if (big) mt--; else mo--;
           el.classList.add('out'); sfx.hop();
-          if (!mt && !mo) api.done('搬走了！');
+          if (!mt && !mo) api.done(`搬走 ${st.mt} 捆和 ${st.mo} 根了。`);
         };
       });
       return;
@@ -789,9 +833,9 @@ const WID = {
         el.classList.add('offable');
         el.onclick = () => {
           if (el.classList.contains('out')) return;
-          if (el.closest('.mainf') && loose()) { if (!oops) { oops = true; api.miss(); } setM('先吃外面的。', 'hint'); w.querySelectorAll('.loosef .it:not(.out)').forEach(x => { x.classList.add('flash'); setTimeout(() => x.classList.remove('flash'), T(900)); }); return; }
+          if (el.closest('.mainf') && loose()) { if (!oops) { oops = true; api.miss(); } setM(`先拿外面的，外面還有 ${loose()} ${un(st)}。`, 'hint'); w.querySelectorAll('.loosef .it:not(.out)').forEach(x => { x.classList.add('flash'); setTimeout(() => x.classList.remove('flash'), T(900)); }); return; }
           el.classList.add('out'); left--; sfx.hop(); say(String(st.off - left), true);
-          if (!left) api.done(`吃掉 ${st.off} 格了！`);
+          if (!left) api.done(`拿走 ${st.off} ${un(st)}了，還剩 ${st.n - st.off} ${un(st)}。`);
         };
       });
       return;
@@ -801,7 +845,7 @@ const WID = {
     w.querySelectorAll('.it').forEach(el => el.onclick = () => {
       if (el.classList.contains('out') || !left) return;
       el.classList.add('out', 'flyaway'); left--; sfx.hop(); say(String(st.off - left), true);
-      if (!left) api.done(`走了 ${st.off} 個！`);
+      if (!left) api.done(`${st.item === 'bird' ? '飛走' : '拿走'} ${st.off} ${un(st)}，還剩 ${st.n - st.off} ${un(st)}。`);
     });
   },
   // 上船
@@ -810,7 +854,7 @@ const WID = {
     w.innerHTML = `<div class="dock-r"><div class="pile" id="pile">${st.who.flatMap((a, i) => Array.from({ length: i ? st.b : st.a }, () => `<span class="di ani-d">${ani(a.ani)}</span>`)).join('')}</div></div><div class="dz boat" id="boat"><div class="dz-in" id="bin"></div></div>`;
     const boat = $('boat'), inn = $('bin');
     let c = 0;
-    const put = e => { inn.appendChild(e); e.style.pointerEvents = 'none'; c++; say(String(c), true); sfx.hop(); if (!$('pile').children.length) api.done(`全部上船了！`); };
+    const put = e => { inn.appendChild(e); e.style.pointerEvents = 'none'; c++; say(String(c), true); sfx.hop(); if (!$('pile').children.length) api.done(`全部上船了，一共 ${c} 隻。`); };
     w.querySelectorAll('.di').forEach(el => draggable(el, { zones: () => [boat], onTap: put, onDrop: (e, z) => { if (z) put(e); } }));
   },
   // 換位子
@@ -823,14 +867,14 @@ const WID = {
   // 推推看、疊疊看
   tryIt(st, api) {
     const w = $('work');
-    w.innerHTML = `<div class="tries">${st.items.map(k => `<button class="try" data-k="${k}">${ic(k)}</button>`).join('')}</div>`;
+    w.innerHTML = `<div class="tries">${st.items.map(k => `<button class="try${st.lying ? ' lying' : ''}" data-k="${k}">${ic(k)}</button>`).join('')}</div>`;
     let left = st.items.length;
     w.querySelectorAll('.try').forEach(b => b.onclick = () => {
       if (b.classList.contains('used')) return;
       b.classList.add('used', b.dataset.k === 'ball' || b.dataset.k === 'can' ? (st.stack ? 'fall' : 'roll') : (st.stack ? 'stackup' : 'still'));
       if (st.stack && b.dataset.k !== 'ball') b.insertAdjacentHTML('afterbegin', `<span class="dbl">${ic(b.dataset.k)}</span>`);
       sfx.hop(); left--;
-      if (!left) api.done(st.stack ? '方方的能疊，球會掉下來。' : '球滾走了，方方的不動。');
+      if (!left) api.done(st.stack ? '方方的能疊，球會掉下來。' : st.items.length === 1 ? (st.items[0] === 'ball' || st.items[0] === 'can' ? '輕輕推，它就滾走了。' : '推了，它沒有滾。') : '球滾走了，方塊沒有滾。');
     });
   },
   // 用迴紋針、腳印排滿
@@ -838,7 +882,7 @@ const WID = {
     const w = $('work');
     w.innerHTML = `<div class="road dz" id="road" style="--n:${st.n}">${Array.from({ length: st.n }, () => `<span class="slot ${st.unit}"></span>`).join('')}</div><div class="bank"><button class="cb big" id="src">${ic(st.unit)}</button></div>`;
     const road = $('road');
-    const put = () => { const s = road.querySelector('.slot:empty'); if (!s) return; s.innerHTML = ic(st.unit); sfx.hop(); const c = road.querySelectorAll('.slot:not(:empty)').length; s.insertAdjacentHTML('beforeend', `<i class="bdg">${c}</i>`); say(String(c), true); if (!road.querySelector('.slot:empty')) api.done('排滿了！'); };
+    const put = () => { const s = road.querySelector('.slot:empty'); if (!s) return; s.innerHTML = ic(st.unit); sfx.hop(); const c = road.querySelectorAll('.slot:not(:empty)').length; s.insertAdjacentHTML('beforeend', `<i class="bdg">${c}</i>`); say(String(c), true); if (!road.querySelector('.slot:empty')) api.done(`一個接一個排滿了，是 ${st.n} ${st.unit === 'foot' ? '個腳印' : '根迴紋針'}長。`); };
     draggable($('src'), { zones: () => [road], onTap: put, onDrop: (e, z) => { if (z) put(); } });
   },
   // 拼圖
@@ -850,7 +894,7 @@ const WID = {
       const i = +e.dataset.i, s = st.slots[i], poly = pz.querySelector(`[data-i="${i}"]`);
       poly.setAttribute('fill', s.c); poly.setAttribute('stroke', '#fff'); poly.removeAttribute('stroke-dasharray');
       e.remove(); sfx.hop();
-      if (!$('pcs').children.length) api.done('拼好了！');
+      if (!$('pcs').children.length) api.done('拼好了。');
     };
     w.querySelectorAll('.pc').forEach(el => draggable(el, { zones: () => [pz], onTap: e => { const p = pz.querySelector(`[data-i="${e.dataset.i}"]`); p.classList.add('flash'); setTimeout(() => p.classList.remove('flash'), T(900)); }, onDrop: (e, z) => {
       if (!z) return;
@@ -903,7 +947,7 @@ const WID = {
     });
     let wrong = 0;
     okBtn().onclick = () => {
-      if (cnt.every((c, i) => c === st.rows[i].n)) { $('actions').innerHTML = ''; return api.done('記好了！這是你自己的記法。'); }
+      if (cnt.every((c, i) => c === st.rows[i].n)) { $('actions').innerHTML = ''; return api.done(`記好了：${st.rows.map(r => `${r.label} ${r.n} 個記號`).join('，')}。這是你自己的記法。`); }
       api.miss(); wrong++;
       const i = cnt.findIndex((c, j) => c !== st.rows[j].n);
       setM(`${st.rows[i].label}有 ${st.rows[i].n} 個，再對一對。`, 'hint');
@@ -945,7 +989,7 @@ function runQuiz(b, U, lv, only) {
     const done = ok => {
       if (ok && tries === 0) { right++; S.stars += QUIZ_STAR; } else if (tries === 0 || !ok) wrong.push(list[i]);
       save();
-      setMsg(`${ok ? (tries ? '對了。' : '答對了！') : '再看一次：'}${nums(esc(q.why))}`, ok ? 'good' : 'hint');
+      setMsg(`${ok ? '對了。' : '一起看看怎麼想：'}${nums(esc(q.why))}`, ok ? 'good' : 'hint');
       if (ok && tries === 0) sfx.good(); else if (ok) sfx.ok();
       const pad = document.getElementById('pad'); if (pad) pad.style.display = 'none';
       document.getElementById('actions').innerHTML = `<button class="btn" id="qn">${i + 1 < list.length ? '下一題' : '看成績'}</button>`;
@@ -956,20 +1000,20 @@ function runQuiz(b, U, lv, only) {
     if (q.t === 'num') {
       bindKeypad((val, clear) => {
         if (val === q.a) return done(true);
-        clear(); miss2(nums(`你按的 ${val} 不對，再想想。`));
+        clear(); miss2(nums(`${val} 和答案不一樣。先看題目問的是哪一個量，再算一次。`));
       });
     } else {
       document.getElementById('actions').innerHTML = `<div class="choices col">${q.o.map((o, n) => `<button class="choice" data-c="${n}">${nums(esc(o))}</button>`).join('')}</div>`;
       document.querySelectorAll('[data-c]').forEach(c => c.onclick = () => {
         if (+c.dataset.c === q.a) return done(true);
-        c.classList.add('no'); c.disabled = true; miss2('再想想，換一個答案。');
+        c.classList.add('no'); c.disabled = true; miss2('這個選項不對。先找出題目問的是什麼，再選一次。');
       });
     }
   }
   function result() {
     const score = Math.round(right / list.length * 100);
     if (!only) { S.quiz = S.quiz || {}; const k = `${b.id}-${U.u}-${lv}`; S.quiz[k] = Math.max(S.quiz[k] || 0, score); save(); }
-    quizShell(`${QUIZ_LV[lv][0]}成績`, back, `<div class="end pop"><h2>${nums(`第一次就答對 ${right} / ${list.length} 題`)}</h2><p>${score === 100 ? '全部答對，太棒了！' : score >= 80 ? '很不錯，只差一點點。' : '沒關係，把錯的再做一次就會更熟。'}</p><div class="actions" id="ra"></div></div>`);
+    quizShell(`${QUIZ_LV[lv][0]}成績`, back, `<div class="end pop"><h2>${nums(`第一次就答對 ${right} / ${list.length} 題`)}</h2><p>${score === 100 ? '每一題第一次就答對了。' : score >= 80 ? '大部分都答對了，可以挑錯的那幾題，再看一次解說。' : '先挑一題錯的，看解說是哪一步卡住，再試一次。'}</p><div class="actions" id="ra"></div></div>`);
     document.getElementById('ra').innerHTML = `${wrong.length ? '<button class="btn" id="rw">再做一次錯的</button>' : ''}<button class="btn alt" id="rb">回去</button>`;
     if (wrong.length) document.getElementById('rw').onclick = () => runQuiz(b, U, lv, wrong);
     document.getElementById('rb').onclick = back;

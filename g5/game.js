@@ -1685,47 +1685,47 @@ const LESSONS = {
   land: {
     title: '大面積', sem: '五下', icon: '🗺️', who: 'seal', name: '波波', say: '地方越大，單位越大。在地圖上鋪鋪看。',
     cards: [
-      { e: '🏡', u: '公畝', t: '每邊 10 公尺的正方形，100 平方公尺。大約一間半教室。' },
-      { e: '⚽', u: '公頃', t: '每邊 100 公尺的正方形，100 公畝。大約一座足球場再大一點。' },
-      { e: '🏙️', u: '平方公里', t: '每邊 1 公里的正方形，100 公頃。走完一邊要 15 分鐘。' },
+      { e: '🏡', u: '公畝', t: '邊長 10 公尺的正方形，面積 100 平方公尺。大約一間半教室。' },
+      { e: '⚽', u: '公頃', t: '邊長 100 公尺的正方形，面積 10000 平方公尺＝100 公畝。一座足球場比它小一些，可以約略比較。' },
+      { e: '🏙️', u: '平方公里', t: '邊長 1 公里的正方形，面積 1 平方公里＝100 公頃。' },
     ],
     labs: [{ view: 'map', n: 10, each: 10, from: '公畝', to: '100 公畝', btn: '鋪一排（10 公畝）', done: '100 公畝就是 1 公頃！' }, { view: 'map', n: 10, each: 10, from: '公頃', to: '100 公頃', btn: '鋪一排（10 公頃）', done: '100 公頃就是 1 平方公里！月球城的目標就是這麼大。' }],
   },
   ton: {
     title: '重量', sem: '五下', icon: '🐘', who: 'turtle', name: '阿穩', say: '大象、貨車太重了，用公斤數字太大。',
-    cards: [{ e: '🧒', u: '公斤', t: '五年級小朋友大約 40 公斤。' }, { e: '🐘', u: '公噸', t: '1 公噸＝1000 公斤。一輛小汽車大約 2 公噸。' }],
-    labs: [{ view: 'ton', n: 10, each: 100, from: '公斤', to: '1000 公斤', btn: '放 100 公斤的沙包', done: '1000 公斤就是 1 公噸！大約 25 個小朋友那麼重。' }],
+    cards: [{ e: '🌾', u: '公斤', t: '一袋米大約 20 公斤。' }, { e: '🐘', u: '公噸', t: '1 公噸＝1000 公斤。一輛小汽車大約 2 公噸。' }],
+    labs: [{ view: 'ton', n: 10, each: 100, from: '公斤', to: '1000 公斤', btn: '放 100 公斤的沙包', done: '1000 公斤就是 1 公噸！一輛小汽車大約 2 公噸。' }],
   },
   cap: {
     title: '容量', sem: '五下', icon: '🚰', who: 'otter', name: '水水', say: '倒水最清楚：水占的空間就是體積。',
-    cards: [{ e: '🥤', u: '毫升', t: '1 毫升的水，就是 1 立方公分。一杯飲料大約 500 毫升。' }, { e: '🍼', u: '公升', t: '1 公升＝1000 毫升。每邊 10 公分的方盒剛好裝滿。' }],
+    cards: [{ e: '🥤', u: '毫升', t: '1 毫升和 1 立方公分是相同的體積。一杯飲料大約 500 毫升。' }, { e: '🍼', u: '公升', t: '1 公升＝1000 毫升。內部每邊 10 公分的正方體容器，容積是 1 公升。' }],
     labs: [{ view: 'pour', n: 10, each: 100, from: '毫升', to: '1000 毫升', btn: '倒一層（100 毫升）', done: '10×10×10＝1000 立方公分，裝 1000 毫升，就是 1 公升！' }],
   },
   m3: {
     title: '大體積', sem: '五下', icon: '📦', who: 'octopus', name: '八八', say: '房子、貨櫃太大了，要用更大的方塊。',
-    cards: [{ e: '🎲', u: '立方公分', t: '一顆小骰子，每邊 1 公分。' }, { e: '📦', u: '立方公尺', t: '每邊 1 公尺的大方塊，大約一台大冰箱。' }],
-    labs: [{ view: 'frame', n: 12, each: 1, from: '根棍子', to: '12 根', btn: '搭一根 1 公尺的棍子', done: '這個框就是 1 立方公尺，鑽進去看看，大約坐得下 3 個小朋友！' }],
+    cards: [{ e: '🎲', u: '立方公分', t: '邊長 1 公分的正方體，例如一個模型小方塊。' }, { e: '📦', u: '立方公尺', t: '邊長 1 公尺的正方體，大約一台大冰箱那麼大。' }],
+    labs: [{ view: 'frame', n: 12, each: 1, from: '根棍子', to: '12 根', btn: '搭一根 1 公尺的棍子', done: '這個框圍出的空間，就是 1 立方公尺。' }],
   },
   deg: {
     title: '角度', sem: '五上', icon: '📐', who: 'goat', name: '角爺爺', say: '圍牆轉彎的地方都有角。角的大小用「度」來說。',
-    cards: [{ e: '📐', u: '度', t: '轉一整圈是 360 度。半圈 180 度，一個直角 90 度。' }],
+    cards: [{ e: '📐', u: '度', t: '把一整圈平均分成 360 份，每份是 1 度。平角 180 度，直角 90 度。' }],
     labs: [{ view: 'angle', n: 18, each: 10, from: '度', to: '180 度', btn: '或按這裡轉 10 度', done: '180 度是一條直線。等一下三角形的角會用到它。' }],
   },
   m2: {
     title: '面積', sem: '五上', icon: '🟩', who: 'sheep', name: '咩咩', say: '小東西用平方公分，大地方用平方公尺。',
     cards: [
-      { e: '👆', u: '平方公分', t: '每邊 1 公分的正方形，大約是食指的指腹。' },
-      { e: '🟩', u: '平方公尺', t: '每邊 1 公尺的正方形，大約可以站 12 個小朋友。' },
+      { e: '👆', u: '平方公分', t: '邊長 1 公分的正方形，例如方格紙上的一小格。' },
+      { e: '🟩', u: '平方公尺', t: '邊長 1 公尺的正方形。1 平方公尺＝10000 平方公分。' },
     ],
     labs: [{ view: 'board', n: 10, each: 1000, from: '平方公分', to: '10000 平方公分', btn: '鋪一排（1000 平方公分）', done: '每邊 100 公分，鋪滿要 100×100＝10000 平方公分，就是 1 平方公尺！' }],
   },
   time: {
     title: '時間', sem: '五上', icon: '⏰', who: 'raccoon', name: '秤秤', say: '時間不是滿 100 才換，要先記得每個單位多大。',
     cards: [
-      { e: '👏', u: '秒', t: '拍一下手大約 1 秒。60 秒是 1 分鐘。' },
+      { e: '👏', u: '秒', t: '跟著每秒一次的節拍拍手，兩聲之間是 1 秒。60 秒是 1 分鐘。' },
       { e: '🍜', u: '分鐘', t: '泡麵大約 3 分鐘。60 分鐘是 1 小時。' },
       { e: '🎬', u: '小時', t: '一部電影大約 2 小時。24 小時是 1 日。' },
-      { e: '🗓️', u: '日', t: '從今天這個時候到明天這個時候。' },
+      { e: '🗓️', u: '日', t: '24 小時，例如從今天上午 8 點到明天上午 8 點。' },
     ],
     labs: [
       { view: 'clock', n: 6, each: 10, from: '分鐘', to: '60 分鐘', btn: '分針走 10 分鐘', done: '60 分鐘就是 1 小時，不是 100 分鐘！' },
@@ -1797,16 +1797,16 @@ const BOARDS = {
 // mk：hook 舊經驗、guess 先猜、rounds 示範・一起做・自己做（solo 可附 predict 先猜下一個）、reveal 揭曉猜測、fade 三步淡化、sort 正反例、kid＋term 命名、pick 選對的話、check 驗收
 function mk(o) {
   const sc = [{ t: 'hook', say: o.hook, pic: o.hookPic }];
-  if (o.guess) sc.push({ t: 'guess', q: o.guess[0], opts: o.guess[1] });
+  if (o.guess) sc.push({ t: 'guess', q: o.guess[0], opts: o.guess[1], a: o.guess[2] }); // a：結果揭曉時拿來和孩子的想法對照
   const modes = ['demo', 'together', 'solo'];
-  o.rounds.forEach((r, i) => sc.push({ t: 'board', mode: modes[i], ...r }));
+  o.rounds.forEach((r, i) => sc.push({ t: 'board', mode: modes[i], ...r, mh: r.mh || o.mh }));
   const solo = sc.length - 1;
   if (o.reveal) sc.push({ t: 'reveal', say: o.reveal, pic: o.revealPic });
   sc.push({ t: 'fade', steps: o.fade });
   if (o.sort) sc.push({ t: 'sort', ...o.sort });
-  sc.push({ t: 'name', kid: o.kid, term: o.term, pic: o.namePic || o.fade[1].h });
-  sc.push({ t: 'pick', opts: o.pick[0], a: o.pick[1], why: o.pick[2] });
-  if (o.pose) sc.push({ t: 'pose', ...o.pose }); // 換你出題（擬題）：選故事卡、拼題目、判斷能不能解、改一樣會不會變
+  sc.push({ t: 'name', kid: o.kid, say: o.nameSay, term: o.term, pic: o.namePic || o.fade[1].h });
+  sc.push({ t: 'pick', opts: o.pick[0], a: o.pick[1], why: o.pick[2] }); // why 可以是每個選項各一句（對應錯因）
+  if (o.pose) sc.push({ t: 'pose', ...o.pose }); // 選一個合適的問題／拼成一道題／資料夠嗎／改一個條件
   sc.push({ t: 'check', ...o.check, back: o.check.back === undefined ? solo : o.check.back });
   return { key: o.key, title: o.title, terms: [o.term], who: o.who, game: o.game, when: o.when || [], board: o.board, scenes: sc };
 }
@@ -1817,43 +1817,46 @@ const rowsRound = (n, w, e, say) => ({ p: { n, draw: rowsDraw(n, w, e), st: rows
 /* ---------- 三段樣本：因數、擴分、分數倍 ---------- */
 const SEGS = [
   mk({ key: 'factor', title: '因數', term: '因數', who: 'octopus', game: 'factor', when: ['factor:rect', 'factor:fit'], board: 'counter',
-    hook: '排隊時，老師說「每排 2 個人」，你會排吧？今天換排地磚。', hookPic: () => em('🟫', 6),
-    rounds: [rowsRound(6, 2, '🟫', '看我做：6 塊地磚，我每排放 2 塊。一塊一塊放⋯⋯'), rowsRound(6, 4, '🟫', '一起做：這次每排放 4 塊。我先放幾塊，剩下的你點。'), { ...rowsRound(6, 3, '🟫', '換你做：每排放 3 塊，一塊一塊點。'), predict: ['先猜猜看：每排 3 塊，會剛好排完嗎？', ['會剛好', '會排不滿'], 0] }],
+    hook: '先看一個排隊的例子：6 個人每排站 2 個，可以站成 3 排，沒有人落單。今天用同樣的方法排地磚。', hookPic: () => em('🟫', 6),
+    mh: '一塊一塊放，排滿一排再排下一排。最後看最後一排有沒有排滿。',
+    rounds: [rowsRound(6, 2, '🟫', '看我做：6 塊地磚，我每排放 2 塊。一塊一塊放⋯⋯'), rowsRound(6, 4, '🟫', '一起做：這次每排放 4 塊。我先放幾塊，剩下的你點。'), { ...rowsRound(6, 3, '🟫', '換你做：每排放 3 塊，一塊一塊點。'), predict: ['先預測：每排 3 塊，會剛好排完嗎？', ['會剛好', '會排不滿'], 0] }],
     fade: [{ h: `<div class="rows6"><div class="row6">${em('🟫', 2)}</div><div class="row6">${em('🟫', 2)}</div><div class="row6">${em('🟫', 2)}</div></div>`, t: '第 1 步：真的地磚，每排 2 塊，排了 3 排。' },
       { h: `<svg class="g5" style="max-height:120px" viewBox="0 0 140 110"><g>${[0, 1, 2].map(r => [0, 1].map(c => `<rect x="${20 + c * 32}" y="${8 + r * 32}" width="30" height="30" fill="#e0b070" stroke="#7a5b2e"/>`).join('')).join('')}</g><text x="52" y="108" text-anchor="middle" class="ax" fill="${C1}" style="fill:${C1}">每排 2</text><text x="100" y="58" class="ax" style="fill:${C2}">3 排</text></svg>`, t: '第 2 步：畫成方格。紅色是每排幾塊，藍色是幾排。' },
       { h: `<div class="eq5">${K(2, C1)} × ${K(3, C2)} ＝ ${K(6, C3)}</div><div class="trail">紅 2：每排 2 塊　藍 3：排了 3 排　綠 6：全部 6 塊</div>`, t: '第 3 步：寫成算式，每個數都是圖上的一個地方。' }],
-    sort: { q: '6 塊地磚，每排放幾塊能剛好排完？把卡片放進對的那一邊。', items: [1, 2, 3, 4, 5, 6].map(w => ({ h: `每排 ${w} 塊`, c: 6 % w ? 1 : 0 })), bins: ['剛好排完', '排不滿'], hint: '想想：最後一排會不會滿？', done: '1、2、3、6 都能剛好排完；4、5 排不滿。' },
-    kid: '能把 6 塊剛好排完的「每排塊數」1、2、3、6', term: '因數', namePic: `<div class="eq5">${K(1, C1)}、${K(2, C1)}、${K(3, C1)}、${K(6, C1)}</div>`,
-    pick: [['4 是 6 的因數，因為 4 比 6 小。', '3 是 6 的因數，因為每排 3 塊能剛好排完。', '比 6 大的數都是 6 的因數。'], 1, '想想剛才：能剛好排完的才算。'],
-    pose: { q: '看圖出題：哪一個故事是在問「3 是不是 9 的因數」？', pic: () => `<div class="rows6">${[0, 1, 2].map(() => `<div class="row6">${em('🥚', 3)}</div>`).join('')}</div>`, opts: ['9 顆蛋，每盒裝 3 顆，剛好裝完嗎？', '9 顆蛋，又買 3 顆，一共幾顆？', '9 顆蛋，吃掉 3 顆，還剩幾顆？'], a: 0, why: '因數是在問「能不能剛好分完」。', ok: '對了！這個故事和排地磚一樣，問能不能剛好分完。' },
-    check: { q: '8 顆糖，每袋裝 3 顆，剛好裝完嗎？3 是 8 的因數嗎？', pic: () => `<div class="rows6"><div class="row6">${em('🍬', 3)}</div><div class="row6">${em('🍬', 3)}</div><div class="row6">${em('🍬', 2)}</div></div>`, opts: ['是', '不是'], a: 1, hint: '回到剛才「每排 3 塊」那一步：最後一排有沒有滿？', ok: '對了！最後一袋只有 2 顆，沒有剛好裝完，3 不是 8 的因數。' } }),
+    sort: { q: '6 塊地磚，每排放幾塊能剛好排完？把卡片放進對的那一邊。', items: [1, 2, 3, 4, 5, 6].map(w => ({ h: `每排 ${w} 塊`, c: 6 % w ? 1 : 0 })), bins: ['剛好排完', '排不滿'], hint: '在心裡排排看：最後一排會不會滿？', done: '1、2、3、6 都能剛好排完；4、5 排不滿。' },
+    nameSay: `每排 3 塊，6 塊剛好排成 2 排：6÷3＝2，沒有餘數。<br>像 1、2、3、6 這樣，能把 6 剛好分完的數，叫作 6 的${T('因數')}。4 會剩下 2 塊，所以 4 不是。`, namePic: `<div class="eq5">${K(1, C1)}、${K(2, C1)}、${K(3, C1)}、${K(6, C1)}</div>`,
+    pick: [['4 是 6 的因數，因為 4 比 6 小。', '3 是 6 的因數，因為每排 3 塊能剛好排完。', '比 6 大的數都是 6 的因數。'], 1, ['比 6 小不一定行：每排 4 塊，最後一排只有 2 塊。', '', '每排 7 塊，連一排都排不滿。']],
+    pose: { kind: 'pic', q: '哪一個問題是在問「3 是不是 9 的因數」？', pic: () => `<div class="rows6">${[0, 1, 2].map(() => `<div class="row6">${em('🥚', 3)}</div>`).join('')}</div>`, opts: ['9 顆蛋，每盒裝 3 顆，剛好裝完嗎？', '9 顆蛋，又買 3 顆，一共幾顆？', '9 顆蛋，吃掉 3 顆，還剩幾顆？'], a: 0, why: ['', '這是把蛋加起來，不是問能不能剛好分完。', '這是拿走一些，不是問能不能剛好分完。'], ok: '對了！這個問題和排地磚一樣，問能不能剛好分完。' },
+    check: { q: '8 顆糖，每袋裝 3 顆，剛好裝完嗎？3 是 8 的因數嗎？', pic: () => `<div class="rows6"><div class="row6">${em('🍬', 3)}</div><div class="row6">${em('🍬', 3)}</div><div class="row6">${em('🍬', 2)}</div></div>`, opts: ['是', '不是'], a: 1, hint: '回到剛才「每排 3 塊」那一步：最後一排有沒有滿？', hints: ['最後一袋只有 2 顆，不是 3 顆：8÷3 有餘數。', ''], ok: '對了，你看了最後一袋：只有 2 顆，沒有剛好裝完，3 不是 8 的因數。' } }),
 
   mk({ key: 'expand', title: '擴分', term: '擴分', who: 'rabbit', game: 'ext', when: ['ext:slice'], board: 'tapSet',
-    hook: '一個披薩切成 2 塊，你吃 1 塊，就是 1/2 個。這個你會吧？', hookPic: () => wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }]),
-    guess: ['如果把每一塊再切一刀，你吃到的披薩會變多嗎？', ['變多', '一樣多', '變少']],
-    rounds: [1, 2, 3].map((r, i) => { const n = [2, 3, 3][i], a = [1, 1, 2][i]; return { p: { right: Array.from({ length: n }, (_, j) => String(j)), draw: s => `<div class="vs">${wedgePie([].concat(...Array.from({ length: n }, (_, j) => s.has(String(j)) ? [{ f: 1 / n / 2, c: j < a ? PIE_ON : PIE_OFF }, { f: 1 / n / 2, c: j < a ? PIE_ON : PIE_OFF }] : [{ f: 1 / n, c: j < a ? PIE_ON : PIE_OFF, t: String(j) }])))}</div>`, st: s => `${a * (1 + (s.size ? 1 : 0)) > 0 ? '' : ''}塗色：${[...Array(n)].reduce((c, _, j) => c + (j < a ? (s.has(String(j)) ? 2 : 1) : 0), 0)} 塊，全部 ${n + s.size} 塊`, res: `塊數變成 2 倍，塗色那一份的大小沒有變。` }, say: ['看我做：1/2 個披薩，我把每一塊都再切一刀。', '一起做：1/3 個披薩，我先切一塊，剩下的你點來切。', '換你做：2/3 個披薩，每一塊都點一下，切一刀。'][i], predict: i === 2 ? ['先猜：切完以後，塗色的會是幾塊？', ['2 塊', '4 塊', '6 塊'], 1] : null }; }),
-    reveal: '塊數變多了，可是紅色那一份，大小一點都沒變。很多人一開始也以為切越多吃越多。', revealPic: () => `<div class="vs two5">${wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }])}${wedgePie([{ f: .25, c: PIE_ON }, { f: .25, c: PIE_ON }, { f: .25, c: PIE_OFF }, { f: .25, c: PIE_OFF }])}</div>`,
-    fade: [{ h: `<div class="vs two5">${wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }])}<b>→</b>${wedgePie([{ f: .25, c: PIE_ON }, { f: .25, c: PIE_ON }, { f: .25, c: PIE_OFF }, { f: .25, c: PIE_OFF }])}</div>`, t: '第 1 步：真的披薩，每塊再切一刀。' },
-      { h: `${barRow(2, 1, PIE_ON)}${barRow(4, 2, PIE_ON)}`, t: '第 2 步：畫成長條。上下的紅色一樣長。' },
-      { h: `<div class="eq5"><span class="fr5">${K(1, C1)}<i></i>${K(2, C2)}</span> ＝ <span class="fr5">${K(2, C1)}<i></i>${K(4, C2)}</span></div><div class="trail">紅：塗色的塊數 1→2　藍：全部的塊數 2→4　兩個都變 2 倍</div>`, t: '第 3 步：寫成分數，上下的數都乘 2。' }],
-    kid: '每塊都切細，上面和下面的數一起變大，可是份量不變，這樣的切法', term: '擴分',
-    pick: [['擴分以後，吃到的變多了。', '擴分是分子和分母一起乘同一個數，份量不變。', '擴分只要把分母變大。'], 1, '想想披薩：紅色變多了嗎？'],
-    pose: { q: '同一題只改一樣：1/2 個披薩，每塊改成再切 3 刀（變成更多塊），吃到的份量會變嗎？', pic: () => wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }]), opts: ['會變多', '不會變', '會變少'], a: 1, why: '回想剛才：切得再細，紅色那一份有沒有變大？', ok: '對了！切幾刀都一樣，改的只是塊數。' },
-    check: { q: '2/3 片巧克力，每一格再切成 2 小格。塗色的現在是全部 6 小格裡的幾格？', pic: () => `<div class="vs">${foodSvg(['巧克力', 'bar', '片'], 3, 2)}</div>`, opts: ['2 格', '4 格', '6 格'], a: 1, hint: '回到「每一塊都切一刀」那一步：塗色的 2 塊，每塊變成幾塊？', ok: '對了！2/3＝4/6。分子分母都乘 2。' } }),
+    hook: '這是一個披薩，平均分成 2 塊，紅色是其中 1 塊，也就是這個披薩的 1/2。', hookPic: () => wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }]),
+    guess: ['如果把每一塊再平均分成 2 塊，紅色部分的大小會改變嗎？', ['變多', '一樣多', '變少'], 1],
+    mh: '每一塊都要點到，點一下就把那一塊平均分成 2 塊。紅的和白的都要分。',
+    rounds: [1, 2, 3].map((r, i) => { const n = [2, 3, 3][i], a = [1, 1, 2][i]; return { p: { right: Array.from({ length: n }, (_, j) => String(j)), draw: s => `<div class="vs">${wedgePie([].concat(...Array.from({ length: n }, (_, j) => s.has(String(j)) ? [{ f: 1 / n / 2, c: j < a ? PIE_ON : PIE_OFF }, { f: 1 / n / 2, c: j < a ? PIE_ON : PIE_OFF }] : [{ f: 1 / n, c: j < a ? PIE_ON : PIE_OFF, t: String(j) }])))}</div>`, st: s => `紅色：${[...Array(n)].reduce((c, _, j) => c + (j < a ? (s.has(String(j)) ? 2 : 1) : 0), 0)} 塊，全部 ${n + s.size} 塊`, res: `全部的塊數和紅色的塊數都變成 2 倍，紅色部分的大小沒有變。` }, say: ['看我做：這個披薩的 1/2 是紅色。我把每一塊都再平均分成 2 塊。', '一起做：紅色是 1/3 個披薩。我先把一塊平均分成 2 塊，剩下的你點。', '換你做：紅色是 2/3 個披薩，每一塊都點一下，平均分成 2 塊。'][i], predict: i === 2 ? ['先預測：分完以後，紅色會是幾塊？', ['2 塊', '4 塊', '6 塊'], 1] : null }; }),
+    reveal: '塊數變多了，紅色部分的大小沒有變。', revealPic: () => `<div class="vs two5">${wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }])}${wedgePie([{ f: .25, c: PIE_ON }, { f: .25, c: PIE_ON }, { f: .25, c: PIE_OFF }, { f: .25, c: PIE_OFF }])}</div>`,
+    fade: [{ h: `<div class="vs two5">${wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }])}<b>→</b>${wedgePie([{ f: .25, c: PIE_ON }, { f: .25, c: PIE_ON }, { f: .25, c: PIE_OFF }, { f: .25, c: PIE_OFF }])}</div>`, t: '第 1 步：真的披薩，每塊再平均分成 2 塊。' },
+      { h: `${barRow(2, 1, PIE_ON)}${barRow(4, 2, PIE_ON)}`, t: '第 2 步：畫成長條。上下兩條的紅色一樣長。' },
+      { h: `<div class="eq5"><span class="fr5">${K(1, C1)}<i></i>${K(2, C2)}</span> ＝ <span class="fr5">${K(2, C1)}<i></i>${K(4, C2)}</span></div><div class="trail">紅：分子（紅色塊數）1→2　藍：分母（全部塊數）2→4　兩個都乘 2</div>`, t: '第 3 步：寫成分數：分子（上面的數）和分母（下面的數）都乘 2。' }],
+    nameSay: `分子和分母同乘一個大於 1 的整數（這裡是 2），分數的值不變。<br>這樣改寫分數，叫作${T('擴分')}。`,
+    pick: [['擴分以後，紅色部分變多了。', '擴分是分子和分母同乘一個大於 1 的整數，分數的值不變。', '擴分只要把分母乘 2。'], 1, ['看披薩：塊數變多，紅色部分大小不變。', '', '只乘分母，1/2 會變成 1/4，紅色就變少了。']],
+    pose: { kind: 'change', q: '紅色仍是 1/2 個披薩，這次每一塊平均分成 3 塊。紅色部分的大小會變嗎？', pic: () => wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }]), opts: ['會變多', '不會變', '會變少'], a: 1, why: ['分得再細，只是塊數變多；紅色部分的範圍沒有變。', '', '分子分母都乘 3，紅色部分不會變少。'], ok: '對了，1/2＝3/6。分得更細，只改變塊數。' },
+    check: { q: '一片巧克力平均分成 3 格，塗色 2 格，是 2/3 片。每一格再平均分成 2 小格，塗色的現在是全部 6 小格裡的幾格？', pic: () => `<div class="vs">${foodSvg(['巧克力', 'bar', '片'], 3, 2)}</div>`, opts: ['2 格', '4 格', '6 格'], a: 1, hint: '回到「每一塊都分成 2 塊」那一步：塗色的 2 格，每格變成幾小格？', hints: ['2 格是分之前的格數；每格分成 2 小格後要再數一次。', '', '6 是全部的小格數，塗色的只有一部分。'], ok: '對了，塗色的 2 格各分成 2 小格，共 4 小格：2/3＝4/6。' } }),
 
   mk({ key: 'ffrac', title: '分數倍', term: '分數倍', who: 'rabbit', game: 'fcalc', when: ['fcalc:of', 'fcalc:times', 'fcalc:area', 'fcalc:fdiv', 'fcalc:cmp'], board: 'counter',
-    hook: '6 顆蘋果的 2 倍是 12 顆，你會吧？乘 2 就是拿 2 次。', hookPic: () => `${em('🍎', 6)}<b> ×2 → </b>${em('🍎', 12)}`,
-    guess: ['那 6 顆蘋果「乘 1/2」，會比 6 顆多還是少？', ['比 6 多', '一樣', '比 6 少']],
-    rounds: [[6, 2, 1], [6, 3, 1], [8, 4, 1]].map(([n, d, a], i) => ({ p: { n: 2, draw: k => `<div class="grps">${k === 0 ? `<span class="grp tap5w" data-t="x">${em('🍎', n)}</span>` : Array.from({ length: d }, (_, j) => `<span class="grp ${k >= 2 && j < a ? 'on' : ''} ${k === 1 && j === 0 ? 'tap5w' : ''}" ${k === 1 && j === 0 ? 'data-t="x"' : ''}>${em('🍎', n / d)}</span>`).join('')}</div>`, st: k => [`${n} 顆蘋果`, `分成 ${d} 份，每份 ${n / d} 顆`, `拿 1 份：${n / d} 顆`][k], res: `${n} 顆的 1/${d}，是 ${n / d} 顆，比 ${n} 少。` }, say: [`看我做：6 顆蘋果乘 1/2。先點蘋果分成 2 份，再點一份拿走。`, `一起做：6 顆乘 1/3。我先分成 3 份，你點一份拿走。`, `換你做：8 顆乘 1/4。先分，再拿一份。`][i], predict: i === 2 ? ['先猜：8 顆的 1/4 是幾顆？', ['2 顆', '4 顆', '32 顆'], 0] : null })),
-    reveal: '乘 1/2，就是「拿一半」，所以變少了。很多人一開始以為乘法一定會變大。', revealPic: () => `${em('🍎', 6)}<b> ×1/2 → </b>${em('🍎', 3)}`,
-    fade: [{ h: `<div class="grps"><span class="grp on">${em('🍎', 2)}</span><span class="grp">${em('🍎', 2)}</span><span class="grp">${em('🍎', 2)}</span></div>`, t: '第 1 步：6 顆蘋果分 3 份，拿 1 份。' },
-      { h: `${barRow(3, 1, C1)}<div class="trail">一整條是 6 顆，切 3 段，塗 1 段</div>`, t: '第 2 步：畫成長條。' },
-      { h: `<div class="eq5">${K(6, C2)} × <span class="fr5">${K(1, C1)}<i></i>${K(3, C3)}</span> ＝ ${K(2, C4)}</div><div class="trail">藍 6：一整條　綠 3：切 3 段　紅 1：拿 1 段　橘 2：拿到 2 顆</div>`, t: '第 3 步：寫成算式，每個數連回長條。' }],
-    sort: { q: '哪些會比原來少？放進對的那一邊。', items: [['6×1/2', 0], ['6×2', 1], ['8×1/4', 0], ['8×3', 1], ['4×1/2', 0]].map(([h, c]) => ({ h, c })), bins: ['比原來少', '比原來多'], hint: '乘的數比 1 小，就是只拿一部分。', done: '乘比 1 小的數會變少，乘比 1 大的數才變多。' },
-    kid: '「6 的 1/3」就是拿 6 的 3 份裡的 1 份，可以寫成 6×1/3。乘一個分數', term: '分數倍',
-    pick: [['乘法的答案一定比原來大。', '6×1/3 就是 6 顆的 1/3，是 2 顆。', '6×1/3 是 18 顆。'], 1, '想想分蘋果：拿 3 份裡的 1 份。'],
-    pose: { q: '把三張卡拼成一題，要能用「8×1/4」來算。', rows: [{ label: '東西', cards: ['8 顆糖', '1/4 顆糖'], ok: [0], why: '算式裡的 8 是全部有幾顆。' }, { label: '怎麼做', cards: ['分成 4 份拿 1 份，', '再買 4 顆，'], ok: [0], why: '×1/4 是分成 4 份拿 1 份，不是再買。' }, { label: '問什麼', cards: ['拿到幾顆？', '今天星期幾？'], ok: [0], why: '問的要是算式能算出來的東西。' }], ok: '出得好！8 顆糖分成 4 份拿 1 份，拿到幾顆？就是 8×1/4。' },
-    check: { q: '12 元的 1/2 倍是幾元？', pic: () => `${em('🟡', 12)}`, opts: ['6 元', '12 元', '24 元'], a: 0, hint: '回到「分成幾份、拿一份」那一步：12 元分 2 份，拿 1 份。', ok: '對了！12×1/2＝6 元，比 12 少。' } }),
+    hook: '先回想整數倍：6 顆蘋果的 2 倍，是拿 2 次 6 顆，6×2＝12 顆。', hookPic: () => `${em('🍎', 6)}<b> ×2 → </b>${em('🍎', 12)}`,
+    guess: ['那 6 顆蘋果的 1/2 倍，會比 6 顆多還是少？', ['比 6 多', '一樣', '比 6 少'], 2],
+    mh: '先點全部的蘋果，把它平均分成幾份；再點其中一份拿走。',
+    rounds: [[6, 2, 1], [6, 3, 1], [8, 4, 1]].map(([n, d, a], i) => ({ p: { n: 2, draw: k => `<div class="grps">${k === 0 ? `<span class="grp tap5w" data-t="x">${em('🍎', n)}</span>` : Array.from({ length: d }, (_, j) => `<span class="grp ${k >= 2 && j < a ? 'on' : ''} ${k === 1 && j === 0 ? 'tap5w' : ''}" ${k === 1 && j === 0 ? 'data-t="x"' : ''}>${em('🍎', n / d)}</span>`).join('')}</div>`, st: k => [`${n} 顆蘋果`, `平均分成 ${d} 份，每份 ${n / d} 顆`, `取 1 份：${n / d} 顆`][k], res: `${n} 顆的 1/${d} 倍，是 ${n / d} 顆，比 ${n} 顆少。` }, say: [`看我做：求 6 顆的 1/2 倍。先點蘋果，平均分成 2 份，再點一份拿走。`, `一起做：6 顆的 1/3 倍。我先平均分成 3 份，你點一份拿走。`, `換你做：8 顆的 1/4 倍。先平均分成 4 份，再取 1 份。`][i], predict: i === 2 ? ['先預測：8 顆的 1/4 倍是幾顆？', ['2 顆', '4 顆', '32 顆'], 0] : null })),
+    reveal: '6 的 1/2 倍是平均分成 2 份、取 1 份，得到 3 顆，比 6 顆少。乘的數比 1 小時，得到的比原來少。', revealPic: () => `${em('🍎', 6)}<b> ×1/2 → </b>${em('🍎', 3)}`,
+    fade: [{ h: `<div class="grps"><span class="grp on">${em('🍎', 2)}</span><span class="grp">${em('🍎', 2)}</span><span class="grp">${em('🍎', 2)}</span></div>`, t: '第 1 步：6 顆蘋果平均分成 3 份，取 1 份。' },
+      { h: `${barRow(3, 1, C1)}<div class="trail">一整條是 6 顆，平均分成 3 段，塗 1 段</div>`, t: '第 2 步：畫成長條。' },
+      { h: `<div class="eq5">${K(6, C2)} × <span class="fr5">${K(1, C1)}<i></i>${K(3, C3)}</span> ＝ ${K(2, C4)}</div><div class="trail">藍 6：一整條　綠 3：平均分成 3 段　紅 1：取 1 段　橘 2：得到 2 顆</div>`, t: '第 3 步：寫成算式，每個數連回長條。' }],
+    sort: { q: '原數都是正的。哪些會比原來少？放進對的那一邊。', items: [['6×1/2', 0], ['6×2', 1], ['8×1/4', 0], ['6×2/3', 0], ['6×3/2', 1]].map(([h, c]) => ({ h, c })), bins: ['比原來少', '比原來多'], hint: '乘的數比 1 小，就只拿了一部分；乘的數比 1 大，就比原來多。', done: '乘的數介於 0 和 1 之間時變少（6 的 2/3 倍是平均分成 3 份取 2 份，得 4）；比 1 大時變多（6 的 3/2 倍是 9）。' },
+    nameSay: `求 6 的 1/3 倍，就是把 6 平均分成 3 份，取其中 1 份，寫成 6×1/3＝2。<br>像這樣用分數表示「幾倍」，叫作${T('分數倍')}。`,
+    pick: [['乘法的答案一定比原來大。', '6×1/3 是把 6 平均分成 3 份取 1 份，得到 2。', '6×1/3 是 18。'], 1, ['乘的數比 1 小時，答案會比原來小，像 6×1/2＝3。', '', '18 是 6×3。×1/3 是平均分成 3 份取 1 份。']],
+    pose: { q: '把三張卡拼成一道題，要能用「8×1/4」來算。每一列選一張，合理的選法不只一種。', rows: [{ label: '東西', cards: ['8 顆糖', '8 張貼紙', '1/4 顆糖'], ok: [0, 1], why: '算式裡的 8 是全部有多少，不是 1/4。' }, { label: '怎麼做', cards: ['平均分成 4 份，取 1 份，', '再買 4 個，'], ok: [0], why: '×1/4 是平均分成 4 份取 1 份，不是再買。' }, { label: '問什麼', cards: ['拿到多少？', '今天星期幾？'], ok: [0], why: '問的要是算式能算出來的東西。' }], ok: '拼好了！這一題可以用 8×1/4 算：8 平均分成 4 份，取 1 份，得 2。' },
+    check: { q: '12 元的 1/2 倍是幾元？', pic: () => `${em('🟡', 12)}`, opts: ['6 元', '12 元', '24 元'], a: 0, hint: '回到「平均分成幾份、取一份」那一步：12 元平均分成 2 份，取 1 份。', hints: ['', '12 元是原來的錢；1/2 倍要平均分成 2 份取 1 份。', '24 元是 12 的 2 倍，不是 1/2 倍。'], ok: '對了，你把 12 元平均分成 2 份、取 1 份：12×1/2＝6 元，比 12 少。' } }),
 ];
 
 /* ---------- 還沒改成鷹架版的段落，暫用舊版（逐段改完就刪） ---------- */
@@ -2012,50 +2015,74 @@ const OLD_LESSON_STORY = {
     check: { q: '一個大貨櫃要用哪一個來量？', pic: () => '<div class="u-big">🚢</div>', opts: ['立方公分', '立方公尺'], a: 1, why: '貨櫃很大，用大方框。', ok: '對了！大約 30 立方公尺。' } },
 };
 /* ---------- 播放器 ---------- */
+// seenCpt：已經自動播過（含跳過），不再自動播。cptLog：把「看過」和「做過、驗收」分開記（舊存檔沒有這個欄位，用到才建立）
 const seenCpt = () => S.seenCpt || (S.seenCpt = {});
+const cptLog = () => S.cptLog || (S.cptLog = {});
+function logCpt(key, f) { const r = cptLog()[key] || (cptLog()[key] = {}); if (f === 'open' || f === 'hint') r[f] = (r[f] || 0) + 1; else r[f] = 1; }
+function cptStatus(key) { // 看過 ≠ 學會：只有驗收題第一次就答對、操作沒用提示，才算「自己完成驗收」
+  const r = cptLog()[key] || {};
+  if (r.self) return ['done', '自己完成驗收'];
+  if (r.help) return ['help', '經提示完成驗收'];
+  if (r.ops) return ['ops', '做過操作，還沒驗收'];
+  if (r.skip) return ['seen', '跳過了'];
+  if (r.open || seenCpt()[key]) return ['seen', '看過'];
+  return null;
+}
 let cptTimer = null, cptTimers = [];
 const cptStop = () => { if (cptTimer) { clearInterval(cptTimer); cptTimer = null; } cptTimers.forEach(clearTimeout); cptTimers = []; };
+const DEF_MH = { counter: '一次只做一件事：點有黃色虛線框的東西，看看圖上的數量怎麼變。', tapSet: '先想清楚要找的是什麼，再一個一個檢查。', two: '先比較兩個披薩的一塊誰比較大，塊比較大的那一個先分細。', tanks: '水的總量不變。從最高的水塔倒一格給最低的。' };
+const pickWhy = (w, j) => Array.isArray(w) ? w[j] : w;
 function runSeg(C, L, o) {
-  const B = BOARDS[C.board], guess = {}; let backHint = '';
+  const B = BOARDS[C.board], guess = {}; let backHint = '', retCheck = null, lastWrong = '', helped = 0;
+  const log = f => { if (o.log) o.log(f); };
   const skipBtn = '<button class="skip5" id="skipc">跳過</button>';
   const fin = () => { cptStop(); o.done(); };
-  const page = (prompt, body) => { cptStop(); lessonFrame({ title: o.title || '小故事', sem: L.sem, who: C.who }, prompt, body + skipBtn); document.getElementById('out').onclick = () => { cptStop(); o.out(); }; document.getElementById('skipc').onclick = fin; if (backHint) { setMsg(nums(backHint), 'hint'); backHint = ''; } };
+  const skip = () => { cptStop(); (o.skip || o.done)(); };
+  const page = (prompt, body) => { cptStop(); lessonFrame({ title: o.title || '小故事', sem: L.sem, who: C.who }, prompt, body + skipBtn); document.getElementById('out').onclick = () => { cptStop(); o.out(); }; document.getElementById('skipc').onclick = skip; if (backHint) { setMsg(nums(backHint), 'hint'); backHint = ''; } };
   const next = i => () => show(i + 1);
   const btn = (txt, fn) => { actionBtn('nx5', txt).onclick = fn; reveal('#actions'); };
   function show(i) {
     const sc = C.scenes[i]; if (!sc) return fin();
     const tag = { demo: '看我做', together: '一起做', solo: '換你做' }[sc.mode];
-    if (sc.t === 'hook') { page(sc.say, `<div class="cp">${sc.pic ? sc.pic() : ''}</div>`); return btn('好，試試看', next(i)); }
+    if (sc.t === 'hook') { page(sc.say, `<div class="cp">${sc.pic ? sc.pic() : ''}</div>`); return btn('開始', next(i)); }
     if (sc.t === 'guess') {
-      page(sc.q, `<div class="trail">先猜猜看，猜錯也沒關係。</div>`);
+      page(sc.q, `<div class="trail">先選一個你目前的想法，等一下用圖確認。</div>`);
       document.getElementById('actions').innerHTML = `<div class="choices">${sc.opts.map((x, j) => `<button class="choice" data-g5="${j}">${x}</button>`).join('')}</div>`;
-      document.querySelectorAll('[data-g5]').forEach(b => b.onclick = () => { guess.v = sc.opts[+b.dataset.g5]; setMsg(`你猜「${guess.v}」。等一下動手看看。`, 'good'); btn('動手看看', next(i)); });
+      document.querySelectorAll('[data-g5]').forEach(b => b.onclick = () => { guess.v = sc.opts[+b.dataset.g5]; guess.ok = sc.a === undefined ? null : +b.dataset.g5 === sc.a; setMsg(`你選了「${guess.v}」。等一下動手做做看，再對照。`, 'good'); btn('動手做做看', next(i)); });
       return;
     }
     if (sc.t === 'board') {
-      const p = sc.p; let st = B.init(p);
+      const p = sc.p; let st = B.init(p), hl = 0, pre = null;
       page(`<span class="tag5">${tag}</span> ${sc.say}`, `<div class="cp" id="cp"></div><div class="trail" id="ct"></div>`);
       const draw = () => { setEl('cp', B.draw(p, st)); setEl('ct', nums(B.status(p, st))); };
-      const end = () => { draw(); document.getElementById('cp').onclick = null; setMsg(nums(B.result(p, st) + (sc.predictAns !== undefined ? '' : '')), 'good'); sfx.ok(); btn(i + 1 < C.scenes.length ? '下一步' : '完成', next(i)); };
+      const end = () => {
+        draw(); document.getElementById('cp').onclick = null;
+        const cmp = pre === null ? '' : pre ? '<br><small>和你的預測一樣。</small>' : `<br><small>你剛才預測「${sc.predict[1][guess.pi]}」，和結果不一樣。看看圖上是哪裡不同。</small>`;
+        setMsg(nums(B.result(p, st)) + cmp, 'good'); sfx.ok();
+        if (sc.mode === 'solo') log('ops');
+        if (retCheck !== null) { const r = retCheck; return btn('回到驗收題', () => { retCheck = null; show(r); }); }
+        btn(i + 1 < C.scenes.length ? '下一步' : '完成', next(i));
+      };
       const tap = id => { const r = B.tap(p, st, id); if (r.hint) { sfx.retry(); return setMsg(nums(r.hint), 'hint'); } st = r.st; sfx.hop(); setMsg(''); draw(); if (B.done(p, st)) end(); };
       let total = 0; { let s = B.copy(st); while (!B.done(p, s) && total < 60) { s = B.tap(p, s, B.next(p, s)).st; total++; } }
       const autoN = sc.mode === 'demo' ? total : sc.mode === 'together' ? Math.max(1, Math.floor(total / 2)) : 0;
-      const kid = () => { document.getElementById('cp').onclick = e => { const t = e.target.closest('[data-t]'); if (t) tap(t.dataset.t); }; if (sc.mode !== 'demo') actionBtn('hp5', '提示').onclick = () => { const id = B.next(p, st); const el = document.querySelector(`#cp [data-t="${id}"]`); if (el) { el.classList.add('glow5'); } setMsg('發亮的那一個，點它。'); }; };
-      const auto = k => { if (k >= autoN) { if (B.done(p, st)) return end(); setMsg(sc.mode === 'together' ? '換你點，把剩下的做完。' : ''); return kid(); } cptTimers.push(setTimeout(() => { if (!document.getElementById('cp')) return; tap(B.next(p, st)); if (!B.done(p, st)) auto(k + 1); }, 750)); };
+      // 提示分兩層：第一次按給數學提示（要想什麼），再按才給位置提示（發亮下一步）
+      const kid = () => { document.getElementById('cp').onclick = e => { const t = e.target.closest('[data-t]'); if (t) tap(t.dataset.t); }; if (sc.mode !== 'demo') actionBtn('hp5', '提示').onclick = () => { hl++; helped++; log('hint'); if (hl === 1) return setMsg(nums('想一想：' + (sc.mh || DEF_MH[C.board] || DEF_MH.tapSet)), 'hint'); const id = B.next(p, st); const el = document.querySelector(`#cp [data-t="${id}"]`); if (el) el.classList.add('glow5'); setMsg('位置提示：發亮的地方是下一步可以點的。', 'hint'); }; };
+      const auto = k => { if (k >= autoN) { if (B.done(p, st)) return end(); if (sc.mode === 'together') setMsg('換你點，把剩下的做完。需要的話可以按「提示」。'); return kid(); } cptTimers.push(setTimeout(() => { if (!document.getElementById('cp')) return; tap(B.next(p, st)); if (!B.done(p, st)) auto(k + 1); }, p.ms || 750)); };
       draw();
       const go = () => { document.getElementById('actions').innerHTML = ''; auto(0); };
-      if (sc.predict) {
+      if (sc.predict && retCheck === null) { // 預測放在題目條件和圖都出現之後
         setMsg(sc.predict[0]);
         document.getElementById('actions').innerHTML = `<div class="choices">${sc.predict[1].map((x, j) => `<button class="choice" data-p5="${j}">${x}</button>`).join('')}</div>`;
-        document.querySelectorAll('[data-p5]').forEach(b => b.onclick = () => { const ok = +b.dataset.p5 === sc.predict[2]; guess.pre = ok; setMsg(`你猜「${sc.predict[1][+b.dataset.p5]}」。動手看看對不對！`); go(); });
+        document.querySelectorAll('[data-p5]').forEach(b => b.onclick = () => { guess.pi = +b.dataset.p5; pre = guess.pi === sc.predict[2]; setMsg(`你預測「${sc.predict[1][guess.pi]}」。動手做做看，做完再對照。`); go(); });
         return;
       }
       return go();
     }
-    if (sc.t === 'reveal') { page(`${guess.v ? `你剛才猜「${guess.v}」。` : ''}${sc.say}`, `<div class="cp">${sc.pic ? sc.pic() : ''}</div>`); return btn('下一步', next(i)); }
+    if (sc.t === 'reveal') { const cmp = guess.v ? (guess.ok === true ? `你剛才選「${guess.v}」，和圖上的結果一樣。` : guess.ok === false ? `你剛才選「${guess.v}」。現在圖上有什麼不同？` : `你剛才選「${guess.v}」。`) : ''; page(`${cmp}${sc.say}`, `<div class="cp">${sc.pic ? sc.pic() : ''}</div>`); return btn('下一步', next(i)); }
     if (sc.t === 'fade') {
       let k = 0;
-      const step = () => { const s = sc.steps[k], prev = k ? `<div class="prev5">${sc.steps[k - 1].h}</div><div class="arr5">↓ 同一件事</div>` : ''; page(s.t, `${prev}<div class="cp">${s.h}</div>`); btn(k < 2 ? '下一步' : '好，我看懂了', () => { k++; if (k < 3) step(); else show(i + 1); }); };
+      const step = () => { const s = sc.steps[k], prev = k ? `<div class="prev5">${sc.steps[k - 1].h}</div><div class="arr5">↓ 同一件事</div>` : ''; page(s.t, `${prev}<div class="cp">${s.h}</div>`); btn(k < 2 ? '下一步' : '繼續', () => { k++; if (k < 3) step(); else show(i + 1); }); };
       return step();
     }
     if (sc.t === 'sort') {
@@ -2065,35 +2092,43 @@ function runSeg(C, L, o) {
       document.querySelectorAll('[data-c]').forEach(c => c.onclick = () => { document.querySelectorAll('.card5').forEach(x => x.classList.remove('sel')); sel = +c.dataset.c; c.classList.add('sel'); });
       document.querySelectorAll('[data-b]').forEach(b => b.onclick = () => {
         if (sel === null) return setMsg('先點一張卡片。', 'hint');
-        const it = sc.items[sel]; if (it.c !== +b.dataset.b) { sfx.retry(); return setMsg(nums(sc.hint), 'hint'); }
+        const it = sc.items[sel]; if (it.c !== +b.dataset.b) { sfx.retry(); return setMsg(nums(it.w || sc.hint), 'hint'); }
         const card = document.querySelector(`[data-c="${sel}"]`); document.getElementById('bin' + b.dataset.b).appendChild(card); card.disabled = true; card.classList.remove('sel'); sel = null; sfx.hop();
         if (--left === 0) { setMsg(nums(sc.done), 'good'); btn('下一步', next(i)); }
       });
       return;
     }
-    if (sc.t === 'pose') {
-      page(`<span class="tag5">換你出題</span> ${sc.q}`, `<div class="cp">${sc.pic ? sc.pic() : ''}</div>`);
-      if (sc.rows) { // 把「東西、數量、問題」三張卡拼成一題
+    if (sc.t === 'pose') { // 依實際做的事命名：拼成一道題、選一個合適的問題、資料夠嗎、改一個條件
+      const ptag = sc.rows ? '拼成一道題' : { can: '資料夠嗎？', change: '改一個條件', story: '選一個合適的問題', pic: '選一個合適的問題' }[sc.kind] || '選一個合適的問題';
+      const pq = sc.kind === 'can' ? `${sc.q}<br><small>目前的資料夠回答嗎？還需要知道什麼？</small>` : sc.q;
+      page(`<span class="tag5">${ptag}</span> ${pq}`, `<div class="cp">${sc.pic ? sc.pic() : ''}</div>`);
+      if (sc.rows) { // 把「東西、怎麼做、問什麼」三張卡拼成一題；每一列可以有不只一個合理選擇
         const pickd = sc.rows.map(() => -1);
-        const paint = () => { setEl('stage', `<div class="cp">${sc.pic ? sc.pic() : ''}</div>${sc.rows.map((row, ri) => `<div class="prow5"><small>${row.label}</small>${row.cards.map((c, ci) => `<button class="card5 ${pickd[ri] === ci ? 'sel' : ''}" data-r="${ri}" data-k="${ci}">${nums(c)}</button>`).join('')}</div>`).join('')}<div class="trail">${pickd.every(x => x >= 0) ? nums(sc.rows.map((row, ri) => row.cards[pickd[ri]]).join('')) : '每一列選一張'}</div>${skipBtn}`); document.getElementById('skipc').onclick = fin; document.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { pickd[+b.dataset.r] = +b.dataset.k; sfx.hop(); paint(); }); };
+        const paint = () => { setEl('stage', `<div class="cp">${sc.pic ? sc.pic() : ''}</div>${sc.rows.map((row, ri) => `<div class="prow5"><small>${row.label}</small>${row.cards.map((c, ci) => `<button class="card5 ${pickd[ri] === ci ? 'sel' : ''}" data-r="${ri}" data-k="${ci}">${nums(c)}</button>`).join('')}</div>`).join('')}<div class="trail">${pickd.every(x => x >= 0) ? nums(sc.rows.map((row, ri) => row.cards[pickd[ri]]).join('')) : '每一列選一張'}</div>${skipBtn}`); document.getElementById('skipc').onclick = skip; document.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { pickd[+b.dataset.r] = +b.dataset.k; sfx.hop(); paint(); }); };
         paint();
-        actionBtn('ck5', '這樣出題').onclick = () => { if (pickd.some(x => x < 0)) return setMsg('每一列都要選一張。', 'hint'); const bad = sc.rows.findIndex((row, ri) => !row.ok.includes(pickd[ri])); if (bad >= 0) { sfx.retry(); return setMsg(nums(sc.rows[bad].why), 'hint'); } sfx.good(); setMsg(nums(sc.ok), 'good'); btn('下一步', next(i)); };
+        actionBtn('ck5', '這樣拼').onclick = () => { if (pickd.some(x => x < 0)) return setMsg('每一列都要選一張。', 'hint'); const bad = sc.rows.findIndex((row, ri) => !row.ok.includes(pickd[ri])); if (bad >= 0) { sfx.retry(); return setMsg(nums(`「${sc.rows[bad].label}」這一列：${sc.rows[bad].why}`), 'hint'); } sfx.good(); setMsg(nums(sc.ok), 'good'); btn('下一步', next(i)); };
         return;
       }
       document.getElementById('actions').innerHTML = `<div class="choices col">${sc.opts.map((x, j) => `<button class="choice" data-c5="${j}">${nums(x)}</button>`).join('')}</div>`;
-      document.querySelectorAll('[data-c5]').forEach(b => b.onclick = () => { if (+b.dataset.c5 === sc.a) { sfx.good(); setMsg(nums(sc.ok), 'good'); return btn('下一步', next(i)); } sfx.retry(); b.disabled = true; b.classList.add('no'); setMsg(nums(sc.why), 'hint'); });
+      document.querySelectorAll('[data-c5]').forEach(b => b.onclick = () => { const j = +b.dataset.c5; if (j === sc.a) { sfx.good(); setMsg(nums(sc.ok), 'good'); return btn('下一步', next(i)); } sfx.retry(); b.disabled = true; b.classList.add('no'); setMsg(nums(pickWhy(sc.why, j)), 'hint'); });
       return;
     }
-    if (sc.t === 'name') { page(`${sc.kid}，<br>就叫作${T(sc.term)}。`, `<div class="cp">${typeof sc.pic === 'function' ? sc.pic() : sc.pic}</div><div class="tagrow"><span class="termtag">${sc.term}</span></div>`); return btn('下一步', next(i)); }
+    if (sc.t === 'name') { page(sc.say || `${sc.kid}，<br>就叫作${T(sc.term)}。`, `<div class="cp">${typeof sc.pic === 'function' ? sc.pic() : sc.pic}</div><div class="tagrow"><span class="termtag">${sc.term}</span></div>`); return btn('下一步', next(i)); }
     if (sc.t === 'pick' || sc.t === 'check') {
       const chk = sc.t === 'check';
       page(chk ? sc.q : '哪一句話說得對？', chk ? `<div class="cp">${sc.pic()}</div>` : '');
+      if (chk && lastWrong) setMsg(nums(`你上一次選「${lastWrong}」。對照剛才那一步，再選一次。`), 'hint');
       document.getElementById('actions').innerHTML = `<div class="choices ${chk ? '' : 'col'}">${sc.opts.map((x, j) => `<button class="choice" data-c5="${j}">${nums(x)}</button>`).join('')}</div>`;
       document.querySelectorAll('[data-c5]').forEach(b => b.onclick = () => {
-        if (+b.dataset.c5 === sc.a) { sfx.good(); if (!chk) { setMsg('對了！', 'good'); return btn('下一步', next(i)); } setMsg(nums(sc.ok), 'good'); if (o.right) o.right(); document.getElementById('skipc').hidden = true; return btn(o.last || '完成', fin); }
+        const j = +b.dataset.c5;
+        if (j === sc.a) {
+          sfx.good(); if (!chk) { setMsg('對了。', 'good'); return btn('下一步', next(i)); }
+          setMsg(nums(sc.ok) + (o.note ? `<br><small>${nums(o.note)}</small>` : ''), 'good'); if (o.right) o.right(!lastWrong && !helped); document.getElementById('skipc').hidden = true; return btn(o.last || '完成', fin);
+        }
         sfx.retry(); b.disabled = true; b.classList.add('no');
-        if (!chk) return setMsg(nums(sc.why), 'hint');
-        setMsg(nums(sc.hint), 'hint'); actionBtn('bk', '回去看那一步').onclick = () => { backHint = sc.hint; show(sc.back); };
+        if (!chk) return setMsg(nums(pickWhy(sc.why, j)), 'hint');
+        const h = (sc.hints && sc.hints[j]) || sc.hint; lastWrong = sc.opts[j];
+        setMsg(nums(h), 'hint'); actionBtn('bk', '回去看那一步').onclick = () => { backHint = `${h}<br><small>做完這一步，會直接回到驗收題。</small>`; retCheck = i; show(sc.back); };
       });
     }
   }
@@ -2101,402 +2136,508 @@ function runSeg(C, L, o) {
 }
 let CONCEPTS = SEGS; // segs5*.js 補上其餘段落後重新組合
 const conceptsOf = g => CONCEPTS.filter(c => c.game === g || c.when.some(w => w.startsWith(g + ':')));
-function runConcept(key, then) {
+function runConcept(key, then, note) {
   const C = CONCEPTS.find(c => c.key === key);
-  if (!C.scenes) return storyFlow(C, { title: C.title, sem: GAMES[C.game].sem, who: C.who }, { done: () => { seenCpt()[key] = 1; save(); then(); }, right: () => { seenCpt()[key] = 1; save(); }, out: () => { R = null; go(''); }, last: '開始玩' });
-  runSeg(C, { sem: GAMES[C.game].sem }, { done: () => { seenCpt()[key] = 1; save(); then(); }, right: () => { seenCpt()[key] = 1; save(); }, out: () => { R = null; go(''); }, last: '開始玩' });
+  logCpt(key, 'open'); save();
+  const o = { done: () => { seenCpt()[key] = 1; save(); then(); }, skip: () => { seenCpt()[key] = 1; logCpt(key, 'skip'); save(); then(); }, right: self => { seenCpt()[key] = 1; logCpt(key, self ? 'self' : 'help'); save(); }, log: f => logCpt(key, f), out: () => { R = null; go(''); }, last: '開始玩', note };
+  if (!C.scenes) return storyFlow(C, { title: C.title, sem: GAMES[C.game].sem, who: C.who }, o);
+  runSeg(C, { sem: GAMES[C.game].sem }, o);
 }
 const LESSON_STORY = {};
 function lessonStory(key, L, next, leave) { // 單位教室開場：一個單位一段，依序播
   if (!LESSON_STORY[key] && OLD_LESSON_STORY[key]) return storyFlow(OLD_LESSON_STORY[key], { title: '單位教室', sem: L.sem, who: L.who }, { done: next, out: leave, last: '再多認識一點' });
   const list = LESSON_STORY[key] || []; let i = 0;
-  const run = () => { if (i >= list.length) return next(); runSeg(list[i++], L, { done: run, out: leave, last: i < list.length ? '下一個單位' : '再多認識一點', title: '單位教室' }); };
+  const run = () => { if (i >= list.length) return next(); const seg = list[i++]; logCpt(seg.key, 'open'); runSeg(seg, L, { done: run, skip: () => { logCpt(seg.key, 'skip'); save(); run(); }, right: self => { logCpt(seg.key, self ? 'self' : 'help'); save(); }, log: f => logCpt(seg.key, f), out: leave, last: i < list.length ? '下一個單位' : '再多認識一點', title: '單位教室' }); };
   run();
 }
-function conceptThen(q, then) { // 第一次碰到這個題型，自動播；已看過就不再播
-  const key = q.kind + ':' + q.mode, C = CONCEPTS.find(c => c.when.includes(key) && !seenCpt()[c.key]);
+function conceptThen(q, then) { // 第一次碰到這個題型：只播目前最需要的一段（還沒看過的第一段），其他列為選讀，不連播
+  const key = q.kind + ':' + q.mode, list = CONCEPTS.filter(c => c.when.includes(key)), C = list.find(c => !seenCpt()[c.key]);
   if (!C) return then();
-  runConcept(C.key, () => conceptThen(q, then));
+  const rest = list.filter(c => c !== C && !seenCpt()[c.key]).map(c => `〈${c.title}〉`);
+  runConcept(C.key, then, rest.length ? `相關的小故事${rest.join('、')}可以之後按題目上的 💡 選讀。` : '');
 }
-function viewConcepts(g, back) { // 重看
+function viewConcepts(g, back) { // 重看：「看過」和「做過、驗收」分開顯示
   const list = g ? conceptsOf(g) : CONCEPTS;
   window.scrollTo(0, 0);
-  $app.innerHTML = `<div class="top"><button class="icon-btn" id="bkc" aria-label="回去">⌂</button><h2 class="page-h">新概念小故事</h2></div><p class="tag">想再看一次哪一個？</p><div class="lessons">${list.map(c => `<button class="lesson" data-rc="${c.key}"><span class="l-t"><b>${c.title}</b><small>${GAMES[c.game].name}</small></span><em class="sem">${GAMES[c.game].sem}</em>${seenCpt()[c.key] ? '<span class="badge in">✓</span>' : ''}</button>`).join('')}</div>`;
+  $app.innerHTML = `<div class="top"><button class="icon-btn" id="bkc" aria-label="回去">⌂</button><h2 class="page-h">新概念小故事</h2></div><p class="tag">想再看一次哪一個？</p><p class="cst5-note">「看過」不等於學會；驗收題自己答對，才標「自己完成驗收」。</p><div class="lessons">${list.map(c => { const s = cptStatus(c.key); return `<button class="lesson" data-rc="${c.key}"><span class="l-t"><b>${c.title}</b><small>${GAMES[c.game].name}</small></span><em class="sem">${GAMES[c.game].sem}</em>${s ? `<span class="cst5 ${s[0]}">${s[1]}</span>` : ''}</button>`; }).join('')}</div>`;
   document.getElementById('bkc').onclick = back;
   document.querySelectorAll('[data-rc]').forEach(b => b.onclick = () => runConcept(b.dataset.rc, () => viewConcepts(g, back)));
 }
-/* ---------- 鷹架版段落（一）：因數倍數、多邊形、分數、對稱、平均、分配律、底和高 ---------- */
-const cnt = (n, draw, st, res, say, predict) => ({ p: { n, draw, st, res }, say, predict: predict || null });
-const tset = (right, draw, st, res, say, predict, hints) => ({ p: { right, draw, st, res, hints }, say, predict: predict || null });
-const PK = { story: '選故事：', can: '能不能解：', change: '改一樣：', pic: '看圖出題：' };
-const pose = (kind, q, opts, a, why, ok, pic) => ({ q: PK[kind] + q, opts, a, why, ok, pic });
+/* ---------- 鷹架版段落（一）：因數倍數、多邊形、分數（依 2026-11-02 外部審查修訂） ---------- */
+const cnt = (n, draw, st, res, say, predict, mh) => ({ p: { n, draw, st, res }, say, predict: predict || null, mh });
+const tset = (right, draw, st, res, say, predict, hints, mh) => ({ p: { right, draw, st, res, hints }, say, predict: predict || null, mh });
+// 「選一個合適的問題／資料夠嗎／改一個條件」：kind 決定畫面上的標籤，why 可以是每個選項各一句
+const pose = (kind, q, opts, a, why, ok, pic) => ({ kind, q, opts, a, why, ok, pic });
 const step3 = (h1, t1, h2, t2, h3, t3) => [{ h: h1, t: '第 1 步：' + t1 }, { h: h2, t: '第 2 步：' + t2 }, { h: h3, t: '第 3 步：' + t3 }];
 const lit = (s, c) => `<b style="color:${c}">${s}</b>`;
+// 時鐘：短針是時針、長針是分針（h 可以有小數，m 是分鐘）
+const clock2 = (h, m) => { const P = (deg, l) => [100 + l * Math.sin(deg * Math.PI / 180), 100 - l * Math.cos(deg * Math.PI / 180)], hh = P((h % 12) * 30 + m * .5, 44), mm = P(m * 6, 70); let s = '<svg class="clock4" viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="#fff" stroke="#33405a" stroke-width="4"/>'; for (let i = 1; i <= 12; i++) { const [x, y] = P(i * 30, 76); s += `<text x="${x}" y="${y + 6}" text-anchor="middle" class="pt">${i}</text>`; } return s + `<line x1="100" y1="100" x2="${mm[0]}" y2="${mm[1]}" stroke="#2f5f9e" stroke-width="5" stroke-linecap="round"/><line x1="100" y1="100" x2="${hh[0]}" y2="${hh[1]}" stroke="#d6476b" stroke-width="8" stroke-linecap="round"/><circle cx="100" cy="100" r="6" fill="#33405a"/></svg>`; };
 // 兩堆磚排排看：先排紅磚，再排藍磚
 const bricks2 = (a, b, w) => k => { const ra = Math.min(k, a), rb = Math.max(0, k - a); const rows = (n, e) => { const r = []; for (let i = 0; i < n; i += w) r.push(`<div class="row6">${em(e, Math.min(w, n - i))}</div>`); return r.join(''); }; return `<div class="vs two5"><div class="rows6">${rows(ra, '🟥') || '<small>紅磚</small>'}</div><div class="rows6">${rows(rb, '🟦') || '<small>藍磚</small>'}</div></div><div class="pile6">${k < a + b ? `<span class="tap5w big6" data-t="x">${k < a ? '🟥' : '🟦'}</span>${em(k < a ? '🟥' : '🟦', (k < a ? a - k : a + b - k) - 1)}` : ''}</div>`; };
 const bricksSt = (a, b, w) => k => k < a + b ? `排了 ${k} 塊` : `紅磚${a % w ? '最後一排不滿' : '剛好排完'}，藍磚${b % w ? '最後一排不滿' : '剛好排完'}`;
-const brRound = (a, b, w, say, predict) => cnt(a + b, bricks2(a, b, w), bricksSt(a, b, w), `每排 ${w} 塊：紅磚${a % w ? '排不滿' : '剛好'}，藍磚${b % w ? '排不滿' : '剛好'}。`, say, predict);
-const lampsDraw = (A, B) => k => `${lampPair(k && k % A === 0, k && k % B === 0)}<div class="lines5"><div>${Array.from({ length: Math.max(k, 1) }, (_, i) => `<i class="${(i + 1) % A === 0 && i < k ? 'r' : ''}">${i + 1}</i>`).join('')}</div><div>${Array.from({ length: Math.max(k, 1) }, (_, i) => `<i class="${(i + 1) % B === 0 && i < k ? 'g' : ''}">${i + 1}</i>`).join('')}</div></div><div class="pile6"><span class="tap5w big6" data-t="x">⏱️</span><small>點一下過 1 秒</small></div>`;
-const lampRound = (A, B, n, say, predict) => cnt(n, lampsDraw(A, B), k => k ? `第 ${k} 秒：${k % A === 0 && k % B === 0 ? '兩盞一起亮！' : k % A === 0 ? '紅燈亮' : k % B === 0 ? '綠燈亮' : '都沒亮'}` : '按碼表開始', `第 ${n} 秒，兩盞燈第一次一起亮。`, say, predict);
+const brRound = (a, b, w, say, predict) => cnt(a + b, bricks2(a, b, w), bricksSt(a, b, w), `每排 ${w} 塊：紅磚 ${a} 塊${a % w ? `最後一排只有 ${a % w} 塊` : '剛好排完'}，藍磚 ${b} 塊${b % w ? `最後一排只有 ${b % w} 塊` : '剛好排完'}。`, say, predict);
+const lampsDraw = (A, B) => k => `${lampPair(k && k % A === 0, k && k % B === 0)}<div class="lines5"><div>${Array.from({ length: Math.max(k, 1) }, (_, i) => `<i class="${(i + 1) % A === 0 && i < k ? 'r' : ''}">${i + 1}</i>`).join('')}</div><div>${Array.from({ length: Math.max(k, 1) }, (_, i) => `<i class="${(i + 1) % B === 0 && i < k ? 'g' : ''}">${i + 1}</i>`).join('')}</div></div><div class="pile6"><span class="tap5w big6" data-t="x">⏱️</span><small>點一下，時間過 1 秒</small></div>`;
+const lampRound = (A, B, n, say, predict, res) => cnt(n, lampsDraw(A, B), k => k ? `第 ${k} 秒：${k % A === 0 && k % B === 0 ? '兩盞一起亮！' : k % A === 0 ? '紅燈亮' : k % B === 0 ? '綠燈亮' : '都沒亮'}` : '第 0 秒：兩盞同時亮了一下，碼表開始', res || `從第 0 秒算起，第 ${n} 秒兩盞燈最早再一起亮。`, say, predict);
 const boxDraw = (each, n, e) => k => `<div class="crates">${Array.from({ length: k }, (_, i) => `<span class="crate"><span class="em5">${e.repeat(each)}</span><small>${each * (i + 1)}</small></span>`).join('') || '<small>還沒拿</small>'}</div><div class="pile6">${k < n ? `<span class="tap5w big6" data-t="x">📦</span><small>拿一盒（每盒 ${each} 顆）</small>` : ''}</div>`;
 const tearTri = (P, lab) => s => { const ang = triAngles(P), C = ['#f4a9a0', '#a9d0f0', '#b7e0a8'], torn = [0, 1, 2].filter(i => s.has('c' + i)).map(i => ang[i]); return `${tri5(P, P.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="17" data-t="c${i}" class="tap5" fill="${s.has('c' + i) ? '#fff' : C[i]}" stroke="#33405a" stroke-width="2"/>`).join(''))}<div class="q5">${torn.length ? wedges(torn) : '<div class="trail">點一個角，把它撕下來</div>'}</div>`; };
 const TRIS = [[[60, 150], [270, 150], [130, 30]], [[30, 150], [290, 150], [80, 60]], [[90, 150], [230, 150], [160, 20]]];
 const sideShape = (P, s, showAng) => { const n = P.length; let h = `<svg class="g5" style="max-height:170px" viewBox="0 0 320 210"><polygon points="${polyStr(P)}" fill="#fff0cf" stroke="#7a5b2e" stroke-width="3"/>`; P.forEach((p, i) => { const q = P[(i + 1) % n], m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], L = Math.round(Math.hypot(p[0] - q[0], p[1] - q[1]) / 20); h += `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${s.has('s' + i) ? C1 : 'transparent'}" stroke-width="14" data-t="s${i}" class="tap5" opacity=".5"/>${s.has('s' + i) ? `<text x="${m[0]}" y="${m[1] - 8}" text-anchor="middle" class="ax" style="fill:${C1}">${L}</text>` : ''}`; if (showAng) { const l = P[(i + n - 1) % n], c = [P.reduce((a, b) => a + b[0], 0) / n, P.reduce((a, b) => a + b[1], 0) / n]; h += `<text x="${p[0] + (c[0] - p[0]) * .25}" y="${p[1] + (c[1] - p[1]) * .25 + 5}" text-anchor="middle" class="ax" style="fill:${C2}">${Math.round(ptAng(l, p, q))}°</text>`; } }); return h + '</svg>'; };
-const SH_RECT = [[50, 50], [270, 50], [270, 160], [50, 160]], SH_RHO = [[160, 15], [250, 105], [160, 195], [70, 105]], SH_SQ = [[100, 40], [220, 40], [220, 160], [100, 160]];
-const measRound = (P, say, predict) => tset(P.map((_, i) => 's' + i), s => sideShape(P, s, s.size === P.length), s => s.size < P.length ? `量了 ${s.size} 邊` : '邊量完了，角也一起量出來', '每邊和每個角都量好了。', say, predict);
+// 菱形：上下兩個角 60 度、左右兩個角 120 度（半寬 52、半高 90，tan 30°≈52/90）
+const SH_RECT = [[50, 50], [270, 50], [270, 160], [50, 160]], SH_RHO = [[160, 15], [212, 105], [160, 195], [108, 105]], SH_SQ = [[100, 40], [220, 40], [220, 160], [100, 160]];
+const measRound = (P, say, predict) => tset(P.map((_, i) => 's' + i), s => sideShape(P, s, s.size === P.length), s => s.size < P.length ? `量了 ${s.size} 條邊` : '邊量完了，四個角的度數也一起量出來', '每條邊和每個角都量好了。', say, predict, null, '每一條邊都要量到。一條一條點，量完會看到邊長和角的度數。');
 const mergePie = (n, a) => s => { const parts = []; for (let j = 0; j < n / 2; j++) { const on = 2 * j < a; if (s.has('m' + j)) parts.push({ f: 2 / n, c: on ? PIE_ON : PIE_OFF }); else parts.push({ f: 1 / n, c: on ? PIE_ON : PIE_OFF, t: 'm' + j }, { f: 1 / n, c: on ? PIE_ON : PIE_OFF, t: 'm' + j }); } return `<div class="vs">${wedgePie(parts)}</div>`; };
-const mergeRound = (n, a, say, predict) => tset(Array.from({ length: n / 2 }, (_, j) => 'm' + j), mergePie(n, a), s => `塗色 ${a - [...s].filter(m => 2 * +m.slice(1) < a).length} 塊，全部 ${n - s.size} 塊`, `兩塊併一塊：${a}/${n} 變成 ${a / 2}/${n / 2}，紅色大小沒變。`, say, predict);
-const foldShape = (pts, c) => s => { const g = pts.map(p => [2 * c - p[0], p[1]]); return `<svg class="g5" style="max-height:180px" viewBox="0 0 220 200"><polygon points="${polyStr(pts)}" fill="#a9d0f0" stroke="#2f5f9e" stroke-width="2" data-t="f" class="tap5"/>${s.has('f') ? `<polygon points="${polyStr(g)}" fill="#f4a9a0" fill-opacity=".5" stroke="#d6476b" stroke-dasharray="5 4"/><line x1="${c}" x2="${c}" y1="5" y2="195" stroke="#d6476b" stroke-width="3"/>` : ''}</svg>`; };
-const HEART = [[110, 180], [40, 110], [40, 60], [70, 35], [110, 60], [150, 35], [180, 60], [180, 110]], RECT2 = [[40, 60], [180, 60], [180, 150], [40, 150]], PARA2 = [[70, 60], [190, 60], [150, 150], [30, 150]];
-const foldRound = (pts, c, yes, say, predict) => tset(['f'], foldShape(pts, c), s => s.size ? (yes ? '左右完全疊在一起！' : '對不起來，有地方露出來') : '點圖形，從中間摺', yes ? '摺起來兩邊完全重疊。' : '摺起來沒有完全重疊。', say, predict);
-const lineShape = (pts, lines) => s => `<svg class="g5" style="max-height:190px" viewBox="0 0 220 210"><polygon points="${polyStr(pts)}" fill="#a9d0f0" stroke="#2f5f9e" stroke-width="2"/>${lines.map(L => `<line x1="${L[1][0]}" y1="${L[1][1]}" x2="${L[2][0]}" y2="${L[2][1]}" stroke="${s.has(L[0]) ? '#d6476b' : '#33405a'}" stroke-width="${s.has(L[0]) ? 4 : 2}" stroke-dasharray="${s.has(L[0]) ? '' : '6 5'}"/><line x1="${L[1][0]}" y1="${L[1][1]}" x2="${L[2][0]}" y2="${L[2][1]}" stroke="transparent" stroke-width="18" data-t="${L[0]}" class="tap5"/>`).join('')}</svg>`;
-const ptGrid = (P, cand) => s => gridBg(`<polygon points="${polyStr(fullShape([[0, -3], [3, -1], [2, -1], [2, 3], [0, 3]], 'v').map(gp))}" fill="#fff0cf" stroke="#7a5b2e" stroke-width="2"/><line x1="${gp([0, -4])[0]}" y1="${gp([0, -4])[1]}" x2="${gp([0, 4])[0]}" y2="${gp([0, 4])[1]}" stroke="#d6476b" stroke-width="3"/><circle cx="${gp(P)[0]}" cy="${gp(P)[1]}" r="9" fill="#d6476b"/>${cand.map(c => `<circle cx="${gp(c)[0]}" cy="${gp(c)[1]}" r="11" data-t="${c.join('_')}" class="tap5" fill="${s.has(c.join('_')) ? '#3fae5a' : '#ffd65a'}" stroke="#33405a"/>`).join('')}`);
-const ptRound = (P, cand, say, predict) => tset([[-P[0], P[1]].join('_')], ptGrid(P, cand), s => s.size ? '碰在一起了！' : `紅點離摺痕 ${Math.abs(P[0])} 格`, `兩個點離摺痕都是 ${Math.abs(P[0])} 格，一樣高。`, say, predict, Object.fromEntries(cand.map(c => [c.join('_'), c[1] !== P[1] ? '摺過去會一樣高。' : '數一數：離摺痕要一樣遠。'])));
-const trays = (n, a, b) => s => `<div class="tray5">${Array.from({ length: n }, (_, i) => `<div class="trow"><span class="em5">🍱</span><small>${a}</small>${s.has('w' + i) ? '' : `<span class="tap5w" data-t="w${i}"><span class="em5">💧</span><small>${b}</small></span>`}</div>`).join('')}</div><div class="trow g2">${s.size ? `<span class="em5">${'💧'.repeat(s.size)}</span><small>${b}×${s.size}</small>` : '<small>水移到這裡</small>'}</div>`;
-const trayRound = (n, a, b, say, predict) => tset(Array.from({ length: n }, (_, i) => 'w' + i), trays(n, a, b), s => `便當 ${a}×${n}，水 ${b}×${s.size}`, `合起來 (${a}＋${b})×${n}＝${(a + b) * n}；分開 ${a}×${n}＋${b}×${n}＝${a * n + b * n}，一樣多。`, say, predict);
-const groundShape = (pts, edges, s, tall) => `<svg class="g5" style="max-height:170px" viewBox="0 0 320 200"><rect x="0" y="170" width="320" height="30" fill="#c8b48a"/><polygon points="${polyStr(pts)}" fill="#cfe6c6" stroke="#4a8a3e" stroke-width="2"/>${edges.map(E => `<line x1="${E[1][0]}" y1="${E[1][1]}" x2="${E[2][0]}" y2="${E[2][1]}" stroke="${s.has(E[0]) ? '#d6476b' : E[3] || 'transparent'}" stroke-width="${s.has(E[0]) ? 6 : 3}" ${E[3] ? 'stroke-dasharray="6 4"' : ''}/><line x1="${E[1][0]}" y1="${E[1][1]}" x2="${E[2][0]}" y2="${E[2][1]}" stroke="transparent" stroke-width="20" data-t="${E[0]}" class="tap5"/>`).join('')}${tall || ''}</svg>`;
-const G_PARA = [[40, 170], [220, 170], [280, 70], [100, 70]], G_TRI = [[40, 170], [260, 170], [120, 50]], G_TRAP = [[30, 170], [290, 170], [220, 70], [100, 70]];
-const edgesOf = P => P.map((p, i) => ['e' + i, p, P[(i + 1) % P.length]]);
-const baseRound = (P, say, predict) => tset(['e0'], s => groundShape(P, edgesOf(P), s), s => s.size ? '貼著地面的就是這一條' : '點一條邊', '找到了，圖形就站在這一條邊上。', say, predict, { e1: '這一條沒有貼著地面。', e2: '這一條沒有貼著地面。', e3: '這一條沒有貼著地面。' });
-const hRound = (P, topX, topY, slant, say, predict) => tset(['h'], s => groundShape(P, [['h', [topX, topY], [topX, 170], '#2f5f9e'], ['s', slant[0], slant[1]]], s, `<text x="${topX + 6}" y="${(topY + 170) / 2}" class="ax">直直的</text>`), s => s.size ? '從地面直直量上去' : '點量高的那一條線', '量高要直直量，不能沿著斜邊量。', say, predict, { s: '斜邊是斜的。量身高要站直，量圖形也要直直量。' });
+const mergeRound = (n, a, say, predict) => tset(Array.from({ length: n / 2 }, (_, j) => 'm' + j), mergePie(n, a), s => `紅色 ${a - [...s].filter(m => 2 * +m.slice(1) < a).length} 塊，全部 ${n - s.size} 塊`, `每兩塊合成一塊：${a}/${n} 變成 ${a / 2}/${n / 2}，紅色部分的大小沒有變。`, say, predict, null, '相鄰的兩小塊合成一塊。紅的和紅的合，白的和白的合。');
 const capRow = (opts, a, ok, why) => ({ opts, a, ok, why });
 
 SEGS.push(
   mk({ key: 'multiple', title: '倍數', term: '倍數', who: 'octopus', game: 'factor', when: ['factor:multi'], board: 'counter',
-    hook: '2、4、6、8，兩個兩個數，你會吧？', hookPic: () => `<div class="eq5">2、4、6、8</div>`,
-    rounds: [cnt(3, boxDraw(2, 3, '🥚'), k => `拿了 ${k} 盒，共 ${2 * k} 顆`, '2、4、6，每次多 2 顆。', '看我做：一盒 2 顆蛋，我一盒一盒拿。'), cnt(3, boxDraw(3, 3, '🥚'), k => `拿了 ${k} 盒，共 ${3 * k} 顆`, '3、6、9，每次多 3 顆。', '一起做：一盒 3 顆。我先拿，剩下的你拿。'), cnt(3, boxDraw(4, 3, '🥚'), k => `拿了 ${k} 盒，共 ${4 * k} 顆`, '4、8、12，每次多 4 顆。', '換你做：一盒 4 顆，一盒一盒拿。', ['先猜：3 盒共幾顆？', ['7 顆', '12 顆', '16 顆'], 1])],
-    fade: step3(`<div class="crates">${[1, 2, 3].map(i => `<span class="crate"><span class="em5">${'🥚'.repeat(3)}</span></span>`).join('')}</div>`, '真的蛋盒，每盒 3 顆。', `<div class="lines5"><div>${Array.from({ length: 9 }, (_, i) => `<i class="${(i + 1) % 3 ? '' : 'r'}">${i + 1}</i>`).join('')}</div></div>`, '畫成數線，每盒在 3、6、9 停一下。', `<div class="eq5">${K(3, C1)}×1、${K(3, C1)}×2、${K(3, C1)}×3 ＝ ${K(3, C2)}、${K(6, C2)}、${K(9, C2)}</div><div class="trail">${lit('紅 3：一盒幾顆', C1)}　${lit('藍：數線上停的地方', C2)}</div>`, '寫成算式，乘幾就是拿幾盒。'),
-    sort: { q: '一盒 3 顆，一盒一盒拿，能剛好拿到幾顆？', items: [[6, 0], [9, 0], [12, 0], [7, 1], [10, 1]].map(([v, c]) => ({ h: `${v} 顆`, c })), bins: ['拿得到', '拿不到'], hint: '從 3 開始，一直加 3，會碰到它嗎？', done: '6、9、12 拿得到；7、10 拿不到。' },
-    kid: '一盒 3 顆、一盒一盒數到的 3、6、9、12⋯⋯', term: '倍數', namePic: `<div class="eq5">${[3, 6, 9, 12].map(v => K(v, C2)).join('、')}⋯⋯</div>`,
-    pick: [['3 的倍數只有 3、6、9 三個。', '3、6、9、12 都是 3 的倍數，還可以一直數下去。', '7 也是 3 的倍數。'], 1, '想想：一盒一盒可以一直拿下去。'],
-    pose: pose('story', '哪一個故事會用到「5 的倍數」？', ['每包 5 片餅乾，買幾包會有幾片？', '5 片餅乾吃掉 2 片，剩幾片？', '5 個人分 10 片，每人幾片？'], 0, '倍數是一份一份加上去。', '對了！一包 5 片、一包一包買，數到的就是 5 的倍數。'),
-    check: { q: '每包 5 片餅乾，一包一包買，能剛好買到 15 片嗎？', pic: () => `<div class="crates">${[1, 2, 3].map(() => `<span class="crate"><span class="em5">🍪🍪🍪🍪🍪</span></span>`).join('')}</div>`, opts: ['買得到', '買不到'], a: 0, hint: '回到一盒一盒拿那一步：5、10、15⋯⋯', ok: '對了！5×3＝15，15 是 5 的倍數。' } }),
+    hook: '兩個兩個數：2、4、6、8。今天換成一盒一盒拿蛋來數。', hookPic: () => `<div class="eq5">2、4、6、8</div>`,
+    mh: '每拿一盒，蛋就多一盒的顆數。點一下盒子，看看總數變成多少。',
+    rounds: [cnt(3, boxDraw(2, 3, '🥚'), k => `拿了 ${k} 盒，共 ${2 * k} 顆`, '拿 1、2、3 盒，分別是 2、4、6 顆，每次多 2 顆。', '看我做：一盒 2 顆蛋，我一盒一盒拿。'), cnt(3, boxDraw(3, 3, '🥚'), k => `拿了 ${k} 盒，共 ${3 * k} 顆`, '拿 1、2、3 盒，分別是 3、6、9 顆，每次多 3 顆。', '一起做：一盒 3 顆。我先拿，剩下的你拿。'), cnt(3, boxDraw(4, 3, '🥚'), k => `拿了 ${k} 盒，共 ${4 * k} 顆`, '拿 1、2、3 盒，分別是 4、8、12 顆，每次多 4 顆。', '換你做：一盒 4 顆，一盒一盒拿。', ['先預測：拿 3 盒共幾顆？', ['7 顆', '12 顆', '16 顆'], 1])],
+    fade: step3(`<div class="crates">${[1, 2, 3].map(i => `<span class="crate"><span class="em5">${'🥚'.repeat(3)}</span><small>${3 * i}</small></span>`).join('')}</div>`, '真的蛋盒，每盒 3 顆，拿了 3 盒。', `<div class="lines5"><div>${Array.from({ length: 9 }, (_, i) => `<i class="${(i + 1) % 3 ? '' : 'r'}">${i + 1}</i>`).join('')}</div></div>`, '畫成數線：每拿一盒，就往前跳 3 格，停在 3、6、9。', `<div class="eq5">${K(3, C1)}×1、${K(3, C1)}×2、${K(3, C1)}×3 ＝ ${K(3, C2)}、${K(6, C2)}、${K(9, C2)}</div><div class="trail">${lit('紅 3：每盒幾顆', C1)}　×1、×2、×3：拿幾盒　${lit('藍：數線上停的地方', C2)}</div>`, '寫成算式：每盒的顆數 × 盒數。'),
+    sort: { q: '一盒 3 顆，一盒一盒拿，能剛好拿到幾顆？', items: [[6, 0], [9, 0], [12, 0], [7, 1], [10, 1]].map(([v, c]) => ({ h: `${v} 顆`, c })), bins: ['拿得到', '拿不到'], hint: '從 3 開始，每次加 3：3、6、9、12⋯⋯會不會碰到它？', done: '6、9、12 拿得到；7、10 會被跳過，拿不到。' },
+    nameSay: `每盒 3 顆，拿 1、2、3、4 盒，分別有 3、6、9、12 顆，也就是 3×1、3×2、3×3、3×4。<br>這些數叫作 3 的${T('倍數')}，還可以一直找下去。（這裡從拿 1 盒開始數。）`, namePic: `<div class="eq5">${[3, 6, 9, 12].map(v => K(v, C2)).join('、')}⋯⋯</div>`,
+    pick: [['3 的倍數只有 3、6、9 三個。', '3、6、9、12 都是 3 的倍數，還可以一直數下去。', '7 也是 3 的倍數。'], 1, ['再拿第 4 盒就有 12 顆，還可以繼續拿下去。', '', '3、6、9 一路跳過了 7，一盒一盒拿，拿不到 7 顆。']],
+    pose: pose('story', '哪一個問題會用到「5 的倍數」？', ['每包 5 片餅乾，買幾包會有幾片？', '5 片餅乾吃掉 2 片，剩幾片？', '5 個人分 10 片，每人幾片？'], 0, ['', '這是拿走一部分，不是一包一包加上去。', '這是平均分，不是一包一包加上去。'], '對了！一包 5 片、一包一包買，數到的片數 5、10、15⋯⋯就是 5 的倍數。'),
+    check: { q: '每包 5 片餅乾，一包一包買，能剛好買到 15 片嗎？', pic: () => `<div class="crates">${[1, 2, 3].map(() => `<span class="crate"><span class="em5">🍪🍪🍪🍪🍪</span></span>`).join('')}</div>`, opts: ['買得到', '買不到'], a: 0, hint: '回到一盒一盒拿那一步：5、10、15⋯⋯', hints: ['', '數數看：第 1 包 5 片、第 2 包 10 片、第 3 包幾片？'], ok: '對了，你一包一包數：5、10、15。5×3＝15，15 是 5 的倍數。' } }),
 
   mk({ key: 'comf', title: '公因數', term: '公因數', who: 'octopus', game: 'factor', when: ['factor:comf', 'factor:pave'], board: 'counter',
-    hook: '你已經會排地磚了：6 塊每排 2 塊剛好。現在有紅、藍兩堆磚。', hookPic: () => `${em('🟥', 4)}　${em('🟦', 6)}`,
-    rounds: [brRound(4, 6, 2, '看我做：4 塊紅磚、6 塊藍磚，都每排 2 塊。'), brRound(4, 6, 3, '一起做：這次都每排 3 塊，我先排紅磚。'), brRound(4, 6, 4, '換你做：都每排 4 塊。', ['先猜：每排 4 塊，兩堆都會剛好嗎？', ['兩堆都剛好', '有一堆排不滿'], 1])],
-    fade: step3(`<div class="vs two5"><div class="rows6"><div class="row6">${em('🟥', 2)}</div><div class="row6">${em('🟥', 2)}</div></div><div class="rows6">${[1, 2, 3].map(() => `<div class="row6">${em('🟦', 2)}</div>`).join('')}</div></div>`, '真的磚，每排 2 塊，兩堆都剛好。', `<div class="eq5">${lit('紅 4', C1)}：每排 1、2 剛好　${lit('藍 6', C2)}：每排 1、2、3 剛好</div>`, '把兩堆各自能剛好的列出來。', `<div class="eq5">${K(1, C3)}、${K(2, C3)}</div><div class="trail">${lit('綠色', C3)}是兩邊都有的：紅的能排完，藍的也能排完</div>`, '圈出兩邊都有的數。'),
-    sort: { q: '每排幾塊，兩堆都能剛好排完？', items: [1, 2, 3, 4].map(w => ({ h: `每排 ${w} 塊`, c: 4 % w || 6 % w ? 1 : 0 })), bins: ['兩堆都剛好', '有一堆不滿'], hint: '紅磚 4 塊、藍磚 6 塊，兩堆都要排完。', done: '1、2 兩堆都剛好；3、4 有一堆排不滿。' },
-    kid: '4 和 6 都能剛好排完的「每排塊數」1、2', term: '公因數', namePic: `<div class="eq5">${K(1, C3)}、${K(2, C3)}</div>`,
-    pick: [['公因數是兩個數都能剛好分完的數。', '公因數就是兩個數相加。', '3 是 4 和 6 的公因數。'], 0, '想想：兩堆都要剛好排完。'],
-    pose: pose('can', '紅磚 4 塊，藍磚有一些，都每排 2 塊，兩堆會剛好嗎？這題能回答嗎？', ['能，一定剛好', '不能，不知道藍磚有幾塊', '不能，紅磚太少'], 1, '少了哪一個數？', '對了！缺藍磚的塊數，題目要補上才能算。'),
-    check: { q: '6 顆蘋果、9 顆橘子，每袋裝 3 顆，兩種都剛好裝完嗎？3 是 6 和 9 的公因數嗎？', pic: () => `${em('🍎', 6)}　${em('🍊', 9)}`, opts: ['是', '不是'], a: 0, hint: '回到排磚那一步：兩堆每排 3 個，各自排得完嗎？', ok: '對了！6 和 9 都能剛好分成 3 個一袋。' } }),
+    hook: '先回想：6 塊地磚每排 2 塊，剛好排完。這次有紅磚 4 塊、藍磚 6 塊，兩堆要用同樣的每排塊數來排。', hookPic: () => `${em('🟥', 4)}　${em('🟦', 6)}`,
+    mh: '一塊一塊點，先排紅磚、再排藍磚。排完看兩堆的最後一排是不是都滿。',
+    rounds: [brRound(4, 6, 2, '看我做：4 塊紅磚、6 塊藍磚，兩堆都每排 2 塊。'), brRound(4, 6, 3, '一起做：這次兩堆都每排 3 塊，我先排紅磚。'), brRound(4, 6, 4, '換你做：兩堆都每排 4 塊。', ['先預測：每排 4 塊，兩堆都會剛好排完嗎？', ['兩堆都剛好', '有一堆排不滿'], 1])],
+    fade: step3(`<div class="vs two5"><div class="rows6"><div class="row6">${em('🟥', 2)}</div><div class="row6">${em('🟥', 2)}</div></div><div class="rows6">${[1, 2, 3].map(() => `<div class="row6">${em('🟦', 2)}</div>`).join('')}</div></div>`, '真的磚，每排 2 塊，兩堆都剛好排完。', `<div class="eq5" style="font-size:20px"><span class="ln5">${lit('紅磚 4', C1)}：每排 ${K(1, C3)}、${K(2, C3)}、4 塊都剛好</span><span class="ln5">${lit('藍磚 6', C2)}：每排 ${K(1, C3)}、${K(2, C3)}、3、6 塊都剛好</span></div>`, '把兩堆各自能剛好排完的每排塊數，全部列出來。', `<div class="eq5">${K(1, C3)}、${K(2, C3)}</div><div class="trail">${lit('綠色', C3)}是兩列都有的數：紅磚排得完，藍磚也排得完</div>`, '圈出兩列都有的數。'),
+    sort: { q: '每排幾塊，兩堆都能剛好排完？', items: [1, 2, 3, 4, 6].map(w => ({ h: `每排 ${w} 塊`, c: 4 % w || 6 % w ? 1 : 0 })), bins: ['兩堆都剛好', '有一堆不滿'], hint: '紅磚 4 塊、藍磚 6 塊，兩堆都要排完才算。', done: '1、2 兩堆都剛好；3、6 紅磚排不滿，4 藍磚排不滿。' },
+    nameSay: `4÷1、4÷2、6÷1、6÷2 都沒有餘數。<br>像 1、2 這樣，能同時把 4 和 6 剛好分完的數，叫作 4 和 6 的${T('公因數')}。`, namePic: `<div class="eq5">${K(1, C3)}、${K(2, C3)}</div>`,
+    pick: [['公因數是能同時把兩個數剛好分完的數。', '公因數就是兩個數相加。', '3 是 4 和 6 的公因數。'], 0, ['', '4＋6＝10，每排 10 塊，兩堆連一排都排不滿。', '每排 3 塊：藍磚剛好，紅磚最後一排只有 1 塊。']],
+    pose: pose('can', '紅磚 4 塊，藍磚有一些，兩堆都每排 2 塊。兩堆都會剛好排完嗎？', ['夠，一定都剛好', '不夠，還需要知道藍磚有幾塊', '不夠，紅磚太少'], 1, ['藍磚如果是 5 塊，每排 2 塊就會剩 1 塊。', '', '紅磚 4 塊每排 2 塊剛好，問題不在紅磚。'], '對了，缺藍磚的塊數。藍磚 6 塊就剛好，5 塊就排不完。'),
+    check: { q: '6 顆蘋果、9 顆橘子，都是每袋裝 3 顆，兩種都剛好裝完嗎？3 是 6 和 9 的公因數嗎？', pic: () => `${em('🍎', 6)}　${em('🍊', 9)}`, opts: ['是', '不是'], a: 0, hint: '回到排磚那一步：兩堆每排 3 個，各自排得完嗎？', hints: ['', '6÷3＝2、9÷3＝3，兩個都沒有餘數。'], ok: '對了，你分別檢查兩堆：6÷3、9÷3 都沒有餘數，3 是 6 和 9 的公因數。' } }),
 
   mk({ key: 'gcf', title: '最大公因數', term: '最大公因數', who: 'octopus', game: 'factor', when: ['factor:comf', 'factor:pave'], board: 'counter',
-    hook: '剛才找到：4 和 6 的公因數是 1 和 2。如果每排要放越多越好呢？', hookPic: () => `<div class="eq5">${K(1, C3)}、${K(2, C3)}</div>`,
-    guess: ['每排放的塊數越多越好，最多可以放幾塊？', ['1 塊', '2 塊', '4 塊']],
-    rounds: [brRound(4, 6, 2, '看我做：4 塊紅磚、6 塊藍磚，試最多的 2 塊。'), brRound(6, 9, 3, '一起做：6 塊紅磚、9 塊藍磚，試每排 3 塊。'), brRound(4, 8, 4, '換你做：4 塊紅磚、8 塊藍磚，試每排 4 塊。', ['先猜：每排 4 塊，兩堆都剛好嗎？', ['都剛好', '有一堆不滿'], 0])],
-    reveal: '4 和 6 最多每排 2 塊，再多就排不滿了。', revealPic: () => `<div class="eq5">${K(1, C3)}、${K(2, C1)}</div>`,
-    fade: step3(`<div class="vs two5"><div class="rows6">${[1, 2].map(() => `<div class="row6">${em('🟥', 2)}</div>`).join('')}</div><div class="rows6">${[1, 2, 3].map(() => `<div class="row6">${em('🟦', 2)}</div>`).join('')}</div></div>`, '兩堆每排 2 塊，最多就是這樣。', `<div class="eq5">${K(1, C3)} ${K(2, C1)}</div><div class="trail">${lit('紅框', C1)}的 2 是兩邊都有的數裡最大的</div>`, '把兩邊都有的數排好，挑最大的。', `<div class="eq5">4 和 6 → ${K(2, C1)}　6 和 9 → ${K(3, C1)}　4 和 8 → ${K(4, C1)}</div>`, '三次的結果寫在一起。'),
-    kid: '兩堆都能剛好排完的數裡，最大的那一個', term: '最大公因數', namePic: `<div class="eq5">4 和 6 → ${K(2, C1)}</div>`,
-    pick: [['最大公因數是兩個數相乘。', '最大公因數是公因數裡最大的那一個。', '最大公因數一定是 1。'], 1, '想想：越多越好，但兩堆都要剛好。'],
-    pose: pose('change', '4 塊紅磚、6 塊藍磚，藍磚改成 8 塊，每排最多幾塊會變嗎？', ['會，變成 4 塊', '不會，還是 2 塊', '會，變成 1 塊'], 0, '4 和 8：每排 4 塊兩堆都剛好嗎？', '對了！4 和 8 最多每排 4 塊，改一個數答案就變了。'),
-    check: { q: '6 公分和 9 公分的繩子，都剪成一樣長、不能剩，最長剪幾公分？', pic: () => `${cBar(6, 6, '#f4a9a0')}${cBar(9, 9, '#a9d0f0')}`, opts: ['1 公分', '3 公分', '9 公分'], a: 1, hint: '回到排磚那一步：6 和 9 都排得完的，最大是幾？', ok: '對了！6 和 9 的最大公因數是 3。' } }),
+    hook: '先回想：4 和 6 的公因數是 1 和 2。這次兩堆磚每排放一樣多、都要剛好排完，而且每排越多越好。', hookPic: () => `<div class="eq5">${K(1, C3)}、${K(2, C3)}</div>`,
+    guess: ['兩堆每排放一樣多、都剛好排完，每排最多可以放幾塊？', ['1 塊', '2 塊', '4 塊'], 1],
+    mh: '一塊一塊排，排完看兩堆的最後一排是不是都滿。都滿才行。',
+    rounds: [brRound(4, 6, 2, '看我做：紅磚 4 塊、藍磚 6 塊，試每排 2 塊。'), brRound(6, 9, 3, '一起做：紅磚 6 塊、藍磚 9 塊，試每排 3 塊。'), brRound(4, 8, 4, '換你做：紅磚 4 塊、藍磚 8 塊，試每排 4 塊。', ['先預測：每排 4 塊，兩堆都剛好嗎？', ['都剛好', '有一堆不滿'], 0])],
+    reveal: '4 和 6 每排 3 塊或 4 塊，總有一堆排不完；每排最多 2 塊。', revealPic: () => `<div class="eq5">${K(1, C3)}、${K(2, C1)}</div>`,
+    fade: step3(`<div class="vs two5"><div class="rows6">${[1, 2].map(() => `<div class="row6">${em('🟥', 2)}</div>`).join('')}</div><div class="rows6">${[1, 2, 3].map(() => `<div class="row6">${em('🟦', 2)}</div>`).join('')}</div></div>`, '紅磚 4 塊、藍磚 6 塊，每排 2 塊，兩堆都剛好。', `<div class="eq5" style="font-size:20px"><span class="ln5">4：${K(1, C3)}、${K(2, C3)}、4</span><span class="ln5">6：${K(1, C3)}、${K(2, C3)}、3、6</span></div>`, '列出兩堆各自能剛好排完的數，綠色是兩堆都有的。', `<div class="eq5">${K(1, C3)}、${K(2, C1)} → 最大的是 ${K(2, C1)}</div>`, '在兩堆都有的數裡，挑最大的。'),
+    nameSay: `4 和 6 的公因數有 1、2，其中最大的是 2。<br>公因數裡最大的那一個，叫作${T('最大公因數')}。`, namePic: `<div class="eq5">4 和 6 → ${K(2, C1)}</div>`,
+    pick: [['最大公因數是兩個數相乘。', '最大公因數是公因數裡最大的那一個。', '最大公因數一定是 1。'], 1, ['4×6＝24，每排 24 塊，兩堆都排不滿。', '', '1 一定是公因數，可是 4 和 6 還有比 1 大的 2。']],
+    pose: pose('change', '紅磚 4 塊、藍磚 6 塊。只把藍磚改成 8 塊，每排最多幾塊會變嗎？', ['會，變成 4 塊', '不會，還是 2 塊', '會，變成 1 塊'], 0, ['', '試試每排 4 塊：4÷4、8÷4 都沒有餘數。', '每排 2 塊、4 塊也都能剛好，最多不是 1 塊。'], '對了，4 和 8 每排最多 4 塊。改一個數，最大公因數就可能改變。'),
+    check: { q: '6 公分和 9 公分的兩條繩子，都剪成等長的小段，不留剩餘。每段最長幾公分？', pic: () => `${cBar(6, 6, '#f4a9a0')}${cBar(9, 9, '#a9d0f0')}`, opts: ['1 公分', '3 公分', '9 公分'], a: 1, hint: '回到排磚那一步：6 和 9 都能剛好分完的數裡，最大是幾？', hints: ['1 公分可以剪得剛好，但不是最長的；試試更長的。', '', '6 公分長的繩子剪不出 9 公分的一段。'], ok: '對了，6 和 9 的公因數有 1、3，最大的是 3，每段最長 3 公分。' } }),
 
   mk({ key: 'coml', title: '公倍數', term: '公倍數', who: 'octopus', game: 'factor', when: ['factor:lamp'], board: 'counter',
-    hook: '一盒一盒拿蛋，數到的數你會了。現在有兩盞燈。', hookPic: () => lampPair(true, true),
-    rounds: [lampRound(2, 3, 6, '看我做：紅燈每 2 秒亮，綠燈每 3 秒亮。我按碼表。'), lampRound(2, 4, 4, '一起做：紅燈每 2 秒、綠燈每 4 秒。我先按，你接著按。'), lampRound(3, 6, 6, '換你做：紅燈每 3 秒、綠燈每 6 秒。', ['先猜：第幾秒會一起亮？', ['第 3 秒', '第 6 秒', '第 18 秒'], 1])],
-    fade: step3(lampPair(true, true), '第 6 秒，兩盞燈一起亮。', `<div class="lines5"><div>${Array.from({ length: 12 }, (_, i) => `<i class="${(i + 1) % 2 ? '' : 'r'}">${i + 1}</i>`).join('')}</div><div>${Array.from({ length: 12 }, (_, i) => `<i class="${(i + 1) % 3 ? '' : 'g'}">${i + 1}</i>`).join('')}</div></div>`, `畫成兩條數線：${lit('紅', C1)}是紅燈亮、${lit('綠', C3)}是綠燈亮。`, `<div class="eq5">${K(6, C4)}、${K(12, C4)}</div><div class="trail">兩條線都有記號的地方：6 是 2 數到的，也是 3 數到的</div>`, '圈出兩條都有的數。'),
-    sort: { q: '紅燈每 2 秒、綠燈每 3 秒，哪幾秒兩盞一起亮？', items: [[6, 0], [12, 0], [4, 1], [9, 1]].map(([v, c]) => ({ h: `第 ${v} 秒`, c })), bins: ['一起亮', '只亮一盞'], hint: '要 2 數得到，也要 3 數得到。', done: '6、12 一起亮；4 只有紅燈，9 只有綠燈。' },
-    kid: '兩盞燈一起亮的 6、12、18⋯⋯（2 數得到、3 也數得到的數）', term: '公倍數', namePic: `<div class="eq5">${[6, 12, 18].map(v => K(v, C4)).join('、')}⋯⋯</div>`,
-    pick: [['公倍數是兩個數都數得到的數。', '公倍數是兩個數相加。', '4 是 2 和 3 的公倍數。'], 0, '想想：兩盞燈都要亮。'],
-    pose: pose('pic', '看這兩條數線，哪一個故事配得上？', ['甲車每 2 分、乙車每 3 分到站，什麼時候一起到？', '甲有 2 顆、乙有 3 顆，共幾顆？', '2 個人分 3 個餅。'], 0, '兩條數線是兩種「每隔多久」。', '對了！兩種每隔一段時間的事，一起發生的時候就是公倍數。', () => `<div class="lines5"><div>${Array.from({ length: 6 }, (_, i) => `<i class="${(i + 1) % 2 ? '' : 'r'}">${i + 1}</i>`).join('')}</div><div>${Array.from({ length: 6 }, (_, i) => `<i class="${(i + 1) % 3 ? '' : 'g'}">${i + 1}</i>`).join('')}</div></div>`),
-    check: { q: '甲車每 2 分、乙車每 3 分到站。第 12 分鐘會一起到嗎？', pic: () => '<div class="u-big">🚌🚌</div>', opts: ['會', '不會'], a: 0, hint: '回到按碼表那一步：12 是 2 數到的嗎？是 3 數到的嗎？', ok: '對了！12 是 2 和 3 的公倍數。' } }),
+    hook: '兩盞燈在碼表第 0 秒同時亮了一下。之後紅燈每隔 2 秒亮一次，綠燈每隔 3 秒亮一次。', hookPic: () => lampPair(true, true),
+    mh: '紅燈在 2 數得到的秒數亮，綠燈在 3 數得到的秒數亮。點碼表，一秒一秒看。',
+    rounds: [lampRound(2, 3, 6, '看我做：紅燈每隔 2 秒、綠燈每隔 3 秒亮。我按碼表。', null, '第 6 秒兩盞燈再一起亮。繼續數下去，第 12、18 秒也會一起亮。'), lampRound(2, 4, 8, '一起做：紅燈每隔 2 秒、綠燈每隔 4 秒。我先按，你接著按到第 8 秒。', null, '第 4 秒和第 8 秒，兩盞燈都一起亮。'), lampRound(3, 6, 6, '換你做：紅燈每隔 3 秒、綠燈每隔 6 秒。', ['先預測：開始之後，第幾秒會再一起亮？', ['第 3 秒', '第 6 秒', '第 18 秒'], 1])],
+    fade: step3(lampPair(true, true), '紅燈每隔 2 秒、綠燈每隔 3 秒，第 6 秒一起亮。', `<div class="lines5"><div>${Array.from({ length: 12 }, (_, i) => `<i class="${(i + 1) % 2 ? '' : 'r'}">${i + 1}</i>`).join('')}</div><div>${Array.from({ length: 12 }, (_, i) => `<i class="${(i + 1) % 3 ? '' : 'g'}">${i + 1}</i>`).join('')}</div></div>`, `畫成兩條數線：${lit('紅', C1)}是紅燈亮、${lit('綠', C3)}是綠燈亮。`, `<div class="eq5">${K(6, C4)}、${K(12, C4)}</div><div class="trail">兩條線都有記號的地方：6 和 12 是 2 數得到的，也是 3 數得到的</div>`, '圈出兩條都有的數。'),
+    sort: { q: '紅燈每隔 2 秒、綠燈每隔 3 秒，哪幾秒兩盞一起亮？', items: [[6, 0], [12, 0], [4, 1], [9, 1]].map(([v, c]) => ({ h: `第 ${v} 秒`, c })), bins: ['一起亮', '只亮一盞'], hint: '要是 2 數得到的，也要是 3 數得到的。', done: '6、12 一起亮；4 只有紅燈，9 只有綠燈。' },
+    nameSay: `紅燈在 2、4、6、8⋯⋯秒亮，綠燈在 3、6、9、12⋯⋯秒亮。<br>兩邊都有的 6、12、18⋯⋯，既是 2 的倍數也是 3 的倍數，叫作 2 和 3 的${T('公倍數')}。`, namePic: `<div class="eq5">${[6, 12, 18].map(v => K(v, C4)).join('、')}⋯⋯</div>`,
+    pick: [['公倍數是兩個數都數得到的數。', '公倍數是兩個數相加。', '4 是 2 和 3 的公倍數。'], 0, ['', '2＋3＝5，第 5 秒兩盞燈都沒亮。', '第 4 秒只有紅燈亮，4 不是 3 的倍數。']],
+    pose: pose('pic', '看這兩條數線，哪一個問題配得上？', ['甲、乙兩線公車現在同時到站，之後甲每 2 分鐘、乙每 3 分鐘到站一次。什麼時候會再一起到站？', '甲有 2 顆、乙有 3 顆，共幾顆？', '2 個人分 3 個餅。'], 0, ['', '兩條數線是兩種「每隔多久」，不是把兩堆合起來。', '兩條數線是兩種「每隔多久」，不是平均分。'], '對了！兩件每隔一段時間就發生的事，從同一個時刻開始，之後一起發生的時刻就是公倍數。', () => `<div class="lines5"><div>${Array.from({ length: 6 }, (_, i) => `<i class="${(i + 1) % 2 ? '' : 'r'}">${i + 1}</i>`).join('')}</div><div>${Array.from({ length: 6 }, (_, i) => `<i class="${(i + 1) % 3 ? '' : 'g'}">${i + 1}</i>`).join('')}</div></div>`),
+    check: { q: '甲、乙兩線公車現在同時到站，之後甲每 2 分鐘、乙每 3 分鐘到一班。從現在算起第 12 分鐘，會一起到站嗎？', pic: () => '<div class="u-big">🚌🚌</div>', opts: ['會', '不會'], a: 0, hint: '回到按碼表那一步：12 是 2 數得到的嗎？是 3 數得到的嗎？', hints: ['', '兩個都檢查：12÷2＝6、12÷3＝4，都沒有餘數。'], ok: '對了，你檢查了兩邊：12 是 2 的倍數，也是 3 的倍數，所以是 2 和 3 的公倍數。' } }),
 
   mk({ key: 'lcm', title: '最小公倍數', term: '最小公倍數', who: 'octopus', game: 'factor', when: ['factor:lamp'], board: 'counter',
-    hook: '2 和 3 一起亮的有 6、12、18⋯⋯第一次一起亮是哪一個？', hookPic: () => `<div class="eq5">${[6, 12, 18].map(v => K(v, C4)).join('、')}</div>`,
-    guess: ['第一次一起亮，是不是一定把兩個數乘起來？', ['一定是', '不一定']],
-    rounds: [lampRound(2, 3, 6, '看我做：紅 2 秒、綠 3 秒，第一次一起亮。'), lampRound(2, 4, 4, '一起做：紅 2 秒、綠 4 秒。2×4＝8，會是第 8 秒嗎？'), lampRound(2, 5, 10, '換你做：紅 2 秒、綠 5 秒。', ['先猜：第一次一起亮是第幾秒？', ['第 7 秒', '第 10 秒', '第 20 秒'], 1])],
-    reveal: '2 和 4 第一次一起亮是第 4 秒，不是 8 秒。不一定要乘起來，很多人一開始也這樣想。', revealPic: () => lampPair(true, true),
-    fade: step3(lampPair(true, true), '第一次一起亮的那一秒。', `<div class="lines5"><div>${Array.from({ length: 8 }, (_, i) => `<i class="${(i + 1) % 2 ? '' : 'r'}">${i + 1}</i>`).join('')}</div><div>${Array.from({ length: 8 }, (_, i) => `<i class="${(i + 1) % 4 ? '' : 'g'}">${i + 1}</i>`).join('')}</div></div>`, '數線上，第一個兩條都有記號的地方。', `<div class="eq5">2 和 3 → ${K(6, C4)}　2 和 4 → ${K(4, C4)}　2 和 5 → ${K(10, C4)}</div>`, '三次的結果寫在一起。'),
-    kid: '兩盞燈第一次一起亮的時候（一起數得到的數裡最小的）', term: '最小公倍數', namePic: `<div class="eq5">2 和 4 → ${K(4, C4)}</div>`,
-    pick: [['最小公倍數一定是兩個數相乘。', '最小公倍數是公倍數裡最小的那一個。', '最小公倍數一定是 1。'], 1, '想想 2 和 4：第 4 秒就一起亮了。'],
-    pose: pose('change', '紅燈 2 秒、綠燈 4 秒。綠燈改成 3 秒，第一次一起亮的時間會變嗎？', ['會，從 4 秒變 6 秒', '不會', '會，變 8 秒'], 0, '2 和 3 第一次一起數到哪？', '對了！改了一個數，第一次一起亮就從 4 變 6。'),
-    check: { q: '一個社團每 3 天聚會，另一個每 4 天聚會。今天都聚會，下次一起聚會是幾天後？', pic: () => '<div class="u-big">📅</div>', opts: ['7 天', '12 天', '24 天'], a: 1, hint: '回到按碼表那一步：3、6、9、12 和 4、8、12⋯⋯', ok: '對了！3 和 4 的最小公倍數是 12。' } }),
+    hook: '兩盞燈在第 0 秒同時亮。之後第 6、12、18⋯⋯秒也會一起亮。不算開始那一下，最早再一起亮是哪一秒？', hookPic: () => `<div class="eq5">${[6, 12, 18].map(v => K(v, C4)).join('、')}</div>`,
+    guess: ['最早再一起亮的那一秒，是不是一定等於兩個數相乘？', ['一定是', '不一定'], 1],
+    mh: '一秒一秒按，看第一次兩盞燈同時亮是第幾秒。',
+    rounds: [lampRound(2, 3, 6, '看我做：紅燈每隔 2 秒、綠燈每隔 3 秒，找最早再一起亮的那一秒。'), lampRound(2, 4, 4, '一起做：紅燈每隔 2 秒、綠燈每隔 4 秒。2×4＝8，會是第 8 秒嗎？'), lampRound(2, 5, 10, '換你做：紅燈每隔 2 秒、綠燈每隔 5 秒。', ['先預測：最早再一起亮是第幾秒？', ['第 7 秒', '第 10 秒', '第 20 秒'], 1])],
+    reveal: '紅燈每隔 2 秒、綠燈每隔 4 秒時，第 4 秒就再一起亮了，比 2×4＝8 早。所以不一定是兩個數相乘。', revealPic: () => lampPair(true, true),
+    fade: step3(lampPair(true, true), '紅燈每隔 2 秒、綠燈每隔 4 秒：第 0 秒同時亮起後，第 4 秒最早再一起亮。', `<div class="lines5"><div>${Array.from({ length: 8 }, (_, i) => `<i class="${(i + 1) % 2 ? '' : 'r'}">${i + 1}</i>`).join('')}</div><div>${Array.from({ length: 8 }, (_, i) => `<i class="${(i + 1) % 4 ? '' : 'g'}">${i + 1}</i>`).join('')}</div></div>`, '數線上，第一個兩條都有記號的地方是 4。', `<div class="eq5" style="font-size:20px"><span class="ln5">2 數得到：2、${K(4, C4)}、6、${K(8, C4)}</span><span class="ln5">4 數得到：${K(4, C4)}、${K(8, C4)}</span><span class="ln5">兩邊都有的：4、8，最小是 ${K(4, C4)}</span></div>`, '寫成數字：兩邊都有的數裡，挑最小的。'),
+    nameSay: `不算開始的第 0 秒，2 和 4 的公倍數有 4、8、12⋯⋯，最小的是 4。<br>公倍數裡最小的那一個，叫作${T('最小公倍數')}。`, namePic: `<div class="eq5">2 和 4 → ${K(4, C4)}</div>`,
+    pick: [['最小公倍數一定是兩個數相乘。', '最小公倍數是公倍數裡最小的那一個。', '最小公倍數一定是 1。'], 1, ['2 和 4 的最小公倍數是 4，不是 2×4＝8。', '', '第 1 秒兩盞燈都沒亮，1 不是 2 的倍數。']],
+    pose: pose('change', '紅燈每隔 2 秒、綠燈每隔 4 秒。只把綠燈改成每隔 3 秒，最早再一起亮的時間會變嗎？', ['會，從第 4 秒變成第 6 秒', '不會', '會，變成第 8 秒'], 0, ['', '2 數得到 2、4、6；3 數得到 3、6。第 4 秒綠燈沒有亮。', '第 6 秒兩盞就一起亮了，比第 8 秒早。'], '對了，改了一個數，最早一起亮就從第 4 秒變成第 6 秒。'),
+    check: { q: '一個社團每 3 天聚會一次，另一個每 4 天聚會一次。今天兩個社團都聚會，最快幾天後會再一起聚會？', pic: () => '<div class="u-big">📅</div>', opts: ['7 天', '12 天', '24 天'], a: 1, hint: '回到按碼表那一步：3、6、9、12 和 4、8、12，最早一起出現的是哪個？', hints: ['3＋4＝7，第 7 天兩個社團都不聚會。', '', '第 24 天也會一起聚會，可是第 12 天更早。'], ok: '對了，你把兩邊的倍數列出來找最早相同的：3 和 4 的最小公倍數是 12。' } }),
 
   mk({ key: 'sum180', title: '內角和', term: '內角和', who: 'goat', game: 'poly', when: ['poly:sum', 'poly:cut', 'poly:quad'], board: 'tapSet',
-    hook: '三角形有三個角，你會用量角器量。', hookPic: () => tri5(TRIS[0]),
-    guess: ['把三個角撕下來拼在一起，會拼成什麼樣子？', ['一個直角', '一條直線', '一整圈']],
-    rounds: TRIS.map((P, i) => tset(['c0', 'c1', 'c2'], tearTri(P), s => `撕下 ${s.size} 個角`, `三個角拼成一條直線：${triAngles(P).join('＋')}＝180。`, ['看我做：我把三個角一個一個撕下來，拼在一起。', '一起做：換一個三角形，我先撕一個角。', '換你做：再換一個形狀，三個角都撕下來。'][i], i === 2 ? ['先猜：這個瘦瘦的三角形，拼起來還是一直線嗎？', ['還是一直線', '不會是一直線'], 0] : null)),
-    reveal: '不管三角形長怎樣，三個角都拼成一條直線，就是 180 度。', revealPic: () => wedges([60, 50, 70]),
-    fade: step3(tri5(TRIS[0]), '紙做的三角形，撕下三個角。', `<div class="q5">${wedges([60, 50, 70])}</div>`, '三個角拼成一條直線，三種顏色是三個角。', `<div class="eq5"><b style="color:#e07b70">60</b>＋<b style="color:#6ea8dc">50</b>＋<b style="color:#5fae55">70</b>＝${K(180, C1)}</div><div class="trail">每個數的顏色和上面的角一樣，${lit('180', C1)} 是一條直線</div>`, '寫成算式。'),
-    kid: '三角形裡面三個角全部加起來，都是 180 度', term: '內角和', namePic: `<div class="q5">${wedges([60, 50, 70])}</div>`,
-    pick: [['大的三角形，三個角加起來比較大。', '三角形的內角和都是 180 度。', '三角形的內角和是 360 度。'], 1, '想想：每次都拼成一條直線。'],
-    pose: pose('can', '一個三角形有一個角是 50 度，另外兩個角各幾度？這題能解嗎？', ['能，各 65 度', '不能，只知道兩個角加起來，缺另一個角', '能，各 50 度'], 1, '180－50＝130，可是 130 要怎麼分？', '對了！只能知道另外兩個合起來 130 度，要再多一個條件。'),
-    check: { q: '三角旗有兩個角是 50 度和 60 度，第三個角幾度？', pic: () => `<div class="q5">${wedges([50, 60])}</div>`, opts: ['70 度', '80 度', '90 度'], a: 0, hint: '回到撕角那一步：拼成一直線是 180，還缺多少？', ok: '對了！180－50－60＝70。' } }),
+    hook: '三角形有三個角，每個角都可以用量角器量出度數。', hookPic: () => tri5(TRIS[0]),
+    guess: ['把三個角撕下來，頂點靠在一起拼，會拼成什麼樣子？', ['一個直角', '一個平角（一條直線）', '一整圈'], 1],
+    mh: '把三個角都撕下來，看它們拼在一起時，兩邊是不是連成一條直線。',
+    rounds: TRIS.map((P, i) => tset(['c0', 'c1', 'c2'], tearTri(P), s => `撕下 ${s.size} 個角`, `三個角拼成平角：${triAngles(P).join('＋')}＝180。`, ['看我做：我把三個角一個一個撕下來，拼在一起。', '一起做：換一個三角形，我先撕一個角。', '換你做：再換一個瘦長的三角形，三個角都撕下來。'][i], i === 2 ? ['先預測：這個瘦長的三角形，三個角拼起來還是平角嗎？', ['還是平角', '不會是平角'], 0] : null)),
+    reveal: '換了三個不同的三角形，三個角每次都拼成平角，也就是 180 度。', revealPic: () => wedges(triAngles(TRIS[0])),
+    fade: step3(tri5(TRIS[0]), '紙做的三角形，撕下三個角。', `<div class="q5">${wedges(triAngles(TRIS[0]))}</div>`, '三個角拼成平角，三種顏色是三個角。', `<div class="eq5">${triAngles(TRIS[0]).map((a, i) => `<b style="color:${['#e07b70', '#6ea8dc', '#5fae55'][i]}">${a}</b>`).join('＋')}＝${K(180, C1)}</div><div class="trail">每個數的顏色和上面的角一樣，${lit('180', C1)} 是平角的度數</div>`, '寫成算式。'),
+    nameSay: `三角形三個角的度數加起來，每次都是 180 度。<br>多邊形各個內角的度數加起來，叫作${T('內角和')}。三角形的內角和是 180 度。`, namePic: `<div class="q5">${wedges(triAngles(TRIS[0]))}</div>`,
+    pick: [['大的三角形，三個角加起來比較大。', '三角形的內角和都是 180 度。', '三角形的內角和是 360 度。'], 1, ['把大三角形的三個角撕下來，一樣拼成平角，還是 180 度。', '', '360 度是一整圈；三個角只拼成半圈。']],
+    pose: pose('can', '一個三角形有一個角是 50 度，另外兩個角各是幾度？', ['夠，各 65 度', '不夠，只知道另外兩個角合起來 130 度，還要知道其中一個角', '夠，各 50 度'], 1, ['兩個角不一定一樣大：60 和 70 合起來也是 130。', '', '50＋50＋50＝150，不是 180。'], '對了！只能知道另外兩個合起來 130 度，要再多一個條件。'),
+    check: { q: '三角旗有兩個角是 50 度和 60 度，第三個角幾度？', pic: () => `<div class="q5">${wedges([50, 60])}</div>`, opts: ['70 度', '80 度', '90 度'], a: 0, hint: '回到撕角那一步：拼成平角是 180 度，還缺多少？', hints: ['', '50＋60＋80＝190，比 180 多了 10。', '50＋60＋90＝200，比 180 多了 20。'], ok: '對了，你用 180 減去已知的兩個角：180－50－60＝70。' } }),
 
   mk({ key: 'regular', title: '正多邊形', term: '正多邊形', who: 'goat', game: 'poly', when: ['poly:regular'], board: 'tapSet',
-    hook: '正方形每邊一樣長，四個角都是直角，你知道吧？', hookPic: () => sideShape(SH_SQ, new Set(), false),
-    rounds: [measRound(SH_RECT, '看我做：量長方形的每一條邊。'), measRound(SH_RHO, '一起做：量菱形，我先量一條。'), measRound(SH_SQ, '換你做：量正方形的每一條邊。', ['先猜：正方形的邊和角都一樣嗎？', ['都一樣', '邊一樣、角不一樣'], 0])],
-    fade: step3(`<div class="vs two5"><span class="em5">🚪</span><span class="em5">🔷</span><span class="em5">⬜</span></div>`, '門板、路標、地磚。', `${sideShape(SH_SQ, new Set(['s0', 's1', 's2', 's3']), true)}`, '量出來：邊都一樣，角也都一樣。', `<div class="eq5">${lit('邊', C1)}：6、6、6、6　${lit('角', C2)}：90、90、90、90</div>`, '寫成數字，兩排都各自一樣。'),
-    sort: { q: '哪些邊和角都各自一樣？', items: [['地磚（四邊都 6，角都 90 度）', 0], ['門板（邊 6 和 11）', 1], ['路標（邊一樣，角 60 和 120）', 1], ['蜂巢一格（六邊一樣，角都一樣）', 0], ['警告牌（三邊一樣，角都 60 度）', 0]].map(([h, c]) => ({ h, c })), bins: ['邊和角都一樣', '有不一樣'], hint: '邊要一樣，角也要一樣，兩個都要。', done: '地磚、蜂巢、警告牌都是；門板和路標不是。' },
-    kid: '每一邊一樣長、每一個角也一樣大的多邊形', term: '正多邊形',
-    pick: [['只要每邊一樣長就是正多邊形。', '每邊一樣長、每個角也一樣大，才是正多邊形。', '長方形是正多邊形。'], 1, '想想路標：邊一樣，角不一樣。'],
-    pose: pose('change', '正方形的四邊都改成不一樣長，角還是 90 度，它還是正多邊形嗎？', ['還是', '不是了'], 1, '邊和角都要一樣。', '對了！只改了邊，就不是了。'),
-    check: { q: '蜂巢的一格，六個邊一樣長，六個角也一樣大。它是正多邊形嗎？', pic: () => `<svg class="g5" style="max-height:110px" viewBox="0 0 200 200"><polygon points="${polyStr(Array.from({ length: 6 }, (_, i) => { const t = (i * 60 - 90) * Math.PI / 180; return [100 + 85 * Math.cos(t), 100 + 85 * Math.sin(t)]; }))}" fill="#f7dc8c" stroke="#a9702a" stroke-width="4"/></svg>`, opts: ['是', '不是'], a: 0, hint: '回到量邊那一步：邊和角都一樣嗎？', ok: '對了！它是正六邊形。' } }),
+    hook: '先回想正方形：四條邊一樣長，四個角都是直角。今天量量看其他四邊形。', hookPic: () => sideShape(SH_SQ, new Set(), false),
+    mh: '把每一條邊都點一次，量完會同時看到四個角的度數。比較邊，也比較角。',
+    rounds: [measRound(SH_RECT, '看我做：量長方形門板的每一條邊。'), measRound(SH_RHO, '一起做：量菱形路標，我先量一條。'), measRound(SH_SQ, '換你做：量正方形地磚的每一條邊。', ['先預測：正方形的邊和角，都會各自一樣嗎？', ['都一樣', '邊一樣、角不一樣'], 0])],
+    fade: step3(`<div class="u-big">⬜</div>`, '一塊正方形地磚。', `${sideShape(SH_SQ, new Set(['s0', 's1', 's2', 's3']), true)}`, '畫成簡圖：邊都是 6，角都是 90 度。', `<div class="eq5">${lit('邊', C1)}：6、6、6、6　${lit('角', C2)}：90、90、90、90</div>`, '寫成數字，兩排都各自一樣。'),
+    sort: { q: '哪些圖形的邊都一樣長、角也都一樣大？', items: [['圖中的正方形地磚（四邊都 6，角都 90 度）', 0], ['長方形門板（邊 6 和 11，角都 90 度）', 1], ['菱形路標（四邊一樣長，角 60 度和 120 度）', 1], ['圖中理想化的蜂巢一格（六邊一樣長，六個角一樣大）', 0], ['三邊一樣長的三角形警告牌（角都 60 度）', 0]].map(([h, c]) => ({ h, c })), bins: ['邊和角都一樣', '有不一樣'], hint: '兩個條件都要看：邊都一樣長嗎？角都一樣大嗎？', done: '地磚、蜂巢、警告牌兩個條件都符合；門板的邊不一樣，路標的角不一樣。' },
+    nameSay: `每條邊都一樣長、每個內角都一樣大的多邊形，叫作${T('正多邊形')}。`,
+    pick: [['只要每邊一樣長就是正多邊形。', '每條邊一樣長、每個內角也一樣大，才是正多邊形。', '長方形是正多邊形。'], 1, ['菱形路標四邊一樣長，可是角有 60 度和 120 度。', '', '不是正方形的長方形，角都一樣大，但長和寬不一樣長。']],
+    pose: pose('change', '把正方形只向左右拉長，四個角仍是直角，但長和寬不相等。它還是正多邊形嗎？', ['還是', '不是了'], 1, ['四個角一樣大，可是並非每條邊都一樣長。', ''], '對了，角都一樣大還不夠，每條邊也要一樣長。'),
+    check: { q: '圖中理想化的蜂巢一格，六條邊一樣長，六個角也一樣大。它是正多邊形嗎？', pic: () => `<svg class="g5" style="max-height:110px" viewBox="0 0 200 200"><polygon points="${polyStr(Array.from({ length: 6 }, (_, i) => { const t = (i * 60 - 90) * Math.PI / 180; return [100 + 85 * Math.cos(t), 100 + 85 * Math.sin(t)]; }))}" fill="#f7dc8c" stroke="#a9702a" stroke-width="4"/></svg>`, opts: ['是', '不是'], a: 0, hint: '回到量邊那一步：檢查兩件事，邊都一樣長嗎？角都一樣大嗎？', hints: ['', '題目說六條邊一樣長、六個角也一樣大，兩個條件都符合。'], ok: '對了，邊和角兩個條件都符合，它是正六邊形。' } }),
 
   mk({ key: 'reduce', title: '約分', term: '約分', who: 'rabbit', game: 'ext', when: ['ext:merge', 'ext:lowest'], board: 'tapSet',
-    hook: '剛才把披薩切細，份量不變。反過來把小塊併起來呢？', hookPic: () => wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 2 ? PIE_ON : PIE_OFF }))),
-    rounds: [mergeRound(4, 2, '看我做：2/4 個披薩，我把小塊兩塊兩塊併起來。'), mergeRound(6, 2, '一起做：2/6 個披薩，我先併一組。'), mergeRound(8, 4, '換你做：4/8 個披薩，兩塊兩塊點來併。', ['先猜：併完會是幾分之幾？', ['1/2', '2/4', '4/4'], 1])],
-    fade: step3(`<div class="vs two5">${wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 2 ? PIE_ON : PIE_OFF })))}<b>→</b>${wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }])}</div>`, '真的披薩，兩塊併一塊。', `${barRow(4, 2, PIE_ON)}${barRow(2, 1, PIE_ON)}`, '畫成長條，紅色一樣長。', `<div class="eq5"><span class="fr5">${K(2, C1)}<i></i>${K(4, C2)}</span> ＝ <span class="fr5">${K(1, C1)}<i></i>${K(2, C2)}</span></div><div class="trail">${lit('紅：塗色塊數 2→1', C1)}　${lit('藍：全部塊數 4→2', C2)}　都除以 2</div>`, '寫成分數，上下都 ÷2。'),
-    kid: '兩塊兩塊併起來，上下的數一起變小、份量不變', term: '約分',
-    pick: [['約分以後披薩變少了。', '約分是分子和分母一起除以同一個數，份量不變。', '約分只把分子變小。'], 1, '想想披薩：紅色有沒有變小？'],
-    pose: pose('pic', '哪一個故事配這張圖？', ['6/8 盒蛋糕，每兩塊併成一塊，是幾分之幾？', '6 塊蛋糕再買 8 塊。', '8 塊蛋糕吃掉 6 塊。'], 0, '圖上是把小塊併起來。', '對了！6/8＝3/4。', () => barRow(8, 6, PIE_ON)),
-    check: { q: '4/8 盒巧克力，每兩塊併成一塊，是幾分之幾？', pic: () => barRow(8, 4, PIE_ON), opts: ['2/4', '4/4', '1/8'], a: 0, hint: '回到併披薩那一步：上下都 ÷2。', ok: '對了！4/8＝2/4。' } }),
+    hook: '把每塊再平均分成幾小塊，紅色部分的大小不變。反過來，把小塊合併成大塊呢？', hookPic: () => wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 2 ? PIE_ON : PIE_OFF }))),
+    rounds: [mergeRound(4, 2, '看我做：紅色是一個披薩的 2/4，我把小塊兩塊兩塊合併。'), mergeRound(6, 2, '一起做：紅色是 2/6 個披薩，我先合併一組。'), mergeRound(8, 4, '換你做：紅色是 4/8 個披薩，兩塊兩塊點來合併。', ['先預測：每兩塊合成一塊以後，是幾分之幾？', ['1/2', '2/4', '4/4'], 1])],
+    fade: step3(`<div class="vs two5">${wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 2 ? PIE_ON : PIE_OFF })))}<b>→</b>${wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }])}</div>`, '真的披薩，每兩塊合成一塊。', `${barRow(4, 2, PIE_ON)}${barRow(2, 1, PIE_ON)}`, '畫成長條，紅色一樣長。', `<div class="eq5"><span class="fr5">${K(2, C1)}<i></i>${K(4, C2)}</span> ＝ <span class="fr5">${K(1, C1)}<i></i>${K(2, C2)}</span></div><div class="trail">${lit('紅：分子（紅色塊數）2→1', C1)}　${lit('藍：分母（全部塊數）4→2', C2)}　都除以 2</div>`, '寫成分數：分子和分母都除以 2。'),
+    nameSay: `分子和分母同除以一個大於 1 的公因數（這裡是 2），分數的值不變。<br>這樣改寫分數，叫作${T('約分')}。不一定要兩塊兩塊合，也不一定一次就合到最大塊。`,
+    pick: [['約分以後披薩變少了。', '約分是分子和分母同除以一個大於 1 的公因數，分數的值不變。', '約分只把分子變小。'], 1, ['合併以後塊數變少，可是紅色部分的大小不變。', '', '只把分子變小，紅色部分就真的變少了。']],
+    pose: pose('change', '紅色是 3/6 個披薩。這次改成每 3 小塊合成一塊，會變成幾分之幾？', ['1/2', '3/3', '1/6'], 0, ['', '分母也要一起除以 3：6÷3＝2。', '分子 3÷3＝1，分母 6÷3＝2，不是 6。'], '對了，3/6 的分子和分母同除以 3，得到 1/2。不一定要兩塊兩塊合。', () => barRow(6, 3, PIE_ON)),
+    check: { q: '紅色是一盒巧克力的 4/8。每兩塊合成一塊，是幾分之幾？', pic: () => barRow(8, 4, PIE_ON), opts: ['2/4', '4/4', '1/8'], a: 0, hint: '回到合併披薩那一步：分子和分母都除以 2。', hints: ['', '分母也要除以 2：8÷2＝4，分子 4÷2＝2。', '分子 4÷2 是 2；分母也要除以 2。'], ok: '對了，分子和分母都除以 2：4/8＝2/4。2/4 還可以再約分，不必一次約到最簡。' } }),
 
-  mk({ key: 'lowest', title: '最簡分數', term: '最簡分數', who: 'rabbit', game: 'ext', when: ['ext:merge', 'ext:lowest'], board: 'tapSet',
-    hook: '2/4 併一次變 1/2。還能再併嗎？', hookPic: () => wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }]),
-    rounds: [mergeRound(4, 2, '看我做：2/4 兩兩併，變 1/2，再也併不下去了。'), mergeRound(8, 4, '一起做：4/8 併一次是 2/4，我先併。'), mergeRound(4, 2, '換你做：再把 2/4 併下去。', ['先猜：2/4 併完，還能再兩塊兩塊併嗎？', ['還能', '不能了'], 1])],
-    fade: step3(`<div class="vs two5">${wedgePie(Array.from({ length: 8 }, (_, i) => ({ f: 1 / 8, c: i < 4 ? PIE_ON : PIE_OFF })))}<b>→</b>${wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 2 ? PIE_ON : PIE_OFF })))}<b>→</b>${wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }])}</div>`, '4/8 → 2/4 → 1/2，一直併。', `${barRow(8, 4, PIE_ON)}${barRow(4, 2, PIE_ON)}${barRow(2, 1, PIE_ON)}`, '長條一路變粗，紅色一樣長。', `<div class="eq5"><span class="fr5">4<i></i>8</span>＝<span class="fr5">2<i></i>4</span>＝<span class="fr5">${K(1, C1)}<i></i>${K(2, C1)}</span></div><div class="trail">${lit('1 和 2', C1)} 沒辦法再一起除以同一個數（1 除外）</div>`, '寫成分數，最後一個停住了。'),
-    sort: { q: '哪些還能再併？', items: [['1/2', 1], ['1/3', 1], ['2/4', 0], ['3/6', 0], ['2/3', 1]].map(([h, c]) => ({ h, c })), bins: ['還能再併', '不能再併'], hint: '上下的數能不能一起除以同一個數（1 除外）？', done: '2/4、3/6 還能併；1/2、1/3、2/3 不能了。' },
-    kid: '上下的數不能再一起變小的分數', term: '最簡分數',
-    pick: [['最簡分數就是很小的分數。', '最簡分數是分子分母不能再一起除以同一個數（1 除外）。', '2/4 是最簡分數。'], 1, '想想 2/4 還能不能併。'],
-    pose: pose('can', '小明說他的蛋糕是最簡分數，是幾分之幾？這題能回答嗎？', ['能，是 1/2', '不能，最簡分數有很多個，缺資料', '能，是 2/4'], 1, '1/2、1/3、2/3 都是最簡分數。', '對了！只知道「最簡」，不知道是哪一個。'),
-    check: { q: '3/6 盤蛋糕，併到最簡，是幾分之幾？', pic: () => barRow(6, 3, PIE_ON), opts: ['1/2', '3/6', '1/3'], a: 0, hint: '回到一直併那一步：3/6 可以每 3 塊併一塊。', ok: '對了！3/6＝1/2。' } }),
+  mk({ key: 'lowest', title: '最簡分數', term: '最簡分數', who: 'rabbit', game: 'ext', when: ['ext:lowest'], board: 'tapSet',
+    hook: '2/4 約分一次變成 1/2。1/2 還能再約分嗎？', hookPic: () => wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }]),
+    rounds: [mergeRound(4, 2, '看我做：2/4 兩塊兩塊合，變成 1/2，就再也合不下去了。'), mergeRound(8, 4, '一起做：4/8 合一次是 2/4，我先合。'), mergeRound(6, 2, '換你做：2/6 兩塊兩塊合。', ['先預測：合完以後，還能再兩塊兩塊合嗎？', ['還能', '不能了'], 1])],
+    fade: step3(`<div class="vs two5">${wedgePie(Array.from({ length: 8 }, (_, i) => ({ f: 1 / 8, c: i < 4 ? PIE_ON : PIE_OFF })))}<b>→</b>${wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 2 ? PIE_ON : PIE_OFF })))}<b>→</b>${wedgePie([{ f: .5, c: PIE_ON }, { f: .5, c: PIE_OFF }])}</div>`, '4/8 → 2/4 → 1/2，一直合。', `${barRow(8, 4, PIE_ON)}${barRow(4, 2, PIE_ON)}${barRow(2, 1, PIE_ON)}`, '長條的格子一路變大，紅色一樣長。', `<div class="eq5"><span class="fr5">4<i></i>8</span>＝<span class="fr5">2<i></i>4</span>＝<span class="fr5">${K(1, C1)}<i></i>${K(2, C1)}</span></div><div class="trail">${lit('1 和 2', C1)} 的公因數只有 1，不能再約分了</div>`, '寫成分數，最後一個停住了。'),
+    sort: { q: '哪些還能再約分？', items: [['1/2', 1], ['1/3', 1], ['2/4', 0], ['3/6', 0], ['2/3', 1]].map(([h, c]) => ({ h, c })), bins: ['還能再約分', '不能再約分'], hint: '分子和分母有沒有大於 1 的公因數？', done: '2/4、3/6 還能約分；1/2、1/3、2/3 的分子分母公因數只有 1。' },
+    nameSay: `分子和分母的公因數只有 1，不能再約分的分數，叫作${T('最簡分數')}。`,
+    pick: [['最簡分數就是很小的分數。', '分子和分母的公因數只有 1 的分數，是最簡分數。', '2/4 是最簡分數。'], 1, ['大小不是重點：2/3 比 1/4 大，兩個都不能再約分。', '', '2 和 4 有公因數 2，還能約分成 1/2。']],
+    pose: pose('can', '小明說：「我寫的分數是最簡分數。」他寫的是幾分之幾？', ['夠，是 1/2', '不夠，最簡分數有很多個，還需要更多資料', '夠，是 2/4'], 1, ['1/3、2/3、3/4 也都是最簡分數。', '', '2/4 還能約分，不是最簡分數。'], '對了！只知道「最簡」，不知道是哪一個。'),
+    check: { q: '3/6 盤蛋糕，約分到最簡分數，是幾分之幾？', pic: () => barRow(6, 3, PIE_ON), opts: ['1/2', '3/6', '1/3'], a: 0, hint: '回到一直合的那一步：3 和 6 有沒有大於 1 的公因數？', hints: ['', '3 和 6 有公因數 3，還可以約分。', '分子 3÷3＝1，分母 6÷3 是 2，不是 3。'], ok: '對了，3 和 6 同除以 3：3/6＝1/2，1 和 2 的公因數只有 1。' } }),
 
   mk({ key: 'common', title: '通分', term: '通分', who: 'rabbit', game: 'ext', when: ['ext:common', 'ext:cmp', 'uadd:add', 'uadd:sub', 'uadd:mixed', 'uadd:borrow', 'uadd:enough'], board: 'two',
-    hook: '同樣切成 4 塊的披薩，比塊數就知道誰多，這你會。', hookPic: () => `<div class="vs two5">${wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 1 ? PIE_ON : PIE_OFF })))}${wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 3 ? '#f0a03c' : PIE_OFF })))}</div>`,
-    guess: ['1/2 個和 1/3 個披薩，塊的大小不一樣，能直接比塊數嗎？', ['能', '不能']],
-    rounds: [{ p: { n: 2, m: 4, b: 1, res: '1/2 切成 2/4，和 1/4 一樣細了：2 塊比 1 塊。' }, say: '看我做：1/2 和 1/4。我把 1/2 那個每塊再切一刀。' }, { p: { n: 2, m: 3, b: 1, res: '都切成 6 塊：3/6 和 2/6，3 塊比 2 塊多。' }, say: '一起做：1/2 和 1/3。我先切一個，你接著切。' }, { p: { n: 3, m: 6, b: 1, res: '1/3 切成 2/6，和 1/6 一樣細。' }, say: '換你做：1/3 和 1/6。點披薩，每塊再切一刀。', predict: ['先猜：要切哪一個？', ['1/3 那個', '1/6 那個'], 0] }],
-    reveal: '塊不一樣大，比塊數沒有用；先切成一樣大，才能比。', revealPic: () => `<div class="vs two5">${wedgePie(Array.from({ length: 6 }, (_, i) => ({ f: 1 / 6, c: i < 3 ? PIE_ON : PIE_OFF })))}${wedgePie(Array.from({ length: 6 }, (_, i) => ({ f: 1 / 6, c: i < 2 ? '#f0a03c' : PIE_OFF })))}</div>`,
-    fade: step3(`<div class="vs two5">${wedgePie(Array.from({ length: 6 }, (_, i) => ({ f: 1 / 6, c: i < 3 ? PIE_ON : PIE_OFF })))}${wedgePie(Array.from({ length: 6 }, (_, i) => ({ f: 1 / 6, c: i < 2 ? '#f0a03c' : PIE_OFF })))}</div>`, '兩個披薩都切成 6 塊。', `${barRow(6, 3, PIE_ON)}${barRow(6, 2, '#f0a03c')}`, '畫成兩條一樣細的長條。', `<div class="eq5"><span class="fr5">1<i></i>2</span>＝<span class="fr5">${K(3, C1)}<i></i>${K(6, C2)}</span>　<span class="fr5">1<i></i>3</span>＝<span class="fr5">${K(2, C4)}<i></i>${K(6, C2)}</span></div><div class="trail">${lit('藍 6', C2)}：兩條都切 6 格　${lit('紅 3', C1)}、${lit('橘 2', C4)}：各塗幾格</div>`, '寫成分數，下面的數一樣了。'),
-    kid: '把兩個分數切成一樣大的塊，讓分母一樣', term: '通分',
-    pick: [['通分是把分子變一樣。', '通分是把幾個分數的分母變成一樣，份量不變。', '通分會讓披薩變多。'], 1, '想想：切成一樣大的塊。'],
-    pose: pose('story', '哪一個故事要先通分才好算？', ['1/2 杯果汁加 1/3 杯，共幾杯？', '1/4 杯加 2/4 杯，共幾杯？', '3 杯果汁加 2 杯。'], 0, '分母不一樣的才要通分。', '對了！1/2 和 1/3 塊不一樣大，要先切成一樣細。'),
-    check: { q: '一杯 1/2 公升、一杯 1/4 公升，通分時都切成幾格最方便？', pic: () => `<div class="vs two5">${vesselSvg(['', '', 'cup'], 2, 1)}${vesselSvg(['', '', 'cup'], 4, 1)}</div>`, opts: ['2 格', '4 格', '6 格'], a: 1, hint: '回到切披薩那一步：1/2 每塊切一刀就是幾格？', ok: '對了！1/2＝2/4，都切成 4 格。' } }),
+    hook: '兩個一樣大的披薩，都平均分成 4 塊。比紅色和橘色的塊數，就知道誰多。', hookPic: () => `<div class="vs two5">${wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 1 ? PIE_ON : PIE_OFF })))}${wedgePie(Array.from({ length: 4 }, (_, i) => ({ f: .25, c: i < 3 ? '#f0a03c' : PIE_OFF })))}</div>`,
+    guess: ['兩個一樣大的披薩，一個紅色是 1/2、一個橘色是 1/3。塊的大小不一樣，能直接比塊數嗎？', ['能', '不能'], 1],
+    mh: '先比較兩個披薩的一塊誰比較大。塊比較大的那一個，先把每塊再分細。',
+    rounds: [{ p: { n: 2, m: 4, b: 1, res: '1/2 改寫成 2/4，和 1/4 的塊一樣大了：2 塊比 1 塊多。' }, say: '看我做：兩個一樣大的披薩，1/2 和 1/4。我把 1/2 那個的每塊再平均分成 2 塊。' }, { p: { n: 2, m: 3, b: 1, res: '都分成 6 塊：3/6 和 2/6，3 塊比 2 塊多。' }, say: '一起做：1/2 和 1/3。我先分一個，你接著分。' }, { p: { n: 3, m: 6, b: 1, res: '1/3 改寫成 2/6，和 1/6 的塊一樣大。' }, say: '換你做：1/3 和 1/6。點披薩，讓它的每塊再分細。', predict: ['先預測：要把哪一個披薩分細？', ['1/3 那個', '1/6 那個'], 0] }],
+    reveal: '塊不一樣大，比塊數沒有意義；先分成一樣大的塊，再比。', revealPic: () => `<div class="vs two5">${wedgePie(Array.from({ length: 6 }, (_, i) => ({ f: 1 / 6, c: i < 3 ? PIE_ON : PIE_OFF })))}${wedgePie(Array.from({ length: 6 }, (_, i) => ({ f: 1 / 6, c: i < 2 ? '#f0a03c' : PIE_OFF })))}</div>`,
+    fade: step3(`<div class="vs two5">${wedgePie(Array.from({ length: 6 }, (_, i) => ({ f: 1 / 6, c: i < 3 ? PIE_ON : PIE_OFF })))}${wedgePie(Array.from({ length: 6 }, (_, i) => ({ f: 1 / 6, c: i < 2 ? '#f0a03c' : PIE_OFF })))}</div>`, '兩個一樣大的披薩，都平均分成 6 塊。', `${barRow(6, 3, PIE_ON)}${barRow(6, 2, '#f0a03c')}`, '畫成兩條一樣長、格子一樣大的長條。', `<div class="eq5"><span class="fr5">1<i></i>2</span>＝<span class="fr5">${K(3, C1)}<i></i>${K(6, C2)}</span>　<span class="fr5">1<i></i>3</span>＝<span class="fr5">${K(2, C4)}<i></i>${K(6, C2)}</span></div><div class="trail">${lit('藍 6', C2)}：兩條都分成 6 格　${lit('紅 3', C1)}、${lit('橘 2', C4)}：各塗幾格</div>`, '寫成分數，分母一樣了。'),
+    nameSay: `用擴分把 1/2 改寫成 3/6、1/3 改寫成 2/6，分母相同，各自的值不變。<br>像這樣用擴分或約分，把幾個分數改成同分母，叫作${T('通分')}。`,
+    pick: [['通分是把分子變一樣。', '通分是把幾個分數改寫成分母相同、各自的值不變的分數。', '通分會讓披薩變多。'], 1, ['要一樣的是塊的大小，也就是分母。', '', '分得更細只是塊數變多，紅色部分大小不變。']],
+    pose: pose('story', '哪一個問題要先通分才好算？', ['1/2 杯果汁加 1/3 杯，共幾杯？', '1/4 杯加 2/4 杯，共幾杯？', '3 杯果汁加 2 杯。'], 0, ['', '1/4 和 2/4 的分母已經一樣了。', '3 杯和 2 杯是整數，直接加。'], '對了！1/2 和 1/3 塊不一樣大，要先改成一樣大的塊。'),
+    check: { q: '一杯 1/2 公升、一杯 1/4 公升，想用一樣大的格子比較。兩杯都分得剛好、而且格數最少，要都分成幾格？', pic: () => `<div class="vs two5">${vesselSvg(['', '', 'cup'], 2, 1)}${vesselSvg(['', '', 'cup'], 4, 1)}</div>`, opts: ['2 格', '4 格', '6 格'], a: 1, hint: '回到分披薩那一步：1/2 的每格再分成 2 格，會是幾格？', hints: ['分成 2 格，1/4 公升那杯就分不剛好。', '', '分成 6 格時，1/4 不是整數格。'], ok: '對了，1/2＝2/4，兩杯都用四分之一公升的格子。分成 8 格也能通分，只是 4 格最少。' } }),
 );
-/* ---------- 鷹架版段落（二）：對稱、平均、分配律、底和高、立體、小數、扇形、比率、容積、柱錐 ---------- */
-const capCup = k => `<svg class="g5" style="max-height:190px" viewBox="0 0 240 190"><rect x="40" y="10" width="160" height="160" rx="6" fill="#c9a36a" stroke="#33405a" stroke-width="2"/><rect x="60" y="10" width="120" height="140" fill="#fff"/><rect x="60" y="${150 - k * 28}" width="120" height="${k * 28}" fill="#a9d0f0"/><text x="215" y="95" class="ax">外 8</text><line x1="208" x2="208" y1="10" y2="170" stroke="#33405a"/><text x="120" y="185" text-anchor="middle" class="ax">外面 8 公分寬，裡面 6 公分寬</text></svg><div class="pile6"><span class="tap5w big6" data-t="x">🫗</span><small>倒一層</small></div>`;
-const capPic = k => capCup(k).replace(/<div class="pile6">.*<\/div>$/, '');
-const fanSvg = d => sectorSvg(d);
-const solidCard = (id, name, t, n) => `<button class="sol5 tap5w" data-t="${id}">${solidSvg(t, n, 30, 20).replace('class="g5"', 'class="g5 solmini"')}<small>${name}</small></button>`;
-const SOL = { tent: ['帳篷', 'prism', 3], box: ['鞋盒', 'prism', 4], pencil: ['鉛筆', 'prism', 6], can: ['罐頭', 'cyl', 0], pipe: ['水管', 'cyl', 0], pyr: ['金字塔', 'pyr', 4], roof: ['尖屋頂', 'pyr', 3], cone: ['甜筒', 'cone', 0], hat: ['派對帽', 'cone', 0], ball: ['足球', 'ball', 0] };
-const solRound = (ids, right, say, hint, predict) => tset(right, s => `<div class="sols5">${ids.map(id => { const [nm, t, n] = SOL[id]; return solidCard(id, nm, t, n).replace('class="sol5 tap5w"', `class="sol5 tap5w ${s.has(id) ? 'on' : ''}"`); }).join('')}</div>`, s => `找到 ${s.size} 個`, '都找到了。', say, predict, Object.fromEntries(ids.filter(i => !right.includes(i)).map(i => [i, hint])));
-const solidSeg = (key, term, right, kidWords, hookTxt, rounds, sortItems, binA, fadeTxt, pickOpts, poseObj, checkObj) => mk({ key, title: term, term, who: 'fox', game: 'solid', when: ['solid:count', 'solid:name', 'solid:rel', 'solid:net'], board: 'tapSet', hook: hookTxt, hookPic: () => `<div class="sols5">${rounds[0][0].slice(0, 3).map(id => solidCard(id, SOL[id][0], SOL[id][1], SOL[id][2])).join('')}</div>`,
-  rounds: rounds.map((r, i) => solRound(r[0], r[1], ['看我做：', '一起做：', '換你做：'][i] + r[2], r[3], r[4])),
-  fade: step3(`<div class="sols5">${right.slice(0, 2).map(id => solidCard(id, SOL[id][0], SOL[id][1], SOL[id][2])).join('')}</div>`, '真的東西。', solidSvg(SOL[right[0]][1], SOL[right[0]][2], 30, 20), fadeTxt[0], `<div class="eq5">${fadeTxt[1]}</div>`, fadeTxt[2]),
-  sort: { q: '分分看。', items: sortItems.map(([h, c]) => ({ h, c })), bins: [binA, '不是'], hint: '看它的底面和側面。', done: '分好了。' }, kid: kidWords, term, pick: pickOpts, pose: poseObj, check: checkObj });
+/* ---------- 鷹架版段落（二）：對稱、平均數、分配律、底和高、平行四邊形與三角形面積、長方體（依 2026-11-02 外部審查修訂） ---------- */
+// 幾何小工具：垂足、對直線翻摺、直角記號
+const ft = (P, A, B) => { const dx = B[0] - A[0], dy = B[1] - A[1], t = ((P[0] - A[0]) * dx + (P[1] - A[1]) * dy) / (dx * dx + dy * dy); return { x: A[0] + t * dx, y: A[1] + t * dy, t }; };
+const refl = (p, A, B) => { const F = ft(p, A, B); return [2 * F.x - p[0], 2 * F.y - p[1]]; };
+const ln5 = (a, b, st) => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" ${st}/>`;
+const unit5 = (a, b) => { const L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [(b[0] - a[0]) / L, (b[1] - a[1]) / L]; };
+const rmark = (F, A, B, V) => { const u = unit5(A, B), n = unit5(F, V), k = 11, p = [[F[0] + k * u[0], F[1] + k * u[1]], [F[0] + k * u[0] + k * n[0], F[1] + k * u[1] + k * n[1]], [F[0] + k * n[0], F[1] + k * n[1]]]; return `<polyline points="${p.map(q => q.join(',')).join(' ')}" fill="none" stroke="#33405a" stroke-width="2"/>`; };
+const rot5 = (pts, deg, c) => pts.map(p => { const a = deg * Math.PI / 180, x = p[0] - c[0], y = p[1] - c[1]; return [c[0] + x * Math.cos(a) - y * Math.sin(a), c[1] + x * Math.sin(a) + y * Math.cos(a)]; });
+// 圖：o.base 紅色的底；o.perp [頂點, 邊] 藍色垂直虛線；o.edges 每條邊都能點；o.cands 可點的候選線 [id, 起點, 終點]
+function bhSvg(P, o) {
+  const E = i => [P[i], P[(i + 1) % P.length]], sel = o.sel || new Set();
+  let s = `<svg class="g5" style="max-height:185px" viewBox="0 0 320 215"><polygon points="${polyStr(P)}" fill="#cfe6c6" stroke="#4a8a3e" stroke-width="2"/>`;
+  if (o.perp) { const [vi, ei] = o.perp, [A, B] = E(ei), F = ft(P[vi], A, B); if (F.t < 0 || F.t > 1) s += ln5(F.t < 0 ? A : B, [F.x, F.y], 'stroke="#4a8a3e" stroke-width="2" stroke-dasharray="2 4"'); s += ln5(P[vi], [F.x, F.y], `stroke="${C2}" stroke-width="4" stroke-dasharray="7 5"`); if (o.mark) s += rmark([F.x, F.y], A, B, P[vi]); }
+  if (o.ext) { const [A, B] = E(o.ext[0]), F = ft(P[o.ext[1]], A, B); if (F.t < 0 || F.t > 1) s += ln5(F.t < 0 ? A : B, [F.x, F.y], 'stroke="#4a8a3e" stroke-width="2" stroke-dasharray="2 4"'); }
+  if (o.base !== undefined) s += ln5(...E(o.base), `stroke="${C1}" stroke-width="7"`);
+  if (o.edges) P.forEach((p, i) => { const on = sel.has('e' + i); s += ln5(...E(i), `stroke="${on ? C1 : 'transparent'}" stroke-width="7"`) + ln5(...E(i), `stroke="transparent" stroke-width="24" data-t="e${i}" class="tap5"`); });
+  (o.cands || []).forEach(([id, a, b]) => { const on = sel.has(id); s += ln5(a, b, `stroke="${on ? C2 : '#7a8699'}" stroke-width="${on ? 5 : 3}" stroke-dasharray="7 5"`) + ln5(a, b, `stroke="transparent" stroke-width="20" data-t="${id}" class="tap5"`); });
+  (o.marks || []).forEach(([F, A, B, V]) => { s += rmark(F, A, B, V); });
+  (o.labels || []).forEach(([t, x, y, c]) => { s += `<text x="${x}" y="${y}" text-anchor="middle" class="ax" style="fill:${c || '#33405a'}">${t}</text>`; });
+  return s + '</svg>';
+}
+// 平行四邊形：底 7、高 4、偏 2（每格 20）；PGR 是同一塊轉了方向
+const PG0 = [[70, 160], [210, 160], [250, 80], [110, 80]], PGR = rot5(PG0, -20, [160, 120]);
+const TRI1 = [[50, 165], [255, 125], [150, 35]], TRI2 = [[40, 175], [150, 175], [285, 65]];
+const footOf = (P, vi, ei) => { const F = ft(P[vi], P[ei], P[(ei + 1) % P.length]); return [F.x, F.y]; };
+const atT = (P, ei, t) => { const A = P[ei], B = P[(ei + 1) % P.length]; return [A[0] + t * (B[0] - A[0]), A[1] + t * (B[1] - A[1])]; };
+const baseRound = (P, ei, vi, say, predict) => tset(['e' + ei], s => bhSvg(P, { perp: [vi, ei], edges: true, sel: s, mark: s.has('e' + ei) }), s => s.size ? '這條邊和藍色虛線互相垂直' : '點一條邊', '找到了：這條邊和藍色虛線互相垂直，藍色虛線就是頂點到這條邊的垂直距離。', say, predict, Object.fromEntries(P.map((_, i) => i).filter(i => i !== ei).map(i => ['e' + i, '這條邊和藍色虛線沒有垂直。找和它成直角的那條邊（或那條邊的延長線）。'])), '用三角板的直角對對看：哪一條邊（或它的延長線）和藍色虛線成直角？');
+const hRound = (P, ei, vi, cands, say, predict) => tset(['h'], s => bhSvg(P, { base: ei, cands, sel: s, ext: [ei, vi], marks: s.has('h') ? [[footOf(P, vi, ei), P[ei], P[(ei + 1) % P.length], P[vi]]] : [] }), s => s.size ? '這一條和紅色的底垂直' : '點一條虛線', '對了：這條虛線和紅色的底互相垂直，它的長度就是頂點到底的距離。', say, predict, { s: '這一條是斜邊，和紅色的底沒有垂直。', o: '這一條斜斜的，和紅色的底沒有成直角。' }, '要找和紅色的底成直角的那一條。三條裡最短的那一條，就是垂直的。');
+// 摺紙
+const foldShape = (pts, c) => s => { const g = pts.map(p => [2 * c - p[0], p[1]]); return `<svg class="g5" style="max-height:180px" viewBox="0 0 220 200"><polygon points="${polyStr(pts)}" fill="#a9d0f0" stroke="#2f5f9e" stroke-width="2" data-t="f" class="tap5"/>${s.has('f') ? `<polygon points="${polyStr(g)}" fill="#f4a9a0" fill-opacity=".5" stroke="#d6476b" stroke-dasharray="5 4"/><line x1="${c}" x2="${c}" y1="5" y2="195" stroke="#d6476b" stroke-width="3"/>` : ''}</svg>`; };
+const HEART = [[110, 180], [40, 110], [40, 60], [70, 35], [110, 60], [150, 35], [180, 60], [180, 110]], RECT2 = [[40, 60], [180, 60], [180, 150], [40, 150]], PARA2 = [[70, 60], [190, 60], [150, 150], [30, 150]];
+const foldRound = (pts, c, yes, say, predict) => tset(['f'], foldShape(pts, c), s => s.size ? (yes ? '兩側完全重合！' : '對不齊，有地方露出來') : '點圖形，沿中間的直線摺', yes ? '沿這條直線摺，兩側完全重合。' : '沿這條直線摺，兩側沒有完全重合。', say, predict, null, '點圖形一下，它就會沿中間摺過去。看看粉紅色的虛線框和藍色的圖形有沒有對齊。');
+const PARA_LINES = [['v', [110, 5], [110, 195]], ['h', [10, 105], [210, 105]], ['d1', [70, 60], [150, 150]], ['d2', [190, 60], [30, 150]]];
+const foldTry = (pts, lines) => s => { const last = [...s].pop(), L = lines.find(l => l[0] === last); let h = `<svg class="g5" style="max-height:190px" viewBox="0 0 220 210"><polygon points="${polyStr(pts)}" fill="#a9d0f0" stroke="#2f5f9e" stroke-width="2"/>`; if (L) h += `<polygon points="${polyStr(pts.map(p => refl(p, L[1], L[2])))}" fill="#f4a9a0" fill-opacity=".45" stroke="#d6476b" stroke-dasharray="5 4"/>`; lines.forEach(l => { const on = s.has(l[0]); h += ln5(l[1], l[2], `stroke="${on ? '#d6476b' : '#33405a'}" stroke-width="${on ? 3 : 2}" stroke-dasharray="6 5"`) + ln5(l[1], l[2], `stroke="transparent" stroke-width="18" data-t="${l[0]}" class="tap5"`); }); return h + '</svg>'; };
+const lineShape = (pts, lines) => s => `<svg class="g5" style="max-height:190px" viewBox="0 0 220 210"><polygon points="${polyStr(pts)}" fill="#a9d0f0" stroke="#2f5f9e" stroke-width="2"/>${lines.map(L => `<line x1="${L[1][0]}" y1="${L[1][1]}" x2="${L[2][0]}" y2="${L[2][1]}" stroke="${s.has(L[0]) ? '#d6476b' : '#33405a'}" stroke-width="${s.has(L[0]) ? 4 : 2}" stroke-dasharray="${s.has(L[0]) ? '' : '6 5'}"/><line x1="${L[1][0]}" y1="${L[1][1]}" x2="${L[2][0]}" y2="${L[2][1]}" stroke="transparent" stroke-width="18" data-t="${L[0]}" class="tap5"/>`).join('')}</svg>`;
+const ptGrid = (P, cand) => s => gridBg(`<polygon points="${polyStr(fullShape([[0, -3], [3, -1], [2, -1], [2, 3], [0, 3]], 'v').map(gp))}" fill="#fff0cf" stroke="#7a5b2e" stroke-width="2"/><line x1="${gp([0, -4])[0]}" y1="${gp([0, -4])[1]}" x2="${gp([0, 4])[0]}" y2="${gp([0, 4])[1]}" stroke="#d6476b" stroke-width="3"/><circle cx="${gp(P)[0]}" cy="${gp(P)[1]}" r="9" fill="#d6476b"/>${cand.map(c => `<circle cx="${gp(c)[0]}" cy="${gp(c)[1]}" r="11" data-t="${c.join('_')}" class="tap5" fill="${s.has(c.join('_')) ? '#3fae5a' : '#ffd65a'}" stroke="#33405a"/>`).join('')}`);
+const ptRound = (P, cand, say, predict) => tset([[-P[0], P[1]].join('_')], ptGrid(P, cand), s => s.size ? '摺過去重合了！' : `紅點離摺痕 ${Math.abs(P[0])} 格`, `兩點離摺痕都是 ${Math.abs(P[0])} 格，兩點的連線和摺痕垂直。`, say, predict, Object.fromEntries(cand.map(c => [c.join('_'), c[1] !== P[1] ? '摺過去，兩點的連線會和摺痕垂直；這個點偏上或偏下了。' : '數一數：兩點離摺痕要一樣遠。'])), '摺過去的點，和紅點離摺痕一樣遠，而且兩點的連線和摺痕垂直。先數紅點離摺痕幾格。');
+const diagPts = () => { const a = gp([2, -1]), b = gp([-1, 2]); return gridBg(`<line x1="${gp([-4, -4])[0]}" y1="${gp([-4, -4])[1]}" x2="${gp([4, 4])[0]}" y2="${gp([4, 4])[1]}" stroke="#d6476b" stroke-width="3"/>${ln5(a, b, 'stroke="#2f5f9e" stroke-width="2" stroke-dasharray="5 4"')}<circle cx="${a[0]}" cy="${a[1]}" r="9" fill="#d6476b"/><circle cx="${b[0]}" cy="${b[1]}" r="9" fill="#3fae5a"/>`); };
+// 平均數：一樣粗的水塔
+// 分配律：每份一個飯糰和一瓶水
+const trays = (n, a, b, e1, e2) => s => `<div class="tray5">${Array.from({ length: n }, (_, i) => `<div class="trow"><span class="em5">${e1 || '🍙'}</span><small>${a} 元</small>${s.has('w' + i) ? '' : `<span class="tap5w" data-t="w${i}"><span class="em5">${e2 || '💧'}</span><small>${b} 元</small></span>`}</div>`).join('')}</div><div class="trow g2">${s.size ? `<span class="em5">${(e2 || '💧').repeat(s.size)}</span><small>${b}×${s.size}</small>` : '<small>移出來的放這裡</small>'}</div>`;
+const trayRound = (n, a, b, say, predict) => tset(Array.from({ length: n }, (_, i) => 'w' + i), trays(n, a, b), s => `飯糰 ${a}×${n}，水 ${b}×${s.size}`, `先算一份再乘份數：(${a}＋${b})×${n}＝${(a + b) * n}；分開算：${a}×${n}＋${b}×${n}＝${a * n + b * n}，一樣多。`, say, predict, null, '每一份都有一瓶水。把每一瓶水都移到下面，看看水一共有幾瓶。');
+// 面積：平行四邊形沿高剪開移過去；兩個一樣的三角形拼成平行四邊形
+const U5 = 20;
+function pgCut(b, h, off, k) {
+  const x0 = 30, yb = 20 + h * U5, yt = 20, A = [x0, yb], B = [x0 + b * U5, yb], C = [x0 + (b + off) * U5, yt], D = [x0 + off * U5, yt], F = [D[0], yb], dx = k >= 3 ? b * U5 : k === 2 ? b * U5 / 2 : 0;
+  const tri = [A, F, D].map(p => [p[0] + dx, p[1]]);
+  let s = `<svg class="g5" style="max-height:170px" viewBox="0 0 ${x0 * 2 + (b + off) * U5} ${yb + 40}"><polygon points="${polyStr([F, B, C, D])}" fill="#cfe6c6" stroke="#4a8a3e" stroke-width="2"/><polygon points="${polyStr(tri)}" fill="${k >= 1 ? '#f4a9a0' : '#cfe6c6'}" stroke="${k >= 1 ? '#d6476b' : '#4a8a3e'}" stroke-width="2"/>`;
+  s += ln5(D, F, `stroke="${k >= 1 ? '#d6476b' : C2}" stroke-width="${k >= 1 ? 3 : 2.5}" stroke-dasharray="${k >= 1 ? '' : '6 4'}"`);
+  s += `<text x="${(A[0] + B[0]) / 2 + (k >= 3 ? off * U5 : 0)}" y="${yb + 22}" text-anchor="middle" class="ax" style="fill:${C1}">${k >= 3 ? '長' : '底'} ${b}</text><text x="${D[0] + 5}" y="${(yt + yb) / 2 + 5}" class="ax" style="fill:${C2}">${k >= 3 ? '寬' : '高'} ${h}</text>`;
+  return s + '</svg>';
+}
+const pgRound = (b, h, off, say, predict) => cnt(3, k => `<div class="tap5w" data-t="x" style="display:block">${pgCut(b, h, off, k)}</div>`, k => ['平行四邊形：底 ' + b + '、高 ' + h, '沿高剪開，剪下左邊的三角形', '把三角形往右移', '拼成長方形了'][k], `拼成長 ${b}、寬 ${h} 的長方形，面積 ${b}×${h}＝${b * h} 平方公分。`, say, predict, '每點一下做一件事：沿高剪開、把三角形移過去、拼好。看看拼出來的長方形，長和寬是原來的哪兩段。');
+function triPair(b, h, c, k) {
+  const x0 = 30, yb = 20 + h * U5, yt = 20, A = [x0, yb], B = [x0 + b * U5, yb], C = [x0 + c * U5, yt], A2 = [B[0] + C[0] - A[0], yt];
+  let s = `<svg class="g5" style="max-height:160px" viewBox="0 0 ${x0 * 2 + (b + c) * U5} ${yb + 40}">`;
+  if (k >= 1) s += `<polygon points="${polyStr([B, A2, C])}" fill="${k >= 2 ? '#a9d0f0' : 'none'}" stroke="#2f5f9e" stroke-width="2" stroke-dasharray="${k >= 2 ? '' : '6 4'}"/>`;
+  s += `<polygon points="${polyStr([A, B, C])}" fill="#f7dc8c" stroke="#a9702a" stroke-width="2"/>${ln5(C, [C[0], yb], `stroke="${C2}" stroke-width="2.5" stroke-dasharray="6 4"`)}<text x="${(A[0] + B[0]) / 2}" y="${yb + 22}" text-anchor="middle" class="ax" style="fill:${C1}">底 ${b}</text><text x="${C[0] + 5}" y="${(yt + yb) / 2 + 5}" class="ax" style="fill:${C2}">高 ${h}</text>`;
+  return s + '</svg>';
+}
+const triRound = (b, h, c, say, predict) => cnt(2, k => `<div class="tap5w" data-t="x" style="display:block">${triPair(b, h, c, k)}</div>`, k => ['一個三角形：底 ' + b + '、高 ' + h, '拿一個一模一樣的三角形，轉半圈', '拼成平行四邊形了'][k], `兩個一樣的三角形拼成底 ${b}、高 ${h} 的平行四邊形，面積 ${b}×${h}＝${b * h}；一個三角形是一半：${b * h / 2} 平方公分。`, say, predict, '點一下拿出一樣的三角形，再點一下把它轉半圈靠上去。看看拼出來的是什麼形狀。');
+// 表面積：長 6、寬 3、高 4 的盒子（每公分 15 像素），每一面標上面積
+const BOXF = (() => { const W = 90, D = 45, H = 60, y0 = 4; return [[D, y0 + D, W, H, 1, 24, '前'], [D, y0 + D + H + D, W, H, 1, 24, '後'], [D, y0, W, D, 0, 18, '蓋'], [D, y0 + D + H, W, D, 0, 18, '底'], [0, y0 + D, D, H, 2, 12, '左'], [D + W, y0 + D, D, H, 2, 12, '右']]; })();
+const boxNet = (s, open) => { const C = ['#f4a9a0', '#a9d0f0', '#b7e0a8']; return `<svg class="g5" style="max-height:230px" viewBox="0 0 ${2 * 45 + 90 + 8} ${2 * 45 + 2 * 60 + 12}">${BOXF.map((r, j) => { const lid = open && j === 2, on = s === true || (s && s.has && s.has('f' + j)); return `<rect x="${r[0]}" y="${r[1]}" width="${r[2]}" height="${r[3]}" ${lid ? '' : `data-t="f${j}" class="tap5"`} fill="${lid ? '#fff' : on ? C[r[4]] : '#f4f6fa'}" stroke="#33405a" stroke-width="1.5" ${lid ? 'stroke-dasharray="4 3"' : ''}/><text x="${r[0] + r[2] / 2}" y="${r[1] + r[3] / 2 + 5}" text-anchor="middle" class="ax" style="pointer-events:none">${lid ? '沒有蓋' : on ? r[5] : r[6]}</text>`; }).join('')}</svg>`; };
+const surfRound = (open, say, predict) => tset(['f0', 'f1', 'f3', 'f4', 'f5'].concat(open ? [] : ['f2']), s => boxNet(s, open), s => `塗了 ${s.size} 面`, open ? '沒有蓋子，只塗 5 面：24＋24＋18＋12＋12＝90 平方公分。' : '六個面都塗到了：24＋24＋18＋18＋12＋12＝108 平方公分。', say, predict, null, '包裝紙要蓋住盒子外面的每一面。一面一面點，點到的會顯示這一面的面積。');
 
 SEGS.push(
   mk({ key: 'symfig', title: '線對稱圖形', term: '線對稱圖形', who: 'crab', game: 'sym', when: ['sym:axis', 'sym:count'], board: 'tapSet',
-    hook: '你摺過紙吧？把紙對摺，兩邊會疊在一起。', hookPic: () => '<div class="u-big">📄</div>',
-    rounds: [foldRound(HEART, 110, true, '看我做：愛心貼紙，我從中間摺。'), foldRound(RECT2, 110, true, '一起做：門板形狀，點它摺摺看。'), foldRound(PARA2, 110, false, '換你做：停車格的形狀，點它摺摺看。', ['先猜：停車格摺起來會完全疊好嗎？', ['會', '不會'], 1])],
-    fade: step3(foldShape(HEART, 110)(new Set(['f'])), '愛心摺起來，兩邊疊好了。', `<div class="vs two5">${foldShape(RECT2, 110)(new Set(['f']))}${foldShape(PARA2, 110)(new Set(['f']))}</div>`, '左邊疊好、右邊露出來。', `<div class="eq5">${lit('疊好', C3)}：愛心、門板　${lit('露出來', C1)}：停車格</div>`, '分成兩類。'),
-    sort: { q: '哪些可以摺成兩邊完全疊好？', items: [['愛心', 0], ['蝴蝶', 0], ['門板（長方形）', 0], ['停車格', 1], ['碎玻璃（三邊都不一樣）', 1]].map(([h, c]) => ({ h, c })), bins: ['能完全疊好', '疊不好'], hint: '想像從中間摺一摺。', done: '愛心、蝴蝶、門板能；停車格、碎玻璃不能。' },
-    kid: '可以對摺成兩邊完全重疊的圖形', term: '線對稱圖形',
-    pick: [['所有圖形都是線對稱圖形。', '能對摺成兩邊完全重疊的，才是線對稱圖形。', '停車格是線對稱圖形。'], 1, '想想停車格摺起來的樣子。'],
-    pose: pose('pic', '哪一個問題配這張圖？', ['這隻蝴蝶貼紙能對摺成兩邊完全一樣嗎？', '這隻蝴蝶有幾隻腳？', '蝴蝶飛多快？'], 0, '圖上畫的是摺線。', '對了！問的是能不能完全疊好。', () => '<div class="u-big">🦋</div>'),
-    check: { q: '蝴蝶貼紙從中間摺，兩邊完全疊好。它是線對稱圖形嗎？', pic: () => '<div class="u-big">🦋</div>', opts: ['是', '不是'], a: 0, hint: '回到摺紙那一步：完全疊好的就是。', ok: '對了！' } }),
+    hook: '把一張長方形紙沿中間對摺，兩半剛好疊在一起。今天摺不同的形狀。', hookPic: () => '<div class="u-big">📄</div>',
+    rounds: [foldRound(HEART, 110, true, '看我做：愛心貼紙，我沿中間的直線摺。'), foldRound(RECT2, 110, true, '一起做：長方形門板，點它摺摺看。'), tset(PARA_LINES.map(l => l[0]), foldTry(PARA2, PARA_LINES), s => s.size ? `試了 ${s.size} 條摺線：這一條摺過去，兩側沒有完全重合` : '點一條虛線，沿它摺摺看', '直的、橫的、兩條斜的都試過，沒有一條能讓兩側完全重合。', '換你做：停車格的形狀（平行四邊形）。一條一條虛線都摺摺看。', ['先預測：這個形狀找得到一條摺線，讓兩側完全重合嗎？', ['找得到', '找不到'], 1], null, '每一條虛線都要試。粉紅色虛線框是摺過去的樣子，看它和藍色的圖形有沒有對齊。')],
+    fade: step3(foldShape(HEART, 110)(new Set(['f'])), '愛心貼紙沿中間摺，兩側完全重合。', lineShape(HEART, [['v', [110, 5], [110, 195]]])(new Set(['v'])), '畫成簡圖：紅線是那條摺線。', `<div class="eq5" style="font-size:20px"><span class="ln5">沿紅線對摺：${lit('左半邊', C2)} ↔ ${lit('右半邊', C1)}</span><span class="ln5">完全重合</span></div>`, '說成一句話。'),
+    sort: { q: '哪些圖形找得到一條摺線，讓兩側完全重合？', items: [['愛心', 0], ['蝴蝶圖案', 0], ['長方形門板', 0], ['停車格（平行四邊形）', 1], ['三邊都不一樣長的三角形', 1]].map(([h, c]) => ({ h, c })), bins: ['找得到', '找不到'], hint: '想像換不同的摺線摺摺看：直的、橫的、斜的。', done: '愛心、蝴蝶、門板找得到；停車格、三邊都不一樣長的三角形找不到。' },
+    nameSay: `沿著某一條直線對摺，兩側能完全重合的圖形，叫作${T('線對稱圖形')}。`,
+    pick: [['所有圖形都是線對稱圖形。', '能沿某一條直線對摺、兩側完全重合的，才是線對稱圖形。', '停車格的形狀是線對稱圖形。'], 1, ['停車格的形狀換了四條摺線，都對不齊。', '', '直的、橫的、斜的摺線都試過，兩側都沒有完全重合。']],
+    pose: pose('pic', '哪一個問題配這張圖？', ['這個蝴蝶圖案能沿一條直線對摺，兩側完全重合嗎？', '這隻蝴蝶有幾隻腳？', '蝴蝶飛多快？'], 0, ['', '圖上要看的是形狀能不能摺到重合，不是數腳。', '圖上看不出速度。'], '對了！問的是能不能完全重合。', () => '<div class="u-big">🦋</div>'),
+    check: { q: '蝴蝶圖案沿中間那條直線對摺，兩側完全重合。它是線對稱圖形嗎？', pic: () => '<div class="u-big">🦋</div>', opts: ['是', '不是'], a: 0, hint: '回到摺紙那一步：只要找得到一條直線能摺到完全重合就是。', hints: ['', '題目說沿中間那條直線摺，兩側完全重合，已經找到一條了。'], ok: '對了，找得到一條摺線讓兩側完全重合，就是線對稱圖形。' } }),
 
   mk({ key: 'symaxis', title: '對稱軸', term: '對稱軸', who: 'crab', game: 'sym', when: ['sym:axis', 'sym:count'], board: 'tapSet',
-    hook: '剛才摺紙時，紙上會留下一條摺痕。', hookPic: () => foldShape(HEART, 110)(new Set(['f'])),
-    rounds: [tset(['v'], lineShape(HEART, [['v', [110, 5], [110, 195]], ['h', [20, 110], [200, 110]]]), s => `找到 ${s.size} 條`, '愛心只有直的這一條能摺好。', '看我做：愛心可以沿哪一條虛線摺好？'), tset(['v', 'h'], lineShape(RECT2, [['v', [110, 40], [110, 170]], ['h', [20, 105], [200, 105]], ['d', [40, 60], [180, 150]]]), s => `找到 ${s.size} 條`, '門板有直的、橫的兩條。', '一起做：門板有好幾條虛線，我先找一條。', null), tset(['v', 'h', 'd1', 'd2'], lineShape(SH_SQ.map(p => [p[0] - 50, p[1]]), [['v', [110, 20], [110, 180]], ['h', [30, 100], [190, 100]], ['d1', [50, 40], [170, 160]], ['d2', [170, 40], [50, 160]]]), s => `找到 ${s.size} 條`, '正方形有 4 條。', '換你做：地磚有幾條能摺好的線？點出全部。', ['先猜：正方形地磚有幾條？', ['2 條', '4 條'], 1])].map((r, i) => i === 1 ? { ...r, p: { ...r.p, hints: { d: '斜著摺，角對不起來。' } } } : r),
-    fade: step3(foldShape(RECT2, 110)(new Set(['f'])), '門板沿直的線摺。', lineShape(RECT2, [['v', [110, 40], [110, 170]], ['h', [20, 105], [200, 105]]])(new Set(['v', 'h'])), '兩條紅線都能摺好。', `<div class="eq5">愛心 ${K(1, C1)}　門板 ${K(2, C1)}　地磚 ${K(4, C1)}</div>`, '數一數，每種有幾條。'),
-    kid: '能把圖形摺成兩邊完全重疊的那條摺痕', term: '對稱軸',
-    pick: [['每個圖形都只有一條對稱軸。', '對稱軸是能把圖形摺成完全重疊的那條線。', '斜著摺長方形也是對稱軸。'], 1, '想想長方形斜著摺的樣子。'],
-    pose: pose('can', '一面旗子有幾條對稱軸？這題能回答嗎？', ['能，2 條', '不能，不知道旗子長什麼樣子', '能，1 條'], 1, '不同的旗子圖案不一樣。', '對了！要看到旗子的圖案才能數。'),
-    check: { q: '長方形的門板有幾條對稱軸？', pic: () => lineShape(RECT2, [])(new Set()), opts: ['1 條', '2 條', '4 條'], a: 1, hint: '回到找摺痕那一步：直的、橫的、斜的各試一次。', ok: '對了！直的和橫的兩條。' } }),
+    hook: '對摺後再打開，紙上會留下一條摺痕。', hookPic: () => foldShape(HEART, 110)(new Set(['f'])),
+    mh: '沿一條虛線摺，兩側要完全重合才算。直的、橫的、斜的都想一想。',
+    rounds: [tset(['v'], lineShape(HEART, [['v', [110, 5], [110, 195]], ['h', [20, 110], [200, 110]]]), s => `找到 ${s.size} 條`, '愛心只有直的這一條能摺到完全重合。', '看我做：愛心可以沿哪一條虛線摺到完全重合？', null, { h: '橫著摺，上下兩半形狀不一樣。' }), tset(['v', 'h'], lineShape(RECT2, [['v', [110, 40], [110, 170]], ['h', [20, 105], [200, 105]], ['d', [40, 60], [180, 150]]]), s => `找到 ${s.size} 條`, '長方形門板有直的、橫的兩條。', '一起做：長方形門板（不是正方形）有好幾條虛線，我先找一條。', null, { d: '斜著摺，角對不起來。' }), tset(['v', 'h', 'd1', 'd2'], lineShape(SH_SQ.map(p => [p[0] - 50, p[1]]), [['v', [110, 20], [110, 180]], ['h', [30, 100], [190, 100]], ['d1', [50, 40], [170, 160]], ['d2', [170, 40], [50, 160]]]), s => `找到 ${s.size} 條`, '正方形地磚有 4 條：直的、橫的，還有兩條斜的。', '換你做：正方形地磚有幾條能摺到完全重合的線？點出全部。', ['先預測：正方形地磚有幾條？', ['2 條', '4 條'], 1])],
+    fade: step3(foldShape(RECT2, 110)(new Set(['f'])), '門板沿直的線摺，兩側完全重合。', lineShape(RECT2, [['v', [110, 40], [110, 170]], ['h', [20, 105], [200, 105]]])(new Set(['v', 'h'])), '簡圖：兩條紅線都能摺到完全重合。', `<div class="eq5" style="font-size:20px"><span class="ln5">門板（不是正方形的長方形）</span><span class="ln5">直的 ${K(1, C1)} 條＋橫的 ${K(1, C1)} 條＝${K(2, C1)} 條</span></div>`, '數一數有幾條。'),
+    nameSay: `能讓圖形對摺後兩側完全重合的那條直線，叫作${T('對稱軸')}。它可以是直的、橫的，也可以是斜的。`,
+    pick: [['每個圖形都只有一條對稱軸。', '對稱軸是能讓圖形對摺後完全重合的那條直線。', '斜著摺長方形門板，那條摺線也是對稱軸。'], 1, ['正方形地磚有 4 條。', '', '不是正方形的長方形斜著摺，角對不起來。']],
+    pose: pose('can', '一面旗子有幾條對稱軸？', ['夠，2 條', '不夠，還要看到旗子的形狀；也要說清楚只看外框，還是連圖案一起看', '夠，1 條'], 1, ['長方形外框有 2 條，可是旗子上的圖案可能讓它變少。', '', '有些旗子連圖案一起看是 1 條，有些是 0 條，要看到才知道。'], '對了！只看長方形外框有 2 條；連圖案一起看，條數可能不一樣。'),
+    check: { q: '長方形門板（不是正方形）有幾條對稱軸？', pic: () => lineShape(RECT2, [])(new Set()), opts: ['1 條', '2 條', '4 條'], a: 1, hint: '回到找摺痕那一步：直的、橫的、斜的各試一次。', hints: ['直的那條對了，橫的那條也試試看。', '', '4 條是正方形；這個門板斜著摺對不齊。'], ok: '對了，你檢查了直、橫、斜三種：直的和橫的兩條能摺到完全重合。' } }),
 
   mk({ key: 'sympt', title: '對稱點', term: '對稱點', who: 'crab', game: 'sym', when: ['sym:point', 'sym:half', 'sym:prop'], board: 'tapSet',
     hook: '沿摺痕對摺，左邊的一個點，會碰到右邊的某個點。', hookPic: () => ptGrid([2, 1], [])(new Set()),
-    rounds: [ptRound([2, 1], [[-1, 1], [-2, 1], [-2, 2]], '看我做：紅點離摺痕 2 格，摺過去碰到哪？'), ptRound([3, -1], [[-3, -1], [-2, -1], [-3, 0]], '一起做：紅點離摺痕 3 格。'), ptRound([1, 2], [[-1, 2], [-2, 2], [-1, 1]], '換你做：紅點離摺痕 1 格。', ['先猜：碰到的點離摺痕幾格？', ['1 格', '2 格'], 0])],
-    fade: step3(ptGrid([2, 1], [[-2, 1]])(new Set(['-2_1'])), '紅點和綠點摺起來碰在一起。', ptGrid([2, 1], [[-2, 1]])(new Set(['-2_1'])), '數格子：兩點都離摺痕 2 格、一樣高。', `<div class="eq5">紅點離摺痕 ${K(2, C1)} 格　綠點離摺痕 ${K(2, C3)} 格</div>`, '寫成數字，一樣遠。'),
-    kid: '對摺時碰在一起的兩個點（離摺痕一樣遠、一樣高）', term: '對稱點',
-    pick: [['對稱點離摺痕的距離不一樣。', '對稱點是對摺時碰在一起的兩個點。', '任何兩個點都是對稱點。'], 1, '想想摺起來的樣子。'],
-    pose: pose('change', '紅點改成離摺痕 4 格，它的對稱點離摺痕幾格？', ['2 格', '4 格', '8 格'], 1, '兩邊要一樣遠。', '對了！改一邊，另一邊也跟著一樣。'),
-    check: { q: '窗花上一個點離對稱軸 3 格，它的對稱點離對稱軸幾格？', pic: () => ptGrid([3, 0], [])(new Set()), opts: ['2 格', '3 格', '6 格'], a: 1, hint: '回到找點那一步：離摺痕要一樣遠。', ok: '對了！都是 3 格。' } }),
+    rounds: [ptRound([2, 1], [[-1, 1], [-2, 1], [-2, 2]], '看我做：紅點離摺痕 2 格，摺過去碰到哪？'), ptRound([3, -1], [[-3, -1], [-2, -1], [-3, 0]], '一起做：紅點離摺痕 3 格。'), ptRound([1, 2], [[-1, 2], [-2, 2], [-1, 1]], '換你做：紅點離摺痕 1 格。', ['先預測：碰到的點離摺痕幾格？', ['1 格', '2 格'], 0])],
+    fade: step3(ptGrid([2, 1], [[-2, 1]])(new Set(['-2_1'])), '紅點和綠點摺起來碰在一起。', gridBg(`${ln5(gp([0, -4]), gp([0, 4]), 'stroke="#d6476b" stroke-width="3"')}${ln5(gp([-2, 1]), gp([2, 1]), 'stroke="#2f5f9e" stroke-width="2" stroke-dasharray="5 4"')}<circle cx="${gp([2, 1])[0]}" cy="${gp([2, 1])[1]}" r="9" fill="#d6476b"/><circle cx="${gp([-2, 1])[0]}" cy="${gp([-2, 1])[1]}" r="9" fill="#3fae5a"/>${rmark(gp([0, 1]), gp([0, -4]), gp([0, 4]), gp([2, 1]))}<text x="${gp([1, 1])[0]}" y="${gp([1, 1])[1] - 8}" text-anchor="middle" class="ax">2 格</text><text x="${gp([-1, 1])[0]}" y="${gp([-1, 1])[1] - 8}" text-anchor="middle" class="ax">2 格</text>`), '簡圖：只留摺痕和兩個點。連線和摺痕垂直。', `<div class="eq5">紅點離摺痕 ${K(2, C1)} 格　綠點離摺痕 ${K(2, C3)} 格</div>`, '寫成數字，一樣遠。'),
+    nameSay: `沿對稱軸對摺後會重合的兩個點，互為${T('對稱點')}。它們到對稱軸的距離相同，兩點的連線和對稱軸垂直。`,
+    pick: [['對稱點離摺痕的距離不一樣。', '沿對稱軸對摺後會重合的兩個點，是對稱點。', '任何兩個點都是對稱點。'], 1, ['摺過去會重合，兩點離摺痕一定一樣遠。', '', '要摺過去會碰在一起才算；隨便兩點通常碰不到。']],
+    pose: pose('change', '把摺痕換成斜的。紅點的對稱點，還是「離摺痕一樣遠、連線和摺痕垂直」嗎？', ['是', '不是，對稱點一定要一樣高'], 0, ['', '「一樣高」只在摺痕是直的時候成立；斜的摺痕，兩點就不一樣高了。'], '對了，摺痕是斜的也一樣：兩點到摺痕一樣遠，連線和摺痕垂直。', diagPts),
+    check: { q: '窗花上一個點離對稱軸 3 格，它的對稱點離對稱軸幾格？', pic: () => ptGrid([3, 0], [])(new Set()), opts: ['2 格', '3 格', '6 格'], a: 1, hint: '回到找點那一步：兩點離摺痕要一樣遠。', hints: ['兩邊要一樣遠，紅點是 3 格。', '', '6 格是兩個點之間的距離；題目問的是到對稱軸的距離。'], ok: '對了，對稱點到對稱軸的距離和原來的點一樣，都是 3 格。' } }),
 
-  mk({ key: 'avg', title: '平均', term: '平均', who: 'raccoon', game: 'mix', when: ['mix:avg'], board: 'tanks',
-    hook: '分糖果要公平，多的分給少的，你會吧？', hookPic: () => tanks3([4, 2]),
-    rounds: [{ p: { L: [4, 2], res: '推平了，每個 3 格。' }, say: '看我做：兩個水塔 4 格和 2 格，從高的倒一格給低的。' }, { p: { L: [5, 1, 3], res: '推平了，每個 3 格。' }, say: '一起做：5、1、3 格。我先倒，你接著倒。' }, { p: { L: [2, 6, 4], res: '推平了，每個 4 格。' }, say: '換你做：2、6、4 格，點最高的倒一格。', predict: ['先猜：推平後每個幾格？', ['3 格', '4 格', '6 格'], 1] }],
-    fade: step3(tanks3([5, 1, 3]), '真的水塔，高高低低。', `${tanks3([3, 3, 3])}`, '推平後都是 3 格。', `<div class="eq5">（${K(5, C1)}＋${K(1, C1)}＋${K(3, C1)}）÷${K(3, C2)}＝${K(3, C3)}</div><div class="trail">${lit('紅：原來每個', C1)}　${lit('藍 3：有 3 個水塔', C2)}　${lit('綠 3：推平後每個', C3)}</div>`, '全部加起來，再平分。'),
-    kid: '高的補給低的、推到一樣多時，每個的那個數', term: '平均',
-    pick: [['平均就是最多的那一個。', '平均是全部合起來再平分，每份一樣多。', '平均一定是整數。'], 1, '想想推平水塔。'],
-    pose: pose('can', '三個人跑步，平均每人跑幾圈？這題能回答嗎？', ['能，3 圈', '不能，不知道一共跑幾圈', '能，1 圈'], 1, '要先知道全部有多少。', '對了！缺一共跑了幾圈。'),
-    check: { q: '三天存了 2、4、6 元，平均每天存幾元？', pic: () => tanks3([2, 4, 6]), opts: ['3 元', '4 元', '6 元'], a: 1, hint: '回到推平那一步：6 倒給 2。', ok: '對了！（2＋4＋6）÷3＝4。' } }),
+  mk({ key: 'avg', title: '平均數', term: '平均數', who: 'raccoon', game: 'mix', when: ['mix:avg'], board: 'tanks',
+    hook: '兩個一樣粗（底面一樣大）的水塔，一個有 4 格水、一個有 2 格水。想讓兩個一樣高，可以從高的倒給低的。', hookPic: () => tanks3([4, 2]),
+    mh: '水的總量不會變。每次從最高的水塔倒一格，給最低的水塔。',
+    rounds: [{ p: { L: [4, 2], res: '水位一樣高了，每個 3 格。總共還是 6 格。' }, say: '看我做：兩個水塔 4 格和 2 格，從高的倒一格給低的。' }, { p: { L: [5, 1, 3], res: '水位一樣高了，每個 3 格。總共還是 9 格。' }, say: '一起做：三個一樣粗的水塔，5、1、3 格。我先倒，你接著倒。' }, { p: { L: [2, 6, 4], res: '水位一樣高了，每個 4 格。總共還是 12 格。' }, say: '換你做：2、6、4 格，點最高的水塔倒一格。', predict: ['先預測：倒到一樣高時，每個幾格？', ['3 格', '4 格', '6 格'], 1] }],
+    fade: step3(tanks3([5, 1, 3]), '一樣粗的水塔，水位高高低低。', `${tanks3([3, 3, 3])}`, '倒到一樣高後，每個 3 格，總量不變。', `<div class="eq5">（${K(5, C1)}＋${K(1, C1)}＋${K(3, C1)}）÷${K(3, C2)}＝${K(3, C3)}</div><div class="trail">${lit('紅：原來每個', C1)}　${lit('藍 3：有 3 個水塔', C2)}　${lit('綠 3：倒平後每個', C3)}</div>`, '全部加起來，再平均分成 3 份。'),
+    nameSay: `水的總量不變，重新平均分配到 3 個水塔，每個都是 3 格。<br>重新平均分配後每份的量，叫作${T('平均數')}。原本每個水塔不一定一樣多。`,
+    pick: [['平均數就是最多的那一個。', '平均數是總量不變、重新平均分配後，每份的量。', '平均數一定是整數。'], 1, ['最高的水塔有 5 格，倒平後是 3 格。', '', '如果 7 格水平均分給 2 個水塔，每個 3.5 格，也可以。']],
+    pose: pose('can', '三個人跑步，平均每人跑幾圈？', ['夠，3 圈', '不夠，還需要知道三個人一共跑幾圈（或每個人各跑幾圈）', '夠，1 圈'], 1, ['3 是人數，不是圈數。', '', '不知道總共跑了多少，不能平均分。'], '對了！要先知道總量，才能平均分。'),
+    check: { q: '三天存了 2、4、6 元，平均每天存幾元？', pic: () => tanks3([2, 4, 6]), opts: ['3 元', '4 元', '6 元'], a: 1, hint: '回到倒水那一步：從 6 倒給 2，倒到一樣高。', hints: ['3 是天數；要把 2＋4＋6 平均分成 3 份。', '', '6 元是存最多的那一天。'], ok: '對了，總共 12 元平均分成 3 份：(2＋4＋6)÷3＝4 元。實際上每天存的不一樣多。' } }),
 
   mk({ key: 'dist', title: '分配律', term: '分配律', who: 'raccoon', game: 'mix', when: ['mix:dist', 'mix:near'], board: 'tapSet',
-    hook: '一個便當 10 元、一瓶水 2 元，一份 12 元，你會算吧？', hookPic: () => `<span class="em5">🍱💧</span>`,
-    rounds: [trayRound(2, 10, 2, '看我做：買 2 份。我把水一瓶一瓶移出來，分開算。'), trayRound(3, 10, 2, '一起做：買 3 份。我先移一瓶。'), trayRound(4, 10, 2, '換你做：買 4 份，點每一瓶水移出來。', ['先猜：合起來算和分開算，錢會一樣嗎？', ['一樣', '不一樣'], 0])],
-    fade: step3(trays(3, 10, 2)(new Set()), '3 份便當和水，放在一起。', `<div class="vs two5">${barRow(5, 5, '#f4a9a0')}${barRow(1, 1, '#a9d0f0')}</div><div class="trail">${lit('紅：便當', C1)}　${lit('藍：水', C2)}</div>`, '分成兩堆：便當一堆、水一堆。', `<div class="eq5">（${K(10, C1)}＋${K(2, C2)}）×${K(3, C3)}＝${K(10, C1)}×${K(3, C3)}＋${K(2, C2)}×${K(3, C3)}</div>`, '寫成算式，左邊是一份一份算，右邊是分兩堆算。'),
-    kid: '先合起來再乘，和分開乘再加，答案一樣', term: '分配律',
-    pick: [['（10＋2）×3＝10×3＋2', '（10＋2）×3＝10×3＋2×3', '（10＋2）×3＝10＋2×3'], 1, '水也買了 3 瓶。'],
-    pose: pose('story', '哪一個故事可以寫成（20＋5）×4？', ['一份飯 20 元、一杯湯 5 元，買 4 份', '20 元買 5 個，再買 4 個', '20 個人分 5 組，再來 4 人'], 0, '括號裡是一份的價錢，乘份數。', '對了！一份 20＋5 元，買 4 份。'),
-    check: { q: '一盒筆 5 元、一塊橡皮 1 元，買 4 份。哪一個算法對？', pic: () => trays(4, 5, 1)(new Set()), opts: ['5×4＋1×4', '5×4＋1', '5＋1×4'], a: 0, hint: '回到移水那一步：橡皮也有 4 塊。', ok: '對了！（5＋1）×4＝5×4＋1×4。' } }),
+    hook: '一份早餐有一個飯糰 30 元和一瓶水 10 元，一份是 40 元。', hookPic: () => `<span class="em5">🍙💧</span>`,
+    rounds: [trayRound(2, 30, 10, '看我做：買 2 份。我把水一瓶一瓶移出來，分開算。'), trayRound(3, 30, 10, '一起做：買 3 份。我先移一瓶。'), trayRound(4, 30, 10, '換你做：買 4 份，點每一瓶水移出來。', ['先預測：一份一份算和分開算，錢會一樣嗎？', ['一樣', '不一樣'], 0])],
+    fade: step3(trays(3, 30, 10)(new Set()), '3 份早餐，每份一個飯糰、一瓶水。', `<div class="eq5" style="font-size:20px"><span class="ln5">${lit('飯糰', C1)}：${K(30, C1)} ${K(30, C1)} ${K(30, C1)}</span><span class="ln5">${lit('水', C2)}：${K(10, C2)} ${K(10, C2)} ${K(10, C2)}</span></div>`, '分成兩堆：飯糰一堆、水一堆，各 3 個。', `<div class="eq5">（${K(30, C1)}＋${K(10, C2)}）×${K(3, C3)}＝${K(30, C1)}×${K(3, C3)}＋${K(10, C2)}×${K(3, C3)}</div><div class="trail">左邊：一份的錢 × 份數　右邊：飯糰總價＋水總價　${lit('綠 3：買 3 份', C3)}</div>`, '寫成算式：每份量 × 份數。'),
+    nameSay: `(30＋10)×3＝30×3＋10×3：先算一份再乘份數，和分別算飯糰、水的總價再相加，結果一樣。<br>這個規律叫作${T('分配律')}。`,
+    pick: [['(30＋10)×3＝30×3＋10', '(30＋10)×3＝30×3＋10×3', '(30＋10)×3＝30＋10×3'], 1, ['水也買了 3 瓶，10 也要乘 3。', '', '飯糰也買了 3 個，30 也要乘 3。']],
+    pose: pose('story', '哪一個問題可以寫成 (20＋5)×4？', ['一份飯 20 元、一杯湯 5 元，買 4 份', '20 元買 5 個，再買 4 個', '20 個人分 5 組，再來 4 人'], 0, ['', '這是個數相加，不是「一份的錢 × 份數」。', '這是分組和加人，不是「一份 × 份數」。'], '對了！括號裡是一份的錢 20＋5 元，乘份數 4。'),
+    check: { q: '一枝筆 15 元、一把尺 5 元，每份各一樣，買 4 份。哪一個算法對？', pic: () => trays(4, 15, 5, '✏️', '📏')(new Set()), opts: ['15×4＋5×4', '15×4＋5', '15＋5×4'], a: 0, hint: '回到移水那一步：每一份都有一把尺。', hints: ['', '尺也有 4 把，5 也要乘 4。', '筆也有 4 枝，15 也要乘 4。'], ok: '對了，筆的總價加尺的總價：(15＋5)×4＝15×4＋5×4＝80 元。' } }),
 
   mk({ key: 'base', title: '底', term: '底', who: 'sheep', game: 'para', when: ['para:para', 'para:tri', 'para:slide', 'para:trap', 'para:sym', 'para:back'], board: 'tapSet',
-    hook: '長方形的面積是長乘寬，你會。今天的地是歪的。', hookPic: () => groundShape(G_PARA, [], new Set()),
-    rounds: [baseRound(G_PARA, '看我做：這塊地放在地上，找貼著地面的那一條邊。'), baseRound(G_TRI, '一起做：三角形的屋頂模型，點貼著地面的那一條。'), baseRound(G_TRAP, '換你做：梯形的花圃。', ['先猜：貼著地面的是上面還是下面那條？', ['上面', '下面'], 1])],
-    fade: step3(groundShape(G_PARA, [['e0', G_PARA[0], G_PARA[1]]], new Set(['e0'])), '地塊站在地面上。', `<svg class="g5" style="max-height:120px" viewBox="0 0 320 120"><polygon points="40,100 220,100 280,20 100,20" fill="#cfe6c6" stroke="#4a8a3e" stroke-width="2"/><line x1="40" y1="100" x2="220" y2="100" stroke="${C1}" stroke-width="6"/></svg>`, '畫成簡圖，紅色是貼地的那一條。', `<div class="eq5">${lit('紅邊', C1)} 長 ${K(9, C1)} 公尺</div>`, '量出它的長度。'),
-    kid: '圖形放在地上時，貼著地面的那一條邊', term: '底',
-    pick: [['底一定是最長的邊。', '底是我們選來當作「放在地上」的那一條邊。', '底是斜的那一條。'], 1, '想想圖形站在地上的樣子。'],
-    pose: pose('pic', '哪一個問題配這張圖？', ['這塊地貼著地面的那一條邊有多長？', '這塊地是什麼顏色？', '地上有幾棵樹？'], 0, '圖上紅色是貼地那條。', '對了！', () => groundShape(G_TRI, [['e0', G_TRI[0], G_TRI[1]]], new Set(['e0']))),
-    check: { q: '三角形屋頂放在地上，哪一條是底？', pic: () => groundShape(G_TRI, [], new Set()), opts: ['貼著地面那一條', '左邊斜的那一條', '右邊斜的那一條'], a: 0, hint: '回到找邊那一步：圖形站在哪一條上？', ok: '對了！' } }),
+    hook: '長方形的面積是長乘寬。今天的圖形斜放著，藍色虛線是從一個頂點畫到對邊、和那條邊垂直的線。', hookPic: () => bhSvg(PGR, { perp: [3, 0] }),
+    rounds: [baseRound(PGR, 0, 3, '看我做：這塊斜放的平行四邊形，找和藍色虛線垂直的那條邊。'), baseRound(TRI1, 1, 0, '一起做：換一個三角形，這次藍色虛線從左下的頂點出發。'), baseRound(TRI2, 0, 2, '換你做：這個三角形有一個角很大。', ['先預測：藍色虛線會碰到三角形的邊，還是要把一條邊延長才碰得到？', ['碰得到', '要把邊延長'], 1])],
+    fade: step3(bhSvg(PGR, { perp: [3, 0], base: 0, mark: true }), '斜放的平行四邊形：選紅色這條邊。', bhSvg(PG0, { perp: [3, 0], base: 0, mark: true, labels: [['7 公分', 140, 185, C1], ['4 公分', 128, 125, C2]] }), '把圖轉一轉，紅邊轉到下面。它還是同一條邊，藍色虛線也還是和它垂直。', `<div class="eq5" style="font-size:20px"><span class="ln5">紅邊 ${K(7, C1)} 公分</span><span class="ln5">和它垂直的藍色虛線 ${K(4, C2)} 公分</span></div>`, '量出兩段的長度。'),
+    nameSay: `先選定一條邊作為${T('底')}。底不一定在下面；換選另一條邊當底，和它垂直的距離也要重新找。`,
+    pick: [['底一定是最長的邊。', '底是我們選定的一條邊，不一定在下面。', '底一定是貼著地面的那條邊。'], 1, ['任何一條邊都可以選來當底，和長短無關。', '', '把圖轉一轉，紅邊不在下面，它還是我們選的底。']],
+    pose: pose('pic', '哪一個問題配這張圖？', ['選紅色這條邊作為底，和它垂直的藍色虛線有多長？', '這個三角形是什麼顏色？', '三角形有幾個角？'], 0, ['', '顏色和底、垂直距離無關。', '圖上畫的是底和垂直距離，不是在數角。'], '對了！紅邊是底，藍色虛線是和它垂直的距離。', () => bhSvg(TRI1, { perp: [0, 1], base: 1, mark: true })),
+    check: { q: '三角形的三條邊，都可以選來當底嗎？', pic: () => bhSvg(TRI1, {}), opts: ['可以，選哪一條都行，但垂直距離要跟著換', '不行，只有最下面那條能當底'], a: 0, hint: '回到找邊那一步：同一個三角形，藍色虛線從不同頂點出發，對到的是不同的邊。', hints: ['', '轉一轉圖形，哪一條都可以在下面。底是我們選的。'], ok: '對了，三條邊都能當底；換了底，就要重新找和它垂直的距離。梯形通常把兩條平行的邊叫上底和下底。' } }),
 
   mk({ key: 'height', title: '圖形的高', term: '圖形的高', who: 'sheep', game: 'para', when: ['para:para', 'para:tri', 'para:slide', 'para:trap', 'para:sym', 'para:back'], board: 'tapSet',
-    hook: '量身高要站直，從腳量到頭頂，你量過吧？', hookPic: () => '<div class="u-big">🧍📏</div>',
-    guess: ['歪歪的地，量斜斜的那一邊，是它有多高嗎？', ['是', '不是']],
-    rounds: [hRound(G_PARA, 100, 70, [G_PARA[0], G_PARA[3]], '看我做：從底直直往上量到最上面。'), hRound(G_TRI, 120, 50, [G_TRI[0], G_TRI[2]], '一起做：三角形，哪一條是直直量的？'), hRound(G_TRAP, 160, 70, [G_TRAP[0], G_TRAP[3]], '換你做：梯形。', ['先猜：斜邊和直直量的，哪個比較長？', ['斜邊比較長', '一樣長'], 0])],
-    reveal: '斜邊比較長，可是它不是高度。量高要直直量，很多人一開始也量成斜邊。', revealPic: () => groundShape(G_PARA, [['h', [100, 70], [100, 170], '#2f5f9e'], ['s', G_PARA[0], G_PARA[3]]], new Set(['h'])),
-    fade: step3('<div class="u-big">🧍📏</div>', '量身高：站直，從腳到頭。', groundShape(G_PARA, [['h', [100, 70], [100, 170], '#2f5f9e']], new Set(['h'])), '量地塊：從底直直到最上面。', `<div class="eq5">${lit('直直量', C1)} ${K(5, C1)} 公尺　斜邊 6 公尺（不用）</div>`, '寫成數字，用直直量的那一個。'),
-    kid: '從底直直往上量到最上面的長度', term: '圖形的高',
-    pick: [['高就是斜邊。', '高是從底直直量上去的長度，和底垂直。', '高一定比底長。'], 1, '想想量身高。'],
-    pose: pose('can', '平行四邊形的底是 6 公尺，面積是多少？這題能算嗎？', ['能，36', '不能，缺高', '能，12'], 1, '面積要底和高。', '對了！缺高，算不出來。'),
-    check: { q: '屋頂三角形：底 8 公尺、斜邊 6 公尺、直直量上去 4 公尺。高是幾公尺？', pic: () => tri5([[40, 150], [280, 150], [160, 40]], '<line x1="160" x2="160" y1="40" y2="150" stroke="#d6476b" stroke-width="3" stroke-dasharray="5 4"/><text x="165" y="100" class="ax">4</text><text x="80" y="90" class="ax">6</text><text x="160" y="168" text-anchor="middle" class="ax">8</text>'), opts: ['4', '6', '8'], a: 0, hint: '回到量高那一步：直直量，不量斜邊。', ok: '對了！高是 4 公尺。' } }),
+    hook: '量身高時，尺要和地面垂直，不是沿著斜的方向量。量圖形也一樣：紅色是選好的底。', hookPic: () => bhSvg(PG0, { base: 0 }),
+    guess: ['斜放的平行四邊形，量它的斜邊，是頂點到底的垂直距離嗎？', ['是', '不是'], 1],
+    rounds: [hRound(PG0, 0, 3, [['s', PG0[3], PG0[0]], ['h', PG0[3], footOf(PG0, 3, 0)], ['o', PG0[3], atT(PG0, 0, .7)]], '看我做：從上面的頂點到紅色的底，三條虛線裡哪一條和底垂直？'), hRound(TRI1, 0, 2, [['o', TRI1[2], atT(TRI1, 0, .25)], ['s', TRI1[2], TRI1[1]], ['h', TRI1[2], footOf(TRI1, 2, 0)]], '一起做：三角形，紅色的底是下面這條。'), hRound(TRI2, 0, 2, [['s', TRI2[2], TRI2[1]], ['o', TRI2[2], TRI2[0]], ['h', TRI2[2], footOf(TRI2, 2, 0)]], '換你做：這個三角形有一個角很大，紅色的底要延長（點點的線）。', ['先預測：三條虛線裡最短的那條，是和底垂直的那條嗎？', ['是', '不是'], 0])],
+    reveal: '斜邊比較長，但它和底沒有垂直，不是頂點到底的距離。', revealPic: () => bhSvg(PG0, { base: 0, perp: [3, 0], mark: true, cands: [['s', PG0[3], PG0[0]]] }),
+    fade: step3('<div class="u-big">🧍📏</div>', '量身高：尺和地面垂直，從腳量到頭頂。', bhSvg(PG0, { base: 0, perp: [3, 0], mark: true, labels: [['底 7', 140, 185, C1], ['4', 122, 125, C2]] }), '量平行四邊形：從頂點畫一條和底垂直的線。', `<div class="eq5" style="font-size:20px"><span class="ln5">和底垂直的距離 ${K(4, C2)} 公分</span><span class="ln5">斜邊約 4.5 公分（不用）</span></div>`, '寫成數字，用垂直的那一段。'),
+    nameSay: `從頂點向底（或底的延長線）畫垂直的線，這段垂直距離就是對應這條底的高，叫作${T('圖形的高')}。<br>平行四邊形、梯形的高，也是兩條平行邊之間的垂直距離。`,
+    pick: [['高就是斜邊。', '高是從頂點到底（或底的延長線）的垂直距離。', '高一定畫在圖形裡面。'], 1, ['斜邊沒有和底垂直，比高還長。', '', '角很大的三角形，高可能落在圖形外面，要把底延長。']],
+    pose: pose('can', '平行四邊形的底是 6 公尺，面積是多少？', ['夠，36 平方公尺', '不夠，還需要知道對應這條底的高', '夠，12 平方公尺'], 1, ['6×6 把底當成高了，不知道高是多少。', '', '6＋6 不是面積的算法，而且還不知道高。'], '對了！缺高，算不出來。'),
+    check: { q: '屋頂三角形：底 8 公尺、斜邊 6 公尺，從頂點垂直畫到底是 4 公尺。這條底對應的高是幾公尺？', pic: () => tri5([[40, 150], [280, 150], [174, 30]], '<line x1="174" x2="174" y1="30" y2="150" stroke="#2f5f9e" stroke-width="3" stroke-dasharray="5 4"/><text x="180" y="100" class="ax">4</text><text x="92" y="84" class="ax">6</text><text x="160" y="168" text-anchor="middle" class="ax">8</text>'), opts: ['4', '6', '8'], a: 0, hint: '回到量高那一步：找和底垂直的那一段，不量斜邊。', hints: ['', '6 公尺是斜邊，沒有和底垂直。', '8 公尺是底的長度。'], ok: '對了，你挑的是和底垂直的那一段：高是 4 公尺。' } }),
+
+  mk({ key: 'pgarea', title: '平行四邊形面積', term: '平行四邊形面積公式', who: 'sheep', game: 'para', when: ['para:para', 'para:slide', 'para:sym', 'para:back'], board: 'counter',
+    hook: '長方形的面積＝長×寬。平行四邊形斜斜的，能不能剪一剪、拼成長方形？', hookPic: () => pgCut(6, 3, 2, 0),
+    rounds: [pgRound(6, 3, 2, '看我做：底 6 公分、高 3 公分。我沿高剪開，把三角形移到右邊。'), pgRound(8, 4, 2, '一起做：底 8、高 4。我先剪開，你接著移。'), pgRound(5, 4, 2, '換你做：底 5、高 4。', ['先預測：拼成的長方形，長和寬是多少？', ['長 5、寬 4', '長 5、寬 5', '長 7、寬 4'], 0])],
+    fade: step3(pgCut(6, 3, 2, 3), '剪下三角形移過去，拼成長方形。', pgCut(6, 3, 2, 0), '回到原來的平行四邊形：長方形的長是它的底，寬是它的高。', `<div class="eq5">${K('底 6', C1)} × ${K('高 3', C2)} ＝ ${K(18, C3)}</div><div class="trail">${lit('紅：長方形的長＝底', C1)}　${lit('藍：長方形的寬＝高', C2)}　${lit('綠：面積 18 平方公分', C3)}</div>`, '寫成算式。'),
+    nameSay: `平行四邊形沿高剪開、移過去，拼成長方形：長是原來的底，寬是原來的高，面積沒有變。<br>所以平行四邊形面積＝底×高，這叫作${T('平行四邊形面積公式')}。`,
+    pick: [['平行四邊形面積＝底×斜邊。', '平行四邊形面積＝底×高。', '平行四邊形面積＝底＋高。'], 1, ['拼成長方形後，寬是高，不是斜邊。', '', '面積是能鋪幾個小方格，要用乘的。']],
+    pose: pose('can', '一塊平行四邊形的地，斜邊 5 公尺、底 6 公尺，面積是多少？', ['夠，30 平方公尺', '不夠，還需要知道高'], 1, ['6×5 用的是斜邊，不是高。', ''], '對了，面積要用和底垂直的高，斜邊不行。'),
+    check: { q: '平行四邊形的底 7 公分、高 3 公分，面積是多少平方公分？', pic: () => pgCut(7, 3, 2, 0), opts: ['10', '21', '42'], a: 1, hint: '回到剪拼那一步：拼成的長方形，長和寬是多少？', hints: ['7＋3 是相加；面積要相乘。', '', '不用再乘 2；拼成的長方形就是 7×3。'], ok: '對了，拼成長 7、寬 3 的長方形：7×3＝21 平方公分。' } }),
+
+  mk({ key: 'triarea', title: '三角形面積', term: '三角形面積公式', who: 'sheep', game: 'para', when: ['para:tri'], board: 'counter',
+    hook: '先回想：平行四邊形面積＝底×高。如果拿兩個一模一樣的三角形，能拼成什麼？', hookPic: () => triPair(6, 4, 2, 0),
+    rounds: [triRound(6, 4, 2, '看我做：底 6 公分、高 4 公分的三角形。我拿一個一樣的，轉半圈靠上去。'), triRound(4, 3, 1, '一起做：底 4、高 3。我先拿出一樣的三角形，你把它靠上去。'), triRound(5, 2, 3, '換你做：底 5、高 2。', ['先預測：一個三角形的面積是多少平方公分？', ['5', '10', '7'], 0])],
+    fade: step3(triPair(6, 4, 2, 2), '兩個一樣的三角形，拼成一個平行四邊形。', triPair(6, 4, 2, 0), '回到一個三角形：底 6、高 4，它是那個平行四邊形的一半。', `<div class="eq5">${K(6, C1)} × ${K(4, C2)} ÷ ${K(2, C3)} ＝ 12</div><div class="trail">${lit('紅 6：底', C1)}　${lit('藍 4：高', C2)}　${lit('綠 ÷2：兩個三角形取一個', C3)}</div>`, '寫成算式，每個數連回圖上。'),
+    nameSay: `兩個一樣的三角形拼成平行四邊形，面積是底×高；一個三角形是它的一半。<br>所以三角形面積＝底×高÷2，這叫作${T('三角形面積公式')}。`,
+    pick: [['三角形面積＝底×高。', '三角形面積＝底×高÷2。', '三角形面積＝底×斜邊÷2。'], 1, ['底×高是兩個三角形拼成的平行四邊形面積。', '', '要用和底垂直的高，不是斜邊。']],
+    pose: pose('story', '哪一個問題要用「底×高÷2」？', ['三角形旗子底 6 公分、高 4 公分，面積多少？', '長方形桌子長 6 公尺、寬 4 公尺，面積多少？', '6 根木條和 4 根木條，一共幾根？'], 0, ['', '長方形的面積是長×寬，不用 ÷2。', '這是數量相加，不是面積。'], '對了！三角形是平行四邊形的一半，所以要 ÷2。'),
+    check: { q: '三角形的底 8 公分、高 3 公分，面積是多少平方公分？', pic: () => triPair(8, 3, 3, 0), opts: ['12', '24', '11'], a: 0, hint: '回到拼圖那一步：兩個一樣的三角形拼成底 8、高 3 的平行四邊形。', hints: ['', '24 是兩個三角形拼成的平行四邊形；一個三角形要再 ÷2。', '8＋3 是相加；面積要用底×高÷2。'], ok: '對了，8×3＝24 是兩個三角形，一個是 24÷2＝12 平方公分。' } }),
 
   mk({ key: 'facepar', title: '面和面平行', term: '面和面平行', who: 'bee', game: 'cuboid', when: ['cuboid:spin', 'cuboid:life'], board: 'tapSet',
-    hook: '教室的地板和天花板，你走進教室就看得到。', hookPic: () => roomSvg(new Set(), 'floor'),
-    rounds: [tset(['ceil'], s => roomSvg(s, 'floor'), s => s.size ? '永遠碰不到！' : '紅色是地板', '天花板和地板永遠碰不到，一直一樣遠。', '看我做：哪一面永遠碰不到紅色的地板？', null, { back: '後牆碰到地板了。', left: '左牆碰到地板了。', right: '右牆碰到地板了。' }), tset(['right'], s => roomSvg(s, 'left'), s => s.size ? '永遠碰不到！' : '紅色是左牆', '右牆和左牆碰不到。', '一起做：紅色換成左牆，哪一面碰不到它？', null, { ceil: '天花板碰到左牆了。', floor: '地板碰到左牆了。', back: '後牆碰到左牆了。' }), tset(['floor'], s => roomSvg(s, 'ceil'), s => s.size ? '永遠碰不到！' : '紅色是天花板', '地板和天花板碰不到。', '換你做：紅色是天花板。', ['先猜：碰不到天花板的有幾面？', ['1 面', '3 面'], 0], { back: '後牆碰到天花板了。', left: '左牆碰到天花板了。', right: '右牆碰到天花板了。' })],
-    fade: step3(roomSvg(new Set(['ceil']), 'floor'), '教室：地板和天花板。', box3d(4, 3, 3, 30, 22, { colors: ['#ffd65a', '#e0455a', '#fdeec6', '#fdeec6', '#fdeec6', '#fdeec6'] }), '畫成盒子：上下兩面。', `<div class="eq5">${lit('紅', C1)}（下面）和 ${lit('黃', C4)}（上面）：距離處處都一樣</div>`, '量一量，兩面之間處處一樣遠。'),
-    kid: '兩個面永遠碰不到、處處一樣遠', term: '面和面平行',
-    pick: [['相鄰的兩面平行。', '相對的兩面永遠碰不到，叫面和面平行。', '地板和牆壁平行。'], 1, '想想地板和天花板。'],
-    pose: pose('story', '哪一個故事在問面和面平行？', ['書本闔起來，封面和封底會碰到嗎？', '書本有幾頁？', '書本多重？'], 0, '問的是兩面碰不碰得到。', '對了！'),
-    check: { q: '書桌的桌面和地板是什麼關係？', pic: () => '<div class="u-big">🪑</div>', opts: ['面和面平行', '碰在一起'], a: 0, hint: '回到教室那一步：桌面和地板會碰到嗎？', ok: '對了！' } }),
+    hook: '把教室想成一個理想的長方體：地板、天花板和四面牆都是平平的面。', hookPic: () => roomSvg(new Set(), 'floor'),
+    mh: '想像兩個面一直往四周延伸。有交線（碰在一起）的不算，要找延伸了也不相交的那一面。',
+    rounds: [tset(['ceil'], s => roomSvg(s, 'floor'), s => s.size ? '延伸了也不相交！' : '紅色是地板', '天花板和地板處處一樣遠，再怎麼延伸也不會相交。', '看我做：哪一面和紅色的地板，延伸了也不會相交？', null, { back: '後牆和地板相交在一條線上。', left: '左牆和地板相交在一條線上。', right: '右牆和地板相交在一條線上。' }), tset(['right'], s => roomSvg(s, 'left'), s => s.size ? '延伸了也不相交！' : '紅色是左牆', '右牆和左牆處處一樣遠，不會相交。', '一起做：紅色換成左牆，哪一面和它不相交？', null, { ceil: '天花板和左牆相交了。', floor: '地板和左牆相交了。', back: '後牆和左牆相交了。' }), tset(['floor'], s => roomSvg(s, 'ceil'), s => s.size ? '延伸了也不相交！' : '紅色是天花板', '地板和天花板不相交。', '換你做：紅色是天花板。', ['先預測：和天花板不相交的有幾面？', ['1 面', '3 面'], 0], { back: '後牆和天花板相交了。', left: '左牆和天花板相交了。', right: '右牆和天花板相交了。' })],
+    fade: step3(roomSvg(new Set(['ceil']), 'floor'), '教室：地板和天花板。', box3d(4, 3, 3, 30, 22, { colors: ['#ffd65a', '#e0455a', '#fdeec6', '#fdeec6', '#fdeec6', '#fdeec6'] }), '畫成長方體盒子：上下相對的兩面。', `<div class="eq5" style="font-size:20px"><span class="ln5">${lit('紅', C1)}（下面）和 ${lit('黃', C4)}（上面）</span><span class="ln5">處處一樣遠，延伸也不相交</span></div>`, '說成一句話。'),
+    nameSay: `把長方體相對的兩個面想像向四周延伸，它們仍然不相交。<br>這種關係叫作${T('面和面平行')}，例如地板和天花板。`,
+    pick: [['相鄰的兩面平行。', '長方體相對的兩面，延伸後也不相交，是面和面平行。', '地板和牆壁平行。'], 1, ['相鄰的兩面碰在一起，有一條交線。', '', '牆壁和地板相交在牆角那條線上。']],
+    pose: pose('story', '哪一個問題在問兩個面平不平行？', ['把長方體鞋盒的盒蓋和盒底想像延伸，會相交嗎？', '鞋盒有多重？', '鞋子幾號？'], 0, ['', '重量和兩個面的關係無關。', '鞋子大小和兩個面的關係無關。'], '對了！問的是兩個面延伸後會不會相交。'),
+    check: { q: '把書桌的桌面和地板想成兩個平平的面。它們是什麼關係？', pic: () => '<div class="u-big">🪑</div>', opts: ['面和面平行', '會相交'], a: 0, hint: '回到教室那一步：桌面和地板處處一樣遠嗎？', hints: ['', '桌面是水平的，和地板處處一樣遠，延伸也不會相交。'], ok: '對了，桌面和地板處處一樣遠，是面和面平行。' } }),
 
   mk({ key: 'faceper', title: '面和面垂直', term: '面和面垂直', who: 'bee', game: 'cuboid', when: ['cuboid:spin', 'cuboid:life'], board: 'tapSet',
-    hook: '牆壁和地板碰在一起的地方，像直角一樣，你看過吧。', hookPic: () => roomSvg(new Set(), 'floor'),
-    rounds: [tset(['back', 'left', 'right'], s => roomSvg(s, 'floor'), s => `找到 ${s.size} 面`, '三面牆都和地板碰成直角。', '看我做：哪幾面和紅色地板碰成直角？', null, { ceil: '天花板碰不到地板。' }), tset(['ceil', 'floor', 'back'], s => roomSvg(s, 'left'), s => `找到 ${s.size} 面`, '天花板、地板、後牆都和左牆碰成直角。', '一起做：紅色換成左牆。', null, { right: '右牆碰不到左牆。' }), tset(['ceil', 'floor', 'left', 'right'], s => roomSvg(s, 'back'), s => `找到 ${s.size} 面`, '四面都和後牆碰成直角。', '換你做：紅色是後牆。', ['先猜：和後牆碰成直角的有幾面？', ['2 面', '4 面'], 1])],
-    fade: step3(roomSvg(new Set(['back', 'left', 'right']), 'floor'), '教室：牆和地板。', box3d(4, 3, 3, 30, 22, { colors: ['#fdeec6', '#e0455a', '#ffd65a', '#fdeec6', '#ffd65a', '#fdeec6'] }), '畫成盒子：紅色和旁邊的面。', `<div class="eq5">${lit('紅', C1)}和每一個${lit('黃', C4)}：碰在一起成直角</div>`, '旁邊的面都碰成直角。'),
-    kid: '兩個面碰在一起，成一個直角', term: '面和面垂直',
-    pick: [['對面的兩面垂直。', '相鄰、碰成直角的兩面，叫面和面垂直。', '天花板和地板垂直。'], 1, '想想牆和地板。'],
-    pose: pose('change', '打開的門和地板碰成直角。門關起來貼著牆，門和地板的關係會變嗎？', ['不會，還是碰成直角', '會，變成碰不到'], 0, '門一直站在地板上。', '對了！'),
-    check: { q: '相鄰的兩面牆是什麼關係？', pic: () => '<div class="u-big">🧱</div>', opts: ['面和面垂直', '永遠碰不到'], a: 0, hint: '回到教室那一步：左牆和後牆碰在一起嗎？', ok: '對了！' } }),
+    hook: '在長方體的教室裡，牆壁和地板相交在一條線上。把三角板的直角靠在牆角，剛好貼合。', hookPic: () => roomSvg(new Set(), 'floor'),
+    mh: '找和紅色的面相交、而且夾成直角的面。相對、不相交的那一面不算。',
+    rounds: [tset(['back', 'left', 'right'], s => roomSvg(s, 'floor'), s => `找到 ${s.size} 面`, '三面牆都和地板相交，夾成直角。', '看我做：哪幾面和紅色地板相交、夾成直角？', null, { ceil: '天花板和地板不相交。' }), tset(['ceil', 'floor', 'back'], s => roomSvg(s, 'left'), s => `找到 ${s.size} 面`, '天花板、地板、後牆都和左牆夾成直角。', '一起做：紅色換成左牆。', null, { right: '右牆和左牆不相交。' }), tset(['ceil', 'floor', 'left', 'right'], s => roomSvg(s, 'back'), s => `找到 ${s.size} 面`, '四面都和後牆夾成直角。', '換你做：紅色是後牆。', ['先預測：和後牆夾成直角的有幾面？', ['2 面', '4 面'], 1])],
+    fade: step3(roomSvg(new Set(['back', 'left', 'right']), 'floor'), '教室：牆和地板。', box3d(4, 3, 3, 30, 22, { colors: ['#fdeec6', '#e0455a', '#ffd65a', '#fdeec6', '#ffd65a', '#fdeec6'] }), '畫成長方體盒子：紅色和旁邊的面。', `<div class="eq5" style="font-size:20px"><span class="ln5">${lit('紅', C1)}和每一個${lit('黃', C4)}</span><span class="ln5">相交，夾成 ${K('90°', C1)}</span></div>`, '旁邊的面都夾成直角。'),
+    nameSay: `在長方體中，相鄰的兩個面相交，夾成直角。<br>這種關係叫作${T('面和面垂直')}，例如牆壁和地板。`,
+    pick: [['相對的兩面垂直。', '長方體中相鄰、夾成直角的兩面，叫面和面垂直。', '天花板和地板垂直。'], 1, ['相對的兩面不相交，那是面和面平行。', '', '天花板和地板不相交，是面和面平行。']],
+    pose: pose('change', '長方體盒子平放時，側面和盒底垂直。把盒子翻成直立的，原來的側面和原來的盒底，還是互相垂直嗎？', ['還是', '不是了'], 0, ['', '翻轉盒子不會改變兩個面相交的角度，還是直角。'], '對了，兩個面的關係由盒子本身決定，和怎麼擺放無關。'),
+    check: { q: '長方體教室裡相鄰的兩面牆，是什麼關係？', pic: () => '<div class="u-big">🧱</div>', opts: ['面和面垂直', '面和面平行'], a: 0, hint: '回到教室那一步：左牆和後牆相交嗎？夾成什麼角？', hints: ['', '相鄰的兩面牆在牆角相交，不是平行。'], ok: '對了，相鄰的兩面牆相交、夾成直角，是面和面垂直。' } }),
 
   mk({ key: 'net', title: '展開圖', term: '展開圖', who: 'bee', game: 'cuboid', when: ['cuboid:net', 'cuboid:opp'], board: 'counter',
-    hook: '紙盒拆開壓平，比較好收，你做過吧？', hookPic: () => '<div class="u-big">📦</div>',
-    rounds: [0, 1, 2].map(i => cnt(5, k => `<div class="tap5w" data-t="x" style="display:block">${foldNet(NET_A, 1 - k / 5)}</div>`, k => k < 5 ? `打開了 ${k} 面` : '全部攤平了', '六個面連在一起，攤成一張平平的紙。', ['看我做：一面一面打開紙盒。', '一起做：我先打開兩面，你接著打開。', '換你做：點紙盒，一面一面打開。'][i], i === 2 ? ['先猜：全部攤平後，六個面還連在一起嗎？', ['連在一起', '散開了'], 0] : null)),
+    hook: '正方體紙盒沿著一些邊剪開，就能攤成一張平平的紙。', hookPic: () => '<div class="u-big">📦</div>',
+    mh: '每點一下，就把一個面攤開。看看六個面攤平後是不是還連在一起。',
+    rounds: [0, 1, 2].map(i => cnt(5, k => `<div class="tap5w" data-t="x" style="display:block">${foldNet(NET_A, 1 - k / 5)}</div>`, k => k < 5 ? `打開了 ${k} 面` : '全部攤平了', '六個面連在一起，攤成一張平平的紙。', ['看我做：一面一面打開紙盒。', '一起做：我先打開兩面，你接著打開。', '換你做：點紙盒，一面一面打開。'][i], i === 2 ? ['先預測：全部攤平後，六個面還連在一起嗎？', ['連在一起', '散開了'], 0] : null)),
     fade: step3('<div class="u-big">📦</div>', '真的紙盒。', foldNet(NET_A, 0), '攤平的簡圖，六個面連在一起。', `<div class="eq5">${K(6, C1)} 個正方形，連成一張</div>`, '數一數。'),
-    kid: '立體拆開、攤平以後的那張圖', term: '展開圖',
-    pick: [['展開圖是立體的照片。', '展開圖是把立體攤平的圖，摺回去又是原來的立體。', '六個正方形隨便排都是展開圖。'], 1, '想想：要能摺回去。'],
-    pose: pose('can', '這張圖能摺成正方體嗎？', ['能', '不能，有兩面會疊在一起'], 1, '想像摺起來。', '對了！它摺不成。', () => foldNet(NET_BAD, 0)),
-    check: { q: '把禮物盒拆開攤平的那張紙，叫什麼？', pic: () => foldNet(NET_A, 0), opts: ['展開圖', '平面圖', '設計圖'], a: 0, hint: '回到打開紙盒那一步。', ok: '對了！' } }),
+    sort: { q: '這些圖摺得回正方體嗎？', items: [[NET_A, 0], [[[0, 0], [1, 0], [1, 1], [1, 2], [1, 3], [2, 3]], 0], [NET_BAD, 1], [[[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2]], 1]].map(([n, c]) => ({ h: `<span class="netmini">${foldNet(n, 0)}</span>`, c })), bins: ['摺得回去', '摺不回去'], hint: '想像中間一排當側面繞一圈，其他的當上蓋和底。有沒有兩面會疊在一起？', done: '上面兩張摺得回正方體；另外兩張摺起來有兩面疊在一起。' },
+    nameSay: `沿著立體的一些邊剪開，把各個面攤平，得到能再摺回原來立體的圖，叫作${T('展開圖')}。`,
+    pick: [['展開圖是立體的照片。', '展開圖是把立體攤平的圖，摺回去又是原來的立體。', '六個正方形隨便排都是展開圖。'], 1, ['照片只看得到外面幾面，不能摺回去。', '', '有些排法摺起來兩面會疊在一起，就不是正方體的展開圖。']],
+    pose: pose('can', '這張圖能摺成正方體嗎？', ['能', '不能，有兩面會疊在一起'], 1, ['摺摺看：左邊兩排是 2×3 的長方形，摺起來會有兩面疊在一起。', ''], '對了！它摺不成正方體。', () => foldNet(NET_BAD, 0)),
+    check: { q: '這張圖摺起來，能變回正方體嗎？', pic: () => foldNet([[0, 0], [1, 0], [1, 1], [1, 2], [1, 3], [2, 3]], 0), opts: ['能', '不能'], a: 0, hint: '回到打開紙盒那一步：中間 4 格繞一圈當側面，上下各一格當蓋和底。', hints: ['', '中間一排 4 格繞一圈，左上那格當蓋、右下那格當底，沒有疊在一起。'], ok: '對了，中間 4 格繞成側面，另外兩格剛好是上蓋和底，它是正方體的展開圖。' } }),
 
   mk({ key: 'surface', title: '表面積', term: '表面積', who: 'bee', game: 'cuboid', when: ['cuboid:area', 'cuboid:cube'], board: 'tapSet',
-    hook: '包禮物要包住全部，紙要夠大，你包過吧？', hookPic: () => '<div class="u-big">🎁</div>',
-    rounds: [0, 1, 2].map(i => tset(['f0', 'f1', 'f2', 'f3', 'f4', 'f5'], s => { const C = ['#f4a9a0', '#a9d0f0', '#b7e0a8'], W = 90, D = 40, H = 50, y0 = 4, R0 = [[D, y0 + D, W, H, 1], [D, y0 + D + H + D, W, H, 1], [D, y0, W, D, 0], [D, y0 + D + H, W, D, 0], [0, y0 + D, D, H, 2], [D + W, y0 + D, D, H, 2]]; return `<svg class="g5" style="max-height:210px" viewBox="0 0 ${2 * D + W + 8} ${2 * D + 2 * H + 12}">${R0.map((r, j) => `<rect x="${r[0]}" y="${r[1]}" width="${r[2]}" height="${r[3]}" data-t="f${j}" class="tap5" fill="${s.has('f' + j) ? C[r[4]] : '#f4f6fa'}" stroke="#33405a" stroke-width="1.5"/>`).join('')}</svg>`; }, s => `塗了 ${s.size} 面`, '六個面都塗到了。', ['看我做：一面一面塗包裝紙。', '一起做：我先塗三面。', '換你做：六面都點一下。'][i], i === 2 ? ['先猜：要塗幾面才包得住？', ['4 面', '6 面'], 1] : null)),
-    fade: step3('<div class="u-big">🎁</div>', '真的禮物盒。', netRects(3), '攤平，每一面都塗色。', `<div class="eq5">${K(18, C1)}＋${K(18, C1)}＋${K(24, C2)}＋${K(24, C2)}＋${K(12, C3)}＋${K(12, C3)}</div><div class="trail">同色的兩面一樣大，全部加起來</div>`, '每一面的大小加起來。'),
-    kid: '立體外面所有的面，大小加起來', term: '表面積',
-    pick: [['表面積只算最大的一面。', '表面積是全部的面加起來。', '表面積是裡面能裝多少。'], 1, '想想包禮物。'],
-    pose: pose('change', '同一個盒子，把蓋子拿掉不包，要的紙會變嗎？', ['不會變', '會變少'], 1, '少了一面。', '對了！少包一面，紙就少一些。'),
-    check: { q: '骰子每一面 4 平方公分，表面積是多少？', pic: () => '<div class="u-big">🎲</div>', opts: ['4', '16', '24'], a: 2, hint: '回到塗面那一步：骰子有幾面？', ok: '對了！4×6＝24 平方公分。' } }),
+    hook: '一個禮物盒長 6 公分、寬 3 公分、高 4 公分。用包裝紙剛好蓋住盒子外面的每一面（不算重疊和剪掉的部分），需要多少紙？', hookPic: () => '<div class="u-big">🎁</div>',
+    rounds: [surfRound(false, '看我做：盒子攤平了，我一面一面塗包裝紙。'), surfRound(false, '一起做：我先塗三面，你塗剩下的。'), surfRound(true, '換你做：這次是沒有蓋子的盒子，只塗要包的面。', ['先預測：沒有蓋子的盒子要塗幾面？', ['5 面', '6 面'], 0])],
+    fade: step3('<div class="u-big">🎁</div>', '真的禮物盒：長 6、寬 3、高 4。', boxNet(true, false), '攤平，每一面都標上面積。', `<div class="eq5">${K(24, C1)}＋${K(24, C1)}＋${K(18, C2)}＋${K(18, C2)}＋${K(12, C3)}＋${K(12, C3)}＝108</div><div class="trail">${lit('紅 6×4', C1)}　${lit('藍 6×3', C2)}　${lit('綠 3×4', C3)}：同色的兩面一樣大</div>`, '每一面的面積加起來。'),
+    nameSay: `把立體外表各個面的面積加起來，叫作${T('表面積')}。這個盒子的表面積是 108 平方公分（不算包裝時重疊的部分）。`,
+    pick: [['表面積只算最大的一面。', '表面積是立體外表各個面的面積總和。', '表面積是裡面能裝多少。'], 1, ['盒子有 6 面，每一面都要算。', '', '能裝多少是看裡面的空間，不是包在外面的面積。']],
+    pose: pose('change', '同一個盒子，把蓋子拿掉不包，要的紙會變嗎？', ['不會變', '會變少'], 1, ['蓋子那一面 18 平方公分不用包了。', ''], '對了，少包一面 18 平方公分。如果只包側面，上下兩面都不算。'),
+    check: { q: '一個正方體，每一面都是 4 平方公分，表面積是多少平方公分？', pic: () => '<div class="u-big">🎲</div>', opts: ['4', '16', '24'], a: 2, hint: '回到塗面那一步：正方體有幾面？', hints: ['4 是一面的面積；正方體有 6 面。', '16 只算了 4 面，還有上下兩面。', ''], ok: '對了，6 面都一樣大：4×6＝24 平方公分。' } }),
 );
-/* ---------- 鷹架版段落（三）：千分位、兆、扇形、比率、容積、柱錐，以及單位教室開場 ---------- */
-const cutStrip = k => `<div class="tap5w" data-t="x" style="display:block">${cBar(1, 1, '#a9d0f0')}${k >= 1 ? cBar(10, 1, '#6ea8dc') : ''}${k >= 2 ? cBar(10, 1, '#f0a03c') : ''}${k >= 3 ? cBar(10, 1, '#3fae5a') : ''}</div>`;
+/* ---------- 鷹架版段落（三）：千分位、兆、扇形、比率、容積、柱錐，以及單位教室開場（依 2026-11-02 外部審查修訂） ---------- */
+// 一層一層放大：下一層是把上一層的「第 1 格」放大來看，再平均分成 10 份
+const zoomFunnel = '<svg viewBox="0 0 100 10" preserveAspectRatio="none" style="width:100%;height:12px;display:block"><path d="M0 0L10 0L100 10L0 10Z" fill="#cfe0f5"/></svg>';
+const ZL = [['1（一整條）', '#a9d0f0'], ['1 平均分成 10 份，1 份是 0.1', '#6ea8dc'], ['把 0.1 放大，再平均分成 10 份，1 份是 0.01', '#f0a03c'], ['把 0.01 放大，再平均分成 10 份，1 份是 0.001', '#3fae5a']];
+const zoomStrip = k => `<div class="tap5w" data-t="x" style="display:block;padding:2px 4px">${ZL.slice(0, k + 1).map(([t, c], i) => `${i ? zoomFunnel : ''}<small class="zl5">${t}</small>${i ? cBar(10, 1, c) : cBar(1, 1, c)}`).join('')}</div>`;
 const digitsCut = (groups, k) => `<div class="digits big tap5w" data-t="x">${groups.map((g, i) => (i && groups.length - i <= k ? '<b class="cut5">｜</b>' : '') + g).join('')}</div>`;
-const fanOpen = k => `<div class="tap5w" data-t="x" style="display:block">${sectorSvg(30 * Math.max(k, 0.5) * 1)}</div>`;
 const shots = (n, ins) => k => `<div class="people">${Array.from({ length: n }, (_, i) => `<span class="pp ${i < k ? (ins.includes(i) ? 'on' : '') : ''}">${i < k ? (ins.includes(i) ? '🏀' : '❌') : '⚪'}</span>`).join('')}</div><div class="pile6">${k < n ? '<span class="tap5w big6" data-t="x">🏀</span><small>投一球</small>' : ''}</div>`;
-const tagStar = '<small>點一下</small>';
+const trees = (n, on) => `<div class="pics5">${Array.from({ length: n }, (_, i) => `<span class="t5 ${i < on ? 'on' : ''}">🌳${i < on ? '<i>●</i>' : ''}</span>`).join('')}</div>`;
+const people10 = on => `<div class="pics5">${Array.from({ length: 10 }, (_, i) => `<span class="t5 ${i < on ? 'on' : ''}">🧑</span>`).join('')}</div>`;
+const capCup = k => `<svg class="g5" style="max-height:190px" viewBox="0 0 240 190"><rect x="40" y="10" width="160" height="160" rx="6" fill="#c9a36a" stroke="#33405a" stroke-width="2"/><rect x="60" y="10" width="120" height="140" fill="#fff"/><rect x="60" y="${150 - k * 28}" width="120" height="${k * 28}" fill="#a9d0f0"/><line x1="40" x2="200" y1="182" y2="182" stroke="#33405a"/><text x="120" y="179" text-anchor="middle" class="ax">外面 8 公分</text><line x1="60" x2="180" y1="22" y2="22" stroke="#2f5f9e" stroke-dasharray="4 3"/><text x="120" y="38" text-anchor="middle" class="ax" style="fill:#2f5f9e">裡面 6 公分</text></svg><div class="pile6"><span class="tap5w big6" data-t="x">🫗</span><small>倒一層</small></div>`;
+const capPic = k => capCup(k).replace(/<div class="pile6">.*<\/div>$/, '');
+const solidCard = (id, name, t, n) => `<button class="sol5 tap5w" data-t="${id}">${solidSvg(t, n, 30, 20).replace('class="g5"', 'class="g5 solmini"')}<small>${name}</small></button>`;
+const SOL = { tent: ['帳篷', 'prism', 3], box: ['鞋盒', 'prism', 4], pencil: ['沒削的鉛筆', 'prism', 6], can: ['罐頭', 'cyl', 0], pipe: ['一段水管', 'cyl', 0], pyr: ['金字塔', 'pyr', 4], roof: ['尖屋頂', 'pyr', 3], cone: ['甜筒形積木', 'cone', 0], hat: ['派對帽', 'cone', 0], ball: ['足球', 'ball', 0] };
+// 每一種東西「為什麼不是」：依目標形體給錯因
+const SOLWHY = { prism: { can: '罐頭的兩個底面是圓，不是多邊形。', pipe: '水管的底面是圓。', pyr: '金字塔只有一個底面，往上收成一個尖點。', roof: '尖屋頂往上收成一個尖點。', cone: '它的底面是圓，而且頂端是尖的。', hat: '它的底面是圓，而且頂端是尖的。', ball: '球沒有平平的底面。' }, cyl: { box: '鞋盒的底面是長方形，不是圓。', tent: '帳篷的底面是三角形。', pencil: '鉛筆的底面是六邊形。', cone: '它往上收成一個尖點，只有一個底面。', hat: '派對帽往上收成一個尖點。', ball: '球沒有平平的底面。', pyr: '金字塔的底面是正方形，頂端是尖的。' }, pyr: { box: '鞋盒上下有兩個一樣的底面，不是尖的。', can: '罐頭的底面是圓，上下一樣粗。', tent: '帳篷是橫放的三角柱，有兩個三角形底面。', cone: '它的底面是圓，不是多邊形。', hat: '派對帽的底面是圓。', pencil: '沒削的鉛筆上下一樣粗。' }, cone: { can: '罐頭上下一樣粗，有兩個底面。', pyr: '金字塔的底面是正方形，不是圓。', ball: '球沒有平平的底面，也沒有尖點。', roof: '尖屋頂的底面是三角形。', pipe: '水管上下一樣粗，沒有尖點。', tent: '帳篷的底面是三角形。' } };
+const solRound = (ids, right, say, type, predict) => tset(right, s => `<div class="sols5">${ids.map(id => { const [nm, t, n] = SOL[id]; return solidCard(id, nm, t, n).replace('class="sol5 tap5w"', `class="sol5 tap5w ${s.has(id) ? 'on' : ''}"`); }).join('')}</div>`, s => `找到 ${s.size} 個`, '都找到了。', say, predict, Object.fromEntries(ids.filter(i => !right.includes(i)).map(i => [i, SOLWHY[type][i] || '這個不符合：看底面的形狀，再看上下是不是一樣粗。'])));
+const solidSeg = o => mk({ key: o.key, title: o.term, term: o.term, who: 'fox', game: 'solid', when: ['solid:count', 'solid:name', 'solid:rel', 'solid:net'], board: 'tapSet', hook: o.hook, hookPic: () => `<div class="sols5">${o.rounds[0][0].slice(0, 3).map(id => solidCard(id, SOL[id][0], SOL[id][1], SOL[id][2])).join('')}</div>`, mh: o.mh,
+  rounds: o.rounds.map((r, i) => solRound(r[0], r[1], ['看我做：', '一起做：', '換你做：'][i] + r[2], o.type, r[3])),
+  fade: step3(`<div class="sols5">${o.right.slice(0, 2).map(id => solidCard(id, SOL[id][0], SOL[id][1], SOL[id][2])).join('')}</div>`, '把真的東西想成理想的模型。', solidSvg(SOL[o.right[0]][1], SOL[o.right[0]][2], 30, 20), o.fade[0], `<div class="eq5" style="font-size:20px">${o.fade[1]}</div>`, o.fade[2]),
+  sort: { q: '分分看。', items: o.sort.map(([h, c]) => ({ h, c })), bins: [o.bin, '不是'], hint: '先看底面有幾個、是什麼形狀，再看上下是不是一樣粗。', done: o.sortDone }, nameSay: o.nameSay, term: o.term, pick: o.pick, pose: o.pose, check: o.check });
 
 SEGS.push(
   mk({ key: 'thou', title: '千分位', term: '千分位', who: 'pelican', game: 'decimal', when: ['decimal:thou', 'decimal:point', 'decimal:shift', 'decimal:rel'], board: 'counter',
-    hook: '1 切成 10 份是 0.1，再切 10 份是 0.01，你學過。', hookPic: () => `${cBar(1, 1, '#a9d0f0')}${cBar(10, 1, '#6ea8dc')}`,
-    rounds: [cnt(1, cutStrip, k => ['一整條是 1', '一份是 0.1'][k], '切 10 份，一份是 0.1。', '看我做：點長條，切成 10 份。'), cnt(2, cutStrip, k => ['一整條是 1', '一份是 0.1', '再切：一份是 0.01'][k], '再切一次，一份是 0.01。', '一起做：切兩次，我先切第一次。'), cnt(3, cutStrip, k => ['一整條是 1', '一份是 0.1', '一份是 0.01', '再切：一份是 0.001'][k], '切三次，一份是 0.001，好細！', '換你做：切三次。', ['先猜：0.01 再切 10 份，一份是多少？', ['0.1', '0.001', '0.02'], 1])],
-    fade: step3('<div class="u-big">🪙</div>'.replace('🪙', '📏'), '尺上最細的刻度，還能再切。', `${cBar(10, 1, '#6ea8dc')}${cBar(10, 1, '#f0a03c')}${cBar(10, 1, '#3fae5a')}`, '一層一層切細。', `<div class="digits big"><span>3</span><b>.</b><span style="color:${C2}">2</span><span style="color:${C4}">7</span><span style="color:${C3}">5</span></div><div class="trail">${lit('藍：幾個 0.1', C2)}　${lit('橘：幾個 0.01', C4)}　${lit('綠：幾個 0.001', C3)}</div>`, '寫成小數，每一位對應一層。'),
-    kid: '小數點後第三位，記有幾個 0.001 的位置', term: '千分位',
-    pick: [['千分位是小數點後第一位。', '千分位是小數點後第三位，記有幾個 0.001。', '千分位是 1000。'], 1, '數一數切了幾層。'],
-    pose: pose('change', '3.275 的 5 改成 8，哪一位變了？', ['十分位', '百分位', '千分位'], 2, '5 在小數點後第三位。', '對了！只有千分位變了。'),
-    check: { q: '3.275 的 5 在哪一位？', pic: () => '<div class="digits big"><span>3</span><b>.</b><span>2</span><span>7</span><span class="dg l">5</span></div>', opts: ['十分位', '百分位', '千分位'], a: 2, hint: '回到切長條那一步：第三層是多少？', ok: '對了！' } }),
+    hook: '先回想：把 1 平均分成 10 份，每份是 0.1；把 0.1 再平均分成 10 份，每份是 0.01。忘了也沒關係，下面會再做一次。', hookPic: () => zoomStrip(2).replace(' tap5w" data-t="x"', '"'),
+    mh: '每點一下，就把上一層的 1 格放大，再平均分成 10 份。看新的一份是多少。',
+    rounds: [cnt(1, zoomStrip, k => ['一整條是 1', '一份是 0.1'][k], '1 平均分成 10 份，一份是 0.1。', '看我做：點長條，平均分成 10 份。'), cnt(2, zoomStrip, k => ['一整條是 1', '一份是 0.1', '一份是 0.01'][k], '再分一次，一份是 0.01。', '一起做：分兩次，我先分第一次。'), cnt(3, zoomStrip, k => ['一整條是 1', '一份是 0.1', '一份是 0.01', '一份是 0.001'][k], '分三次，一份是 0.001。', '換你做：分三次。', ['先預測：0.01 再平均分成 10 份，一份是多少？', ['0.1', '0.001', '0.02'], 1])],
+    fade: step3('<div class="u-big">📏</div><div class="trail">1 公尺 → 1 公寸是 0.1 公尺 → 1 公分是 0.01 公尺 → 1 公釐是 0.001 公尺</div>', '一把 1 公尺長的尺：最小的 1 小格（1 公釐）是 1 公尺的 1/1000。', zoomStrip(3).replace(' tap5w" data-t="x"', '"'), '畫成長條：每一層都是把上一層的 1 格放大，再平均分成 10 份。', `<div class="digits big"><span>0</span><b>.</b><span style="color:${C2}">0</span><span style="color:${C4}">0</span><span style="color:${C3}">1</span></div><div class="trail">1÷10÷10÷10＝0.001　${lit('藍：幾個 0.1', C2)}　${lit('橘：幾個 0.01', C4)}　${lit('綠：幾個 0.001', C3)}</div>`, '寫成小數，每一位對應一層。'),
+    nameSay: `把 1 平均分成 1000 份，每份是 0.001。<br>小數點右邊第三位記的是有幾個 0.001，這一位叫作${T('千分位')}。例如 3.275 的 5 表示 5 個 0.001。`,
+    pick: [['千分位是小數點右邊第一位。', '千分位是小數點右邊第三位，記有幾個 0.001。', '千分位是 1000。'], 1, ['右邊第一位是十分位，記幾個 0.1。', '', '千分位記的是幾個 0.001，不是 1000。']],
+    pose: pose('change', '3.275 只把 5 改成 8，哪一位的數字變了？', ['十分位', '百分位', '千分位'], 2, ['十分位是 2，沒有改。', '百分位是 7，沒有改。', ''], '對了！只有千分位變了：3.278 比 3.275 多 3 個 0.001。'),
+    check: { q: '3.275 的 5 在哪一位？', pic: () => '<div class="digits big"><span>3</span><b>.</b><span>2</span><span>7</span><span class="dg l">5</span></div>', opts: ['十分位', '百分位', '千分位'], a: 2, hint: '回到分長條那一步：小數點右邊第三層是多少？', hints: ['十分位是小數點右邊第一位，是 2。', '百分位是右邊第二位，是 7。', ''], ok: '對了，5 在小數點右邊第三位，是千分位，表示 5 個 0.001。' } }),
 
   mk({ key: 'zhao', title: '兆', term: '兆', who: 'pelican', game: 'decimal', when: ['decimal:chunk', 'decimal:zero'], board: 'counter',
-    hook: '1 0000 是一萬，1 0000 0000 是一億，你會念。', hookPic: () => '<div class="digits">1｜0000｜0000</div>',
-    rounds: [cnt(2, k => digitsCut(['12', '3456', '7890'], k), k => ['從右邊每 4 位切一刀', '第一刀：萬', '第二刀：億'][k], '念作 12 億 3456 萬 7890。', '看我做：從右邊每 4 位切一刀。'), cnt(2, k => digitsCut(['5', '0000', '0000'], k), k => ['', '第一刀：萬', '第二刀：億'][k], '念作 5 億。', '一起做：我先切一刀。'), cnt(3, k => digitsCut(['3', '0000', '0000', '0000'], k), k => ['', '第一刀：萬', '第二刀：億', '第三刀：比億再大的新單位'][k], '切了三刀，最前面的 3 要用一個新單位。', '換你做：切三刀。', ['先猜：第三刀前面的 3，是幾個億？', ['3 億', '一萬個億的 3 倍', '30 萬'], 1])],
-    fade: step3('<div class="u-big">🌌</div>', '星星好遠，數字好長。', '<div class="digits big">3<b class="cut5">｜</b>0000<b class="cut5">｜</b>0000<b class="cut5">｜</b>0000</div>', '每 4 位切一刀。', `<div class="eq5">${K('一萬', C1)} 個 ${K('億', C2)}</div><div class="trail">最左邊那一段，每個是一萬個億</div>`, '寫出最左邊那段代表的大小。'),
-    kid: '一萬個億', term: '兆',
-    pick: [['1 兆＝1000 億。', '1 兆＝一萬個億。', '1 兆＝一萬個萬。'], 1, '想想第三刀。'],
-    pose: pose('pic', '這張圖可以問什麼？', ['這個數念作什麼？', '這個數有幾個 0？要不要再加 0？', '它是單數還是雙數？'], 0, '圖上把數切成一段一段。', '對了！切好了就能念。', () => '<div class="digits">5｜0000｜0000｜0000</div>'),
-    check: { q: '5 0000 0000 0000 念作什麼？', pic: () => '<div class="digits">5｜0000｜0000｜0000</div>', opts: ['5 億', '5 兆', '50 萬'], a: 1, hint: '回到切數字那一步：第三刀前面叫什麼？', ok: '對了！' } }),
+    hook: '先回想：1 0000 是一萬，1 0000 0000 是一億。很長的數，從個位開始每 4 位分一組來念。', hookPic: () => '<div class="digits">1｜0000｜0000</div>',
+    mh: '從最右邊的個位開始，每數 4 位切一刀。每切一刀，左邊那一組的單位就更大。',
+    rounds: [cnt(2, k => digitsCut(['12', '3456', '7890'], k), k => ['從個位開始，每 4 位切一刀', '第一刀：左邊是萬', '第二刀：左邊是億'][k], '念作 12 億 3456 萬 7890。', '看我做：從個位開始，每 4 位切一刀。'), cnt(2, k => digitsCut(['5', '0000', '0000'], k), k => ['從個位開始，每 4 位切一刀', '第一刀：左邊是萬', '第二刀：左邊是億'][k], '念作 5 億。', '一起做：我先切一刀。'), cnt(3, k => digitsCut(['3', '0000', '0000', '0000'], k), k => ['從個位開始，每 4 位切一刀', '第一刀：左邊是萬', '第二刀：左邊是億', '第三刀：左邊比億還大'][k], '切了三刀，最左邊的 3，每個表示 10000 億。', '換你做：切三刀。', ['先預測：第三刀左邊的 3，表示 3 個多少？', ['3 個億', '3 個 10000 億', '3 個萬'], 1])],
+    fade: step3('<div class="u-big">🌌</div>', '天文、人口、經費常有很長的數。', '<div class="digits big">3<b class="cut5">｜</b>0000<b class="cut5">｜</b>0000<b class="cut5">｜</b>0000</div>', '從個位開始，每 4 位切一刀。', `<div class="eq5">${K('10000', C1)} 個 ${K('億', C2)}</div><div class="trail">最左邊那一組，每個 1 表示 10000 個億</div>`, '寫出最左邊那一組的大小。'),
+    nameSay: `從個位開始每 4 位一組，依序是個、萬、億，再往左一組，每個 1 表示 10000 億。<br>10000 億叫作 1 ${T('兆')}。1 兆＝10000 億。`,
+    pick: [['1 兆＝1000 億。', '1 兆＝10000 億。', '1 兆＝10000 萬。'], 1, ['億的左邊一組有 4 位，所以是 10000 億，不是 1000 億。', '', '10000 萬是 1 億。']],
+    pose: pose('change', '5 兆改成 3 兆，等於幾億？', ['3 億', '30000 億', '300 億'], 1, ['3 兆比 3 億大很多：每 1 兆是 10000 億。', '', '1 兆是 10000 億，3 兆是 3 個 10000 億。'], '對了！3 兆＝3×10000 億＝30000 億。'),
+    check: { q: '5 0000 0000 0000 怎麼念？', pic: () => '<div class="digits">5｜0000｜0000｜0000</div>', opts: ['5 億', '5 兆', '50 萬'], a: 1, hint: '回到切數字那一步：數數看有幾組 0000。', hints: ['5 後面有 3 組 0000，5 億只有 2 組。', '', '50 萬是 50 0000，只有 1 組。'], ok: '對了，5 後面有 3 組 0000，最左邊那一組是兆：5 兆。' } }),
 
   mk({ key: 'sector', title: '扇形', term: '扇形', who: 'bee', game: 'sector', when: ['sector:drag', 'sector:frac', 'sector:read', 'sector:part', 'sector:draw'], board: 'counter',
-    hook: '分披薩時，從中間的點往外切，你看過吧？', hookPic: () => sectorSvg(360),
-    rounds: [1, 2, 3].map((n, i) => cnt(n, k => `<div class="tap5w" data-t="x" style="display:block">${sectorSvg(360 - 45 * k)}</div>`, k => `切下 ${k} 塊`, '從圓心切出來，每一塊都像一把扇子。', ['看我做：從中心點切一塊下來。', '一起做：再切兩塊。', '換你做：切三塊。'][i], i === 2 ? ['先猜：切下來的每一塊，有幾條直直的邊？', ['1 條', '2 條', '3 條'], 1] : null)),
-    fade: step3('<div class="u-big">🍕</div>', '一塊披薩。', sectorSvg(45, { parts: true }), `畫成簡圖：${lit('兩條直邊', C2)}和${lit('一條彎邊', C1)}。`, `<div class="eq5">${K(2, C2)} 條直邊（從圓心出發）＋${K(1, C1)} 條彎邊</div>`, '數一數邊。'),
-    sort: { q: '哪些是從圓心切出來的？', items: [['一塊披薩', 0], ['一片扇子', 0], ['一塊三角形餅乾', 1], ['切掉一邊的西瓜片（沒過中心）', 1]].map(([h, c]) => ({ h, c })), bins: ['從圓心切的', '不是'], hint: '看看是不是從中心點出發。', done: '分好了。' },
-    kid: '從圓心切出來、兩條直邊和一條彎邊圍成的形狀', term: '扇形',
-    pick: [['扇形是三角形。', '扇形是圓的一部分，由兩條半徑和一段彎邊圍成。', '扇形一定比半圓小。'], 1, '想想披薩。'],
-    pose: pose('story', '哪一個故事說的是扇形？', ['把圓形蛋糕從中心切 4 塊，一塊有多大？', '把方形蛋糕切成 4 塊。', '買 4 個圓形蛋糕。'], 0, '要從圓心切。', '對了！'),
-    check: { q: '一片從中心切下的披薩，是什麼形狀？', pic: () => sectorSvg(60), opts: ['三角形', '扇形', '長方形'], a: 1, hint: '回到切披薩那一步：它有一條彎邊。', ok: '對了！' } }),
+    hook: '一個圓形披薩，從圓心沿直線往外切，可以切下一塊一塊。', hookPic: () => sectorSvg(360),
+    mh: '每點一下，就從圓心沿兩條直線切下一塊。看看每一塊有幾條直的邊、幾條彎的邊。',
+    rounds: [1, 2, 3].map((n, i) => cnt(n, k => `<div class="tap5w" data-t="x" style="display:block">${sectorSvg(360 - 45 * k)}</div>`, k => `切下 ${k} 塊`, '從圓心切下來的每一塊：兩條直的邊都從圓心出發，另一條邊是圓周的一段。', ['看我做：從圓心切一塊下來。', '一起做：再切兩塊。', '換你做：切三塊。'][i], i === 2 ? ['先預測：切下來的每一塊，有幾條直的邊？', ['1 條', '2 條', '3 條'], 1] : null)),
+    fade: step3('<div class="u-big">🍕</div>', '一塊從圓心切下的圓形披薩。', sectorSvg(45, { parts: true }), `畫成簡圖：${lit('兩條半徑', C2)}和${lit('一段圓周', C1)}。`, `<div class="eq5">${K(2, C2)} 條半徑（從圓心出發）＋${K(1, C1)} 段圓周</div>`, '數一數邊。'),
+    sort: { q: '哪些是由同一個圓的兩條半徑和一段圓周圍成的？', items: [['從圓心切下的一塊圓形披薩', 0], ['兩條半徑和一段圓周圍成的圖', 0], ['一把長方形的扇子', 1], ['沒有切過圓心的西瓜片', 1], ['三角形餅乾', 1]].map(([h, c]) => ({ h, c })), bins: ['是', '不是'], hint: '看兩條直的邊是不是從圓心出發的半徑，另一條邊是不是圓周的一段。', done: '只有從圓心切下的那兩個是；長方形扇子、沒過圓心的西瓜片、三角形餅乾都不是。' },
+    nameSay: `由同一個圓的兩條半徑，和它們之間的一段圓周圍成的圖形，叫作${T('扇形')}。名字像扇子，但不是每一把扇子都是這個形狀。`,
+    pick: [['扇形是三角形。', '扇形由同一個圓的兩條半徑和一段圓周圍成。', '扇形一定比半圓小。'], 1, ['扇形有一條邊是彎的圓周。', '', '張開超過 180 度的扇形比半圓大。']],
+    pose: pose('story', '哪一個問題說的是扇形？', ['把圓形蛋糕從圓心切成 4 塊一樣大的，一塊有多大？', '把方形蛋糕切成 4 塊。', '買 4 個圓形蛋糕。'], 0, ['', '方形蛋糕切下的一塊沒有圓周。', '這是買幾個，沒有切成扇形。'], '對了！從圓心切，每一塊都是扇形。'),
+    check: { q: '一塊從圓心切下的圓形披薩，是什麼形狀？', pic: () => sectorSvg(60), opts: ['三角形', '扇形', '長方形'], a: 1, hint: '回到切披薩那一步：它有兩條半徑和一段圓周。', hints: ['三角形三條邊都是直的；這一塊有一條邊是彎的。', '', '長方形有四條直的邊。'], ok: '對了，兩條半徑加一段圓周，是扇形。' } }),
 
   mk({ key: 'centerangle', title: '圓心角', term: '圓心角', who: 'bee', game: 'sector', when: ['sector:drag', 'sector:frac', 'sector:read', 'sector:part', 'sector:draw'], board: 'counter',
-    hook: '扇子打開一點點、打開很多，大小不一樣。', hookPic: () => `<div class="vs two5">${sectorSvg(30)}${sectorSvg(150)}</div>`,
-    rounds: [2, 3, 4].map((n, i) => cnt(n, k => `<div class="tap5w" data-t="x" style="display:block">${sectorSvg(30 * k || 2)}</div>`, k => `打開 ${30 * k}°`, `在中心打開 ${30 * n} 度。`, ['看我做：點扇子，每次多打開 30 度。', '一起做：打開到 90 度。', '換你做：打開到 120 度。'][i], i === 2 ? ['先猜：打開 120 度，比打開 90 度的扇形大還是小？', ['大', '小'], 0] : null)),
-    fade: step3('<div class="u-big">🪭</div>', '真的扇子。', sectorSvg(90, { parts: true }), `簡圖：${lit('中心那個角', C4)}打開多少。`, `<div class="eq5">${K('90°', C4)} → 1/4 圓</div>`, '寫出中心那個角的度數。'),
-    kid: '扇形在圓心張開的那個角', term: '圓心角',
-    pick: [['圓心角是彎邊的長度。', '圓心角是扇形在圓心張開的角，越大扇形越大。', '圓心角都是 90 度。'], 1, '想想扇子打開。'],
-    pose: pose('can', '一片扇形的花圃，是幾分之幾圓？這題能回答嗎？', ['能，1/4 圓', '不能，不知道圓心角', '能，半圓'], 1, '要知道張開多大。', '對了！缺圓心角。'),
-    check: { q: '1/4 圓的花圃，圓心角幾度？', pic: () => sectorSvg(90), opts: ['45 度', '90 度', '180 度'], a: 1, hint: '回到打開扇子那一步：一圈 360 度分 4 份。', ok: '對了！' } }),
+    hook: '同一個圓切下的兩個扇形：一個在圓心張開一點點，一個張開很多。', hookPic: () => `<div class="vs two5">${sectorSvg(30)}${sectorSvg(150)}</div>`,
+    mh: '每點一下，在圓心多張開 30 度。看扇形跟著變大多少。',
+    rounds: [2, 3, 4].map((n, i) => cnt(n, k => `<div class="tap5w" data-t="x" style="display:block">${sectorSvg(30 * k || 2)}</div>`, k => `在圓心張開 ${30 * k}°`, `在圓心張開 ${30 * n} 度。`, ['看我做：點一下，在圓心多張開 30 度。', '一起做：張開到 90 度。', '換你做：張開到 120 度。'][i], i === 2 ? ['先預測：同一個圓裡，張開 120 度的扇形，比張開 90 度的大還是小？', ['大', '小'], 0] : null)),
+    fade: step3('<div class="u-big">🍕</div>', '同一個披薩切下大小不同的兩塊。', sectorSvg(90, { parts: true }), `簡圖：${lit('圓心那個角', C4)}張開多少。`, `<div class="eq5">${K('90°', C4)} → 1/4 圓</div><div class="trail">一整圈 360 度，90 度是 360 度的 1/4</div>`, '寫出圓心那個角的度數。'),
+    nameSay: `扇形中，頂點在圓心、兩邊都是半徑的那個角，叫作${T('圓心角')}。在同一個圓（或半徑一樣的圓）裡，它越大，扇形越大。`,
+    pick: [['圓心角是彎的那條邊的長度。', '在同一個圓裡，圓心角越大，扇形越大。', '圓心角都是 90 度。'], 1, ['彎的邊是圓周的一段，不是角。', '', '圓心角可以是各種度數，例如 30 度、120 度。']],
+    pose: pose('can', '一片扇形的花圃，是幾分之幾圓？', ['夠，1/4 圓', '不夠，還要知道圓心角', '夠，半圓'], 1, ['沒有說張開幾度，不一定是 1/4。', '', '沒有說張開幾度，不一定是半圓。'], '對了！缺圓心角。'),
+    check: { q: '1/4 圓的花圃，圓心角幾度？', pic: () => sectorSvg(90), opts: ['45 度', '90 度', '180 度'], a: 1, hint: '回到張開扇形那一步：一圈 360 度平均分成 4 份。', hints: ['45 度是 1/8 圓。', '', '180 度是半圓。'], ok: '對了，360÷4＝90 度。' } }),
 
   mk({ key: 'ratio', title: '比率', term: '比率', who: 'mimi', game: 'ratio', when: ['ratio:rate'], board: 'counter',
-    hook: '投 5 球進 3 球，你會說「5 球進 3 球」。', hookPic: () => '<div class="u-big">🏀</div>',
-    rounds: [cnt(5, shots(5, [0, 2, 4]), k => `投了 ${k} 球`, '5 球進 3 球。', '看我做：投 5 球，一球一球投。'), cnt(4, shots(4, [1, 2]), k => `投了 ${k} 球`, '4 球進 2 球。', '一起做：投 4 球，我先投兩球。'), cnt(5, shots(5, [0, 3]), k => `投了 ${k} 球`, '5 球進 2 球。', '換你做：投 5 球。', ['先猜：投完會進幾球？（看圖）', ['2 球', '5 球'], 0])],
-    fade: step3(shots(5, [0, 2, 4])(5), '5 球進 3 球。', cBar(5, 3, '#3fae5a'), '畫成長條：全部 5 格，進球塗 3 格。', `<div class="eq5"><span class="fr5">${K(3, C3)}<i></i>${K(5, C2)}</span></div><div class="trail">${lit('綠 3：進球', C3)}　${lit('藍 5：全部投的球', C2)}</div>`, '寫成分數，進球在上、全部在下。'),
-    kid: '進的球數占全部投球數的幾分之幾', term: '比率',
-    pick: [['比率是 5/3。', '比率是部分占全部的幾分之幾，像 3/5。', '比率一定大於 1。'], 1, '全部在下面。'],
-    pose: pose('story', '哪一個故事在問比率？', ['10 顆種子發芽 7 顆，發芽的占幾分之幾？', '10 顆種子又買 7 顆。', '7 顆種子分給 10 人。'], 0, '部分占全部。', '對了！7/10。'),
-    check: { q: '投 10 次進 4 次，投進的比率是多少？', pic: () => cBar(10, 4, '#3fae5a'), opts: ['4/10', '10/4', '4/14'], a: 0, hint: '回到投球那一步：進的在上，全部在下。', ok: '對了！' } }),
+    hook: '小安投籃，投 5 球、進 3 球。要怎麼用一個數，說出投進的次數和全部投球次數相比的結果？', hookPic: () => '<div class="u-big">🏀</div>',
+    mh: '一球一球點，數進了幾球，也數一共投了幾球。',
+    rounds: [cnt(5, shots(5, [0, 2, 4]), k => `投了 ${k} 球`, '投 5 球，進 3 球。', '看我做：投 5 球，一球一球投。'), cnt(4, shots(4, [1, 2]), k => `投了 ${k} 球`, '投 4 球，進 2 球。', '一起做：投 4 球，我先投兩球。'), cnt(5, shots(5, [0, 3]), k => `投了 ${k} 球`, '投 5 球，進 2 球。', '換你做：這次投 5 球，一球一球點。', ['先預測：如果進了 2 球，進球數和全部的球數相比，可以怎麼寫？', ['2/5', '5/2', '2/3'], 0])],
+    fade: step3(shots(5, [0, 2, 4])(5), '投 5 球，進 3 球。', cBar(5, 3, '#3fae5a'), '畫成長條：全部 5 格，進球塗 3 格。', `<div class="eq5"><span class="fr5">${K(3, C3)}<i></i>${K(5, C2)}</span></div><div class="trail">${lit('綠 3：投進的次數', C3)}　${lit('藍 5：全部投球的次數', C2)}</div>`, '寫成分數：投進的次數在上，全部的次數在下。'),
+    nameSay: `把「投進的次數」和「全部投球的次數」相比，進 3 次、投 5 次，用 3/5 表示。<br>像這樣用分數（或小數）表示一個量和另一個量相比的結果，叫作${T('比率')}。這一題是部分和全部相比。`,
+    pick: [['投進的比率是 5/3。', '進 3 球、投 5 球，投進的比率是 3/5。', '比率一定比 1 小。'], 1, ['5/3 是把全部放在上面；這題問的是投進的次數和全部相比。', '', '比率也可以比 1 大，例如今年的人數和去年的人數相比。']],
+    pose: pose('story', '哪一個問題在問比率？', ['10 顆種子有 7 顆發芽，發芽的占全部的幾分之幾？', '10 顆種子又買 7 顆，共幾顆？', '7 顆種子分給 10 人。'], 0, ['', '這是相加，不是相比。', '這是平均分，不是兩個量相比。'], '對了！發芽的和全部相比：7/10。'),
+    check: { q: '投 10 次進 4 次，投進的比率是多少？', pic: () => cBar(10, 4, '#3fae5a'), opts: ['4/10', '10/4', '4/14'], a: 0, hint: '回到投球那一步：投進的次數在上，全部的次數在下。', hints: ['', '10/4 把全部放在上面了。', '4/14 把進的和投的加起來；全部只有 10 次。'], ok: '對了，投進 4 次和全部 10 次相比：4/10。' } }),
 
   mk({ key: 'percent', title: '百分率', term: '百分率', who: 'mimi', game: 'ratio', when: ['ratio:paint', 'ratio:to100', 'ratio:part'], board: 'counter',
-    hook: '3/10 你會：10 份裡的 3 份。', hookPic: () => cBar(10, 3, '#6ea8dc'),
-    rounds: [cnt(3, k => `<div class="tap5w" data-t="x">${hundred(k * 10)}</div>`, k => `塗了 ${k * 10} 格`, '100 格塗 30 格。', '看我做：點板子，一次塗一排 10 格，塗 3 排。'), cnt(5, k => `<div class="tap5w" data-t="x">${hundred(k * 10)}</div>`, k => `塗了 ${k * 10} 格`, '100 格塗 50 格，正好一半。', '一起做：塗 5 排。'), cnt(2, k => `<div class="tap5w" data-t="x">${hundred(k * 10)}</div>`, k => `塗了 ${k * 10} 格`, '100 格塗 20 格。', '換你做：塗 2 排。', ['先猜：塗 2 排是幾格？', ['2 格', '20 格'], 1])],
-    fade: step3('<div class="u-big">🗳️</div>', '100 個人投票。', hundred(30), '畫成 100 格，贊成的塗色。', `<div class="eq5"><span class="fr5">${K(30, C2)}<i></i>${K(100, C1)}</span> ＝ ${K(30, C2)}%</div><div class="trail">${lit('紅 100：全部 100 格', C1)}　${lit('藍 30：塗的格數', C2)}</div>`, '寫成數字，% 的意思是「100 份裡的」。'),
-    kid: '把全部當成 100 份，看占幾份', term: '百分率',
-    pick: [['30% 就是 30 個人。', '30% 是 100 份裡的 30 份。', '百分率可以超過 200%。'], 1, '想想 100 格。'],
-    pose: pose('change', '100 顆種子 20 顆發芽。改成 50 顆種子 10 顆發芽，發芽的百分率會變嗎？', ['不會變，都是 20%', '會變'], 0, '10/50 和 20/100 一樣多嗎？', '對了！都是 20%。'),
-    check: { q: '100 顆種子有 20 顆發芽，發芽的百分率是多少？', pic: () => hundred(20), opts: ['2%', '20%', '80%'], a: 1, hint: '回到塗格子那一步：100 格塗幾格？', ok: '對了！' } }),
+    hook: '一條長條平均分成 10 份，塗了 3 份，是 3/10。如果改用 100 格的板子來塗呢？', hookPic: () => cBar(10, 3, '#6ea8dc'),
+    mh: '每點一下塗一排 10 格。3/10 的每 1 份，在 100 格的板子上是 10 格。',
+    rounds: [cnt(3, k => `<div class="tap5w" data-t="x">${hundred(k * 10)}</div>`, k => `塗了 ${k * 10} 格`, '100 格塗 30 格：3/10＝30/100。', '看我做：3/10 塗到 100 格的板子上。點板子，一次塗一排 10 格。'), cnt(5, k => `<div class="tap5w" data-t="x">${hundred(k * 10)}</div>`, k => `塗了 ${k * 10} 格`, '100 格塗 50 格：5/10＝50/100，正好一半。', '一起做：5/10，塗 5 排。'), cnt(2, k => `<div class="tap5w" data-t="x">${hundred(k * 10)}</div>`, k => `塗了 ${k * 10} 格`, '100 格塗 20 格：2/10＝20/100。', '換你做：2/10，塗 2 排。', ['先預測：塗 2 排是 100 格裡的幾格？', ['2 格', '20 格'], 1])],
+    fade: step3(people10(3), '10 個人裡有 3 個人贊成，是 3/10。全部不是 100 個人。', hundred(30), '改用 100 格表示：每 1 個人變成一排 10 格，塗 30 格。', `<div class="eq5"><span class="fr5">${K(3, C2)}<i></i>${K(10, C1)}</span>＝<span class="fr5">${K(30, C2)}<i></i>${K(100, C1)}</span></div><div class="trail">分子、分母都乘 10，變成分母是 100 的分數</div>`, '寫成分數：分母改成 100。'),
+    nameSay: `把一個比率改寫成分母是 100 的分數，例如 3/10＝30/100，再寫成 30%，這叫作${T('百分率')}。<br>% 讀作「百分之」；全部不一定剛好是 100 個。`,
+    pick: [['30% 就是 30 個人。', '30% 表示每 100 份中的 30 份。', '20% 就是每 100 份取 2 份。'], 1, ['10 個人裡 3 人贊成也是 30%，不一定是 30 個人。', '', '20% 是每 100 份取 20 份；每 100 份取 2 份是 2%。']],
+    pose: pose('change', '100 顆種子有 20 顆發芽。改成 50 顆種子有 10 顆發芽，發芽的種子占全部種子的百分率會變嗎？', ['不會變，都是 20%', '會變'], 0, ['', '10/50 分子分母都乘 2 是 20/100，和原來一樣。'], '對了！10/50＝20/100＝20%。'),
+    check: { q: '一盒 10 顆種子，有 2 顆發芽。發芽的種子占全部種子的百分率是多少？', pic: () => cBar(10, 2, '#3fae5a'), opts: ['2%', '20%', '80%'], a: 1, hint: '回到塗百格板那一步：2/10 改寫成分母是 100 的分數。', hints: ['2 是顆數；2/10 要先改寫成 20/100。', '', '80% 是沒有發芽的種子。'], ok: '對了，2/10＝20/100＝20%。全部只有 10 顆也能用百分率。' } }),
 
   mk({ key: 'discount', title: '打折', term: '打折', who: 'mimi', game: 'ratio', when: ['ratio:off'], board: 'counter',
-    hook: '100 元的東西，老闆說便宜一點，你遇過吧？', hookPic: () => '<div class="u-big">🏷️</div>',
-    rounds: [1, 2, 3].map((n, i) => cnt(n, k => `<div class="tap5w" data-t="x">${cBar(10, 10 - k, '#6ea8dc')}</div><div class="trail">藍色是要付的</div>`, k => `少付 ${k} 份，付 ${10 - k} 份`, `10 份付 ${10 - n} 份。`, ['看我做：100 元切成 10 份，點一份不用付。', '一起做：兩份不用付。', '換你做：三份不用付。'][i], i === 2 ? ['先猜：付 7 份是幾元？', ['30 元', '70 元'], 1] : null)),
-    fade: step3('<div class="u-big">🏷️</div>', '標價 100 元。', cBar(10, 8, '#6ea8dc'), '切 10 份，付 8 份。', `<div class="eq5">${K(100, C1)}×<span class="fr5">${K(8, C2)}<i></i>10</span>＝${K(80, C3)}</div><div class="trail">${lit('紅：標價', C1)}　${lit('藍：付幾份', C2)}　${lit('綠：要付的錢', C3)}</div>`, '寫成算式。'),
-    kid: '把價錢切成 10 份，只付其中幾份（付 8 份叫 8 折）', term: '打折',
-    pick: [['8 折是便宜 8 元。', '8 折是付 10 份裡的 8 份。', '8 折比 9 折貴。'], 1, '想想切 10 份。'],
-    pose: pose('can', '一件衣服打 8 折，要付多少錢？這題能算嗎？', ['能，80 元', '不能，不知道原價', '能，8 元'], 1, '要先知道原價。', '對了！'),
-    check: { q: '200 元的太空衣打 9 折，要付幾元？', pic: () => cBar(10, 9, '#6ea8dc'), opts: ['20 元', '180 元', '190 元'], a: 1, hint: '回到切 10 份那一步：每份 20 元，付 9 份。', ok: '對了！' } }),
+    hook: '一件標價 100 元的玩具在特價，只要付原價的一部分。要付多少？', hookPic: () => '<div class="u-big">🏷️</div>',
+    mh: '把原價平均分成 10 份，每點一下就有一份不用付。看藍色剩下幾份。',
+    rounds: [1, 2, 3].map((n, i) => cnt(n, k => `<div class="tap5w" data-t="x">${cBar(10, 10 - k, '#6ea8dc')}</div><div class="trail">藍色是要付的，每份 10 元</div>`, k => `少付 ${k} 份，付 ${10 - k} 份`, `原價平均分成 10 份，付 ${10 - n} 份，是 ${(10 - n) * 10} 元。`, ['看我做：把 100 元平均分成 10 份，點一份不用付。', '一起做：兩份不用付。', '換你做：三份不用付。'][i], i === 2 ? ['先預測：付 7 份是幾元？', ['30 元', '70 元'], 1] : null)),
+    fade: step3('<div class="u-big">🏷️</div>', '標價 100 元。', cBar(10, 8, '#6ea8dc'), '把原價平均分成 10 份，付 8 份。', `<div class="eq5">${K(100, C1)}×<span class="fr5">${K(8, C2)}<i></i>10</span>＝${K(80, C3)}</div><div class="trail">${lit('紅：原價', C1)}　${lit('藍：付 10 份裡的幾份', C2)}　${lit('綠：要付的錢', C3)}</div>`, '寫成算式。'),
+    nameSay: `只付原價的十分之幾，叫作${T('打折')}。付 8/10 就是打 8 折，也就是付原價的 80%，省下 20%。`,
+    pick: [['8 折是便宜 8 元。', '8 折是付原價的 8/10。', '8 折比 9 折貴。'], 1, ['便宜多少要看原價：100 元打 8 折是便宜 20 元。', '', '8 折付 8/10，9 折付 9/10，8 折比較便宜。']],
+    pose: pose('can', '一件衣服打 8 折，要付多少錢？', ['夠，80 元', '不夠，還要知道原價', '夠，8 元'], 1, ['80 元只在原價 100 元時才對。', '', '8 元不是 8 折的意思。'], '對了！要先知道原價。'),
+    check: { q: '200 元的衣服打 9 折，要付幾元？', pic: () => cBar(10, 9, '#6ea8dc'), opts: ['20 元', '180 元', '190 元'], a: 1, hint: '回到平均分成 10 份那一步：每份 20 元，付 9 份。', hints: ['20 元是原價的 1/10，也就是省下的錢。', '', '190 元是只少付 10 元；要少付 200 的 1/10，也就是 20 元。'], ok: '對了，每份 20 元，付 9 份：200×9/10＝180 元。' } }),
 
   mk({ key: 'cheng', title: '成數', term: '成數', who: 'mimi', game: 'ratio', when: ['ratio:cheng'], board: 'counter',
-    hook: '10 棵樹裡有幾棵結果子，你數得出來。', hookPic: () => `<div class="pics5">${'🌳'.repeat(10)}</div>`,
-    rounds: [2, 4, 6].map((n, i) => cnt(n, k => `<div class="pics5 tap5w" data-t="x">${'🍎'.repeat(k)}${'🌳'.repeat(10 - k)}</div>`, k => `10 棵裡 ${k} 棵結果`, `10 棵裡 ${n} 棵。`, ['看我做：點樹，結果子了。', '一起做：4 棵。', '換你做：6 棵。'][i], i === 2 ? ['先猜：6 棵結果，沒結果的有幾棵？', ['4 棵', '6 棵'], 0] : null)),
-    fade: step3(`<div class="pics5">${'🍎'.repeat(6)}${'🌳'.repeat(4)}</div>`, '10 棵裡 6 棵。', cBar(10, 6, '#3fae5a'), '畫成 10 格的長條。', `<div class="eq5"><span class="fr5">${K(6, C3)}<i></i>${K(10, C2)}</span></div><div class="trail">${lit('綠 6：結果的', C3)}　${lit('藍 10：全部切 10 份', C2)}</div>`, '寫成分數。'),
-    kid: '全部切成 10 份，說其中的幾份（6 份就說 6 成）', term: '成數',
-    pick: [['6 成就是 6 個。', '6 成是 10 份裡的 6 份。', '6 成是 100 份裡的 6 份。'], 1, '想想 10 棵樹。'],
-    pose: pose('story', '哪一個故事可以用「3 成」來說？', ['10 個人有 3 個人戴眼鏡', '3 個人去公園', '30 個人分 10 組'], 0, '10 份裡的 3 份。', '對了！'),
-    check: { q: '圖書館 100 本書，3 成借出去，是幾本？', pic: () => cBar(10, 3, '#3fae5a'), opts: ['3 本', '30 本', '70 本'], a: 1, hint: '回到 10 份那一步：每份 10 本，3 份是？', ok: '對了！' } }),
+    hook: '果園裡有 10 棵一樣的樹，數數看有幾棵結了果子。', hookPic: () => trees(10, 0),
+    mh: '每點一下，就有一棵樹結果（打上圓點）。數一數 10 棵裡有幾棵。',
+    rounds: [2, 4, 6].map((n, i) => cnt(n, k => `<div class="tap5w" data-t="x">${trees(10, k)}</div>`, k => `10 棵裡 ${k} 棵結果`, `10 棵裡 ${n} 棵結果，是 ${n}/10。`, ['看我做：點樹，結果子了。', '一起做：數到 4 棵。', '換你做：數到 6 棵。'][i], i === 2 ? ['先預測：6 棵結果，沒結果的有幾棵？', ['4 棵', '6 棵'], 0] : null)),
+    fade: step3(trees(10, 6), '10 棵裡 6 棵結果。', cBar(10, 6, '#3fae5a'), '畫成 10 格的長條。', `<div class="eq5"><span class="fr5">${K(6, C3)}<i></i>${K(10, C2)}</span>＝60%</div><div class="trail">${lit('綠 6：結果的', C3)}　${lit('藍 10：全部平均分成 10 份', C2)}</div>`, '寫成分數和百分率。'),
+    nameSay: `把全部平均分成 10 份，用「幾成」來說其中的幾份：1 成是 1/10，6 成是 6/10，也就是 60%。<br>這種說法叫作${T('成數')}。`,
+    pick: [['6 成就是 6 個。', '6 成是 6/10，也就是 60%。', '6 成是 100 份裡的 6 份。'], 1, ['20 棵樹的 6 成是 12 棵，不一定是 6 個。', '', '100 份裡的 6 份是 6%；6 成是 60%。']],
+    pose: pose('story', '哪一個情況可以用「3 成」來說？', ['10 個人有 3 個人戴眼鏡', '3 個人去公園', '30 個人分 10 組'], 0, ['', '只有人數，沒有和全部相比。', '這是分組，不是占全部的幾份。'], '對了！10 份裡的 3 份。'),
+    check: { q: '圖書館有 100 本書，借出 3 成，是幾本？', pic: () => cBar(10, 3, '#3fae5a'), opts: ['3 本', '30 本', '70 本'], a: 1, hint: '回到 10 份那一步：100 本平均分成 10 份，每份 10 本，3 份是幾本？', hints: ['3 是成數；3 成是 3/10，100 本的 3/10 是 30 本。', '', '70 本是沒有借出去的。'], ok: '對了，每份 10 本，3 份是 30 本。' } }),
 
   mk({ key: 'capacity', title: '容積', term: '容積', who: 'turtle', game: 'capacity', when: ['capacity:inner', 'capacity:level', 'capacity:rock', 'capacity:over'], board: 'counter',
-    hook: '量盒子的長寬高，你會。這個水杯的杯壁很厚。', hookPic: () => capPic(0),
-    guess: ['外面量是 8 公分寬，水能裝 8 公分寬嗎？', ['能', '不能']],
-    rounds: [2, 3, 5].map((n, i) => cnt(n, capCup, k => `倒了 ${k} 層`, '水只在杯子裡面，碰不到厚厚的杯壁。', ['看我做：一層一層倒水。', '一起做：我先倒，你接著倒。', '換你做：倒到快滿。'][i], i === 2 ? ['先猜：水最寬能到幾公分？', ['6 公分', '8 公分'], 0] : null)),
-    reveal: '外面 8 公分，可是杯壁占了地方，水只有 6 公分寬。很多人一開始也用外面量。', revealPic: () => capPic(3),
-    fade: step3(capPic(4), '真的水杯，倒了水。', `<svg class="g5" style="max-height:140px" viewBox="0 0 240 150"><rect x="40" y="10" width="160" height="130" fill="#c9a36a"/><rect x="60" y="10" width="120" height="110" fill="#a9d0f0"/><text x="120" y="70" text-anchor="middle" class="ax" style="fill:${C2}">裡面</text></svg>`, '簡圖：藍色是裡面。', `<div class="eq5">${K('裡面的長', C2)}×${K('裡面的寬', C2)}×${K('裡面的高', C2)}</div>`, '量裡面才算。'),
-    kid: '容器裡面能裝的大小（量裡面）', term: '容積',
-    pick: [['容積要量外面。', '容積是量容器裡面能裝多少。', '容積和表面積一樣。'], 1, '想想厚杯子。'],
-    pose: pose('change', '同樣外面大小的杯子，杯壁改得更厚，容積會變嗎？', ['變大', '變小', '不變'], 1, '杯壁占的地方變多了。', '對了！裡面變小。'),
-    check: { q: '魚缸裡面長 10、寬 10、高 5 公分，容積是多少立方公分？', pic: () => capPic(3), opts: ['25', '500', '1000'], a: 1, hint: '回到倒水那一步：量裡面。', ok: '對了！10×10×5＝500。' } }),
+    hook: '這是一個方形杯子的切面圖，杯壁很厚：外面量 8 公分寬，裡面量 6 公分寬。', hookPic: () => capPic(0),
+    guess: ['水能裝到 8 公分寬嗎？', ['能', '不能'], 1],
+    mh: '每點一下倒一層水。看藍色的水最寬到哪裡。',
+    rounds: [2, 3, 5].map((n, i) => cnt(n, capCup, k => `倒了 ${k} 層`, '水會碰到內壁，但杯壁本身占去的地方裝不進水，水只有 6 公分寬。', ['看我做：一層一層倒水。', '一起做：我先倒，你接著倒。', '換你做：倒到快滿。'][i], i === 2 ? ['先預測：水最寬能到幾公分？', ['6 公分', '8 公分'], 0] : null)),
+    reveal: '外面 8 公分，可是兩邊的杯壁占了地方，水只有 6 公分寬。', revealPic: () => capPic(3),
+    fade: step3(capPic(4), '真的杯子，倒了水。', `<svg class="g5" style="max-height:140px" viewBox="0 0 240 150"><rect x="40" y="10" width="160" height="130" fill="#c9a36a"/><rect x="60" y="10" width="120" height="110" fill="#a9d0f0"/><text x="120" y="70" text-anchor="middle" class="ax" style="fill:${C2}">裡面</text></svg>`, '簡圖：藍色是裡面的空間。', `<div class="eq5">${K('裡面的長', C2)}×${K('裡面的寬', C2)}×${K('裡面的高', C2)}</div>`, '長方體容器：量裡面的長、寬、高。'),
+    nameSay: `容器內部能容納東西的空間大小，叫作${T('容積')}。長方體容器的容積＝內部的長×寬×高。`,
+    pick: [['容積要量外面。', '容積是容器內部能容納的空間大小。', '容積和表面積一樣。'], 1, ['外面包含杯壁，杯壁的地方裝不進水。', '', '表面積是外表的面積；容積是裡面的空間。']],
+    pose: pose('change', '外面大小一樣的杯子，杯壁改得更厚，容積會變嗎？', ['變大', '變小', '不變'], 1, ['杯壁變厚，裡面的空間變小，不會變大。', '', '杯壁占的地方變多了，裡面變小。'], '對了！裡面變小，容積就變小。'),
+    check: { q: '長方體魚缸，內部長 10、寬 10、高 5 公分，容積是多少立方公分？', pic: () => capPic(3), opts: ['25', '500', '1000'], a: 1, hint: '回到倒水那一步：量的是裡面，長×寬×高。', hints: ['10＋10＋5 是相加；容積要相乘。', '', '1000 是內部高 10 公分時；這裡內部高只有 5 公分。'], ok: '對了，內部長×寬×高：10×10×5＝500 立方公分。' } }),
 );
 SEGS.push(
-  solidSeg('prism', '角柱', ['tent', 'box', 'pencil'], '上下兩個底一樣大、底是有角的多邊形、從上到下一樣粗的立體', '帳篷、鞋盒、鉛筆，形狀有什麼一樣？',
-    [[['tent', 'can', 'pyr'], ['tent'], '哪一個上下一樣粗、底有角？', '這個不是：看底面是不是有角，上下是不是一樣粗。'], [['box', 'pencil', 'cone', 'ball'], ['box', 'pencil'], '找出上下一樣粗、底有角的。', '這個不是：看底面和上下。'], [['tent', 'pipe', 'roof', 'pencil'], ['tent', 'pencil'], '再找一次。', '這個不是。', ['先猜：水管是不是？', ['是', '不是，它的底是圓的'], 1]]],
-    [['帳篷', 0], ['鞋盒', 0], ['罐頭', 1], ['金字塔', 1]], '上下一樣粗、底有角', ['簡圖：上下兩個底一樣大。', `${lit('底', C4)}：三角形、四邊形、六邊形　${lit('側面', C2)}：長方形`, '寫出底和側面的形狀。'],
-    [['角柱的底是圓。', '角柱上下兩底一樣大、底是多邊形。', '角柱頂端是尖的。'], 1, '想想鉛筆。'],
-    pose('pic', '這張圖可以問什麼？', ['這個鞋盒是不是上下一樣粗、底有角？', '鞋盒是什麼顏色？', '鞋子幾號？'], 0, '問形狀。', '對了！', () => solidSvg('prism', 4, 30, 20)),
-    { q: '沒削的鉛筆，底是六邊形、上下一樣粗。它是什麼？', pic: () => solidSvg('prism', 6, 30, 20), opts: ['角柱', '角錐'], a: 0, hint: '回到找形狀那一步：上下一樣粗嗎？', ok: '對了！六角柱。' }),
-  solidSeg('cylinder', '圓柱', ['can', 'pipe'], '上下兩個底是一樣大的圓、從上到下一樣粗的立體', '罐頭、水管，形狀有什麼一樣？',
-    [[['can', 'box', 'cone'], ['can'], '哪一個底是圓、上下一樣粗？', '這個不是：底要是圓。'], [['pipe', 'tent', 'ball', 'can'], ['pipe', 'can'], '找出全部。', '這個不是。'], [['hat', 'can', 'pencil'], ['can'], '再找一次。', '這個不是。', ['先猜：派對帽是不是？', ['是', '不是，它是尖的'], 1]]],
-    [['罐頭', 0], ['水管', 0], ['甜筒', 1], ['足球', 1]], '底是圓、上下一樣粗', ['簡圖：上下兩個圓。', `${lit('底', C4)}：圓　${lit('側面', C2)}：捲起來的長方形`, '寫出底和側面。'],
-    [['圓柱的頂端是尖的。', '圓柱上下兩個底是一樣大的圓。', '圓柱的底是三角形。'], 1, '想想罐頭。'],
-    pose('change', '罐頭的上面改成尖尖的，還是一樣嗎？', ['還是', '不是了'], 1, '上下不再一樣粗。', '對了！'),
-    { q: '水塔上下都是圓、一樣粗。它是什麼？', pic: () => solidSvg('cyl', 0, 30, 20), opts: ['圓柱', '圓錐'], a: 0, hint: '回到找形狀那一步。', ok: '對了！' }),
-  solidSeg('pyramid', '角錐', ['pyr', 'roof'], '只有一個有角的底、往上收成一個尖點的立體', '金字塔、尖屋頂，形狀有什麼一樣？',
-    [[['pyr', 'box', 'can'], ['pyr'], '哪一個底有角、頂端尖？', '這個不是：頂端要尖。'], [['roof', 'tent', 'cone', 'pyr'], ['roof', 'pyr'], '找出全部。', '這個不是。'], [['hat', 'pyr', 'pencil'], ['pyr'], '再找一次。', '這個不是。', ['先猜：派對帽是不是？', ['是', '不是，它的底是圓'], 1]]],
-    [['金字塔', 0], ['尖屋頂', 0], ['甜筒', 1], ['鞋盒', 1]], '底有角、頂端尖', ['簡圖：一個底、一個尖。', `${lit('底', C4)}：多邊形　${lit('側面', C2)}：三角形`, '寫出底和側面。'],
-    [['角錐有兩個底。', '角錐只有一個多邊形的底，頂端是尖的。', '角錐的底是圓。'], 1, '想想金字塔。'],
-    pose('story', '哪一個東西是角錐？', ['四面都是三角形、底是正方形的金字塔', '圓圓的甜筒', '長長的鉛筆'], 0, '底有角、頂端尖。', '對了！'),
-    { q: '帳篷的尖屋頂，底是三角形、往上變尖。它是什麼？', pic: () => solidSvg('pyr', 3, 30, 20), opts: ['角柱', '角錐'], a: 1, hint: '回到找形狀那一步：頂端尖嗎？', ok: '對了！三角錐。' }),
-  solidSeg('cone', '圓錐', ['cone', 'hat'], '底是圓、往上收成一個尖點的立體', '甜筒、派對帽，形狀有什麼一樣？',
-    [[['cone', 'can', 'pyr'], ['cone'], '哪一個底是圓、頂端尖？', '這個不是。'], [['hat', 'ball', 'cone', 'roof'], ['hat', 'cone'], '找出全部。', '這個不是。'], [['pipe', 'hat', 'tent'], ['hat'], '再找一次。', '這個不是。', ['先猜：水管是不是？', ['是', '不是，它不尖'], 1]]],
-    [['甜筒', 0], ['派對帽', 0], ['金字塔', 1], ['罐頭', 1]], '底是圓、頂端尖', ['簡圖：圓的底、一個尖。', `${lit('底', C4)}：圓　${lit('側面', C2)}：攤開是扇形`, '寫出底和側面。'],
-    [['圓錐的底是正方形。', '圓錐的底是圓，頂端是尖的。', '圓錐上下一樣粗。'], 1, '想想甜筒。'],
-    pose('can', '一頂帽子是不是圓錐？只知道它是紅色的，能判斷嗎？', ['能', '不能，要知道它的形狀'], 1, '顏色不決定形狀。', '對了！'),
-    { q: '尖尖的派對帽，底是圓的。它是什麼？', pic: () => solidSvg('cone', 0, 30, 20), opts: ['角錐', '圓錐'], a: 1, hint: '回到找形狀那一步：底是什麼形狀？', ok: '對了！' }),
+  solidSeg({ key: 'prism', term: '角柱', type: 'prism', right: ['tent', 'box', 'pencil'], hook: '把帳篷、鞋盒、沒削的鉛筆想成理想的模型。它們的形狀有什麼一樣？', mh: '看兩件事：有沒有上下兩個一樣的多邊形底面？從上到下是不是一樣粗？',
+    rounds: [[['tent', 'can', 'pyr'], ['tent'], '哪一個有兩個一樣的多邊形底面、上下一樣粗？'], [['box', 'pencil', 'cone', 'ball'], ['box', 'pencil'], '找出全部有兩個一樣的多邊形底面、上下一樣粗的。'], [['tent', 'pipe', 'roof', 'pencil'], ['tent', 'pencil'], '再找一次。', ['先預測：水管是不是？', ['是', '不是，它的底面是圓'], 1]]],
+    sort: [['鞋盒', 0], ['帳篷（橫放）', 0], ['罐頭', 1], ['金字塔', 1]], bin: '兩個多邊形底面、上下一樣粗', sortDone: '鞋盒、帳篷是；罐頭的底面是圓，金字塔只有一個底面。', fade: ['簡圖：上下兩個一樣大的底面。', `${lit('底面', C4)}：三角形、四邊形、六邊形<br>${lit('側面', C2)}：長方形`, '寫出底面和側面的形狀。'],
+    nameSay: `有兩個互相平行、形狀和大小都相同的多邊形底面，側面都是長方形的立體，叫作${T('角柱')}。（這裡先看側面和底面垂直的角柱。）`,
+    pick: [['角柱的底面是圓。', '角柱有兩個互相平行、一樣大的多邊形底面。', '角柱頂端是尖的。'], 1, ['底面是圓的是另一種立體。', '', '頂端尖的只有一個底面，不是角柱。']],
+    pose: pose('pic', '這張圖可以問什麼？', ['這個鞋盒是不是有兩個一樣的多邊形底面、上下一樣粗？', '鞋盒是什麼顏色？', '鞋子幾號？'], 0, ['', '顏色和形體無關。', '鞋子大小和盒子的形狀無關。'], '對了！問的是形狀。', () => solidSvg('prism', 4, 30, 20)),
+    check: { q: '沒削的鉛筆，兩個底面都是六邊形、上下一樣粗。它是什麼？', pic: () => solidSvg('prism', 6, 30, 20), opts: ['角柱', '角錐'], a: 0, hint: '回到找形狀那一步：有幾個底面？上下一樣粗嗎？', hints: ['', '角錐只有一個底面，頂端是尖的；鉛筆上下一樣粗。'], ok: '對了，兩個六邊形底面、上下一樣粗：六角柱。' } }),
+  solidSeg({ key: 'cylinder', term: '圓柱', type: 'cyl', right: ['can', 'pipe'], hook: '罐頭、一段水管，外形都近似同一種立體。它們的形狀有什麼一樣？', mh: '看兩件事：底面是不是圓？有沒有上下兩個一樣大的底面？',
+    rounds: [[['can', 'box', 'cone'], ['can'], '哪一個有上下兩個一樣大的圓形底面？'], [['pipe', 'tent', 'ball', 'can'], ['pipe', 'can'], '找出全部。'], [['hat', 'can', 'pencil'], ['can'], '再找一次。', ['先預測：派對帽是不是？', ['是', '不是，它往上變尖'], 1]]],
+    sort: [['罐頭', 0], ['一段水管', 0], ['甜筒形積木', 1], ['足球', 1]], bin: '兩個圓形底面、上下一樣粗', sortDone: '罐頭、水管是；甜筒形積木往上變尖，足球沒有平平的底面。', fade: ['簡圖：上下兩個一樣大的圓。', `${lit('底面', C4)}：圓<br>${lit('側面', C2)}：攤開是長方形`, '寫出底面和側面。'],
+    nameSay: `有兩個互相平行、大小相同的圓形底面，側面攤開是長方形的立體，叫作${T('圓柱')}。罐頭、水管的外形近似它。`,
+    pick: [['圓柱的頂端是尖的。', '圓柱有上下兩個一樣大的圓形底面。', '圓柱的底面是三角形。'], 1, ['頂端尖的只有一個底面。', '', '底面是多邊形的是角柱。']],
+    pose: pose('change', '罐頭的上面改成收成一個尖點，還是同一種立體嗎？', ['還是', '不是了'], 1, ['上面變尖就只剩一個底面，上下也不一樣粗了。', ''], '對了！只改一個地方，形體就不一樣了。'),
+    check: { q: '一個水塔，上下兩個底面是一樣大的圓、從上到下一樣粗。它的外形近似什麼立體？', pic: () => solidSvg('cyl', 0, 30, 20), opts: ['圓柱', '圓錐'], a: 0, hint: '回到找形狀那一步：有幾個圓形底面？', hints: ['', '圓錐只有一個底面，頂端尖；水塔上下一樣粗。'], ok: '對了，兩個一樣大的圓形底面、上下一樣粗：圓柱。' } }),
+  solidSeg({ key: 'pyramid', term: '角錐', type: 'pyr', right: ['pyr', 'roof'], hook: '金字塔、尖屋頂，它們的形狀有什麼一樣？', mh: '看兩件事：底面是不是多邊形？側面是不是都交會在同一個尖點？',
+    rounds: [[['pyr', 'box', 'can'], ['pyr'], '哪一個底面是多邊形、側面交會在一個尖點？'], [['roof', 'tent', 'cone', 'pyr'], ['roof', 'pyr'], '找出全部。'], [['hat', 'pyr', 'pencil'], ['pyr'], '再找一次。', ['先預測：派對帽是不是？', ['是', '不是，它的底面是圓'], 1]]],
+    sort: [['金字塔', 0], ['尖屋頂', 0], ['甜筒形積木', 1], ['鞋盒', 1]], bin: '多邊形底面、頂端尖', sortDone: '金字塔、尖屋頂是；甜筒形積木的底面是圓，鞋盒沒有尖點。', fade: ['簡圖：一個底面，側面交會在一個尖點。', `${lit('底面', C4)}：多邊形<br>${lit('側面', C2)}：三角形`, '寫出底面和側面。'],
+    nameSay: `有一個多邊形底面，各個三角形側面交會在同一個頂點的立體，叫作${T('角錐')}。`,
+    pick: [['角錐有兩個底面。', '角錐只有一個多邊形底面，側面交會在一個頂點。', '角錐的底面是圓。'], 1, ['有兩個底面的是柱體。', '', '底面是圓、頂端尖的是另一種立體。']],
+    pose: pose('story', '哪一個東西的外形是角錐？', ['四個側面都是三角形、底面是正方形的金字塔', '底面是圓的甜筒形積木', '長長的沒削的鉛筆'], 0, ['', '它的底面是圓，不是多邊形。', '鉛筆上下一樣粗，沒有尖點。'], '對了！多邊形底面，側面交會在一個頂點。'),
+    check: { q: '一個尖屋頂，底面是三角形、側面都交會在一個尖點。它是什麼？', pic: () => solidSvg('pyr', 3, 30, 20), opts: ['角柱', '角錐'], a: 1, hint: '回到找形狀那一步：有幾個底面？頂端尖嗎？', hints: ['角柱有兩個底面、上下一樣粗；這個頂端是尖的。', ''], ok: '對了，一個三角形底面、頂端尖：三角錐。' } }),
+  solidSeg({ key: 'cone', term: '圓錐', type: 'cone', right: ['cone', 'hat'], hook: '甜筒形積木、派對帽（派對帽只有側面，外形像這種立體的側面），它們的形狀有什麼一樣？', mh: '看兩件事：底面是不是圓？側面是不是向一個尖點收攏？',
+    rounds: [[['cone', 'can', 'pyr'], ['cone'], '哪一個底面是圓、側面向一個尖點收攏？'], [['hat', 'ball', 'cone', 'roof'], ['hat', 'cone'], '找出全部。'], [['pipe', 'hat', 'tent'], ['hat'], '再找一次。', ['先預測：水管是不是？', ['是', '不是，它沒有尖點'], 1]]],
+    sort: [['甜筒形積木', 0], ['派對帽的外形', 0], ['金字塔', 1], ['罐頭', 1]], bin: '圓形底面、頂端尖', sortDone: '甜筒形積木、派對帽的外形是；金字塔的底面是正方形，罐頭上下一樣粗。', fade: ['簡圖：一個圓形底面，側面收攏成一個尖點。', `${lit('底面', C4)}：圓<br>${lit('側面', C2)}：攤開是扇形`, '寫出底面和側面。'],
+    nameSay: `有一個圓形底面，側面向同一個頂點收攏的立體，叫作${T('圓錐')}。（這裡先看頂點在底面圓心正上方的圓錐。）`,
+    pick: [['圓錐的底面是正方形。', '圓錐有一個圓形底面，側面向一個頂點收攏。', '圓錐上下一樣粗。'], 1, ['底面是正方形、頂端尖的是四角錐。', '', '上下一樣粗、兩個圓形底面的是圓柱。']],
+    pose: pose('can', '一頂帽子的外形是不是圓錐？只知道它是紅色的。', ['夠，能判斷', '不夠，還要知道它的形狀'], 1, ['顏色不決定形狀。', ''], '對了！要看底面和側面的形狀。'),
+    check: { q: '一個甜筒形積木，底面是圓，側面向一個尖點收攏。它是什麼立體？', pic: () => solidSvg('cone', 0, 30, 20), opts: ['角錐', '圓錐'], a: 1, hint: '回到找形狀那一步：底面是什麼形狀？', hints: ['角錐的底面是多邊形；這個底面是圓。', ''], ok: '對了，圓形底面、頂端尖：圓錐。' } }),
 );
 
 /* ---------- 單位教室開場：一個單位一段 ---------- */
@@ -2504,101 +2645,109 @@ const UL = (key, term, who, o) => mk({ key: 'u_' + key, title: '單位教室', t
 const tapDraw = (pic, label) => k => `<div class="tap5w" data-t="x" style="display:block">${pic(k)}</div><div class="pile6"><small>${label}</small></div>`;
 const turnPic = k => protractor(30 * k, { knob: 30 * k });
 const tilesPic = (cols, rows, e) => k => `<div class="rows6">${Array.from({ length: rows }, (_, r) => `<div class="row6">${em(e, Math.max(0, Math.min(cols, k - r * cols)))}${'<span class="em5" style="opacity:.2">⬜</span>'.repeat(Math.max(0, cols - Math.max(0, Math.min(cols, k - r * cols))))}</div>`).join('')}</div>`;
-const lessonCnt = (ns, draw, st, res, says, predict) => ns.map((n, i) => cnt(n, draw(n), st, res(n), says[i], i === 2 ? predict : null));
-const ucheck = (q, pic, opts, a, hint, ok) => ({ q, pic, opts, a, hint, ok });
+const lessonCnt = (ns, draw, st, res, says, predict, mh) => ns.map((n, i) => cnt(n, draw(n), st, res(n), says[i], i === 2 ? predict : null, mh));
+const ucheck = (q, pic, opts, a, hint, ok, hints) => ({ q, pic, opts, a, hint, ok, hints });
+// 秒針錶面：s 秒（圖上快轉）
+const secDial = s => { const P = (deg, l) => [100 + l * Math.sin(deg * Math.PI / 180), 100 - l * Math.cos(deg * Math.PI / 180)], d = (s % 60) * 6, full = s > 0 && s % 60 === 0; let h = '<svg class="clock4" viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="#fff" stroke="#33405a" stroke-width="4"/>'; if (full) h += '<circle cx="100" cy="100" r="80" fill="#ffe3a3"/>'; else if (d) { const [x, y] = P(d, 80); h += `<path d="M100 100L100 20A80 80 0 ${d > 180 ? 1 : 0} 1 ${x} ${y}Z" fill="#ffe3a3"/>`; } for (let i = 0; i < 60; i++) { const [a, b] = P(i * 6, 92), [c, e] = P(i * 6, i % 5 ? 86 : 80); h += `<line x1="${a}" y1="${b}" x2="${c}" y2="${e}" stroke="#33405a" stroke-width="${i % 5 ? 1 : 2}"/>`; } for (let i = 1; i <= 12; i++) { const [x, y] = P(i * 30, 66); h += `<text x="${x}" y="${y + 6}" text-anchor="middle" class="pt" style="font-size:15px">${i * 5}</text>`; } const [hx, hy] = P(d, 84); return h + `<line x1="100" y1="100" x2="${hx}" y2="${hy}" stroke="#d6476b" stroke-width="3"/><circle cx="100" cy="100" r="5" fill="#33405a"/></svg>`; };
+// 有刻度的量杯：v 小格的水，最多 30 小格
+const mcup = v => { let s = `<svg class="g5" style="max-height:190px" viewBox="0 0 200 200"><rect x="70" y="${180 - v * 5}" width="60" height="${v * 5}" fill="#a9d0f0"/><path d="M70 20V180H130V20" fill="none" stroke="#33405a" stroke-width="3"/>`; for (let i = 1; i <= 30; i++) { const y = 180 - i * 5; s += `<line x1="130" x2="${i % 5 ? 136 : 142}" y1="${y}" y2="${y}" stroke="#33405a"/>`; if (i % 5 === 0) s += `<text x="146" y="${y + 4}" class="ax" style="font-size:12px">${i}</text>`; } return s + '</svg>'; };
+// 每邊 1 公尺的框，搭好以後框裡的空間半透明
+const m3Frame = k => { const base = labPic({ view: 'frame', each: 1 }, k); return k >= 12 ? base.replace('</svg>', '<polygon points="60,150 190,150 240,120 240,10 110,10 60,40" fill="#a9d0f0" fill-opacity=".35"/><text x="150" y="90" text-anchor="middle" class="ax">1 公尺</text></svg>') : base; };
+const DAYT = ['上午 8 點', '下午 2 點', '晚上 8 點', '凌晨 2 點', '隔天上午 8 點'];
+const dayPic = k => `<div class="pics5" style="flex-wrap:wrap;gap:4px">${DAYT.slice(0, Math.min(k, 4) + 1).map((t, i) => `<span class="t5 ${i === Math.min(k, 4) ? 'on' : ''}" style="font-size:14px;padding:2px 6px">${t}</span>`).join('→')}</div>${k > 4 ? `<div class="trail">又過了 ${(k - 4) * 6} 小時</div>` : ''}`;
 Object.assign(LESSON_STORY, {
-  deg: [UL('deg', '度', 'goat', { hook: '直角你認識：門全開、書本的角。', hookPic: () => protractor(90, { knob: 90 }),
-    rounds: lessonCnt([2, 3, 6], n => tapDraw(turnPic, '點量角器，轉 30 小格'), k => `轉了 ${30 * k} 小格`, n => `轉了 ${30 * n} 小格。`, ['看我做：一圈切成 360 小格，我一次轉 30 小格。', '一起做：轉到門全開那麼大。', '換你做：轉到一條直線。'], ['先猜：一條直線是幾小格？', ['90', '180', '360'], 1]),
-    fade: step3('<div class="u-big">🚪</div>', '門全開。', protractor(90, { knob: 90 }), '量角器上轉 90 小格。', `<div class="eq5">一圈 ${K(360, C1)} 份，一份是 1　直角 ${K(90, C2)}</div>`, '寫成數字。'),
-    kid: '一整圈切成 360 小份，每一份', term: '度', pick: [['一圈是 100 度。', '一圈是 360 度，直角 90 度。', '直角是 180 度。'], 1, '想想量角器。'],
-    pose: pose('story', '哪一個問題要用角的大小來回答？', ['門打開多大？', '門有多高？', '門多重？'], 0, '問張開多大。', '對了！'),
-    check: ucheck('時鐘 3 點，兩根針張開多大？', () => clockSvg(0, 3), ['30 度', '90 度', '180 度'], 1, '回到轉量角器那一步：像門全開。', '對了！') })],
-  m2: [UL('cm2', '平方公分', 'sheep', { hook: '哪個比較大，可以疊疊看，你會吧？', hookPic: () => '<div class="u-big">🧽📒</div>',
-    rounds: lessonCnt([4, 6, 9], n => tapDraw(tilesPic(n === 4 ? 2 : 3, n === 9 ? 3 : 2, '🟩'), '點一下鋪一小格（每邊 1 公分）'), k => `鋪了 ${k} 小格`, n => `鋪滿 ${n} 小格。`, ['看我做：橡皮擦的面，用每邊 1 公分的小方格鋪滿。', '一起做：便條紙。', '換你做：小貼紙。'], ['先猜：3 排每排 3 格，共幾格？', ['6', '9'], 1]),
-    fade: step3('<div class="u-big">🧽</div>', '橡皮擦。', tilesPic(3, 2, '🟩')(6), '鋪 6 小格。', `<div class="eq5">${K(6, C3)} 個小方格（每邊 ${K('1 公分', C1)}）</div>`, '寫成數字。'),
-    kid: '每邊 1 公分的小方格，一格的大小', term: '平方公分', pick: [['1 平方公分是一條 1 公分的線。', '1 平方公分是每邊 1 公分的正方形那麼大。', '1 平方公分和一張桌子一樣大。'], 1, '想想小方格。'],
-    pose: pose('can', '一張卡片多大？只知道它長 8 公分，能算出來嗎？', ['能', '不能，缺寬'], 1, '要鋪滿才知道。', '對了！'),
-    check: ucheck('一張郵票鋪滿要 4 格（每邊 1 公分），它多大？', () => tilesPic(2, 2, '🟩')(4), ['4 公分', '4 平方公分', '2 平方公分'], 1, '回到鋪小方格那一步。', '對了！') }),
-    UL('m2', '平方公尺', 'sheep', { hook: '小東西用平方公分。可是教室地板，用小方格鋪要鋪好久。', hookPic: () => '<div class="u-big">🏫</div>',
-    rounds: lessonCnt([2, 4, 6], n => tapDraw(tilesPic(n === 2 ? 2 : n === 4 ? 2 : 3, n === 2 ? 1 : 2, '🟫'), '點一下鋪一大塊（每邊 1 公尺）'), k => `鋪了 ${k} 大塊`, n => `鋪了 ${n} 大塊。`, ['看我做：用每邊 1 公尺的大地墊鋪地板。', '一起做：鋪走廊。', '換你做：鋪舞台。'], ['先猜：一大塊站得下幾個小朋友？', ['1 個', '大約 12 個'], 1]),
-    fade: step3('<div class="u-big">🧍🧍🧍</div>', '一大塊地墊站很多小朋友。', tilesPic(3, 2, '🟫')(6), '鋪了 6 大塊。', `<div class="eq5">${K(6, C1)} 大塊（每邊 ${K('1 公尺', C2)}）</div>`, '寫成數字。'),
-    kid: '每邊 1 公尺的大方格，一格的大小', term: '平方公尺', pick: [['1 平方公尺和 1 平方公分一樣大。', '1 平方公尺是每邊 1 公尺的正方形那麼大，比 1 平方公分大很多。', '1 平方公尺是一條 1 公尺的線。'], 1, '想想大地墊。'],
-    pose: pose('change', '同一間教室，改用平方公分來量，數字會變大還是變小？', ['變大', '變小'], 0, '小方格要鋪更多格。', '對了！'),
-    check: ucheck('教室地板要用哪一個來量？', () => '<div class="u-big">🏫</div>', ['平方公分', '平方公尺'], 1, '回到鋪大地墊那一步。', '對了！') })],
-  time: [UL('sec', '秒', 'raccoon', { hook: '拍一下手很快，你會拍吧？', hookPic: () => '<div class="u-big">👏</div>',
-    rounds: lessonCnt([3, 5, 10], n => tapDraw(k => `<div class="pics5">${'👏'.repeat(k)}</div>`, '跟著拍手'), k => `拍了 ${k} 下`, n => `拍了 ${n} 下。`, ['看我做：滴、滴、滴，每響一聲拍一下。', '一起做：拍 5 下。', '換你做：拍 10 下。'], ['先猜：拍 10 下，比拍 5 下久嗎？', ['久', '一樣'], 0]),
-    fade: step3('<div class="u-big">👏</div>', '拍一下手。', '<div class="u-big">⏱️</div>', '碼表上最細的針走一小格。', `<div class="eq5">拍 ${K(1, C1)} 下 ＝ 細針走 ${K(1, C1)} 小格</div>`, '對起來。'),
-    kid: '拍一下手那麼短的時間', term: '秒', pick: [['1 秒很長，像一節課。', '1 秒大約是拍一下手。', '1 秒是一天。'], 1, '想想拍手。'],
-    pose: pose('story', '哪一個用「秒」來說最合適？', ['跑 50 公尺要多久', '暑假有多久', '睡覺要多久'], 0, '很短的時間。', '對了！'),
-    check: ucheck('好好洗手大約要多久？', () => '<div class="u-big">🧼</div>', ['30 秒', '30 天'], 0, '回到拍手那一步：拍 30 下。', '對了！') }),
-    UL('min', '分鐘', 'raccoon', { hook: '拍手很快。泡麵要等好久，拍手要拍好多下。', hookPic: () => '<div class="u-big">🍜</div>',
-    rounds: lessonCnt([3, 6, 9], n => tapDraw(k => `<div class="pics5">${'🔟'.repeat(k * 2)}</div><small>每個 🔟 是 10 秒</small>`, '點一下過 20 秒'), k => `過了 ${k * 20} 秒`, n => `過了 ${n * 20} 秒。`, ['看我做：一次過 20 秒，到 60 秒。', '一起做：到 120 秒。', '換你做：到 180 秒。'], ['先猜：180 秒是幾個 60 秒？', ['3 個', '18 個'], 0]),
-    fade: step3('<div class="u-big">🍜</div>', '泡麵要等。', '<div class="u-big">⏱️</div>', '碼表上細針走一圈。', `<div class="eq5">${K(60, C1)} 秒 ＝ 細針走 ${K('一圈', C2)}</div>`, '對起來。'),
-    kid: '60 秒那麼長（細針走一整圈）', term: '分鐘', pick: [['1 分鐘是 100 秒。', '1 分鐘是 60 秒。', '1 分鐘是 10 秒。'], 1, '想想細針走一圈。'],
-    pose: pose('change', '泡麵要 3 分鐘，改成 2 分鐘，要等的秒數會少多少？', ['少 60 秒', '少 1 秒'], 0, '1 分鐘是 60 秒。', '對了！'),
-    check: ucheck('120 秒是幾分鐘？', () => '<div class="u-big">⏱️</div>', ['1 分鐘', '2 分鐘', '12 分鐘'], 1, '回到一次過 20 秒那一步：60 秒一個。', '對了！') }),
-    UL('hr', '小時', 'raccoon', { hook: '一節課 40 分鐘，你上過吧？看電影比一節課還久。', hookPic: () => '<div class="u-big">🎬</div>',
-    rounds: lessonCnt([4, 4, 8], n => tapDraw(k => `<div class="vs">${clockSvg(0, k * 3 % 12)}</div>`, '點一下過 15 分鐘'), k => `過了 ${k * 15} 分鐘`, n => `過了 ${n * 15} 分鐘。`, ['看我做：長針一次走 15 分鐘，走一圈。', '一起做：再走一圈。', '換你做：走兩圈。'], ['先猜：長針走兩圈是幾分鐘？', ['60', '120'], 1]),
-    fade: step3('<div class="u-big">🎬</div>', '看電影。', `<div class="vs">${clockSvg(0, 0)}</div>`, '時鐘長針走一圈。', `<div class="eq5">${K(60, C1)} 分鐘 ＝ 長針走 ${K('一圈', C2)}</div>`, '對起來。'),
-    kid: '60 分鐘那麼長（長針走一整圈）', term: '小時', pick: [['1 小時是 100 分鐘。', '1 小時是 60 分鐘。', '1 小時是 60 秒。'], 1, '想想長針走一圈。'],
-    pose: pose('can', '小明看完電影是幾點？這題能回答嗎？', ['能', '不能，缺開始的時間和電影多長'], 1, '要知道從幾點開始。', '對了！'),
-    check: ucheck('一部電影大約要多久？', () => '<div class="u-big">🎬</div>', ['2 秒', '2 分鐘', '2 小時'], 2, '回到走長針那一步：電影很長。', '對了！') }),
-    UL('day', '日', 'raccoon', { hook: '早上起床、中午吃飯、晚上睡覺，你每天都經過。', hookPic: () => '<div class="u-big">🌅🌞🌙</div>',
-    rounds: lessonCnt([4, 4, 8], n => tapDraw(k => `<div class="pics5">${['🌅', '🌞', '🌇', '🌙'].concat(['🌅', '🌞', '🌇', '🌙']).slice(0, k).join('')}</div>`, '點一下過 6 小時'), k => `過了 ${k * 6} 小時`, n => `過了 ${n * 6} 小時。`, ['看我做：一次過 6 小時，從早上回到早上。', '一起做：再過一輪。', '換你做：過兩輪。'], ['先猜：兩輪是幾小時？', ['24', '48'], 1]),
-    fade: step3('<div class="u-big">🌅🌞🌙</div>', '早上→中午→晚上→又是早上。', dayBar(1439, 0), '一條 24 格的長條。', `<div class="eq5">${K(24, C1)} 小時 ＝ 太陽回到${K('同一個地方', C2)}</div>`, '對起來。'),
-    kid: '24 小時那麼長（從今天早上到明天早上）', term: '日', pick: [['1 日是 12 小時。', '1 日是 24 小時。', '1 日是 60 分鐘。'], 1, '想想早上到早上。'],
-    pose: pose('story', '哪一個用「日」來說最合適？', ['暑假有多長', '拍手要多久', '跑一圈要多久'], 0, '很長的時間。', '對了！'),
-    check: ucheck('48 小時是幾日？', () => '<div class="u-big">📅</div>', ['2 日', '4 日', '24 日'], 0, '回到過 6 小時那一步：24 小時一輪。', '對了！') })],
-  land: [UL('are', '公畝', 'seal', { hook: '平方公尺你會了：一塊地墊每邊 1 公尺。蓋公園，地墊要鋪好多。', hookPic: () => '<div class="u-big">🏞️</div>',
-    rounds: lessonCnt([2, 4, 6], n => tapDraw(k => mapSvg(3, 2, k), '點一下鋪一塊（每邊 10 公尺）'), k => `鋪了 ${k} 塊`, n => `鋪了 ${n} 塊大地毯。`, ['看我做：每邊 10 公尺的大地毯，一塊是 100 平方公尺。', '一起做：鋪 4 塊。', '換你做：鋪 6 塊。'], ['先猜：6 塊是幾平方公尺？', ['60', '600'], 1]),
-    fade: step3('<div class="u-big">🏞️</div>', '小公園。', mapSvg(3, 2, 6), '一格是每邊 10 公尺。', `<div class="eq5">10×10＝${K(100, C1)} 平方公尺 一塊　${K(6, C2)} 塊</div>`, '寫成數字。'),
-    kid: '每邊 10 公尺的正方形，100 平方公尺那麼大', term: '公畝', pick: [['1 公畝是 10 平方公尺。', '1 公畝是 100 平方公尺。', '1 公畝是 1 平方公尺。'], 1, '10×10。'],
-    pose: pose('change', '公園改成 8 塊大地毯，是幾平方公尺？', ['80', '800'], 1, '一塊 100。', '對了！'),
-    check: ucheck('一塊菜園長 20 公尺、寬 10 公尺，是幾公畝？', () => mapSvg(2, 1, 2), ['2 公畝', '20 公畝', '200 公畝'], 0, '回到鋪大地毯那一步：每塊每邊 10 公尺。', '對了！') }),
-    UL('ha', '公頃', 'seal', { hook: '一塊大地毯是 1 公畝。大農場，要鋪好幾排。', hookPic: () => mapSvg(10, 1, 10),
-    rounds: lessonCnt([3, 6, 10], n => tapDraw(k => mapSvg(10, 10, k * 10), '點一下鋪一排（10 公畝）'), k => `鋪了 ${k * 10} 公畝`, n => `鋪了 ${n * 10} 公畝。`, ['看我做：一次鋪一排 10 公畝。', '一起做：鋪 6 排。', '換你做：鋪滿 10 排。'], ['先猜：鋪滿是幾公畝？', ['10', '100'], 1]),
-    fade: step3('<div class="u-big">🚜</div>', '大農場。', mapSvg(10, 10, 100), '每邊 100 公尺，鋪滿 100 塊。', `<div class="eq5">${K(100, C1)} 公畝 ＝ 每邊 ${K('100 公尺', C2)}</div>`, '寫成數字。'),
-    kid: '100 公畝（每邊 100 公尺的正方形）那麼大', term: '公頃', pick: [['1 公頃是 10 公畝。', '1 公頃是 100 公畝。', '1 公頃比 1 公畝小。'], 1, '數排數。'],
-    pose: pose('story', '哪一個用「公頃」來說最合適？', ['一座學校的校地有多大', '一張桌子有多大', '一張郵票有多大'], 0, '很大的地。', '對了！'),
-    check: ucheck('一座足球場大約多大？', () => '<div class="u-big">⚽</div>', ['1 公畝', '1 公頃', '1 平方公尺'], 1, '回到鋪 10 排那一步：每邊 100 公尺。', '對了！') }),
-    UL('km2', '平方公里', 'seal', { hook: '1 公頃是每邊 100 公尺。一整個鄉鎮呢？', hookPic: () => '<div class="u-big">🏙️</div>',
-    rounds: lessonCnt([3, 6, 10], n => tapDraw(k => mapSvg(10, 10, k * 10, '', { c: '#a9d0f0' }), '點一下鋪一排（10 公頃）'), k => `鋪了 ${k * 10} 公頃`, n => `鋪了 ${n * 10} 公頃。`, ['看我做：一次鋪一排 10 公頃。', '一起做：鋪 6 排。', '換你做：鋪滿。'], ['先猜：每邊幾公尺？', ['100 公尺', '1000 公尺'], 1]),
-    fade: step3('<div class="u-big">🏙️</div>', '一個鄉鎮。', mapSvg(10, 10, 100, '', { c: '#a9d0f0' }), '每邊 1 公里。', `<div class="eq5">${K(100, C1)} 公頃 ＝ 每邊 ${K('1 公里', C2)}</div>`, '寫成數字。'),
-    kid: '100 公頃（每邊 1 公里的正方形）那麼大', term: '平方公里', pick: [['1 平方公里是 10 公頃。', '1 平方公里是 100 公頃。', '1 平方公里是 1 公里。'], 1, '數排數。'],
-    pose: pose('can', '一座城有多大？只知道它長 2 公里，能算嗎？', ['能', '不能，缺寬'], 1, '面積要長和寬。', '對了！'),
-    check: ucheck('月球城的目標 1 平方公里，是幾公頃？', () => '<div class="u-big">🌕</div>', ['10', '100', '1000'], 1, '回到鋪排那一步。', '對了！') })],
-  ton: [UL('ton', '公噸', 'turtle', { hook: '你大約 40 公斤，用公斤秤你會。大象呢？', hookPic: () => '<div class="u-big">🐘</div>',
-    rounds: lessonCnt([5, 5, 5], n => tapDraw(k => `<div class="pics5">${'🛍️'.repeat(k)}</div><div class="u-count"><b class="num">${k * 200}</b> 公斤</div>`, '點一下放 200 公斤'), k => `${k * 200} 公斤`, n => '到 1000 公斤了。', ['看我做：一包 200 公斤，放到 1000 公斤。', '一起做：再秤一次。', '換你做：再放到 1000。'], ['先猜：5 包是幾公斤？', ['1000', '500'], 0]),
-    fade: step3('<div class="u-big">🐘</div>', '大象很重。', `<div class="pics5">${'🛍️'.repeat(5)}</div>`, '5 包 200 公斤。', `<div class="eq5">${K(1000, C1)} 公斤</div>`, '數字太長，要一個新名字。'),
-    kid: '1000 公斤那麼重', term: '公噸', pick: [['1 公噸是 100 公斤。', '1 公噸是 1000 公斤。', '1 公噸比 1 公斤輕。'], 1, '數沙包。'],
-    pose: pose('story', '哪一個用「公噸」來說最合適？', ['一輛砂石車多重', '一顆蘋果多重', '一本書多重'], 0, '很重的東西。', '對了！'),
-    check: ucheck('大象 5000 公斤，是幾公噸？', () => '<div class="u-big">🐘</div>', ['5', '50', '500'], 0, '回到放沙包那一步：1000 一堆。', '對了！') })],
-  cap: [UL('ml', '毫升', 'otter', { hook: '每邊 1 公分的小方塊，你會：1 立方公分。', hookPic: () => '<div class="u-big">🎲</div>',
-    rounds: lessonCnt([2, 3, 5], n => tapDraw(k => `<div class="pics5">${'💧'.repeat(k * 5)}</div>`, '點一下倒 5 小格的水'), k => `倒了 ${k * 5} 小格的水`, n => `倒了 ${n * 5} 小格。`, ['看我做：把水倒進每邊 1 公分的小格子，一次 5 格。', '一起做：倒 15 格。', '換你做：倒 25 格。'], ['先猜：一湯匙藥水大約幾小格？', ['5', '500'], 0]),
-    fade: step3('<div class="u-big">🥄</div>', '一湯匙藥水。', '<div class="pics5">💧💧💧💧💧</div>', '5 小格的水。', `<div class="eq5">1 小格水 ＝ ${K('1 立方公分', C1)} 那麼多</div>`, '對起來。'),
-    kid: '1 立方公分那麼多的水', term: '毫升', pick: [['1 毫升是一大杯水。', '1 毫升是 1 立方公分那麼多的水。', '1 毫升是 1 公分。'], 1, '想想小方塊。'],
-    pose: pose('change', '一杯飲料 500 毫升，倒掉一半，還剩幾毫升？', ['250', '50'], 0, '一半。', '對了！'),
-    check: ucheck('一包鋁箔包飲料大約多少？', () => '<div class="u-big">🧃</div>', ['250 毫升', '250 公升'], 0, '回到倒小格那一步。', '對了！') }),
-    UL('l', '公升', 'otter', { hook: '1 毫升是 1 小格那麼多水。一大瓶水，要數好多小格。', hookPic: () => '<div class="u-big">🍼</div>',
-    rounds: lessonCnt([5, 5, 5], n => tapDraw(k => tankSvg(k / 5), '點一下倒 200 毫升'), k => `倒了 ${k * 200} 毫升`, n => '每邊 10 公分的方盒倒滿了。', ['看我做：每邊 10 公分的方盒，一次倒 200 毫升。', '一起做：再倒滿一次。', '換你做：倒滿。'], ['先猜：倒滿是幾毫升？', ['100', '1000'], 1]),
-    fade: step3('<div class="u-big">🍼</div>', '一大瓶牛奶。', tankSvg(1), '每邊 10 公分的方盒倒滿。', `<div class="eq5">10×10×10＝${K(1000, C1)} 毫升</div>`, '寫成數字。'),
-    kid: '1000 毫升那麼多（每邊 10 公分的方盒裝滿）', term: '公升', pick: [['1 公升是 100 毫升。', '1 公升是 1000 毫升。', '1 公升比 1 毫升少。'], 1, '數倒了幾次。'],
-    pose: pose('can', '水壺能裝幾公升？只知道它是藍色的，能回答嗎？', ['能', '不能，缺大小'], 1, '顏色不決定能裝多少。', '對了！'),
-    check: ucheck('一瓶 2 公升的牛奶，是幾毫升？', () => '<div class="u-big">🍼</div>', ['20', '200', '2000'], 2, '回到倒方盒那一步：1000 毫升一次。', '對了！') })],
-  m3: [UL('cm3', '立方公分', 'octopus', { hook: '每邊 1 公分的小方格鋪平面，你會了。堆高起來呢？', hookPic: () => '<div class="u-big">🎲</div>',
-    rounds: lessonCnt([4, 6, 8], n => tapDraw(k => isoSvg(2, 2, 2, k), '點一下放一顆小骰子'), k => `放了 ${k} 顆`, n => `堆了 ${n} 顆。`, ['看我做：每邊 1 公分的小骰子，一顆一顆堆。', '一起做：堆 6 顆。', '換你做：堆 8 顆。'], ['先猜：2 層、每層 4 顆，共幾顆？', ['6', '8'], 1]),
-    fade: step3('<div class="u-big">🎲</div>', '小骰子。', isoSvg(2, 2, 2), '堆成 8 顆的方塊。', `<div class="eq5">${K(8, C1)} 顆小骰子（每邊 ${K('1 公分', C2)}）</div>`, '寫成數字。'),
-    kid: '每邊 1 公分的小方塊那麼大', term: '立方公分', pick: [['1 立方公分是一張紙。', '1 立方公分是每邊 1 公分的小方塊那麼大。', '1 立方公分和 1 平方公分一樣。'], 1, '想想骰子。'],
-    pose: pose('story', '哪一個用「立方公分」來說最合適？', ['一塊橡皮擦有多大', '一間教室有多大', '操場有多大'], 0, '小東西。', '對了！'),
-    check: ucheck('一塊方塊堆了 12 顆小骰子，它多大？', () => isoSvg(3, 2, 2), ['12 立方公分', '12 公分', '12 平方公分'], 0, '回到堆骰子那一步。', '對了！') }),
-    UL('m3', '立方公尺', 'octopus', { hook: '小骰子堆貨櫃要堆好久。', hookPic: () => '<div class="u-big">🚢</div>',
-    rounds: lessonCnt([3, 3, 3], n => tapDraw(k => labPic({ view: 'frame', each: 1 }, k * 4), '點一下搭 4 根棍子（每根 1 公尺）'), k => `搭了 ${k * 4} 根`, n => '12 根搭成一個大方框。', ['看我做：用 1 公尺長的棍子搭框。', '一起做：再搭一個。', '換你做：搭一個。'], ['先猜：要幾根棍子？', ['8', '12'], 1]),
-    fade: step3('<div class="u-big">🧊</div>', '大冰箱那麼大。', labPic({ view: 'frame', each: 1 }, 12), '每邊 1 公尺的大方框。', `<div class="eq5">每邊 ${K('1 公尺', C1)} 的大方塊</div>`, '寫成數字。'),
-    kid: '每邊 1 公尺的大方塊那麼大', term: '立方公尺', pick: [['1 立方公尺和小骰子一樣大。', '1 立方公尺是每邊 1 公尺的大方塊那麼大。', '1 立方公尺是一條線。'], 1, '想想大方框。'],
-    pose: pose('change', '大方框每邊改成 1 公分，它還是 1 立方公尺嗎？', ['是', '不是，變成 1 立方公分'], 1, '邊長變了。', '對了！'),
-    check: ucheck('一個大貨櫃要用哪一個來量？', () => '<div class="u-big">🚢</div>', ['立方公分', '立方公尺'], 1, '回到搭大方框那一步。', '對了！') })],
+  deg: [UL('deg', '度', 'goat', { hook: '先看一個直角：書本的角，或是門扇打開到和關閉的位置成直角。', hookPic: () => protractor(90, { knob: 90 }),
+    rounds: lessonCnt([2, 3, 6], n => tapDraw(turnPic, '點量角器，轉 30 小格'), k => `轉了 ${30 * k} 小格`, n => `轉了 ${30 * n} 小格。`, ['看我做：一整圈平均分成 360 小格，量角器是半圈，有 180 小格。我一次轉 30 小格。', '一起做：轉到和書本的角一樣大。', '換你做：轉到兩邊成一條直線。'], ['先預測：成一條直線是幾小格？', ['90', '180', '360'], 1], '每點一下轉 30 小格。看藍色的邊轉到量角器上的哪個數。'),
+    fade: step3('<div class="u-big">🚪</div>', '門扇和關閉的位置成直角。', protractor(90, { knob: 90 }), '量角器上轉 90 小格。', `<div class="eq5">一圈 ${K(360, C1)} 份，1 份是 1　直角 ${K(90, C2)} 份</div>`, '寫成數字。'),
+    nameSay: `把一整圈平均分成 360 份，每一份的角是 1 ${T('度')}。直角是 90 度，平角是 180 度。`, pick: [['一圈是 100 度。', '一圈是 360 度，直角是 90 度。', '直角是 180 度。'], 1, ['一圈是平均分成 360 份，不是 100 份。', '', '180 度是平角（一條直線），直角是它的一半。']],
+    pose: pose('story', '哪一個問題要用角的大小來回答？', ['門扇打開了多大？', '門有多高？', '門多重？'], 0, ['', '高是長度，不是角的大小。', '重是重量，不是角的大小。'], '對了！問的是張開多大。'),
+    check: ucheck('3 點整時，時針和分針所夾的較小的角是幾度？', () => clock2(3, 0), ['30 度', '90 度', '180 度'], 1, '回到轉量角器那一步：鐘面一圈 12 大格，1 大格是 30 度。', '對了，兩針差 3 大格：3×30＝90 度，是直角。', ['30 度只有 1 大格；3 點時兩針差 3 大格。', '', '180 度是兩針成一直線，像 6 點整。']) })],
+  m2: [UL('cm2', '平方公分', 'sheep', { hook: '兩張卡片哪一張比較大？可以疊在一起比，也可以數一數能鋪幾個一樣大的小方格。', hookPic: () => '<div class="u-big">🧽📒</div>',
+    rounds: lessonCnt([4, 6, 9], n => tapDraw(tilesPic(n === 4 ? 2 : 3, n === 9 ? 3 : 2, '🟩'), '點一下鋪一小格（邊長 1 公分）'), k => `鋪了 ${k} 小格`, n => `鋪滿 ${n} 小格，沒有重疊、沒有空隙。`, ['看我做：用邊長 1 公分的小方格，把橡皮擦的一面鋪滿。', '一起做：便條紙的一面。', '換你做：一張小貼紙。'], ['先預測：3 排、每排 3 格，共幾格？', ['6', '9'], 1], '一格一格鋪，不重疊、不留空隙。數一數一共鋪了幾格。'),
+    fade: step3('<div class="u-big">🧽</div>', '橡皮擦的一面。', tilesPic(3, 2, '🟩')(6), '鋪滿 6 小格。', `<div class="eq5">${K(6, C3)} 個小方格（邊長 ${K('1 公分', C1)}）</div>`, '寫成數字。'),
+    nameSay: `邊長 1 公分的正方形，面積是 1 ${T('平方公分')}。橡皮擦這一面鋪滿 6 格，就是 6 平方公分。`, pick: [['1 平方公分是一條 1 公分的線。', '1 平方公分是邊長 1 公分的正方形那麼大。', '1 平方公分和一張桌子一樣大。'], 1, ['1 公分是長度；平方公分量的是一片面有多大。', '', '桌面要鋪很多很多小方格。']],
+    pose: pose('can', '一張長方形卡片長 8 公分，面積是多少？', ['夠', '不夠，還要知道寬'], 1, ['只知道一邊，不知道要鋪幾排。', ''], '對了！長和寬都知道，才知道鋪幾格。'),
+    check: ucheck('一張郵票剛好鋪滿 4 個邊長 1 公分的小方格，沒有重疊、沒有空隙。它的面積是多少？', () => tilesPic(2, 2, '🟩')(4), ['4 公分', '4 平方公分', '2 平方公分'], 1, '回到鋪小方格那一步：鋪了幾格？每格多大？', '對了，鋪了 4 格，每格 1 平方公分：4 平方公分。', ['公分是長度單位；面積要用平方公分。', '', '2 是一邊的格數；共有 2×2＝4 格。']) }),
+    UL('m2', '平方公尺', 'sheep', { hook: '小東西用邊長 1 公分的小方格鋪。教室地板如果用小方格，要鋪非常多格。', hookPic: () => '<div class="u-big">🏫</div>',
+    rounds: lessonCnt([2, 4, 6], n => tapDraw(tilesPic(n === 2 ? 2 : n === 4 ? 2 : 3, n === 2 ? 1 : 2, '🟫'), '點一下鋪一大塊（邊長 1 公尺）'), k => `鋪了 ${k} 大塊`, n => `鋪了 ${n} 大塊。`, ['看我做：用邊長 1 公尺的大地墊鋪地板。', '一起做：鋪走廊。', '換你做：鋪舞台。'], ['先預測：邊長 1 公尺的大地墊，一邊可以排幾個 1 公分？', ['10 個', '100 個'], 1], '一大塊一大塊鋪，數一數鋪了幾塊。'),
+    fade: step3(`<svg class="g5" style="max-height:130px" viewBox="0 0 200 150"><rect x="50" y="20" width="100" height="100" fill="#e8d3b0" stroke="#7a5b2e" stroke-width="3" stroke-dasharray="8 5"/><text x="100" y="140" text-anchor="middle" class="ax">1 公尺</text><text x="165" y="75" class="ax">1 公尺</text></svg>`, '在地上用膠帶圍出邊長 1 公尺的正方形，看看它占多大的地面。', tilesPic(3, 2, '🟫')(6), '舞台鋪了 6 大塊。', `<div class="eq5">${K(6, C1)} 大塊（邊長 ${K('1 公尺', C2)}）</div>`, '寫成數字。'),
+    nameSay: `邊長 1 公尺的正方形，面積是 1 ${T('平方公尺')}。<br>一邊排得下 100 個 1 公分，所以 1 平方公尺＝100×100＝10000 平方公分。`, pick: [['1 平方公尺和 1 平方公分一樣大。', '1 平方公尺是邊長 1 公尺的正方形那麼大，等於 10000 平方公分。', '1 平方公尺是一條 1 公尺的線。'], 1, ['大地墊一邊就排得下 100 個 1 公分，差很多。', '', '1 公尺是長度；平方公尺量的是一片面有多大。']],
+    pose: pose('change', '同一間教室，改用平方公分來量，數字會變大還是變小？', ['變大', '變小'], 0, ['', '小方格比較小，要鋪更多格，數字會變大。'], '對了！單位越小，要的格數越多。'),
+    check: ucheck('邊長 1 公尺的正方形，面積是多少平方公分？', () => '<div class="u-big">🟫</div>', ['100', '1000', '10000'], 2, '回到大地墊那一步：一邊排 100 個 1 公分，要排幾排？', '對了，100 排、每排 100 格：100×100＝10000 平方公分。', ['100 只是一排；要排 100 排。', '1000 少了一個 0：100×100 是 10000。', '']) })],
+  time: [UL('sec', '秒', 'raccoon', { hook: '跟著「滴、滴、滴」的節拍拍手，每一聲之間的時間都一樣長。', hookPic: () => '<div class="u-big">👏</div>',
+    rounds: lessonCnt([3, 5, 10], n => tapDraw(k => `<div class="pics5">${'👏'.repeat(k)}</div>`, '跟著節拍拍手'), k => `拍了 ${k} 下`, n => `拍了 ${n} 下，每兩下之間一樣長。`, ['看我做：滴、滴、滴，每響一聲拍一下。', '一起做：拍 5 下。', '換你做：拍 10 下，盡量跟上一樣的節拍。'], ['先預測：拍 10 下，比拍 5 下久嗎？', ['久', '一樣'], 0], '跟著一樣的節拍，一下一下點。').map(r => ({ ...r, p: { ...r.p, ms: 1000 } })),
+    fade: step3('<div class="u-big">👏</div>', '跟著節拍拍一下手。', secDial(1), '碼表上，最細的那根針走一小格。', `<div class="eq5">相鄰兩聲 ＝ 最細的針走 ${K(1, C1)} 小格</div>`, '對起來。'),
+    nameSay: `跟著每秒一次的節拍拍手，相鄰兩聲之間的時間是 1 ${T('秒')}。`, pick: [['1 秒很長，像一節課。', '1 秒大約是跟著節拍拍一下手的時間。', '1 秒是一天。'], 1, ['一節課有很多很多秒。', '', '一天有 86400 秒。']],
+    pose: pose('story', '哪一個用「秒」來說最合適？', ['跑 50 公尺要多久', '暑假有多久', '睡覺要多久'], 0, ['', '暑假很長，用秒說數字太大。', '睡覺好幾個小時，用秒說數字太大。'], '對了！很短的時間用秒。'),
+    check: ucheck('好好洗手大約要多久？', () => '<div class="u-big">🧼</div>', ['30 秒', '30 天'], 0, '回到拍手那一步：大約拍 30 下的時間。', '對了，洗手大約 30 秒。', ['', '30 天是一個月左右，太長了。']) }),
+    UL('min', '分鐘', 'raccoon', { hook: '泡一碗泡麵要等一段時間，用秒來數會數很多下。', hookPic: () => '<div class="u-big">🍜</div>',
+    rounds: lessonCnt([3, 6, 9], n => tapDraw(k => secDial(k * 20), '點一下，秒針前進 20 秒（圖上快轉，不用真的等）'), k => `過了 ${k * 20} 秒`, n => `過了 ${n * 20} 秒，秒針走了 ${n * 20 / 60} 圈。`, ['看我做：圖上一次快轉 20 秒，到 60 秒。', '一起做：到 120 秒。', '換你做：到 180 秒。'], ['先預測：180 秒是秒針走幾圈？', ['3 圈', '18 圈'], 0], '每點一下，秒針前進 20 秒。看秒針走一整圈是幾秒。'),
+    fade: step3('<div class="u-big">🍜</div>', '泡麵要等。', secDial(60), '秒針走一整圈。', `<div class="eq5">${K(60, C1)} 秒 ＝ 秒針走 ${K('一圈', C2)}</div>`, '對起來。'),
+    nameSay: `秒針走一整圈是 60 秒，叫作 1 ${T('分鐘')}。1 分鐘＝60 秒。`, pick: [['1 分鐘是 100 秒。', '1 分鐘是 60 秒。', '1 分鐘是 10 秒。'], 1, ['時間不是滿 100 才進一位；秒針一圈是 60 秒。', '', '10 秒只走了一圈的 1/6。']],
+    pose: pose('change', '泡麵要 3 分鐘，改成 2 分鐘，要等的秒數會少多少？', ['少 60 秒', '少 1 秒'], 0, ['', '少的是 1 分鐘，1 分鐘是 60 秒。'], '對了！少 1 分鐘，就是少 60 秒。'),
+    check: ucheck('120 秒是幾分鐘？', () => secDial(0), ['1 分鐘', '2 分鐘', '12 分鐘'], 1, '回到快轉秒針那一步：60 秒走一圈。', '對了，120 秒是秒針走 2 圈：2 分鐘。', ['60 秒才 1 分鐘，120 秒是 2 個 60 秒。', '', '12 是把 120 去掉一個 0；時間要用 60 秒一圈來算。']) }),
+    UL('hr', '小時', 'raccoon', { hook: '一節課大約 40 分鐘；看一部電影比一節課久很多。', hookPic: () => '<div class="u-big">🎬</div>',
+    rounds: lessonCnt([4, 4, 8], n => tapDraw(k => `<div class="vs">${clock2(2, k * 15)}</div>`, '點一下，分針（藍色長針）走 15 分鐘'), k => `過了 ${k * 15} 分鐘`, n => `過了 ${n * 15} 分鐘，分針走了 ${n / 4} 圈。`, ['看我做：從 2 點開始，分針一次走 15 分鐘，走一圈。', '一起做：再從 2 點走一圈。', '換你做：走兩圈。'], ['先預測：分針走兩圈是幾分鐘？', ['60', '120'], 1], '每點一下，藍色的分針走 15 分鐘。看分針走一整圈是幾分鐘，紅色的時針走了多少。'),
+    fade: step3('<div class="u-big">🎬</div>', '看電影。', `<div class="vs">${clock2(2, 0)}${clock2(3, 0)}</div>`, '從 2 點到 3 點：分針走一整圈，時針走一大格。', `<div class="eq5">${K(60, C1)} 分鐘 ＝ 分針走 ${K('一圈', C2)}</div>`, '對起來。'),
+    nameSay: `分針走一整圈是 60 分鐘，叫作 1 ${T('小時')}。1 小時＝60 分鐘。`, pick: [['1 小時是 100 分鐘。', '1 小時是 60 分鐘。', '1 小時是 60 秒。'], 1, ['時間不是滿 100 才進一位；分針一圈是 60 分鐘。', '', '60 秒是 1 分鐘。']],
+    pose: pose('can', '小明看完電影是幾點？', ['夠', '不夠，還要知道開始的時間和電影多長'], 1, ['只知道去看電影，不知道從幾點開始、演多久。', ''], '對了！要知道從幾點開始、演多久。'),
+    check: ucheck('一部電影大約要多久？', () => '<div class="u-big">🎬</div>', ['2 秒', '2 分鐘', '2 小時'], 2, '回到走分針那一步：一節課 40 分鐘，電影比一節課久很多。', '對了，電影大約 2 小時。', ['2 秒只夠拍兩下手。', '2 分鐘比泡麵還短。', '']) }),
+    UL('day', '日', 'raccoon', { hook: '早上起床、中午吃飯、晚上睡覺，又到早上。', hookPic: () => '<div class="u-big">🌅🌞🌙</div>',
+    rounds: lessonCnt([4, 4, 8], n => tapDraw(dayPic, '點一下，時間過 6 小時'), k => `過了 ${k * 6} 小時`, n => `過了 ${n * 6} 小時。`, ['看我做：從上午 8 點開始，一次過 6 小時，回到上午 8 點。', '一起做：再過一輪。', '換你做：過兩輪。'], ['先預測：兩輪是幾小時？', ['24', '48'], 1], '每點一下過 6 小時。看回到上午 8 點時，一共過了幾小時。'),
+    fade: step3('<div class="u-big">🌅🌞🌙</div>', '上午 8 點 → 下午 2 點 → 晚上 8 點 → 凌晨 2 點 → 隔天上午 8 點。', dayBar(480, 480), '畫成一條 24 格的長條，從 8 點走一圈回到 8 點。', `<div class="eq5">${K(24, C1)} 小時 ＝ 從今天上午 8 點到明天上午 8 點</div>`, '對起來。'),
+    nameSay: `24 小時叫作 1 ${T('日')}，例如從今天上午 8 點到明天上午 8 點。`, pick: [['1 日是 12 小時。', '1 日是 24 小時。', '1 日是 60 分鐘。'], 1, ['12 小時只到晚上 8 點，還沒回到隔天上午 8 點。', '', '60 分鐘是 1 小時。']],
+    pose: pose('story', '哪一個用「日」來說最合適？', ['暑假有多長', '拍手要多久', '跑一圈操場要多久'], 0, ['', '拍手很短，用秒。', '跑一圈幾分鐘，用分鐘。'], '對了！很長的時間用日。'),
+    check: ucheck('48 小時是幾日？', () => '<div class="u-big">📅</div>', ['2 日', '4 日', '24 日'], 0, '回到過 6 小時那一步：24 小時一輪。', '對了，48 小時是 2 個 24 小時：2 日。', ['', '4 日是 96 小時。', '24 是 1 日的小時數。']) })],
+  land: [UL('are', '公畝', 'seal', { hook: '平方公尺你已經認識：邊長 1 公尺的正方形。蓋公園時，1 平方公尺的地墊要鋪非常多塊。', hookPic: () => '<div class="u-big">🏞️</div>',
+    rounds: lessonCnt([2, 4, 6], n => tapDraw(k => mapSvg(3, 2, k), '點一下鋪一塊（邊長 10 公尺）'), k => `鋪了 ${k} 塊`, n => `鋪了 ${n} 塊大地毯，每塊 100 平方公尺。`, ['看我做：邊長 10 公尺的大地毯，一塊是 10×10＝100 平方公尺。', '一起做：鋪 4 塊。', '換你做：鋪 6 塊。'], ['先預測：6 塊是幾平方公尺？', ['60', '600'], 1], '每塊大地毯是 10×10＝100 平方公尺。數一數鋪了幾塊。'),
+    fade: step3('<div class="u-big">🏞️</div>', '小公園。', mapSvg(3, 2, 6), '一格是邊長 10 公尺的正方形。', `<div class="eq5">10×10＝${K(100, C1)} 平方公尺 一塊　${K(6, C2)} 塊</div>`, '寫成數字。'),
+    nameSay: `邊長 10 公尺的正方形，面積是 100 平方公尺，也就是 1 ${T('公畝')}。`, pick: [['1 公畝是 10 平方公尺。', '1 公畝是 100 平方公尺。', '1 公畝是 1 平方公尺。'], 1, ['邊長 10 公尺，面積是 10×10，不是 10。', '', '1 平方公尺是邊長 1 公尺；這塊邊長 10 公尺。']],
+    pose: pose('change', '公園改成鋪 8 塊大地毯，是幾平方公尺？', ['80', '800'], 1, ['一塊是 100 平方公尺，不是 10。', ''], '對了！8×100＝800 平方公尺。'),
+    check: ucheck('一塊菜園長 20 公尺、寬 10 公尺，是幾公畝？', () => mapSvg(2, 1, 2), ['2 公畝', '20 公畝', '200 公畝'], 0, '回到鋪大地毯那一步：每塊邊長 10 公尺，這塊要鋪幾塊？', '對了，20×10＝200 平方公尺，是 2 個 100 平方公尺：2 公畝。', ['', '20 是長度；面積是 200 平方公尺，是 2 公畝。', '200 是平方公尺的數；1 公畝是 100 平方公尺。']) }),
+    UL('ha', '公頃', 'seal', { hook: '一塊邊長 10 公尺的大地毯是 1 公畝。大農場，要鋪好幾排。', hookPic: () => mapSvg(10, 1, 10),
+    rounds: lessonCnt([3, 6, 10], n => tapDraw(k => mapSvg(10, 10, k * 10), '點一下鋪一排（10 公畝）'), k => `鋪了 ${k * 10} 公畝`, n => `鋪了 ${n * 10} 公畝。`, ['看我做：一次鋪一排 10 公畝。', '一起做：鋪 6 排。', '換你做：鋪滿 10 排。'], ['先預測：鋪滿是幾公畝？', ['10', '100'], 1], '每點一下鋪一排 10 塊（10 公畝）。數排數。'),
+    fade: step3('<div class="u-big">🚜</div>', '大農場。', mapSvg(10, 10, 100), '邊長 100 公尺的正方形，鋪滿 100 塊。', `<div class="eq5">${K(100, C1)} 公畝 ＝ 100×100＝${K('10000 平方公尺', C2)}</div>`, '寫成數字。'),
+    nameSay: `邊長 100 公尺的正方形，面積是 10000 平方公尺＝100 公畝，叫作 1 ${T('公頃')}。`, pick: [['1 公頃是 10 公畝。', '1 公頃是 100 公畝。', '1 公頃比 1 公畝小。'], 1, ['鋪滿要 10 排、每排 10 塊，是 100 塊。', '', '1 公頃要 100 塊公畝才鋪得滿，比公畝大。']],
+    pose: pose('story', '哪一個用「公頃」來說最合適？', ['一所學校的校地有多大', '一張桌子有多大', '一張郵票有多大'], 0, ['', '桌子用平方公分或平方公尺。', '郵票用平方公分。'], '對了！很大的地用公頃。'),
+    check: ucheck('邊長 100 公尺的正方形農地，面積是多少？', () => mapSvg(10, 10, 100), ['1 公畝', '1 公頃', '1 平方公里'], 1, '回到鋪 10 排那一步：鋪滿了幾公畝？', '對了，100×100＝10000 平方公尺＝1 公頃。一座足球場比 1 公頃小一些，可以拿來約略比較。', ['1 公畝只是其中一小格（邊長 10 公尺）。', '', '1 平方公里的邊長是 1000 公尺。']) }),
+    UL('km2', '平方公里', 'seal', { hook: '1 公頃是邊長 100 公尺的正方形。一整個鄉鎮呢？', hookPic: () => '<div class="u-big">🏙️</div>',
+    rounds: lessonCnt([3, 6, 10], n => tapDraw(k => mapSvg(10, 10, k * 10, '', { c: '#a9d0f0' }), '點一下鋪一排（10 公頃）'), k => `鋪了 ${k * 10} 公頃`, n => `鋪了 ${n * 10} 公頃。`, ['看我做：一次鋪一排 10 公頃。', '一起做：鋪 6 排。', '換你做：鋪滿。'], ['先預測：鋪滿時，一邊有幾公尺？', ['100 公尺', '1000 公尺'], 1], '每點一下鋪一排 10 塊（10 公頃）。每塊的邊長是 100 公尺。'),
+    fade: step3('<div class="u-big">🏙️</div>', '一個鄉鎮的一部分。', mapSvg(10, 10, 100, '', { c: '#a9d0f0' }), '一邊 10 塊，每塊 100 公尺：邊長 1000 公尺＝1 公里。', `<div class="eq5">${K(100, C1)} 公頃 ＝ 邊長 ${K('1 公里', C2)} 的正方形</div>`, '寫成數字。'),
+    nameSay: `邊長 1 公里的正方形，面積是 1 ${T('平方公里')}，等於 100 公頃。`, pick: [['1 平方公里是 10 公頃。', '1 平方公里是 100 公頃。', '1 平方公里是 1 公里。'], 1, ['鋪滿要 10 排、每排 10 公頃，是 100 公頃。', '', '1 公里是長度；平方公里量的是一片地有多大。']],
+    pose: pose('can', '一塊長方形基地長 2 公里，面積是多少？', ['夠', '不夠，還要知道寬'], 1, ['只知道長，不知道寬，算不出面積。', ''], '對了！長方形面積要長和寬。'),
+    check: ucheck('月球城的目標是 1 平方公里，是幾公頃？', () => '<div class="u-big">🌕</div>', ['10', '100', '1000'], 1, '回到鋪排那一步：鋪滿了幾公頃？', '對了，10 排、每排 10 公頃：100 公頃。', ['10 只是一排。', '', '1000 多了一個 0。']) })],
+  ton: [UL('ton', '公噸', 'turtle', { hook: '一袋米大約 20 公斤，用公斤說很方便。工地吊車要吊起的鋼材就重很多。', hookPic: () => '<div class="u-big">🏗️</div>',
+    rounds: lessonCnt([5, 5, 5], n => tapDraw(k => `<div class="pics5">${'🧱'.repeat(k)}</div><div class="u-count"><b class="num">${k * 200}</b> 公斤</div>`, '點一下，吊車吊上一捆 200 公斤的鋼材'), k => `${k * 200} 公斤`, n => '吊到 1000 公斤了。', ['看我做：一捆 200 公斤，吊到 1000 公斤。', '一起做：再吊一次。', '換你做：再吊到 1000 公斤。'], ['先預測：5 捆是幾公斤？', ['1000', '500'], 0], '每點一下加 200 公斤。數一數吊到 1000 公斤要幾捆。'),
+    fade: step3('<div class="u-big">🏗️</div>', '吊車吊鋼材。', `<div class="pics5">${'🧱'.repeat(5)}</div>`, '5 捆，每捆 200 公斤。', `<div class="eq5">200×5＝${K(1000, C1)} 公斤</div>`, '數字太長，需要一個更大的單位。'),
+    nameSay: `1000 公斤叫作 1 ${T('公噸')}。1 公噸＝1000 公斤。`, pick: [['1 公噸是 100 公斤。', '1 公噸是 1000 公斤。', '1 公噸比 1 公斤輕。'], 1, ['5 捆 200 公斤才到 1 公噸，是 1000 公斤。', '', '1 公噸是 1000 個 1 公斤，重很多。']],
+    pose: pose('story', '哪一個用「公噸」來說最合適？', ['一輛砂石車多重', '一顆蘋果多重', '一本書多重'], 0, ['', '蘋果用公克。', '書用公克或公斤。'], '對了！很重的東西用公噸。'),
+    check: ucheck('一頭大象大約 5000 公斤，是幾公噸？', () => '<div class="u-big">🐘</div>', ['5', '50', '500'], 0, '回到吊鋼材那一步：每 1000 公斤圈一堆，有幾堆？', '對了，5000 公斤是 5 個 1000 公斤：5 公噸。', ['', '50 公噸是 50000 公斤。', '500 公噸是 500000 公斤。']) })],
+  cap: [UL('ml', '毫升', 'otter', { hook: '邊長 1 公分的模型小方塊，體積是 1 立方公分。水沒有固定形狀，要怎麼量多少？', hookPic: () => isoSvg(1, 1, 1),
+    rounds: lessonCnt([2, 3, 5], n => tapDraw(k => mcup(k * 5), '點一下，倒入 5 小格的水（每小格和 1 個小方塊一樣多）'), k => `水面到 ${k * 5} 小格`, n => `水面到 ${n * 5} 小格。`, ['看我做：有刻度的量杯，每一小格裝得下 1 個邊長 1 公分的小方塊那麼多的水。我一次倒 5 小格。', '一起做：倒到 15 小格。', '換你做：倒到 25 小格。'], ['先預測：倒 5 次、每次 5 小格，水面到第幾格？', ['25', '10'], 0], '每點一下倒 5 小格。看水面停在刻度上的哪個數。'),
+    fade: step3(mcup(5), '有刻度的量杯，水面在 5。', isoSvg(5, 1, 1), '5 小格的水，和 5 個邊長 1 公分的小方塊一樣多。', `<div class="eq5">1 小格水 ＝ ${K('1 立方公分', C1)} 那麼多</div>`, '對起來。'),
+    nameSay: `1 立方公分那麼多的水，叫作 1 ${T('毫升')}。1 毫升和 1 立方公分是相同的體積。`, pick: [['1 毫升是一大杯水。', '1 毫升和 1 立方公分是相同的體積。', '1 毫升是 1 公分。'], 1, ['一杯水有好幾百小格。', '', '1 公分是長度；毫升量的是有多少水。']],
+    pose: pose('change', '一杯飲料 500 毫升，倒掉一半，還剩幾毫升？', ['250', '50'], 0, ['', '一半是 500÷2。'], '對了！500÷2＝250 毫升。'),
+    check: ucheck('一包鋁箔包飲料大約多少？', () => '<div class="u-big">🧃</div>', ['250 毫升', '250 公升'], 0, '回到量杯那一步：一包飲料拿在手上，大約 250 小格那麼多。', '對了，大約 250 毫升。', ['', '250 公升比一缸洗澡水還多。']) }),
+    UL('l', '公升', 'otter', { hook: '1 毫升是 1 小格那麼多的水。一大瓶水，要數非常多小格。', hookPic: () => '<div class="u-big">🍼</div>',
+    rounds: lessonCnt([5, 5, 5], n => tapDraw(k => tankSvg(k / 5), '點一下倒 200 毫升'), k => `倒了 ${k * 200} 毫升`, n => '內部每邊 10 公分的方盒倒滿了。', ['看我做：內部每邊 10 公分的方盒，一次倒 200 毫升。', '一起做：再倒滿一次。', '換你做：倒滿。'], ['先預測：倒滿是幾毫升？', ['100', '1000'], 1], '每點一下倒 200 毫升。數一數倒滿要幾次。'),
+    fade: step3('<div class="u-big">🍼</div>', '一大瓶牛奶。', tankSvg(1), '內部每邊 10 公分的方盒倒滿。', `<div class="eq5">10×10×10＝${K(1000, C1)} 毫升</div>`, '寫成數字。'),
+    nameSay: `1000 毫升叫作 1 ${T('公升')}。內部每邊 10 公分的正方體容器，容積是 1 公升。`, pick: [['1 公升是 100 毫升。', '1 公升是 1000 毫升。', '1 公升比 1 毫升少。'], 1, ['10×10×10 是 1000，不是 100。', '', '1 公升是 1000 個 1 毫升，多很多。']],
+    pose: pose('can', '水壺能裝幾公升？只知道它是藍色的。', ['夠', '不夠，還要知道它的大小'], 1, ['顏色不決定能裝多少。', ''], '對了！要知道容器裡面多大。'),
+    check: ucheck('一瓶 2 公升的牛奶，是幾毫升？', () => '<div class="u-big">🍼</div>', ['20', '200', '2000'], 2, '回到倒方盒那一步：1 公升是 1000 毫升。', '對了，2 個 1000 毫升：2000 毫升。', ['1 公升是 1000 毫升，不是 10。', '1 公升是 1000 毫升，不是 100。', '']) })],
+  m3: [UL('cm3', '立方公分', 'octopus', { hook: '邊長 1 公分的小方格可以鋪滿一片面。如果往上堆高，變成一塊一塊的小方塊呢？', hookPic: () => isoSvg(1, 1, 1),
+    rounds: lessonCnt([4, 6, 8], n => tapDraw(k => isoSvg(2, 2, 2, k), '點一下放一個模型小方塊'), k => `放了 ${k} 個`, n => `堆了 ${n} 個。`, ['看我做：邊長 1 公分的模型小方塊，一個一個堆。', '一起做：堆 6 個。', '換你做：堆 8 個。'], ['先預測：2 層、每層 4 個，共幾個？', ['6', '8'], 1], '每點一下放一個小方塊。數一數一共幾個。'),
+    fade: step3(isoSvg(1, 1, 1), '一個邊長 1 公分的模型小方塊。', isoSvg(2, 2, 2), '堆成 8 個的大方塊。', `<div class="eq5">${K(8, C1)} 個小方塊（邊長 ${K('1 公分', C2)}）</div>`, '寫成數字。'),
+    nameSay: `邊長 1 公分的正方體，體積是 1 ${T('立方公分')}。這塊堆了 8 個，就是 8 立方公分。`, pick: [['1 立方公分是一張紙。', '1 立方公分是邊長 1 公分的正方體那麼大。', '1 立方公分和 1 平方公分一樣。'], 1, ['紙很薄，量的是一片面；立方公分量的是一塊有多大。', '', '平方公分是一片面，立方公分是一塊立體。']],
+    pose: pose('story', '哪一個用「立方公分」來說最合適？', ['一塊橡皮擦的體積', '一間教室的體積', '一座游泳池的體積'], 0, ['', '教室很大，用更大的單位。', '游泳池很大，用更大的單位。'], '對了！小東西用立方公分。'),
+    check: ucheck('一塊積木由 12 個邊長 1 公分的小方塊堆成，體積是多少？', () => isoSvg(3, 2, 2), ['12 立方公分', '12 公分', '12 平方公分'], 0, '回到堆小方塊那一步：堆了幾個？每個多大？', '對了，12 個 1 立方公分：12 立方公分。', ['', '公分是長度單位。', '平方公分是面積單位。']) }),
+    UL('m3', '立方公尺', 'octopus', { hook: '用邊長 1 公分的小方塊量貨櫃，要數非常非常多個。', hookPic: () => '<div class="u-big">🚢</div>',
+    rounds: lessonCnt([3, 3, 3], n => tapDraw(k => m3Frame(k * 4), '點一下搭 4 根棍子（每根 1 公尺）'), k => `搭了 ${k * 4} 根`, n => '12 根搭成一個每邊 1 公尺的框，框裡的空間塗成淡藍色。', ['看我做：用 1 公尺長的棍子搭框。', '一起做：再搭一個。', '換你做：搭一個。'], ['先預測：搭好一個框要幾根棍子？', ['8', '12'], 1], '每點一下搭 4 根。正方體有幾條邊，就要幾根。'),
+    fade: step3('<div class="u-big">🧊</div>', '一台大冰箱，大約這麼大。', m3Frame(12), '每邊 1 公尺的框，淡藍色是框裡的空間。', `<div class="eq5">每邊 ${K('1 公尺', C1)} 的正方體空間</div>`, '寫成數字。'),
+    nameSay: `邊長 1 公尺的正方體，體積是 1 ${T('立方公尺')}。`, pick: [['1 立方公尺和小方塊一樣大。', '1 立方公尺是邊長 1 公尺的正方體那麼大。', '1 立方公尺是一條線。'], 1, ['小方塊每邊只有 1 公分。', '', '一根棍子是 1 公尺長；立方公尺量的是框裡的空間。']],
+    pose: pose('change', '大框每邊改成 1 公分，它還是 1 立方公尺嗎？', ['是', '不是，變成 1 立方公分'], 1, ['邊長變了，體積就變了。', ''], '對了！邊長變小，體積也變小。'),
+    check: ucheck('一個大貨櫃的體積，要用哪一個單位來說？', () => '<div class="u-big">🚢</div>', ['立方公分', '立方公尺'], 1, '回到搭大框那一步：貨櫃裡放得下好幾個這樣的框。', '對了，貨櫃大約 30 立方公尺。', ['用立方公分，數字會非常長。', '']) })],
 });
-CONCEPTS = SEGS.concat(OLD_CONCEPTS.filter(c => !SEGS.some(n => n.key === c.key) && !['comf', 'coml', 'sym', 'sympt', 'baseh', 'plane', 'prism', 'pyr', 'reduce'].includes(c.key)));
+CONCEPTS = SEGS.slice();
 function viewLessons() {
   window.scrollTo(0, 0);
   $app.innerHTML = `<div class="top"><button class="icon-btn" id="home" aria-label="回地圖">⌂</button><h2 class="page-h">單位教室</h2></div>
@@ -2804,7 +2953,7 @@ function runQuiz(b, U, lv, only) {
     const done = ok => {
       if (ok && tries === 0) { right++; S.stars += QUIZ_STAR; } else if (tries === 0 || !ok) wrong.push(list[i]);
       save();
-      setMsg(`${ok ? (tries ? '對了。' : '答對了！') : '再看一次：'}${nums(esc(q.why))}`, ok ? 'good' : 'hint');
+      setMsg(`${ok ? '對了。' : '一起看看怎麼想：'}${nums(esc(q.why))}`, ok ? 'good' : 'hint');
       if (ok && tries === 0) sfx.good(); else if (ok) sfx.ok();
       const pad = document.getElementById('pad'); if (pad) pad.style.display = 'none';
       document.getElementById('actions').innerHTML = `<button class="btn" id="qn">${i + 1 < list.length ? '下一題' : '看成績'}</button>`;
@@ -2815,20 +2964,20 @@ function runQuiz(b, U, lv, only) {
     if (q.t === 'num') {
       bindKeypad((val, clear) => {
         if (val === q.a) return done(true);
-        clear(); miss2(nums(`你按的 ${val} 不對，再想想。`));
+        clear(); miss2(nums(`${val} 和答案不一樣。先看題目問的是哪一個量，再算一次。`));
       });
     } else {
       document.getElementById('actions').innerHTML = `<div class="choices col">${q.o.map((o, n) => `<button class="choice" data-c="${n}">${nums(esc(o))}</button>`).join('')}</div>`;
       document.querySelectorAll('[data-c]').forEach(c => c.onclick = () => {
         if (+c.dataset.c === q.a) return done(true);
-        c.classList.add('no'); c.disabled = true; miss2('再想想，換一個答案。');
+        c.classList.add('no'); c.disabled = true; miss2('這個選項不對。先找出題目問的是什麼，再選一次。');
       });
     }
   }
   function result() {
     const score = Math.round(right / list.length * 100);
     if (!only) { S.quiz = S.quiz || {}; const k = `${b.id}-${U.u}-${lv}`; S.quiz[k] = Math.max(S.quiz[k] || 0, score); save(); }
-    quizShell(`${QUIZ_LV[lv][0]}成績`, back, `<div class="end pop"><h2>${nums(`第一次就答對 ${right} / ${list.length} 題`)}</h2><p>${score === 100 ? '全部答對，太棒了！' : score >= 80 ? '很不錯，只差一點點。' : '沒關係，把錯的再做一次就會更熟。'}</p><div class="actions" id="ra"></div></div>`);
+    quizShell(`${QUIZ_LV[lv][0]}成績`, back, `<div class="end pop"><h2>${nums(`第一次就答對 ${right} / ${list.length} 題`)}</h2><p>${score === 100 ? '每一題第一次就答對了。' : score >= 80 ? '大部分都答對了，可以挑錯的那幾題，再看一次解說。' : '先挑一題錯的，看解說是哪一步卡住，再試一次。'}</p><div class="actions" id="ra"></div></div>`);
     document.getElementById('ra').innerHTML = `${wrong.length ? '<button class="btn" id="rw">再做一次錯的</button>' : ''}<button class="btn alt" id="rb">回單元</button>`;
     if (wrong.length) document.getElementById('rw').onclick = () => runQuiz(b, U, lv, wrong);
     document.getElementById('rb').onclick = back;
@@ -2949,7 +3098,7 @@ function viewParent() {
   </div>`;
   document.getElementById('snd').onchange = e => { S.sound = e.target.checked; save(); };
   document.getElementById('reset').onclick = () => {
-    if (confirm('確定清除所有星星和紀錄？')) { S.stars = 0; S.rec = {}; S.log = []; S.prog = {}; S.opened = false; S.bossDone = false; S.bossSeen = false; S.s2Seen = false; S.stamps = {}; S.fast = {}; S.quiz = {}; S.grandSeen = false; S.seenCpt = {}; S.learned = {}; save(); viewParent(); }
+    if (confirm('確定清除所有星星和紀錄？')) { S.stars = 0; S.rec = {}; S.log = []; S.prog = {}; S.opened = false; S.bossDone = false; S.bossSeen = false; S.s2Seen = false; S.stamps = {}; S.fast = {}; S.quiz = {}; S.grandSeen = false; S.seenCpt = {}; S.cptLog = {}; S.learned = {}; save(); viewParent(); }
   };
   document.getElementById('out').onclick = () => go('');
 }

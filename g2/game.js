@@ -170,7 +170,7 @@ function frame(promptHtml, stageHtml, extra) {
     ${extra || ''}
     <div class="actions" id="actions"></div>`;
   document.getElementById('home').onclick = () => { R = null; go(''); };
-  document.getElementById('say').onclick = () => speak(plainText(document.getElementById('prompt')));
+  document.getElementById('say').onclick = () => speak(sayText()); // 題目、說明和回饋都唸
   cptBtn(cptOf(R.q));
 }
 function endRound() {
@@ -965,7 +965,7 @@ function runQuiz(b, U, lv, only) {
     const done = ok => {
       if (ok && tries === 0) { right++; S.stars += QUIZ_STAR; } else if (tries === 0 || !ok) wrong.push(list[i]);
       save();
-      setMsg(`${ok ? (tries ? '對了。' : '答對了！') : '再看一次：'}${nums(esc(q.why))}`, ok ? 'good' : 'hint');
+      setMsg(`${ok ? '對了。' : '一起看看怎麼想：'}${nums(esc(q.why))}`, ok ? 'good' : 'hint');
       if (ok && tries === 0) sfx.good(); else if (ok) sfx.ok();
       const pad = document.getElementById('pad'); if (pad) pad.style.display = 'none';
       document.getElementById('actions').innerHTML = `<button class="btn" id="qn">${i + 1 < list.length ? '下一題' : '看成績'}</button>`;
@@ -976,20 +976,20 @@ function runQuiz(b, U, lv, only) {
     if (q.t === 'num') {
       bindKeypad((val, clear) => {
         if (val === q.a) return done(true);
-        clear(); miss2(nums(`你按的 ${val} 不對，再想想。`));
+        clear(); miss2(nums(`${val} 和答案不一樣。先看題目問的是哪一個量，再算一次。`));
       });
     } else {
       document.getElementById('actions').innerHTML = `<div class="choices col">${q.o.map((o, n) => `<button class="choice" data-c="${n}">${nums(esc(o))}</button>`).join('')}</div>`;
       document.querySelectorAll('[data-c]').forEach(c => c.onclick = () => {
         if (+c.dataset.c === q.a) return done(true);
-        c.classList.add('no'); c.disabled = true; miss2('再想想，換一個答案。');
+        c.classList.add('no'); c.disabled = true; miss2('這個選項不對。先找出題目問的是什麼，再選一次。');
       });
     }
   }
   function result() {
     const score = Math.round(right / list.length * 100);
     if (!only) { S.quiz = S.quiz || {}; const k = `${b.id}-${U.u}-${lv}`; S.quiz[k] = Math.max(S.quiz[k] || 0, score); save(); }
-    quizShell(`${QUIZ_LV[lv][0]}成績`, back, `<div class="end pop"><h2>${nums(`第一次就答對 ${right} / ${list.length} 題`)}</h2><p>${score === 100 ? '全部答對，太棒了！' : score >= 80 ? '很不錯，只差一點點。' : '沒關係，把錯的再做一次就會更熟。'}</p><div class="actions" id="ra"></div></div>`);
+    quizShell(`${QUIZ_LV[lv][0]}成績`, back, `<div class="end pop"><h2>${nums(`第一次就答對 ${right} / ${list.length} 題`)}</h2><p>${score === 100 ? '每一題第一次就答對了。' : score >= 80 ? '大部分都答對了，可以挑錯的那幾題，再看一次解說。' : '先挑一題錯的，看解說是哪一步卡住，再試一次。'}</p><div class="actions" id="ra"></div></div>`);
     document.getElementById('ra').innerHTML = `${wrong.length ? '<button class="btn" id="rw">再做一次錯的</button>' : ''}<button class="btn alt" id="rb">回單元</button>`;
     if (wrong.length) document.getElementById('rw').onclick = () => runQuiz(b, U, lv, wrong);
     document.getElementById('rb').onclick = back;
@@ -998,7 +998,8 @@ function runQuiz(b, U, lv, only) {
 }
 /*QUIZ_END*/
 /*CPT_BEGIN*/
-/* ---------- 新概念小故事：生活問題 → 動手試（新詞不出現）→ 命名貼回圖上 → 換情境答一題，答錯回去動手 ---------- */
+/* ---------- 新概念小故事：生活問題 → 動手試（新詞不出現）→ 命名貼回圖上 → 換情境試一題；答錯回到出錯的那一步 ---------- */
+/* 紀錄：S.seenCpt[key]＝看過（含跳過）；S.cptDone[key].op＝自己走完每個畫面；S.cptDone[key].ok＝試一題答對。舊存檔的 seenCpt 照舊當「看過」 */
 const cT = w => `<b class="term">${w}</b>`;
 const cTag = w => `<span class="ctag">${w}</span>`;
 const cBk = (k, n) => `<i class="bk ${k}"></i>`.repeat(n);
@@ -1014,219 +1015,271 @@ const cClock = (h, m) => `<div class="c-ck">${clockSvg(h, m)}</div>`;
 const cNear = (a, b, on) => `<div class="near num ${on ? 'cin' : 'off'}"><b>${a}</b><i>➜</i><b class="on">${b}</b></div>`;
 const cPile = n => `<div class="pile5">${cDots(n)}</div>`;
 const cWood = (n, labels) => `<div class="wood">${Array.from({ length: n }, (_, i) => `<span class="cin" style="animation-delay:${i * .05}s">${labels ? `<b class="num">${i + 1}</b>` : ''}</span>`).join('')}</div>`;
-const cRuler = (len, to) => `<svg class="c-svg" viewBox="0 0 320 80"><rect x="14" y="8" width="${len * 28}" height="16" rx="6" fill="#f5a524"/><rect x="14" y="30" width="292" height="30" fill="#fff0cf" stroke="#c9740c" stroke-width="2"/>${Array.from({ length: to + 1 }, (_, i) => `<line x1="${14 + i * 28}" x2="${14 + i * 28}" y1="30" y2="44" stroke="#33405a" stroke-width="2"/><text x="${14 + i * 28}" y="76" text-anchor="middle" font-size="14" fill="#33405a">${i}</text>`).join('')}</svg>`;
+// 尺：鉛筆長 len 格，左端對齊刻度 from（預設 0）
+const cRuler = (len, to, from = 0) => `<svg class="c-svg" viewBox="0 0 320 80"><rect x="${14 + from * 28}" y="8" width="${len * 28}" height="16" rx="6" fill="#f5a524"/><rect x="14" y="30" width="292" height="30" fill="#fff0cf" stroke="#c9740c" stroke-width="2"/>${Array.from({ length: to + 1 }, (_, i) => `<line x1="${14 + i * 28}" x2="${14 + i * 28}" y1="30" y2="44" stroke="#33405a" stroke-width="2"/><text x="${14 + i * 28}" y="76" text-anchor="middle" font-size="14" fill="#33405a">${i}</text>`).join('')}${from ? `<line x1="${14 + from * 28}" x2="${14 + from * 28}" y1="4" y2="30" stroke="#d6476b" stroke-width="2" stroke-dasharray="3 2"/><line x1="${14 + (from + len) * 28}" x2="${14 + (from + len) * 28}" y1="4" y2="30" stroke="#d6476b" stroke-width="2" stroke-dasharray="3 2"/>` : ''}</svg>`;
 const cStick = n => `<div class="stick"><i class="cgrow" style="width:${n}%;--w:${n}%"></i></div>`;
 const cPot = (cls, name, pct, cups, from) => `<div class="pot-w"><div class="pot ${cls}"><i class="water" style="--from:${from}%;--to:${pct}%;height:${pct}%"></i></div><b>${name}</b><small>${'🥛'.repeat(cups) || '　'}</small></div>`;
 const cScale = (l, r, tilt) => `<svg class="c-svg" viewBox="0 0 320 130"><path d="M160 34V118M120 122H200" stroke="#7d5bbe" stroke-width="6" stroke-linecap="round"/><g transform="rotate(${tilt} 160 34)"><path d="M50 34H270" stroke="#7d5bbe" stroke-width="6" stroke-linecap="round"/><path d="M26 62a24 10 0 0 0 48 0zM246 62a24 10 0 0 0 48 0z" fill="#d9c9f2" stroke="#7d5bbe" stroke-width="2"/><path d="M50 34V62M270 34V62" stroke="#7d5bbe" stroke-width="2"/><text x="50" y="60" text-anchor="middle" font-size="${l.length > 2 ? 14 : 26}">${l}</text><text x="270" y="60" text-anchor="middle" font-size="${r.length > 2 ? 14 : 26}">${r}</text></g></svg>`;
 const cTri = s => { const P = [[160, 14], [40, 150], [280, 150]]; return `<svg class="c-svg tall" viewBox="0 0 320 166"><polygon points="${P.join(' ')}" fill="#fff0cf" stroke="${s === 0 ? '#d6476b' : '#c9740c'}" stroke-width="${s === 0 ? 8 : 3}" stroke-linejoin="round"/>${s === 2 ? '<path d="M138 39A34 34 0 0 0 182 39M62 125A34 34 0 0 1 74 150M246 150A34 34 0 0 1 258 125" fill="none" stroke="#3b82c4" stroke-width="7"/>' : ''}${s === 1 ? P.map(p => `<circle class="c-pulse" cx="${p[0]}" cy="${p[1]}" r="9" fill="#3d9970"/>`).join('') : ''}</svg>`; };
 const cRect = k => { const S2 = [[40, 20, 280, 20], [280, 20, 280, 110], [280, 110, 40, 110], [40, 110, 40, 20]], Lb = [[160, 14, 5], [298, 70, 3], [160, 130, 5], [20, 70, 3]], F = [[280, 20], [280, 110], [40, 110], [40, 20]][k - 1]; return `<svg class="c-svg tall" viewBox="0 0 320 136"><rect x="40" y="20" width="240" height="90" fill="#cfe8c9"/>${S2.map((l, i) => `<line x1="${l[0]}" y1="${l[1]}" x2="${l[2]}" y2="${l[3]}" stroke="${i < k ? '#d6476b' : '#8a93a8'}" stroke-width="${i < k ? 7 : 3}" stroke-linecap="round"/><text x="${Lb[i][0]}" y="${Lb[i][1]}" text-anchor="middle" font-size="16" fill="#33405a">${Lb[i][2]}</text>`).join('')}<text class="c-drop" x="${F[0]}" y="${F[1] + 8}" text-anchor="middle" font-size="24">🐸</text></svg>`; };
 const cCloth = (r, c, on, col) => `<div class="cloth" style="grid-template-columns:repeat(${c},24px);background:${col}">${Array.from({ length: r * c }, (_, i) => `<i class="${on ? 'cin' : 'blank'}" style="animation-delay:${i * .03}s"></i>`).join('')}</div>`;
-const cCal = m => { const n = { 1: 31, 2: 28, 4: 30 }[m]; return `<div class="cal"><b>${N(m)} 月</b><div class="cal-g num">${Array.from({ length: n }, (_, i) => `<i class="${i === n - 1 ? 'last' : ''}">${i + 1}</i>`).join('')}</div></div>`; };
+const CAL_D = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // 2 月畫平年
+const cCal = m => { const n = CAL_D[m]; return `<div class="cal"><b>${N(m)} 月${m === 2 ? '（平年）' : ''}</b><div class="cal-g num">${Array.from({ length: n }, (_, i) => `<i class="${i === n - 1 ? 'last' : ''}">${i + 1}</i>`).join('')}</div></div>`; };
+const cSign = tilt => tilt ? '<svg class="c-svg tall" viewBox="0 0 320 130"><polygon points="160,10 215,65 160,120 105,65" fill="#fff0cf" stroke="#c9740c" stroke-width="4" stroke-linejoin="round"/></svg>' : '<svg class="c-svg tall" viewBox="0 0 320 130"><rect x="90" y="15" width="140" height="100" fill="#fff0cf" stroke="#c9740c" stroke-width="4"/></svg>';
 const cptMul = q => q.kind === 'candy' && ['count', 'more', 'less', 'split'].includes(q.mode) && !q.special || q.kind === 'train' && q.mode === 'mult' || (q.kind === 'scale' && /×/.test((q.lText || '') + (q.rText || '')) && !cptLow(q));
 function cptLow(q) { return /(^|×)(0|1)(×|$)/.test(q.lText || '') || /(^|×)(0|1)(×|$)/.test(q.rText || ''); }
+/* check 可以是一題或幾題；whys[i] 是選第 i 個時的下一步提示（沒有就用 why）；back 是答錯時回去看的那一步。
+   pred：走到第 at 個畫面前，先回答「可以怎麼辦」，答對才看到結果 */
 const CONCEPTS = [
-  { key: 'place', title: '百位、十位、個位', sem: '二上', scene: '235 的 2，是 2 根嗎？', terms: ['百位', '十位', '個位'], who: 'amu', quiz: ['2a-1', '2b-1'], when: q => q.kind === 'block',
-    ask: '阿木收到 235 根木頭。235 裡的 2，是 2 根嗎？', tryIt: '按住手指往右拖，把積木一格一格擺好。', states: [1, 2, 3],
+  { key: 'place', title: '百位、十位、個位', sem: '二上', scene: '235 的 2，是 2 個嗎？', terms: ['百位', '十位', '個位'], who: 'amu', quiz: ['2a-1', '2b-1'], when: q => q.kind === 'block',
+    ask: '阿木有 235 個積木。235 裡的 2，是 2 個積木嗎？', tryIt: '向右拖拉桿，或按「下一步」，看每個數字表示幾個積木。', states: [1, 2, 3],
     pic: (s, n) => cPv([[s >= 1 ? 2 : '', cBk('h', 2)], [s >= 2 ? 3 : '', s >= 2 ? cBk('t', 3) : ''], [s >= 3 ? 5 : '', s >= 3 ? cBk('o', 5) : '']], n && ['百位', '十位', '個位']),
-    note: s => ['', '左邊的 2，是 2 個百，就是 200', '中間的 3，是 3 個十，就是 30', '右邊的 5，是 5 個一，就是 5'][s],
-    found: '一樣是數字，站的格子不一樣，大小就不一樣。', name: `左邊這格叫${cT('百位')}，中間叫${cT('十位')}，右邊叫${cT('個位')}。`, loop: [0, 1, 2],
-    check: { q: '308 的十位是多少？', pic: () => cDigits('308'), opts: ['3', '0', '8'], a: 1, why: '十位是中間那一格。回去看看中間在哪裡。', ok: '對了！308 的十位是 0，一個十也沒有。' } },
+    note: s => ['', '2 表示 2 個百，是 200 個', '3 表示 3 個十，是 30 個', '5 表示 5 個一，是 5 個'][s],
+    found: '同一個數字，寫在不同的位置，表示的多少就不一樣。235 的 2 表示 200 個。', name: `最右邊一位叫${cT('個位')}；往左一位叫${cT('十位')}；再往左一位叫${cT('百位')}。235 的 2 在百位，表示 2 個百。`, loop: [0, 1, 2],
+    check: { q: '308 的十位數字是幾？', pic: () => cDigits('308'), opts: ['3', '0', '8'], a: 1, back: 1, why: '十位是從個位往左一位。', whys: ['3 在最左邊，是百位。十位是從個位往左一位。', null, '8 在最右邊，是個位。再往左一位，才是十位。'], ok: '對了，308 的十位數字是 0，表示沒有十。' } },
   { key: 'qian', title: '一千', sem: '二下', scene: '9 個百，再來 1 個百？', terms: ['一千'], ban: ['1000'], who: 'amu', quiz: ['2b-1'], when: q => (q.kind === 'block' && q.v > 300) || (q.kind === 'line' && q.b >= 1000),
-    ask: '木頭越來越多，已經有 8 個百了。再一直來，會變成多少？', tryIt: '往右拖，再放百積木。', states: [8, 9, 10],
+    ask: '阿木的積木越來越多，已經有 8 個百了。再一直放下去，會變成多少？', tryIt: '向右拖拉桿，一次多放 1 個百。', states: [8, 9, 10],
     pic: (k, n) => `<div class="hunds ${k === 10 ? 'ring' : ''}">${cBk('h', k)}</div>${n && k === 10 ? cTag('一千') : ''}`,
-    note: k => k === 10 ? '10 個百，可以合成一大塊！' : `${k} 個百，是 ${k}00`,
-    found: '10 個百合成一大塊，比 900 又多了 100。', name: `10 個百合起來叫${cT('一千')}，寫成 1000。`, loop: [2],
-    check: { q: '一箱有 100 張貼紙，10 箱一共幾張？', pic: () => `<div class="hunds">${cBk('h', 10)}</div>`, opts: ['110', '1000', '10000'], a: 1, why: '10 個百是多少？回去數一數。', ok: '對了！10 個百是 1000。' } },
-  { key: 'jinwei', title: '進位', sem: '二上', scene: '小積木太多，放不下了', terms: ['進位'], who: 'amu', quiz: ['2a-2'], when: q => q.kind === 'block' && q.mode === 'trade',
-    ask: '阿木有 1 條十和 12 個小積木。小積木太多了，要怎麼一眼看出有多少？', tryIt: '往右拖，把小積木圈起來換一換。', states: [0, 1, 2],
+    note: k => k === 10 ? '10 個百，可以合成一大塊' : `${k} 個百，是 ${k}00`,
+    found: '10 個百合成一大塊，比 900 多 100。', name: `10 個百合起來是 1000，讀作${cT('一千')}。`, loop: [2],
+    check: { q: '一箱有 100 張貼紙，10 箱一共幾張？', pic: () => `<div class="hunds">${cBk('h', 10)}</div>`, opts: ['110', '1000', '10000'], a: 1, back: 2, why: '10 個百是多少？', whys: ['110 是 100 再加 10。這裡是 10 個 100。', null, '10000 是 10 個一千。這裡只有 10 個 100。'], ok: '對了，10 個 100 是 1000 張。' } },
+  { key: 'jinwei', title: '進位', sem: '二上', scene: '12 個一，可以怎麼換？', terms: ['進位'], who: 'amu', quiz: ['2a-2'], when: q => q.kind === 'block' && q.mode === 'trade',
+    ask: '阿木有 1 條十和 12 個一。要怎麼排，才能一眼看出一共有多少？', tryIt: '向右拖拉桿，把 10 個一圈起來換一換。', states: [0, 1, 2],
     pic: (s, n) => `${cPv([[s === 2 ? 2 : 1, cBk('t', s === 2 ? 2 : 1)], [s === 2 ? 2 : 12, s === 0 ? cBk('o', 12) : s === 1 ? `<span class="ring">${cBk('o', 10)}</span>${cBk('o', 2)}` : cBk('o', 2)]])}${n ? `<div class="c-arrow">⬅ ${cTag('進位')}</div>` : ''}`,
-    note: s => ['1 條十和 12 個一，太擠了', '圈起 10 個一', '換成 1 條十：2 條十、2 個一，是 22'][s],
-    found: '滿 10 個一，就換成 1 條十，放到左邊那格。', name: `滿十換到左邊一格，叫${cT('進位')}。`, loop: [0, 1, 2],
-    check: { q: '6 張貼紙加 7 張，個位是 6＋7＝13。接下來呢？', pic: () => cPv([['', ''], ['13', cBk('o', 13)]]), opts: ['個位寫 3，十位多 1', '個位寫 13'], a: 0, why: '一格放得下 13 個一嗎？', ok: '對了！滿十要進位，答案是 13。' } },
-  { key: 'tuiwei', title: '退位', sem: '二上', scene: '散的不夠拿，怎麼辦？', terms: ['退位'], who: 'gua', quiz: ['2a-2'], when: q => q.kind === 'frog' && q.t < q.s,
-    ask: '呱呱有 32 片荷葉，3 條十和 2 片散的。要送朋友 5 片，散的不夠，怎麼辦？', tryIt: '往右拖，把 1 條十拆開。', states: [0, 1, 2],
+    note: s => ['1 條十和 12 個一，一共 22 個', '圈起 10 個一', '10 個一換成 1 條十：2 條十和 2 個一，還是 22 個'][s],
+    pred: { at: 2, q: '圈起來的 10 個一，可以換成什麼？', opts: ['1 條十', '10 條十'], a: 0, why: '1 條十就有 10 個一。10 條十是 100 個，太多了。', ok: '對，10 個一換成 1 條十，數量沒有變。' },
+    found: '滿 10 個一，就換成 1 條十。總數沒有變，一眼就看出是 22。', name: `個位滿 10 個一，換成 1 個十放到十位，叫${cT('進位')}。`, loop: [0, 1, 2],
+    check: { q: '6 張貼紙加 7 張，個位有 6＋7＝13 個一。接下來怎麼做？', pic: () => cPv([['', ''], ['13', cBk('o', 13)]]), opts: ['10 個一換成 1 個十：個位寫 3，十位寫 1', '個位寫 13'], a: 0, back: 2, why: '10 個一，可以換成幾個十？換完，個位還剩幾個一？', ok: '對了，13 個一換成 1 個十和 3 個一，答案是 13。' } },
+  { key: 'tuiwei', title: '退位', sem: '二上', scene: '散的不夠拿，怎麼辦？', terms: ['退位'], who: 'amu', quiz: ['2a-2'], when: q => q.kind === 'frog' && q.t < q.s,
+    ask: '阿木有 32 個積木，是 3 條十和 2 個一，每條有 10 個。要拿走 5 個，可以怎麼辦？', tryIt: '向右拖拉桿，或按「下一步」。', states: [0, 1, 2],
     pic: (s, n) => `${cPv([[s ? 2 : 3, cBk('t', s ? 2 : 3)], [s === 0 ? 2 : s === 1 ? 12 : 7, s === 0 ? cBk('o', 2) : s === 1 ? `<span class="ring">${cBk('o', 10)}</span>${cBk('o', 2)}` : cBk('o', 7) + cBk('o gone', 5)]])}${n ? `<div class="c-arrow">➡ ${cTag('退位')}</div>` : ''}`,
-    note: s => ['只有 2 片散的，拿不出 5 片', '拆 1 條十，變成 10 片散的，共 12 片', '拿走 5 片，還有 2 條十和 7 片，是 27'][s],
-    found: '不夠拿，就拆開左邊的 1 條十，變成 10 個一。', name: `不夠拿時，從左邊一格拆 1 個十來用，叫${cT('退位')}。`, loop: [0, 1, 2],
-    check: { q: '41－6，個位的 1 不夠拿 6。要怎麼辦？', pic: () => cPv([[4, cBk('t', 4)], [1, cBk('o', 1)]]), opts: ['拆 1 個十，再拿', '把 6 改成 1'], a: 0, why: '數字不能亂改。回去看看散的不夠時怎麼辦。', ok: '對了！退位以後，11－6＝5。' } },
+    note: s => ['3 條十和 2 個一，一共 32 個。散的只有 2 個', '換開 1 條十：2 條十和 12 個一，一共還是 32 個', '從 12 個一拿走 5 個，剩 7 個；加上 2 條十，一共 27 個'][s],
+    pred: { at: 1, q: '要拿走 5 個，散的只有 2 個。可以怎麼辦？', opts: ['把 1 條十換開成 10 個一', '只拿走 2 個就好', '把要拿的 5 改成 2'], a: 0, why: '題目要拿走 5 個，數量要保持不變。看看左邊的十條，可以換開嗎？', whys: [null, '題目要拿走 5 個，只拿 2 個不夠。看看左邊的十條，可以換開嗎？', null], ok: '對，把 1 條十換開成 10 個一。' },
+    found: '散的不夠拿，就把 1 個十換開成 10 個一。總數不變，再拿走。', name: `個位不夠減時，從十位換開 1 個十，變成 10 個一再減，叫${cT('退位')}。`, loop: [0, 1, 2],
+    check: { q: '41－6，要拿走 6 個一。先把 41 換成幾個十、幾個一？', pic: () => cPv([[4, cBk('t', 4)], [1, cBk('o', 1)]]), opts: ['3 個十和 11 個一', '4 個十和 1 個一', '3 個十和 1 個一'], a: 0, back: 1, why: '換開 1 個十，變成 10 個一。', whys: [null, '4 個十和 1 個一是 41，可是 1 個一不夠拿走 6 個。換開 1 個十試試。', '3 個十和 1 個一只有 31，少了 10 個。換開的十要變成 10 個一，總數不變。'], ok: '對了，3 個十和 11 個一；拿走 6 個一，剩 3 個十和 5 個一，是 35。' } },
   { key: 'line', title: '數線', sem: '二上', scene: '沙灘上怎麼找寶藏？', terms: ['數線'], who: 'pipi', quiz: [], when: q => q.kind === 'line',
-    ask: '皮皮船長說：寶藏在第 70 步的地方。沙灘上什麼也沒有，怎麼找？', tryIt: '往右拖，插上木樁。', states: [0, 1, 2],
+    ask: '皮皮船長說：寶藏在第 70 步的地方。沙灘上什麼也沒有，怎麼找？', tryIt: '向右拖拉桿，插上木樁。', states: [0, 1, 2],
     pic: (s, n) => `${cLine(s === 0 ? [0, 100] : s === 1 ? [0, 50, 100] : [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], s === 2 ? 70 : undefined, s === 2 ? [0, 50, 70, 100] : undefined)}${n ? cTag('數線') : ''}`,
-    note: s => ['只有 0 和 100，不知道在哪裡', '中間是 50，70 還要再過去', '每 10 步一根木樁，找到 70 了！'][s],
-    found: '數字照順序、一樣遠地排好，每個數都有自己的家。', name: `數字照順序、一樣遠地排在一條線上，這條線叫${cT('數線')}。`, loop: [0, 1, 2],
-    check: { q: '在這條數線上，小旗子在 50 和 70 的正中間。它是多少？', pic: () => cLine([0, 50, 70, 100], 60), opts: ['55', '60', '65'], a: 1, why: '50 和 70 的正中間，兩邊要一樣遠。', ok: '對了！60 離 50 和 70 都是 10。' } },
+    note: s => ['只有 0 和 100，不知道 70 在哪裡', '正中間是 50；70 比 50 大，要再往右', '每 10 步插一根木樁，從 50 往右數 2 根，就是 70'][s],
+    found: '數字越往右越大；每兩根木樁都差 10，也隔得一樣遠。', name: `把數字照大小排在一條直線上，越往右越大；相差一樣多，就隔一樣遠。這條線叫${cT('數線')}。`, loop: [0, 1, 2],
+    check: { q: '這條數線上，每一小格是 10。小旗子插在哪個數？', pic: () => cLine([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], 60, [0, 50, 70, 100]), opts: ['55', '60', '65'], a: 1, back: 2, why: '從 50 往右 1 格，要加多少？', whys: ['每一小格是 10，不是 5。從 50 往右 1 格，要加多少？', null, '每一小格是 10。從 50 往右 1 格，要加多少？'], ok: '對了，從 50 往右 1 格，加 10，是 60。' } },
   { key: 'cm', title: '公分', sem: '二上', scene: '同一根木條，答案怎麼不一樣？', terms: ['公分'], who: 'amu', quiz: ['2a-3', '2b-3'], when: () => false,
-    ask: '阿木量同一根木條，量到 5 下；小猴子量到 8 下。怎麼會不一樣？', tryIt: '往右拖，換不同的東西量。', states: [5, 8, 6],
+    ask: '阿木量同一根木條，量到 5 下；小猴子量到 8 下。怎麼會不一樣？', tryIt: '向右拖拉桿，換不同的東西量。', states: [5, 8, 6],
     pic: (k, n) => `${cWood(k, k === 6)}${n ? cTag('一小格是 1 公分') : ''}`,
-    note: k => k === 5 ? '阿木的大手指：5 下' : k === 8 ? '小猴子的小手指：8 下' : '大家都用一樣的小方塊：都是 6 格',
-    found: '手不一樣大，量出來就不一樣。大家用一樣長的小格，答案才一樣。', name: `這一小格的長，叫 1 ${cT('公分')}。木條有 6 格，就是 6 公分。`, loop: [2],
-    check: { q: '鉛筆從 0 量到這裡，長幾公分？', pic: () => cRuler(9, 10), opts: ['8', '9', '10'], a: 1, why: '數一數鉛筆蓋住幾小格。', ok: '對了！9 小格，就是 9 公分。' } },
+    note: k => k === 5 ? '阿木的手指比較寬：5 下' : k === 8 ? '小猴子的手指比較窄：8 下' : '大家都用一樣長的小方塊：都是 6 格',
+    found: '手指寬窄不一樣，量出來就不一樣。大家用一樣長的小格，答案才會一樣。', name: `大家約好用這一小格的長度，叫 1 ${cT('公分')}。木條有 6 格，就是 6 公分。`, loop: [2],
+    check: [{ q: '這把尺上，相鄰兩個數字之間是 1 公分。鉛筆從 0 對齊到這裡，長幾公分？', pic: () => cRuler(9, 10), opts: ['8', '9', '10'], a: 1, back: 2, why: '從 0 開始，數一數鉛筆蓋住幾小格。', ok: '對了，蓋住 9 小格，就是 9 公分。' },
+      { q: '這次鉛筆的左端對齊 2，右端對齊 9。長幾公分？', pic: () => cRuler(7, 10, 2), opts: ['7', '9', '11'], a: 0, back: 2, why: '數一數，從 2 到 9 有幾小格？', whys: [null, '9 是右端的刻度，可是左端不是從 0 開始。數一數鉛筆蓋住幾小格。', '11 是 2＋9。要算的是從 2 到 9 有幾小格。'], ok: '對了，從 2 到 9 有 7 小格，9－2＝7，長 7 公分。' }] },
   { key: 'm', title: '公尺', sem: '二下', scene: '木橋好長，要量到什麼時候？', terms: ['公尺'], who: 'amu', quiz: ['2b-3'], when: () => false,
-    ask: '木橋好長！用 1 公分一格一格量，要量好久。有沒有快一點的方法？', tryIt: '往右拖，把小格接起來。', states: [10, 50, 100],
+    ask: '木橋好長！用 1 公分一格一格量，要量好久。有沒有快一點的方法？', tryIt: '向右拖拉桿，把 1 公分的小格接起來。', states: [10, 50, 100],
     pic: (k, n) => `${cStick(k)}${n ? cTag(k === 100 ? '100 公分是 1 公尺' : '接起來⋯⋯') : ''}`,
-    note: k => k === 100 ? '接了 100 格，變成一根長棍！' : `接了 ${k} 格`,
-    found: '用這根長棍量，木橋一下子就量好了。', name: `100 公分接起來，叫 1 ${cT('公尺')}。`, loop: [0, 2],
-    check: { q: '小船長 3 公尺，是幾公分？', pic: () => `${cStick(100)}${cStick(100)}${cStick(100)}`, opts: ['3', '30', '300'], a: 2, why: '1 根長棍有 100 公分，3 根呢？', ok: '對了！3 公尺是 300 公分。' } },
-  { key: 'capacity', title: '容量', sem: '二上', scene: '瘦壺和胖壺，誰裝得多？', terms: ['容量'], who: 'song', quiz: ['2a-5'], when: () => false,
-    ask: '一個瘦瘦高高的壺，一個矮矮胖胖的壺。看不出來，誰裝的水比較多？', tryIt: '往右拖，用一樣的杯子倒水。', states: [[3, 0], [3, 3], [3, 5]],
-    pic: ([a, b], n) => `<div class="pots">${cPot('tall', '瘦壺', a / 3 * 100, a, 0)}${cPot('fat', '胖壺', b / 5 * 100, b, b === 5 ? 60 : 0)}</div>${n ? cTag('胖壺的容量比較大') : ''}`,
-    note: ([a, b]) => b === 0 ? '瘦壺倒 3 杯，滿了' : b === 3 ? '胖壺倒 3 杯，還沒滿' : '胖壺倒 5 杯，才滿',
-    found: '杯子一樣大，倒得杯數多的，裝得比較多。', name: `一個東西裝滿的水量，叫${cT('容量')}。`, loop: [0, 1, 2],
-    check: { q: '大鍋子倒滿要 9 碗，小鍋子倒滿要 4 碗（碗一樣大）。哪一個容量比較大？', pic: () => '<div class="pots">🍲</div>', opts: ['大鍋子', '小鍋子'], a: 0, why: '碗一樣大，誰倒的碗數多？', ok: '對了！大鍋子的容量比較大。' } },
+    note: k => k === 100 ? '接了 100 個 1 公分，長 100 公分（圖是縮小畫的）' : `接了 ${k} 個 1 公分，長 ${k} 公分`,
+    found: '接成 100 公分長的長棍，用長棍量木橋，一下子就量好一大段。', name: `100 公分是 1 ${cT('公尺')}。`, loop: [0, 2],
+    check: [{ q: '小船的長度是 3 公尺，是幾公分？', pic: () => `${cStick(100)}${cStick(100)}${cStick(100)}`, opts: ['3', '30', '300'], a: 2, back: 2, why: '1 公尺是 100 公分，3 公尺呢？', whys: ['3 是公尺的數目。1 公尺是 100 公分，3 公尺呢？', '30 是 3 個 10。1 公尺是 100 公分，不是 10 公分。', null], ok: '對了，3 個 100 公分是 300 公分。' },
+      { q: '繩子長 1 公尺又 20 公分，是幾公分？', pic: () => `${cStick(100)}${cStick(20)}`, opts: ['120', '102', '21'], a: 0, back: 2, why: '1 公尺是 100 公分，再加 20 公分。', whys: [null, '102 是 100 再加 2。這裡多出來的是 20 公分。', '1 公尺不是 1 公分。1 公尺是 100 公分，再加 20 公分。'], ok: '對了，100 公分加 20 公分，是 120 公分。' }] },
+  { key: 'capacity', title: '容量', sem: '二上', scene: '高窄的壺和矮寬的壺，誰裝得多？', terms: ['容量'], who: 'song', quiz: ['2a-5'], when: () => false,
+    ask: '一個壺高高窄窄，一個壺矮矮寬寬。只用眼睛看，比不出誰裝得多。可以怎麼比？', tryIt: '向右拖拉桿，用同一個杯子，每次裝滿再倒進壺裡。', states: [[3, 0], [3, 3], [3, 5]],
+    pic: ([a, b], n) => `<div class="pots">${cPot('tall', '高窄壺', a / 3 * 100, a, 0)}${cPot('fat', '矮寬壺', b / 5 * 100, b, b === 5 ? 60 : 0)}</div>${n ? cTag('矮寬壺的容量比較大') : ''}`,
+    note: ([a, b]) => b === 0 ? '高窄壺倒 3 杯，滿了' : b === 3 ? '矮寬壺也倒 3 杯，還沒滿' : '矮寬壺倒到第 5 杯，才滿',
+    found: '用同一個杯子、每杯都裝滿來倒。倒滿要的杯數多，壺就裝得多。', name: `一個容器裝滿時能裝的量，叫${cT('容量')}。`, loop: [0, 1, 2],
+    check: [{ q: '大鍋子倒滿要 9 碗，小鍋子倒滿要 4 碗（用同一個碗，每次都裝滿）。哪一個容量比較大？', pic: () => '<div class="pots">🍲</div>', opts: ['大鍋子', '小鍋子'], a: 0, back: 2, why: '同一個碗，倒滿要的碗數多，容量才大。誰要 9 碗？', ok: '對了，大鍋子倒滿要 9 碗，容量比較大。' },
+      { q: '甲壺現在有 2 杯水，裝滿要 6 杯；乙壺現在有 4 杯水，裝滿要 5 杯。哪一個壺的容量比較大？', pic: () => `<div class="near">甲壺：${'🥛'.repeat(2)}${'◯'.repeat(4)}</div><div class="near">乙壺：${'🥛'.repeat(4)}${'◯'.repeat(1)}</div><small>🥛 是現在的水，◯ 是還要倒幾杯才滿</small>`, opts: ['甲壺', '乙壺'], a: 0, back: 2, why: '乙壺現在的水比較多，可是容量要看裝滿要幾杯。', ok: '對了，容量看裝滿要幾杯：甲壺要 6 杯，比乙壺的 5 杯多。' }] },
   { key: 'jige', title: '幾個幾', sem: '二上', scene: '糖果一顆一顆數好慢', terms: ['幾個幾'], ban: [/\d 個 \d/], who: 'bear', quiz: ['2a-7', '2a-9'], when: cptMul,
-    ask: '熊奶奶要送糖：每包 5 顆，有 3 包。不想一顆一顆數，怎麼說最快？', tryIt: '往右拖，一包一包放上來。', states: [1, 2, 3],
+    ask: '熊奶奶要送糖：每包 5 顆，有 3 包。不想一顆一顆數，怎麼說最快？', tryIt: '向右拖拉桿，一包一包放上來。', states: [1, 2, 3],
     pic: (k, n) => `${cBags(k, 5)}${n ? cTag(`${k} 個 5`) : ''}`,
-    note: k => ['', '1 包，5 顆', '2 包，5、10', '3 包，5、10、15'][k],
-    found: '每包都一樣多，一包一包加就好了。', name: `每包 5 顆、有 3 包，可以說 3 個 5。這種說法叫${cT('幾個幾')}。`, loop: [0, 1, 2],
-    check: { q: '每盤 4 個包子，有 6 盤。要怎麼說？', pic: () => cBags(6, 4), opts: ['6 個 4', '4 個 6', '10 個'], a: 0, why: '每盤幾個？有幾盤？回去看看怎麼一包一包放。', ok: '對了！6 盤，每盤 4 個，是 6 個 4。' } },
+    note: k => ['', '1 包，5 顆', '2 包，5、10 顆', '3 包，5、10、15 顆'][k],
+    found: '每包都一樣多，就 5 顆、5 顆往上加。', name: `有 3 包、每包 5 顆，可以說成 3 個 5：先說有幾包，再說每包幾個。這種說法叫${cT('幾個幾')}。`, loop: [0, 1, 2],
+    check: { q: '每盤 4 個包子，有 6 盤。依本課的說法，是幾個幾？', pic: () => cBags(6, 4), opts: ['6 個 4', '4 個 6', '10 個'], a: 0, back: 2, why: '先看有幾盤，再看每盤幾個。', whys: [null, '4 個 6 是 4 盤、每盤 6 個。這裡是有 6 盤、每盤 4 個。', '10 是 6＋4，不是包子一共有幾個。先看有幾盤，再看每盤幾個。'], ok: '對了，有 6 盤，每盤 4 個，是 6 個 4。' } },
   { key: 'mult', title: '乘法和乘號', sem: '二上', scene: '加法寫得好長！', terms: ['乘法', '乘號'], ban: ['×'], who: 'bear', quiz: ['2a-7', '2a-9'], when: cptMul,
-    ask: '5＋5＋5＋5＋5＋5＋5＋5，寫得好長！有沒有短一點的寫法？', tryIt: '往右拖，多放幾包看看。', states: [2, 4, 8],
+    ask: '5＋5＋5＋5＋5＋5＋5＋5，寫得好長！有沒有短一點的寫法？', tryIt: '向右拖拉桿，多放幾包看看。', states: [2, 4, 8],
     pic: (k, n) => n ? `${cBags(k, 5)}${cEq(5, k, ['每份量', '份數'])}<div class="c-arrow">${cTag('乘法')} ${cTag('× 是乘號')}</div>` : `${cBags(k, 5)}<div class="chain num">${Array(k).fill(5).join('＋')}</div>`,
     note: k => `每份 5 顆，有 ${k} 份`,
-    found: '每次都加 5。只要記住「每份幾顆」和「有幾份」就夠了。', name: `每份 5 顆、有 8 份，寫成 5×8。這種算法叫${cT('乘法')}，× 叫${cT('乘號')}。先寫每份量，再寫份數。`, loop: [0, 1, 2],
-    check: { q: '每盤 4 個包子，有 3 盤。乘法算式是哪一個？', pic: () => cBags(3, 4), opts: ['4×3', '3×4', '4＋3'], a: 0, why: '先寫每份量，再寫份數。每盤幾個？有幾盤？', ok: '對了！每份量×份數，4×3＝12 個。' } },
+    found: '每次都加 5。只要知道「每份幾顆」和「有幾份」就夠了。', name: `每份 5 顆、有 8 份，寫成 5×8。這種算法叫${cT('乘法')}，× 叫${cT('乘號')}。本課先寫每份量，再寫份數。`, loop: [0, 1, 2],
+    check: { q: '每盤 4 個包子，有 3 盤。依本課寫法（先寫每份量，再寫份數），算式是哪一個？', pic: () => cBags(3, 4), opts: ['4×3', '3×4', '4＋3'], a: 0, back: 2, why: '每盤幾個？有幾盤？', whys: [null, '3×4 算出來也是 12，答數沒有錯；只是本課先寫每盤幾個，再寫有幾盤。', '4＋3 是 4 個和 3 個合起來，不是 3 盤、每盤 4 個。'], ok: '對了，每份量×份數，4×3＝12 個。寫成 3×4，答數也是 12。' } },
   { key: 'bei', title: '倍', sem: '二上', scene: '繩子要接幾段才夠？', terms: ['倍'], who: 'amu', quiz: ['2a-9'], when: q => q.kind === 'candy' && (q.mode === 'more' || q.mode === 'less'),
-    ask: '一段繩子有 2 格長。木橋要接成 3 段那麼長，要怎麼說才清楚？', tryIt: '往右拖，一段一段接起來。', states: [1, 2, 3],
+    ask: '一段繩子有 2 格長。木橋要接成 3 段那麼長，要怎麼說才清楚？', tryIt: '向右拖拉桿，一段一段接起來。', states: [1, 2, 3],
     pic: (k, n) => `${cRope(k)}${n ? cTag(k === 1 ? '2 格' : `${k * 2} 格是 2 格的 ${k} 倍`) : ''}`,
     note: k => `接 ${k} 段，是 ${k * 2} 格`,
-    found: '6 格，就是把 2 格重複 3 次。', name: `6 格是 2 格的 3 ${cT('倍')}，寫成 2×3＝6。`, loop: [0, 1, 2],
-    check: { q: '一盒有 4 顆糖。媽媽的糖是它的 2 倍，有幾顆？', pic: () => cBags(1, 4), opts: ['4', '6', '8'], a: 2, why: '2 倍就是 2 個 4。', ok: '對了！4×2＝8 顆。' } },
+    found: '6 格，就是 3 段 2 格接起來。', name: `把 2 格看成 1 份，6 格有 3 份，說成 6 格是 2 格的 3 ${cT('倍')}，寫成 2×3＝6。`, loop: [0, 1, 2],
+    check: { q: '一盒有 4 顆糖。媽媽的糖是一盒的 2 倍，有幾顆？', pic: () => cBags(1, 4), opts: ['4', '6', '8'], a: 2, back: 2, why: '把一盒的 4 顆看成 1 份，2 倍就是 2 份。', whys: ['4 顆是 1 盒，只有 1 份。2 倍是 2 份。', '6 是 4＋2。2 倍是 2 個 4，不是多 2 顆。', null], ok: '對了，把一盒 4 顆看成 1 份，2 倍是 2 份，4×2＝8 顆。' } },
   { key: 'zero', title: '0 和 1 的乘法', sem: '二下', scene: '盤子上都沒有糖', terms: ['1×3', '0×3'], who: 'bear', quiz: ['2b-5'], when: q => (q.kind === 'candy' && q.special) || (q.kind === 'scale' && cptLow(q)),
-    ask: '3 個盤子，熊奶奶每盤放的糖越來越少。如果每盤都沒有糖呢？', tryIt: '往右拖，每盤少放一點。', states: [2, 1, 0],
+    ask: '3 個盤子，熊奶奶每盤放的糖越來越少。如果每盤都沒有糖呢？', tryIt: '向右拖拉桿，每盤少放一點。', states: [2, 1, 0],
     pic: (a, n) => `${cPlates(a, 3)}${n ? cTag(`${a}×3＝${a * 3}`) : ''}`,
-    note: a => `每盤 ${a} 顆，3 盤，共 ${a * 3} 顆`,
-    found: '每盤都沒有糖，盤子再多，也是 0 顆。', name: `每盤 1 顆，寫成 ${cT('1×3')}＝3；每盤 0 顆，寫成 ${cT('0×3')}＝0。`, loop: [1, 2],
-    check: { q: '7 個籃子都是空的，每籃 0 顆蘋果。0×7 是多少？', pic: () => cPlates(0, 7), opts: ['0', '7', '70'], a: 0, why: '籃子裡都沒有蘋果，有幾顆？', ok: '對了！0×7＝0。' } },
+    note: a => `每盤 ${a} 顆，3 盤，一共 ${a * 3} 顆`,
+    found: '每盤都沒有糖，盤子再多，一共也是 0 顆。', name: `每盤 1 顆，寫成 ${cT('1×3')}＝3；每盤 0 顆，寫成 ${cT('0×3')}＝0。`, loop: [1, 2],
+    check: [{ q: '7 個籃子都是空的，每籃 0 顆蘋果。0×7 是多少？', pic: () => cPlates(0, 7), opts: ['0', '7', '70'], a: 0, back: 2, why: '籃子裡都沒有蘋果，一共有幾顆？', whys: [null, '7 是籃子的數目。每籃有幾顆蘋果？', null], ok: '對了，每籃 0 顆，7 籃還是 0 顆，0×7＝0。' },
+      { q: '每盤 1 顆糖，有 6 盤。1×6 是多少？', pic: () => cPlates(1, 6), opts: ['1', '6', '7'], a: 1, back: 1, why: '6 盤各 1 顆，一顆一顆數。', whys: ['1 是每盤的顆數。有 6 盤，一共幾顆？', null, '7 是 1＋6。6 盤各 1 顆，一顆一顆數。'], ok: '對了，6 盤各 1 顆，1×6＝6。' }] },
   { key: 'clock', title: '時針和分針', sem: '二上', scene: '兩根針，要先看哪一根？', terms: ['時針', '分針'], who: 'owl', quiz: ['2a-8'], when: q => q.kind === 'clock',
-    ask: '大鐘有長短兩根針。阿鐘問：現在幾時幾分，兩根針要怎麼看？', tryIt: '往右拖，撥動長針。', states: [0, 5, 10],
+    ask: '大鐘有長短兩根針。阿鐘問：現在幾時幾分，兩根針要怎麼看？', tryIt: '向右拖拉桿，看長針走動。', states: [0, 5, 10],
     pic: (m, n) => `${cClock(3, m)}${n ? `<div class="c-arrow">${cTag('短針是時針')} ${cTag('長針是分針')}</div>` : ''}`,
-    note: m => m === 0 ? '長針指 12，短針指 3：3 時整' : `長針走 ${m / 5} 大格，是 ${m} 小格：3 時 ${m} 分`,
-    found: '短針告訴我們幾時，長針走 1 小格就過 1 分。', name: `短針叫${cT('時針')}，看幾時；長針叫${cT('分針')}，看幾分。`, loop: [0, 1, 2],
-    check: { q: '時針剛過 7，分針指在 4。現在是幾時幾分？', pic: () => cClock(7, 20), opts: ['7 時 20 分', '4 時 7 分', '7 時 4 分'], a: 0, why: '分針走 1 大格是 5 小格。走了幾大格？', ok: '對了！4 大格是 20 小格，7 時 20 分。' } },
+    note: m => m === 0 ? '長針指 12，短針指 3：3 時整' : `長針從 12 走了 ${m / 5} 大格，是 ${m} 小格；短針過了 3、還沒到 4：3 時 ${m} 分`,
+    found: '短針告訴我們幾時；長針每走 1 小格，就是 1 分。', name: `短針叫${cT('時針')}，看幾時；長針叫${cT('分針')}，看幾分。`, loop: [0, 1, 2],
+    check: { q: '時針已經過了 7、還沒到 8，分針指在 4。現在是幾時幾分？', pic: () => cClock(7, 20), opts: ['7 時 20 分', '4 時 7 分', '7 時 4 分'], a: 0, back: 1, why: '分針走 1 大格是 5 小格。從 12 走到 4，走了幾大格？', whys: [null, '時針是短針，看幾時；分針是長針，看幾分。', '分針指在 4，是從 12 走了 4 大格。1 大格是 5 小格，是幾分？'], ok: '對了，時針過了 7，是 7 時；分針走了 4 大格，是 20 小格，7 時 20 分。' } },
   { key: 'hour', title: '1 小時', sem: '二上', scene: '長針走一圈，過了多久？', terms: ['1 小時', '60 分鐘'], who: 'owl', quiz: ['2a-8'], when: q => q.kind === 'clock' && q.mode === 'after',
-    ask: '阿鐘 2 時開始修鐘，修到長針又回到 12。過了多久？', tryIt: '往右拖，讓長針走一圈。', states: [15, 30, 60],
+    ask: '阿鐘 2 時整開始修鐘，修到長針第一次又回到 12。過了多久？', tryIt: '向右拖拉桿，讓長針走一圈。', states: [15, 30, 60],
     pic: (m, n) => `${cClock(2 + Math.floor(m / 60), m % 60)}${n ? cTag('1 小時＝60 分鐘') : ''}`,
-    note: m => m === 60 ? '長針走完一圈，60 小格；短針走了 1 大格' : `長針走了 ${m} 小格`,
-    found: '長針走完一圈，短針才走 1 大格，從 2 走到 3。', name: `長針走一圈是 ${cT('60 分鐘')}，也叫 ${cT('1 小時')}。`, loop: [0, 1, 2],
-    check: { q: '看故事書看了 1 小時，是幾分鐘？', pic: () => cClock(4, 0), opts: ['30', '60', '100'], a: 1, why: '長針走一圈有幾小格？', ok: '對了！1 小時是 60 分鐘。' } },
+    note: m => m === 60 ? '長針走完一圈，是 60 小格；短針從 2 走到 3，走了 1 大格' : `長針走了 ${m} 小格；短針在 2 和 3 之間`,
+    found: '長針走完一圈，短針剛好走 1 大格，從 2 走到 3。', name: `長針走一圈是 ${cT('60 分鐘')}，也就是 ${cT('1 小時')}。`, loop: [0, 1, 2],
+    check: { q: '小美從 4 時整開始看故事書，看到 5 時整。看了幾分鐘？', pic: () => cClock(5, 0), opts: ['30', '60', '100'], a: 1, back: 2, why: '從 4 時整到 5 時整，長針走了幾圈？', whys: ['30 分鐘，長針只走半圈。從 4 時整到 5 時整，長針走了幾圈？', null, '鐘面一圈是 60 小格，不是 100 格。'], ok: '對了，長針走一圈，是 60 分鐘，也就是 1 小時。' } },
   { key: 'est', title: '估算', sem: '二下', scene: '100 元夠買嗎？', terms: ['估算', '大約'], who: 'monkey', quiz: ['2b-2'], when: q => (q.kind === 'scale' && q.mode === 'near') || (q.kind === 'shop' && q.mode === 'enough'),
-    ask: '猴子老闆的書 49 元、球 31 元。你帶了 100 元，不用算完，夠不夠？', tryIt: '往右拖，把數想成好算的數。', states: [0, 1, 2],
+    ask: '猴子老闆的書 49 元、球 31 元。你帶了 100 元，不用算完，夠不夠？', tryIt: '向右拖拉桿，把數想成好算的數。', states: [0, 1, 2],
     pic: (s, n) => `${cNear(49, 50, true)}${cNear(31, 30, s >= 1)}<div class="near num ${s >= 2 ? 'cin' : 'off'}"><b>50＋30</b><i>➜</i><b class="on">80</b></div>${n ? `<div class="c-arrow">${cTag('49 大約是 50')} ${cTag('這樣算叫估算')}</div>` : ''}`,
-    note: s => ['49 很靠近 50', '31 很靠近 30', '想成 50＋30＝80，比 100 少，夠了！'][s],
-    found: '不用算到最後，想成好算的數，就知道夠不夠。', name: `49 ${cT('大約')}是 50。想成好算的數來算，叫${cT('估算')}。`, loop: [0, 1, 2],
-    check: { q: '鞋子 198 元、帽子 102 元。估算一下，大約要多少元？', pic: () => `${cNear(198, '？', true)}${cNear(102, '？', true)}`, opts: ['200', '300', '400'], a: 1, why: '198 靠近幾百？102 靠近幾百？', ok: '對了！想成 200＋100，大約 300 元。' } },
+    note: s => ['49 很接近 50', '31 很接近 30', '想成 50＋30＝80，比 100 元少很多，夠了'][s],
+    found: '先想成接近又好算的數，很快就知道多少。要確定，再算 49＋31＝80。', name: `49 ${cT('大約')}是 50。先用接近又好算的數，算出大約多少，叫${cT('估算')}。`, loop: [0, 1, 2],
+    check: { q: '鞋子 198 元、帽子 102 元。估算一下，大約要多少元？', pic: () => `${cNear(198, '？', true)}${cNear(102, '？', true)}`, opts: ['200', '300', '400'], a: 1, back: 2, why: '198 接近幾百？102 接近幾百？', whys: ['198 接近 200，102 接近 100，兩樣都要加進來。', null, '102 接近 100，不是 200。'], ok: '對了，想成 200＋100，大約 300 元。' } },
   { key: 'pack', title: '分裝', sem: '二下', scene: '12 顆糖可以裝幾盒？', terms: ['分裝'], who: 'bear', quiz: ['2b-8'], when: q => q.kind === 'candy' && q.mode === 'pack',
-    ask: '熊奶奶有 12 顆糖，每盒裝 3 顆。可以裝幾盒？', tryIt: '往右拖，一盒一盒裝。', states: [1, 2, 4],
+    ask: '熊奶奶有 12 顆糖，每盒裝 3 顆。可以裝幾盒？', tryIt: '向右拖拉桿，一盒一盒裝。', states: [1, 2, 4],
     pic: (k, n) => `${cPile(12 - 3 * k)}${cBags(k, 3)}${n ? cTag('每 3 顆裝一盒，這是分裝') : ''}`,
-    note: k => k === 4 ? '裝了 4 盒，剛好裝完！' : `裝了 ${k} 盒，還剩 ${12 - 3 * k} 顆`,
-    found: '每次拿 3 顆裝 1 盒，裝了 4 盒，一顆也沒剩。', name: `每幾個裝成一份，看可以裝幾份，叫${cT('分裝')}。`, loop: [0, 1, 2],
-    check: { q: '15 個包子，每盤放 5 個，可以放幾盤？', pic: () => cPile(15), opts: ['3', '5', '10'], a: 0, why: '5 個 5 個拿，可以拿幾次？', ok: '對了！3 盤。5×3＝15。' } },
-  { key: 'share', title: '平分', sem: '二下', scene: '怎麼分才公平？', terms: ['平分'], who: 'bear', quiz: ['2b-8', '2b-9'], when: q => (q.kind === 'candy' && ['share', 'fair', 'frac'].includes(q.mode)) || (q.kind === 'scale' && q.frac),
-    ask: '12 顆糖要給 3 個小朋友。要大家一樣多，怎麼發才公平？', tryIt: '往右拖，一人一顆輪流發。', states: [1, 2, 4],
+    note: k => k === 4 ? '裝了 4 盒，剛好裝完' : `裝了 ${k} 盒，還剩 ${12 - 3 * k} 顆`,
+    found: '每次拿 3 顆裝 1 盒，裝了 4 盒，一顆也沒剩。', name: `每幾個裝成一份，看可以裝成幾份，叫${cT('分裝')}。`, loop: [0, 1, 2],
+    check: { q: '15 個包子，每盤放 5 個，可以放幾盤？', pic: () => cPile(15), opts: ['3', '5', '10'], a: 0, back: 2, why: '5 個 5 個拿，可以拿幾次？', whys: [null, '5 是每盤的個數。5 個 5 個拿，可以拿幾次？', '10 是 15－5。一盤一盤放，放到沒有為止。'], ok: '對了，可以放 3 盤，5×3＝15。' } },
+  { key: 'share', title: '平分', sem: '二下', scene: '每個人要一樣多，怎麼發？', terms: ['平分'], who: 'bear', quiz: ['2b-8', '2b-9'], when: q => (q.kind === 'candy' && ['share', 'fair', 'frac'].includes(q.mode)) || (q.kind === 'scale' && q.frac),
+    ask: '12 顆糖要全部分給 3 個小朋友，每個人要分到一樣多。可以怎麼發？', tryIt: '向右拖拉桿，一人一顆輪流發。', states: [1, 2, 4],
     pic: (k, n) => `${cPile(12 - 3 * k)}<div class="bags">${Array.from({ length: 3 }, () => `<span class="kid"><em>🙂</em><span class="bag">${cDots(k)}</span></span>`).join('')}</div>${n ? cTag('每人一樣多，這是平分') : ''}`,
-    note: k => k === 4 ? '發完了！每人都是 4 顆' : `每人 ${k} 顆，還剩 ${12 - 3 * k} 顆`,
-    found: '一輪一輪發到完，每個人都一樣多。', name: `分得一樣多，叫${cT('平分')}。`, loop: [0, 1, 2],
-    check: { q: '10 片餅乾給 2 個人。哪一種是平分？', pic: () => cPile(10), opts: ['5 片和 5 片', '6 片和 4 片', '9 片和 1 片'], a: 0, why: '平分要每個人一樣多。', ok: '對了！都是 5 片，一樣多。' } },
+    note: k => k === 4 ? '發完了，每人都是 4 顆' : `每人 ${k} 顆，還剩 ${12 - 3 * k} 顆`,
+    found: '一輪一輪發到完，每個人都是 4 顆，一樣多。', name: `全部分完，每份一樣多，叫${cT('平分')}。`, loop: [0, 1, 2],
+    check: { q: '10 片餅乾要分給 2 個人。哪一種是平分？', pic: () => cPile(10), opts: ['5 片和 5 片', '6 片和 4 片', '4 片和 4 片，剩 2 片'], a: 0, back: 2, why: '平分要全部分完，每個人一樣多。', whys: [null, '6 片和 4 片全部分完了，可是兩個人不一樣多。', '兩個人一樣多，可是還剩 2 片沒有分完。'], ok: '對了，10 片全部分完，兩人都是 5 片。' } },
   { key: 'frac', title: '幾分之一', sem: '二下', scene: '一塊蛋糕捲要怎麼說？', terms: ['三分之一', '幾分之一'], ban: ['分之'], who: 'bear', quiz: ['2b-9'], when: q => (q.kind === 'candy' && (q.mode === 'frac' || q.mode === 'fair')) || (q.kind === 'scale' && q.frac),
-    ask: '一條蛋糕捲切給大家，要切得一樣長。你吃到的紅色這一段，要怎麼說？', tryIt: '往右拖，切成不同段數。', states: [2, 3, 4],
+    ask: '一條蛋糕捲要切給大家，每一段要一樣長。你吃到紅色這一段，要怎麼說？', tryIt: '向右拖拉桿，切成不同的段數。', states: [2, 3, 4],
     pic: (k, n) => `<div class="c-bar">${barSvg(Array(k).fill(1), true)}</div>${n ? cTag(Logic.fracWord(k)) : ''}`,
     note: k => `切成 ${k} 段一樣長，紅色是其中 1 段`,
-    found: '切的段數越多，紅色這一段就越小。', name: `平分成 3 份，1 份是${cT('三分之一')}。平分成幾份，1 份就是${cT('幾分之一')}。`, loop: [0, 1, 2],
-    check: { q: '披薩平分成 4 片，吃了 1 片。吃了多少個披薩？', pic: () => `<div class="c-bar">${cakeSvg(4)}</div>`, opts: ['二分之一', '四分之一', '一分之四'], a: 1, why: '平分成幾份？回去數一數。', ok: '對了！四分之一個。' } },
+    found: '同一條蛋糕捲，平分的段數越多，紅色這一段就越小。', name: `把一整條平分成 3 段，1 段是它的${cT('三分之一')}。平分成幾份，1 份就是${cT('幾分之一')}。`, loop: [0, 1, 2],
+    check: [{ q: '一個披薩平分成 4 片，吃了 1 片。吃了幾分之一個披薩？', pic: () => `<div class="c-bar">${cakeSvg(4)}</div>`, opts: ['二分之一', '四分之一', '一分之四'], a: 1, back: 2, why: '平分成幾片？', whys: ['數一數，這個披薩平分成幾片？', null, '平分成 4 片，1 片要說成四分之一。'], ok: '對了，平分成 4 片，1 片是四分之一個。' },
+      { q: '這條蛋糕捲切成 3 段，可是長短不一樣。紅色這一段是三分之一條嗎？', pic: () => `<div class="c-bar">${barSvg([1.8, 0.6, 0.6], true)}</div>`, opts: ['是', '不是'], a: 1, back: 1, why: '三分之一要平分成 3 段，每段一樣長。這 3 段一樣長嗎？', ok: '對了，3 段不一樣長，不是平分，紅色這段不是三分之一。' }] },
   { key: 'calendar', title: '大月和小月', sem: '二下', scene: '每個月都一樣長嗎？', terms: ['大月', '小月'], who: 'owl', quiz: ['2b-4'], when: () => false,
-    ask: '果果每天存 1 元。每個月都會存一樣多嗎？', tryIt: '往右拖，翻翻月曆。', states: [1, 4, 2],
-    pic: (m, n) => `${cCal(m)}${n ? cTag(m === 1 ? '31 天，是大月' : '比 31 天少，是小月') : ''}`,
-    note: m => `${m} 月有 ${{ 1: 31, 4: 30, 2: 28 }[m]} 天，存 ${{ 1: 31, 4: 30, 2: 28 }[m]} 元`,
-    found: '每個月的天數不一樣！有的 31 天，有的比較少。', name: `有 31 天的月叫${cT('大月')}；比 31 天少的月叫${cT('小月')}。`, loop: [0, 1, 2],
-    check: { q: '7 月有 31 天。它是大月還是小月？', pic: () => '<div class="pots">📅</div>', opts: ['大月', '小月'], a: 0, why: '數一數有沒有 31 天。', ok: '對了！7 月是大月。' } },
+    ask: '果果每天存 1 元。每個月存的錢都一樣多嗎？', tryIt: '向右拖拉桿，翻翻月曆。', states: [1, 4, 2],
+    pic: (m, n) => `${cCal(m)}${n ? cTag({ 1: '31 天，是大月', 4: '30 天，是小月', 2: '平年的 2 月：28 天' }[m]) : ''}`,
+    note: m => m === 2 ? '這張是平年的 2 月：有 28 天，存 28 元' : `${m} 月有 ${CAL_D[m]} 天，存 ${CAL_D[m]} 元`,
+    found: '每個月的天數不一樣：有的月 31 天，有的月 30 天，2 月最少。', name: `有 31 天的月叫${cT('大月')}；有 30 天的月叫${cT('小月')}。2 月比較特別：平年 28 天，閏年 29 天。`, loop: [0, 1, 2],
+    check: [{ q: '7 月有 31 天。它是大月還是小月？', pic: () => cCal(7), opts: ['大月', '小月'], a: 0, back: 0, why: '有 31 天的月，是哪一種月？', ok: '對了，7 月有 31 天，是大月。' },
+      { q: '11 月有 30 天。它是大月還是小月？', pic: () => cCal(11), opts: ['大月', '小月'], a: 1, back: 1, why: '大月有 31 天。有 30 天的月，是哪一種月？', ok: '對了，11 月有 30 天，是小月。' }] },
   { key: 'weight', title: '重量', sem: '二下', scene: '蘋果和橘子，誰比較重？', terms: ['重量'], who: 'mole', quiz: ['2b-6'], when: () => false,
-    ask: '蘋果和橘子看起來差不多大。拿在手上比不出來，誰比較重？', tryIt: '往右拖，用天平比比看。', states: [0, 1, 2],
+    ask: '蘋果和橘子看起來差不多大。拿在手上比不出來，誰比較重？', tryIt: '向右拖拉桿，用天平比比看。', states: [0, 1, 2],
     pic: (s, n) => `${s === 0 ? cScale('🍎', '', -8) : s === 1 ? cScale('🍎', '🍊', -5) : `${cScale('🍎', '●●●●●', 0)}<div class="near num">🍊 ＝ ●●●</div>`}${n ? cTag('東西有多重，就是重量') : ''}`,
-    note: s => ['放上蘋果，那一邊沉下去', '再放上橘子，蘋果那邊還是比較低', '用彈珠比：蘋果 5 顆，橘子 3 顆'][s],
-    found: '沉下去的比較重；用彈珠比，還能看出差多少。', name: `東西有多重，就是它的${cT('重量')}。`, loop: [0, 1, 2],
-    check: { q: '1 本書和 6 個積木一樣重，1 個杯子和 4 個積木一樣重。誰的重量比較重？', pic: () => cScale('📕', '☕', -6), opts: ['書', '杯子', '一樣'], a: 0, why: '積木一樣大，誰要用的積木多？', ok: '對了！書的重量比較重。' } },
+    note: s => ['天平兩邊是一樣的盤子。只放蘋果，蘋果那邊沉下去', '另一邊放橘子，蘋果那邊還是比較低', '改用一樣重的彈珠來比：蘋果和 5 顆一樣重，橘子和 3 顆一樣重'][s],
+    found: '天平低的那一邊比較重。用一樣重的彈珠來比，還看得出蘋果比橘子重 2 顆彈珠。', name: `東西有多重，就是它的${cT('重量')}。`, loop: [0, 1, 2],
+    check: { q: '用每個一樣重的積木來比：書和 6 個積木一樣重，杯子和 4 個積木一樣重。誰比較重？', pic: () => cScale('📕', '☕', -6), opts: ['書', '杯子', '一樣重'], a: 0, back: 2, why: '積木每個一樣重。要用比較多個積木的，比較重。', whys: [null, '杯子和 4 個積木一樣重，書和 6 個一樣重。誰用的積木多？', '書要 6 個積木，杯子要 4 個，不一樣多。'], ok: '對了，書和 6 個積木一樣重，比杯子的 4 個多，書比較重。' } },
   { key: 'shape', title: '邊、頂點、角', sem: '二上', scene: '怎麼說清楚這個形狀？', terms: ['邊', '頂點', '角'], who: 'owl', quiz: ['2a-10', '2b-10'], when: () => false,
-    ask: '阿鐘想在電話裡告訴朋友這個招牌的樣子。只說「尖尖的」，對方聽得懂嗎？', tryIt: '往右拖，一樣一樣找出來。', states: [0, 1, 2],
+    ask: '阿鐘想在電話裡告訴朋友這個招牌的樣子。只說「尖尖的」，對方聽得懂嗎？', tryIt: '向右拖拉桿，一樣一樣找出來。', states: [0, 1, 2],
     pic: (s, n) => `${cTri(s)}${n ? cTag(['紅色的線是邊', '綠色的點是頂點', '藍色的地方是角'][s]) : ''}`,
-    note: s => ['直直的線，有 3 條', '尖尖的點，有 3 個', '兩條線張開的地方，有 3 個'][s],
-    found: '線、尖尖的點、張開的地方，都數得出來。', name: `直直的線叫${cT('邊')}；尖尖的點叫${cT('頂點')}；兩條邊張開的地方叫${cT('角')}。`, loop: [0, 1, 2],
-    check: { q: '方方的招牌，有幾個頂點？', pic: () => '<svg class="c-svg tall" viewBox="0 0 320 130"><rect x="90" y="15" width="140" height="100" fill="#fff0cf" stroke="#c9740c" stroke-width="4"/></svg>', opts: ['3', '4', '5'], a: 1, why: '頂點是尖尖的點。一個一個數。', ok: '對了！有 4 個頂點。' } },
-  { key: 'perim', title: '周長', sem: '二上', scene: '繞花圃一圈有多遠？', terms: ['周長'], who: 'gua', quiz: ['2a-10'], when: () => false,
-    ask: '呱呱要繞著花圃跳一圈。一圈有多遠？', tryIt: '往右拖，帶呱呱沿著花圃走。', states: [1, 2, 4],
-    pic: (k, n) => `${cRect(k)}<div class="chain num">${[5, 3, 5, 3].slice(0, k).join('＋')}＝${[5, 8, 13, 16][k - 1]}</div>${n ? cTag('繞一圈的長是周長') : ''}`,
-    note: k => k === 4 ? '回到起點了！一圈是 16' : `走了 ${k} 段，是 ${[5, 8, 13, 16][k - 1]}`,
-    found: '把每一段的長都加起來，就是一圈的長。', name: `繞圖形一圈的長，叫${cT('周長')}。`, loop: [0, 1, 2],
-    check: { q: '正方形每個邊 4 公分，周長是幾公分？', pic: () => '<svg class="c-svg tall" viewBox="0 0 320 130"><rect x="110" y="15" width="100" height="100" fill="#cfe8c9" stroke="#3d9970" stroke-width="4"/><text x="160" y="72" text-anchor="middle" font-size="20">4</text></svg>', opts: ['8', '12', '16'], a: 2, why: '正方形有幾個邊？都要加起來。', ok: '對了！4＋4＋4＋4＝16 公分。' } },
+    note: s => ['圍成這個形狀的直線，有 3 條', '兩條直線接在一起的點，有 3 個', '兩條直線從同一個點張開，有 3 個地方'][s],
+    found: '圍成形狀的直線、兩條直線接在一起的點、兩條直線張開的地方，都數得出來。', name: `圍成圖形的每一條直線叫${cT('邊')}；兩條邊接在一起的點叫${cT('頂點')}；兩條邊從頂點張開，形成${cT('角')}。`, loop: [0, 1, 2],
+    check: [{ q: '這塊長方形招牌，有幾個頂點？', pic: () => cSign(false), opts: ['3', '4', '5'], a: 1, back: 1, why: '頂點是兩條邊接在一起的點。從一個頂點開始，一個一個數。', whys: ['有沒有漏掉一個？從一個頂點開始，一個一個數。', null, '有沒有哪個頂點算了兩次？從一個頂點開始，一個一個數。'], ok: '對了，長方形有 4 個頂點。' },
+      { q: '這塊正方形招牌斜著掛。它有幾個頂點？', pic: () => cSign(true), opts: ['3', '4', '5'], a: 1, back: 1, why: '斜著掛，頂點也不會變多或變少。一個一個數。', ok: '對了，斜著掛還是 4 個頂點。擺的方向改了，頂點不會變多或變少。' }] },
+  { key: 'perim', title: '周長', sem: '二上', scene: '繞花圃一圈有多長？', terms: ['周長'], who: 'gua', quiz: ['2a-10'], when: () => false,
+    ask: '呱呱要沿著花圃的邊跳一圈。長邊 5 公尺，短邊 3 公尺。跳一圈有多長？', tryIt: '向右拖拉桿，帶呱呱沿著邊走。', states: [1, 2, 4],
+    pic: (k, n) => `${cRect(k)}<div class="chain num">${[5, 3, 5, 3].slice(0, k).join('＋')}＝${[5, 8, 13, 16][k - 1]} 公尺</div>${n ? cTag('繞一圈的長度是周長') : ''}`,
+    note: k => k === 4 ? '回到起點了，一圈是 16 公尺' : `走了 ${k} 條邊，一共 ${[5, 8, 13, 16][k - 1]} 公尺`,
+    found: '把繞一圈經過的每一條邊的長度都加起來，就是一圈的長度。', name: `沿著圖形的邊繞一圈的長度，叫${cT('周長')}。`, loop: [0, 1, 2],
+    check: { q: '正方形每一條邊都是 4 公分。周長是幾公分？', pic: () => '<svg class="c-svg tall" viewBox="0 0 320 136"><rect x="110" y="28" width="100" height="100" fill="#cfe8c9" stroke="#3d9970" stroke-width="4"/><text x="160" y="22" text-anchor="middle" font-size="18" fill="#33405a">4</text><text x="226" y="84" text-anchor="middle" font-size="18" fill="#33405a">4</text></svg>', opts: ['8', '12', '16'], a: 2, back: 2, why: '正方形有幾條邊？繞一圈要全部加起來。', whys: ['8 只加了 2 條邊。正方形有幾條邊？', '12 只加了 3 條邊。繞一圈要走完 4 條邊。', null], ok: '對了，4 條邊都是 4 公分，4＋4＋4＋4＝16 公分。' } },
   { key: 'area', title: '面積', sem: '二下', scene: '長桌布和方桌布，誰比較大？', terms: ['面積'], who: 'song', quiz: ['2b-10'], when: () => false,
-    ask: '一塊桌布長長的，一塊方方的。疊起來也看不出來，誰比較大？', tryIt: '往右拖，用一樣大的格子蓋滿。', states: [0, 1, 2],
+    ask: '一塊桌布長長的，一塊方方的。疊起來也看不出來，誰比較大？', tryIt: '向右拖拉桿，用一樣大的格子鋪滿。', states: [0, 1, 2],
     pic: (s, n) => `<div class="cloths">${cCloth(2, 6, s >= 1, '#f4c6d0')}${cCloth(3, 3, s >= 2, '#bcd8f2')}</div>${n ? cTag('12 格的面積比 9 格大') : ''}`,
-    note: s => ['形狀不一樣，比不出來', '長桌布蓋了 12 格', '方桌布蓋了 9 格'][s],
-    found: '格子一樣大，蓋的格子多的，就比較大。', name: `一個面有多大，就是它的${cT('面積')}。`, loop: [0, 1, 2],
-    check: { q: '書本蓋滿 15 格，便當盒蓋滿 12 格（格子一樣大）。誰的面積比較大？', pic: () => '<div class="pots">📕 🍱</div>', opts: ['書本', '便當盒'], a: 0, why: '誰蓋的格子多？', ok: '對了！書本的面積比較大。' } },
+    note: s => ['形狀不一樣，疊起來也比不出來', '長桌布鋪滿 12 格，不重疊，也沒有空隙', '方桌布鋪滿 9 格'][s],
+    found: '格子一樣大、鋪滿不重疊，格子多的那一塊比較大。', name: `一個面有多大，就是它的${cT('面積')}。用一樣大的格子鋪滿，就可以比面積。`, loop: [0, 1, 2],
+    check: { q: '書的封面鋪滿 15 格，便當盒的蓋子鋪滿 12 格（格子一樣大）。哪一個面的面積比較大？', pic: () => '<div class="pots">📕 🍱</div>', opts: ['書的封面', '便當盒的蓋子'], a: 0, back: 2, why: '格子一樣大，鋪滿的格子多，面積就大。誰鋪了 15 格？', ok: '對了，書的封面鋪了 15 格，比 12 格多，面積比較大。' } },
 ];
 const seenCpt = () => S.seenCpt || (S.seenCpt = {});
+const cptDone = () => S.cptDone || (S.cptDone = {});
+const cptMark = (key, f) => { const d = cptDone(); (d[key] = d[key] || {})[f] = 1; save(); };
+const cptChecks = C => [].concat(C.check);
 const cptOf = q => CONCEPTS.filter(c => c.when(q));
+// 唸出來：題目、畫面說明、回饋和選項都唸
+const sayText = () => [...document.querySelectorAll('#prompt, #ct, #msg, #actions .choice')].map(plainText).map(t => t.trim()).filter(Boolean).join('。');
 let cptTimer = null;
 const cptStop = () => { if (cptTimer) { clearInterval(cptTimer); cptTimer = null; } };
 const clamp2 = (v, a, b) => Math.max(a, Math.min(b, v));
 function runConcept(key, then, doneLabel) {
-  const C = CONCEPTS.find(c => c.key === key);
-  const done = () => { cptStop(); seenCpt()[key] = 1; save(); then(); };
+  const C = CONCEPTS.find(c => c.key === key), P = C.pred, L = cptChecks(C), n = C.states.length;
+  let predOk = false;
+  const done = () => { cptStop(); seenCpt()[key] = 1; save(); then(); }; // 跳過或看完都算「看過」，不算完成
   function shell(step, prompt, body) {
     cptStop(); window.scrollTo(0, 0);
     $app.innerHTML = `<div class="top"><button class="icon-btn" id="home" aria-label="回小鎮">⌂</button><div class="dots">${[0, 1, 2, 3].map(i => `<i class="${i < step ? 'g2' : i === step ? 'now' : ''}"></i>`).join('')}</div><span class="sem">小故事</span><button class="icon-btn" id="say" aria-label="唸出來">🔊</button></div>
       <div class="say-row">${artImg(C.who, 'say-who')}<div class="prompt" id="prompt">${prompt}</div></div>
       <div class="stage cpt-stage" id="stage">${body}</div><div class="msg" id="msg"></div><div class="actions" id="actions"></div><button class="skip5" id="skipc">跳過</button>`;
     document.getElementById('home').onclick = () => { cptStop(); R = null; go(''); };
-    document.getElementById('say').onclick = () => speak(plainText(document.getElementById('prompt')));
+    document.getElementById('say').onclick = () => speak(sayText());
     document.getElementById('skipc').onclick = done;
   }
-  function op() { // 動手試，全程不出現新詞
-    shell(1, `${nums(C.ask)}<br><small>${nums(C.tryIt)}</small>`, `<div class="cpw" id="cpw"><div class="cp" id="cp"></div><div class="c2note" id="ct"></div><div class="c2track">${C.states.map(() => '<u></u>').join('')}<b class="knob nudge" id="knob">👆</b></div></div>`);
-    const seen = new Set(); let i = -1, over = false;
+  function op(start, backTo) { // 動手試，全程不出現新詞；backTo 有值表示從「試一題」答錯回來看某一步
+    shell(1, `${nums(C.ask)}<br><small>${nums(C.tryIt)}</small>`, `<div class="cpw" id="cpw"><div class="cp" id="cp"></div><div class="c2note" id="ct"></div><div class="c2track">${C.states.map(() => '<u></u>').join('')}<b class="knob nudge" id="knob">👆</b></div></div><div class="c2steps">${C.states.map((_, k) => `<button class="c2step" data-st="${k}">${N(k + 1)}</button>`).join('')}</div>`);
+    const seen = new Set(), back = backTo !== undefined; let i = -1, over = back, asking = false;
     const btns = () => {
-      if (over) actionBtn('nm', '這叫什麼？').onclick = named;
-      else actionBtn('tn', '試下一個').onclick = () => show((i + 1) % C.states.length);
+      if (back) actionBtn('rb', '回去作答').onclick = () => check(backTo);
+      else if (over) actionBtn('nm', '這叫什麼？').onclick = named;
+      else actionBtn('tn', '下一步').onclick = () => go2(Math.min(i + 1, n - 1) === i ? 0 : i + 1);
     };
-    const show = k => {
-      i = k; setEl('cp', C.pic(C.states[k], false)); setEl('ct', nums(C.note(C.states[k])));
-      const kn = document.getElementById('knob'); kn.style.left = k / (C.states.length - 1) * 100 + '%';
+    const show = (k, extra) => {
+      asking = false; i = k; setEl('cp', C.pic(C.states[k], false)); setEl('ct', nums(C.note(C.states[k])));
+      const kn = document.getElementById('knob'); kn.style.left = k / (n - 1) * 100 + '%';
       seen.add(k); if (seen.size > 1) { kn.classList.remove('nudge'); sfx.hop(); }
-      if (seen.size === C.states.length && !over) { over = true; setMsg(nums(C.found), 'good'); sfx.ok(); reveal('#actions'); }
+      document.querySelectorAll('[data-st]').forEach(b => { b.classList.toggle('on', +b.dataset.st === k); b.classList.toggle('seen', seen.has(+b.dataset.st)); });
+      let m = extra ? nums(extra) : '';
+      if (seen.size === n && !over) { over = true; cptMark(key, 'op'); m = (m ? m + '<br>' : '') + nums(C.found); sfx.ok(); reveal('#actions'); }
+      if (m) setMsg(m, 'good'); else if (!over) setMsg('', '');
       btns();
     };
-    show(0);
-    dragOn(document.getElementById('cpw'), x => { const k = clamp2(Math.round(x * (C.states.length - 1)), 0, C.states.length - 1); if (k !== i) { for (let j = i + Math.sign(k - i); j !== k; j += Math.sign(k - i)) seen.add(j); show(k); } }, 'self');
+    function ask(k) { // 先想再看：答對才看到下一個畫面；答錯只關掉那個選項
+      asking = true; setEl('ct', nums(P.q)); setMsg('', '');
+      document.getElementById('actions').innerHTML = `<div class="choices col">${P.opts.map((o, j) => `<button class="choice" data-p2="${j}">${nums(o)}</button>`).join('')}</div>`;
+      document.querySelectorAll('[data-p2]').forEach(b => b.onclick = () => {
+        const j = +b.dataset.p2;
+        if (j === P.a) { predOk = true; sfx.ok(); show(k, P.ok); return; }
+        sfx.retry(); b.classList.add('no'); b.disabled = true; setMsg(nums((P.whys && P.whys[j]) || P.why), 'hint');
+      });
+      reveal('#actions');
+    }
+    const go2 = k => { if (P && !predOk && k >= P.at) { if (!asking) ask(P.at); return; } show(k); };
+    show(start || 0);
+    document.querySelectorAll('[data-st]').forEach(b => b.onclick = () => go2(+b.dataset.st));
+    // 拖拉桿：只記真的停下來看到的畫面，跨過的中間畫面不算看過
+    dragOn(document.getElementById('cpw'), x => { const k = clamp2(Math.round(x * (n - 1)), 0, n - 1); if (k !== i) go2(k); }, 'self');
   }
   function named() { // 命名，把新詞貼回剛才的圖
     shell(2, nums(C.name), '<div class="cp" id="cp"></div>');
     let k = 0; const paint = () => { if (document.getElementById('cp')) setEl('cp', C.pic(C.states[C.loop[k % C.loop.length]], true)); else cptStop(); };
     paint(); if (C.loop.length > 1) cptTimer = setInterval(() => { k++; paint(); }, 1500);
-    actionBtn('ck', '換一題試試').onclick = check; sfx.good(); reveal('#actions');
+    actionBtn('ck', '試一題').onclick = () => check(0); sfx.good(); reveal('#actions');
   }
-  function check() { // 換情境用新詞答；答錯回到操作
-    const K = C.check; shell(3, nums(K.q), `<div class="cp" id="cp">${K.pic()}</div>`);
-    document.getElementById('actions').innerHTML = `<div class="choices col">${K.opts.map((o, i) => `<button class="choice" data-c2="${i}">${nums(o)}</button>`).join('')}</div>`;
+  function check(ix) { // 換情境試一題；答錯給下一步，留在原題改答案，也可以回去看出錯的那一步
+    const K = L[ix]; shell(3, nums(K.q) + (L.length > 1 ? `<br><small>${nums(`第 ${ix + 1} 題，共 ${L.length} 題`)}</small>` : ''), `<div class="cp" id="cp">${K.pic()}</div>`);
+    document.getElementById('actions').innerHTML = `<div class="choices col">${K.opts.map((o, j) => `<button class="choice" data-c2="${j}">${nums(o)}</button>`).join('')}</div>`;
     document.querySelectorAll('[data-c2]').forEach(b => b.onclick = () => {
-      if (+b.dataset.c2 === K.a) { sfx.good(); setMsg(nums(K.ok), 'good'); seenCpt()[key] = 1; save(); document.getElementById('skipc').hidden = true; actionBtn('fin', doneLabel || '開始玩').onclick = done; reveal('#actions'); return; }
-      sfx.retry(); setMsg(nums(K.why), 'hint'); actionBtn('bk', '回去再動手看看').onclick = op; reveal('#actions');
+      const j = +b.dataset.c2;
+      if (j === K.a) {
+        sfx.good(); setMsg(nums(K.ok), 'good');
+        if (ix + 1 < L.length) { actionBtn('nx', '再試一題').onclick = () => check(ix + 1); }
+        else { seenCpt()[key] = 1; cptMark(key, 'ok'); document.getElementById('skipc').hidden = true; actionBtn('fin', doneLabel || '開始玩').onclick = done; }
+        reveal('#actions'); return;
+      }
+      sfx.retry(); b.classList.add('no'); b.disabled = true; setMsg(nums((K.whys && K.whys[j]) || K.why), 'hint');
+      if (!document.getElementById('bk')) {
+        const x = document.createElement('button'); x.className = 'c2back'; x.id = 'bk'; x.textContent = `回去看第 ${(K.back !== undefined ? K.back : n - 1) + 1} 步`;
+        x.onclick = () => op(K.back !== undefined ? K.back : n - 1, ix);
+        document.getElementById('actions').appendChild(x);
+      }
+      reveal('#actions');
     });
   }
   op();
 }
-function conceptThen(q, then) { // 第一次碰到這個題型自動播；看過就不再播
+function conceptThen(q, then) { // 第一次碰到這個題型自動播；一回合最多自動播一個，其他的按 💡 看
+  if (R && R.cptAuto) return then();
   const L = cptOf(q).filter(c => !seenCpt()[c.key]);
   if (!L.length) return then();
-  runConcept(L[0].key, () => conceptThen(q, then), L.length > 1 ? '下一個小故事' : '開始玩');
+  if (R) R.cptAuto = true;
+  runConcept(L[0].key, then, '開始玩');
 }
-function cptChain(keys, then) { // 測驗單元用：一個接一個
-  const L = keys.filter(k => !seenCpt()[k]);
-  if (!L.length) return then();
-  runConcept(L[0], () => cptChain(keys, then), L.length > 1 ? '下一個小故事' : '開始作答');
+function cptChain(keys, then) { // 測驗單元用：只自動播第一個沒看過的，其他的在作答頁按 💡 看
+  const k = keys.find(x => !seenCpt()[x]);
+  if (!k) return then();
+  runConcept(k, then, '開始作答');
 }
-function viewConcepts(list, back) { // 重看；沒看過的只露情境，不露新詞
+const cptState = k => { const d = cptDone()[k] || {}; return d.ok ? ['ok', '✓ 試一題答對'] : d.op ? ['op', '做完操作'] : seenCpt()[k] ? ['seen', '看過'] : ['', '還沒看過']; };
+function viewConcepts(list, back) { // 重看；沒看過的只露情境，不露新詞。看過、做完操作、答對分開標
   window.scrollTo(0, 0);
-  $app.innerHTML = `<div class="top"><button class="icon-btn" id="bkc" aria-label="回去">⌂</button><h2 class="page-h">新概念小故事</h2></div><p class="tag">想看哪一個？</p><div class="clist">${list.map(c => { const s = seenCpt()[c.key]; return `<button class="c-item" data-rc="${c.key}"><span><b>${nums(s ? c.title : c.scene)}</b><small>${s ? nums(c.scene) : '還沒看過'}</small></span><em class="sem">${c.sem}</em>${s ? '<i class="c-ok">✓</i>' : ''}</button>`; }).join('')}</div>`;
+  $app.innerHTML = `<div class="top"><button class="icon-btn" id="bkc" aria-label="回去">⌂</button><h2 class="page-h">新概念小故事</h2></div><p class="tag">想看哪一個？</p><div class="clist">${list.map(c => { const s = seenCpt()[c.key], [st, label] = cptState(c.key); return `<button class="c-item" data-rc="${c.key}"><span><b>${nums(s ? c.title : c.scene)}</b><small>${s ? nums(c.scene) : ''}<em class="c-st ${st}">${label}</em></small></span><em class="sem">${c.sem}</em></button>`; }).join('')}</div>`;
   document.getElementById('bkc').onclick = back;
   document.querySelectorAll('[data-rc]').forEach(b => b.onclick = () => runConcept(b.dataset.rc, () => viewConcepts(list, back), '回列表'));
 }
@@ -1241,7 +1294,7 @@ function cptBtn(list) {
   b.onclick = () => cptOpen(list);
   const say = document.getElementById('say'); if (say) top.insertBefore(b, say); else top.appendChild(b);
 }
-/* 單元測驗：題庫段不動，從外面包。第一次進這個單元的測驗先播對應的小故事 */
+/* 單元測驗：題庫段不動，從外面包。第一次進這個單元的測驗先播一個對應的小故事 */
 const cptQuiz = (b, U) => CONCEPTS.filter(c => c.quiz.includes(`${b.id}-${U.u}`));
 let cptQuizList = null;
 const vqu0 = viewQuizUnits, rq0 = runQuiz;
@@ -1362,6 +1415,8 @@ function viewParent() {
     <table><tr><th>遊戲</th><th>等級</th><th>紀錄</th></tr>${rows}</table>
     <h2>最近沒答出來的題目</h2>
     ${miss.length ? `<ul>${miss.map(m => `<li>${esc(m)}</li>`).join('')}</ul>` : '<p>目前沒有。</p>'}
+    <h2>新概念小故事</h2>
+    <p>${(() => { const d = S.cptDone || {}, ks = CONCEPTS.map(c => c.key); return `共 ${ks.length} 個：看過 ${ks.filter(k => (S.seenCpt || {})[k] || d[k]).length} 個（跳過也算看過）；自己走完操作 ${ks.filter(k => (d[k] || {}).op).length} 個；試一題答對 ${ks.filter(k => (d[k] || {}).ok).length} 個。`; })()}</p>
     <h2>設定</h2>
     <p><label><input type="checkbox" id="snd" ${S.sound ? 'checked' : ''}> 音效</label></p>
     <button class="link" id="reset">清除這台裝置的紀錄</button><br>
@@ -1370,7 +1425,7 @@ function viewParent() {
   </div>`;
   document.getElementById('snd').onchange = e => { S.sound = e.target.checked; save(); };
   document.getElementById('reset').onclick = () => {
-    if (confirm('確定清除所有星星和紀錄？')) { S.stars = 0; S.rec = {}; S.log = []; S.prog = {}; S.opened = false; S.bossDone = false; S.bossSeen = false; S.s2Seen = false; S.stamps = {}; S.fast = {}; S.quiz = {}; S.seenCpt = {}; save(); viewParent(); }
+    if (confirm('確定清除所有星星和紀錄？')) { S.stars = 0; S.rec = {}; S.log = []; S.prog = {}; S.opened = false; S.bossDone = false; S.bossSeen = false; S.s2Seen = false; S.stamps = {}; S.fast = {}; S.quiz = {}; S.seenCpt = {}; S.cptDone = {}; save(); viewParent(); }
   };
   document.getElementById('out').onclick = () => go('');
 }

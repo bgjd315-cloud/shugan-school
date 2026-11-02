@@ -17,7 +17,7 @@ const STATIONS = {
   count100: { n: 10, sem: '一下', name: '百寶大樹', who: 'squirrel', img: 'isl_count100', tip: '數到 100' },
   add18: { n: 11, sem: '一下', name: '湊十蘑菇', who: 'bunny', img: 'isl_add18', tip: '先湊 10' },
   measure: { n: 12, sem: '一下', name: '量量小路', who: 'caterpillar', img: 'isl_measure', tip: '量長短' },
-  sub18: { n: 13, sem: '一下', name: '吃蜂蜜', who: 'bear', img: 'isl_sub18', tip: '先吃到 10' },
+  sub18: { n: 13, sem: '一下', name: '吃蜂蜜', who: 'bear', img: 'isl_sub18', tip: '先減到剩 10' },
   puzzle: { n: 14, sem: '一下', name: '拼圖工坊', who: 'hedgehog', img: 'isl_puzzle', tip: '拼一拼' },
   calendar: { n: 15, sem: '一下', name: '森林月曆', who: 'owl', img: 'isl_calendar', tip: '幾月幾日' },
   shop: { n: 16, sem: '一下', name: '森林小舖', who: 'mouse', img: 'isl_shop', tip: '用錢買' },
@@ -296,7 +296,7 @@ const GEN = {
   sub18: {
     honey(lv) {
       const n = ri(11, lvn(lv, 14, 16, 18)), o = n - 10, off = ri(o + 1, Math.min(9, o + lvn(lv, 3, 4, 5)));
-      return [{ t: 'tapOff', hands: true, frames: true, say: `吃掉 ${off} 格。先吃外面的，再吃十格盤。`, item: 'honey', n, off }, pad(`${n} － ${off} ＝ ？`, { s: 'frames', n: n - off, item: 'honey', gone: off }, n - off)];
+      return [{ t: 'tapOff', hands: true, frames: true, say: `吃掉 ${off} 罐。先吃外面的，再吃框裡的。`, item: 'honey', n, off }, pad(`${n} － ${off} ＝ ？`, { s: 'frames', n: n - off, item: 'honey', gone: off }, n - off)];
     },
     expr(lv) {
       const n = ri(11, lvn(lv, 14, 16, 18)), o = n - 10, off = ri(o + 1, 9);

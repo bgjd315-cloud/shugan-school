@@ -1132,14 +1132,14 @@ function viewPie(q) {
   }
   const L = q.L, data = [[L.A, L.a], [L.B, L.b], [L.C, L.c]], ask = q.ty === 'cmp' ? `${L.A}和${L.C}哪一個比較可能？` : q.ty === 'most' ? '下一次很有可能是什麼？' : '下一次很不可能是什麼？';
   frame(`${q.ctx}：${L.say}。<br>點每一條，看次數，再回答：${ask}`, `<div class="lk6">${data.map((d, i) => `<button class="lk" data-l="${i}"><b>${d[0]}</b><span class="lkb"><i style="width:0"></i></span><em class="num"></em></button>`).join('')}</div><div class="trail" id="ct">從資料的多寡來判斷</div>`);
-  tapN(q, '.lk', 3, el => { const d = data[+el.dataset.l]; el.querySelector('i').style.width = `${d[1] / q.tot * 100}%`; el.querySelector('em').textContent = `${d[1]} 次`; }, () => pick6(q.options, q.options.indexOf(q.right), '次數差很多，就看多的那一邊。', `對了！全部 ${q.tot} 次裡，${L.A} ${L.a} 次、${L.C} ${L.c} 次、${L.B} ${L.b} 次，資料差很多就能這樣說。`, 'likely'));
+  tapN(q, '.lk', 3, el => { const d = data[+el.dataset.l]; el.querySelector('i').style.width = `${d[1] / q.tot * 100}%`; el.querySelector('em').textContent = `${d[1]} 次`; }, () => pick6(q.options, q.options.indexOf(q.right), '次數差很多，就看多的那一邊。', `對了！全部 ${q.tot} 次裡，${L.A} ${L.a} 次、${L.C} ${L.c} 次、${L.B} ${L.b} 次，次數差很多，可以這樣說；但這只是比較可能，下一次不一定是。`, 'likely'));
 }
 Object.assign(VIEWS, { mix: viewMix, prism: viewPrism, base: viewBase, scale: viewScale, puzzle: viewPuzzle, pie: viewPie });
-/* ---------- 新概念小故事（鷹架版）：舊經驗 → 對東西做事（示範→一起→自己）→ 猜一猜 → 說出規律 → 圖對應到式子 → 命名 → 選對的話 → 換你出題 → 驗收（答錯回到出錯那一步） ---------- */
+/* ---------- 新概念小故事（鷹架版）：舊經驗 → 對東西做事（示範→一起→自己）→ 先選想法 → 說出規律 → 圖對應到式子 → 命名 → 選對的話 → 選題／拼題 → 驗收（答錯回到出錯那一步） ---------- */
 const K1 = '#e07b00', K2 = '#2f6fb0', K3 = '#2e9450', K4 = '#d6476b'; // 全部／每份／有幾份／另一個量：圖和式子同色
-// ---- 畫面零件：.hot6 是孩子要點的東西，.drag6 也可以拖到 .drop6，.no6 點了會給提示 ----
+// ---- 畫面零件：.hot6 是要點的東西（示範、一起做時會發亮；自己做時不發亮，按提示才出現），.drag6 也可以拖到 .drop6，.no6 點了會說明原因 ----
 const it6 = (e, cls, extra) => `<span class="it6 ${cls || ''}" ${extra || ''}>${e}</span>`;
-function pile6(e, n, used, lab) { // 一堆東西，下一個會發亮，可點可拖
+function pile6(e, n, used, lab) { // 一堆東西，可點可拖
   return `<div class="pile6">${lab ? `<small>${lab}</small>` : ''}${Array.from({ length: n }, (_, i) => it6(e, i < used ? 'gone' : i === used ? 'hot6 drag6' : '')).join('')}</div>`;
 }
 function rows6(e, k, w, lab) { // 放進框裡，每排 w 個；沒排滿的那排標紅
@@ -1147,25 +1147,26 @@ function rows6(e, k, w, lab) { // 放進框裡，每排 w 個；沒排滿的那�
   for (let i = 0; i < r; i++) { const m = Math.min(w, k - i * w); h += `<div class="row6 ${m < w ? 'part' : ''}">${it6(e).repeat(m)}</div>`; }
   return `<div class="drop6">${h || '<span class="ph6">放到這裡</span>'}${lab ? `<small>${lab}</small>` : ''}</div>`;
 }
-function cut6(parts, done, o) { // 一條東西，剪刀在下一刀的位置（點剪刀切一刀）
+function cut6(parts, done, o) { // 一條東西平均分成 parts 段；自己做時要點出下一刀的位置
   o = o || {};
   let lines = ''; for (let i = 1; i <= done && i < parts; i++) lines += `<i class="cl6" style="left:${i / parts * 100}%"></i>`;
-  const sc = !o.noCut && done < parts - 1 ? `<span class="sc6 hot6" style="left:${(done + 1) / parts * 100}%">✂️</span>` : '';
+  const live = !o.noCut && done < parts - 1;
+  const sc = live ? `<span class="sc6 hot6" style="left:${(done + 1) / parts * 100}%">✂️</span>` : '';
   const fill = o.fill ? Array.from({ length: parts }, (_, i) => `<b style="left:${i / parts * 100}%;width:${100 / parts}%;background:${o.fill(i)}"></b>`).join('') : '';
-  return `<div class="cut6" style="width:${o.w || 100}%">${o.lab ? `<small>${o.lab}</small>` : ''}<span class="cb6" style="background:${o.col || '#f7dc8c'}">${fill}${lines}${sc}</span></div>`;
+  return `<div class="cut6" style="width:${o.w || 100}%">${o.lab ? `<small>${o.lab}</small>` : ''}<span class="cb6 ${live ? 'cutme6' : ''}" data-p="${parts}" data-d="${done}" style="background:${o.col || '#f7dc8c'}">${fill}${lines}${sc}</span></div>`;
 }
-function grp6(n, g, done, o) { // n 格，每 g 格圈一組；下一組會發亮
+function grp6(n, g, done, o) { // n 格，每 g 格圈一組
   o = o || {}; let h = '';
   for (let s = 0; s < n; s += g) { const gi = s / g, on = gi < done, nx = gi === done && !o.noHot; h += `<span class="g6 ${on ? 'on' : ''} ${nx ? 'hot6' : ''}" style="${on ? `border-color:${o.c || K3}` : ''}">${Array.from({ length: Math.min(g, n - s) }, (_, j) => `<i style="background:${typeof o.cell === 'function' ? o.cell(s + j) : o.cell || '#a9d0f0'}">${o.e || ''}</i>`).join('')}</span>`; }
   return `${o.lab ? `<small class="lab6">${o.lab}</small>` : ''}<div class="grp6">${h}</div>`;
 }
-function chips6(list, okFn, whyFn) { // 一排卡片：對的會發亮可點，錯的點了有提示
-  return `<div class="op6s">${list.map((x, i) => `<button class="op6 ${okFn(x, i) ? 'hot6' : 'no6'}" data-w="${esc(whyFn ? whyFn(x, i) : '再想想看。')}">${x}</button>`).join('')}</div>`;
+function chips6(list, okFn, whyFn) { // 一排選項：對的點了往下走，錯的點了說明原因（自己做時不發亮）
+  return `<div class="op6s">${list.map((x, i) => `<button class="op6 ${okFn(x, i) ? 'hot6' : 'no6'}" data-w="${esc(whyFn ? whyFn(x, i) : '這個選項和題目要的不一樣，再讀一次上面的題目。')}">${x}</button>`).join('')}</div>`;
 }
-function pie6(parts, cuts, taken, o) { // 披薩：parts 等分、已切 cuts 刀、拿走 taken 片；o.hot 'cut' 或 'take'
+function pie6(parts, cuts, taken, o) { // 披薩：平均分成 parts 片、已切 cuts 刀、拿走 taken 片；o.hot 'cut' 或 'take'
   o = o || {}; const r = 44, c = 50; let s = `<svg class="pz6 ${o.hot === 'cut' && cuts < parts ? 'hot6' : ''}" viewBox="0 0 100 100"><circle cx="${c}" cy="${c}" r="${r}" fill="#f7c873" stroke="#a9702a" stroke-width="2"/>`;
   const P = i => [c + r * Math.sin(i / parts * 2 * Math.PI), c - r * Math.cos(i / parts * 2 * Math.PI)];
-  for (let i = 0; i < taken; i++) { const [x0, y0] = P(i), [x1, y1] = P(i + 1); s += `<path d="M${c} ${c}L${x0} ${y0}A${r} ${r} 0 0 1 ${x1} ${y1}Z" fill="${o.takenCol || '#fff'}" stroke="#a9702a"/>`; }
+  for (let i = 0; i < taken; i++) { const [x0, y0] = P(i), [x1, y1] = P(i + 1); s += `<path class="gone" d="M${c} ${c}L${x0} ${y0}A${r} ${r} 0 0 1 ${x1} ${y1}Z" fill="${o.takenCol || '#fff'}" stroke="#a9702a"/>`; }
   if (o.hot === 'take' && taken < parts) { const [x0, y0] = P(taken), [x1, y1] = P(taken + 1); s += `<path class="hot6" d="M${c} ${c}L${x0} ${y0}A${r} ${r} 0 0 1 ${x1} ${y1}Z" fill="#ffd65a" stroke="#d6476b" stroke-width="2"/>`; }
   if (parts > 1) for (let i = 0; i < Math.min(cuts, parts); i++) { const [x, y] = P(i); s += `<line x1="${c}" y1="${c}" x2="${x}" y2="${y}" stroke="#7a4a1a" stroke-width="2"/>`; }
   return s + '</svg>';
@@ -1177,39 +1178,55 @@ const mini6 = (a, b) => `<div class="fade6"><div class="mini6">${a}</div><div cl
 const dotsC = (n, c) => `<span class="dots6">${Array.from({ length: n }, () => `<i style="background:${c}"></i>`).join('')}</span>`;
 const wheel6 = (d, k, sticks) => `<span class="hot6 whl6">${rollSvg(d, k / 4, 1, sticks || 0)}</span>`;
 
+// 學習紀錄：S.seenC＝打開過（只用來決定要不要自動播，不代表學會）；S.cst[key]＝{ act 完成操作, hint 用了幾次提示, why 第一次就選對意思, quiz 'solo' 自己通過／'help' 經提示或回看後通過 }
+const cst6 = key => { S.cst = S.cst || {}; return (S.cst[key] = S.cst[key] || {}); };
 function shapeStory(C) { // 把內容排成統一模板
   if (C._shaped) return; C._shaped = 1;
   const st = C.steps.slice();
+  // 「先選想法」留在作者安排的位置（緊接在要預測的操作之前），不再自動搬到第 2 步；只有 guessFirst 才搬
   const g = st.findIndex(s => s.t === 'guess');
-  if (g > 1 && !C.keepGuess) { const [gs] = st.splice(g, 1); st.splice(1, 0, gs); }
+  if (C.guessFirst && g > 1) { const [gs] = st.splice(g, 1); st.splice(1, 0, gs); }
   let mi = st.findIndex(s => s.id === 'map');
-  if (C.rev && mi >= 0) { const la = st.slice(0, mi).filter(s => s.t === 'act').pop(); st.splice(mi, 0, { t: 'reveal', say: C.rev, pic: la ? () => la.pic(la.n) : '' }); mi++; }
+  if (C.rev && mi >= 0) { const la = st.slice(0, mi).filter(s => s.t === 'act').pop(); st.splice(mi, 0, { t: 'reveal', say: C.rev, pic: C.revPic || (la ? () => la.pic(la.n) : '') }); mi++; }
   if (mi >= 0) {
-    const acts = st.filter(s => s.t === 'act'), src = acts.find(s => s.id === C.q.back) || acts[acts.length - 1], m = st[mi];
-    st[mi] = { t: 'fade', id: 'map', steps: [{ t: '第 1 步：真的東西，剛才做出來的樣子。', h: () => src.pic(src.n) }, { t: '第 2 步：同一件事，畫成簡圖。', h: C.dia || m.pic }, { t: `第 3 步：寫成算式，每個數字連回圖上。${m.say || ''}`, h: m.pic }] };
+    // 三步淡化用同一個例子：fs 指定第 1 步要用哪一個操作（預設是驗收答錯要回去的那一步）
+    const acts = st.filter(s => s.t === 'act'), src = acts.find(s => s.id === (C.fs || C.q.back)) || acts[acts.length - 1], m = st[mi];
+    const f = [{ t: '第 1 步：剛才動手做出來的樣子。', h: () => src.pic(src.n) }];
+    if (C.dia) f.push({ t: '第 2 步：同一件事，畫成簡圖。', h: C.dia });
+    f.push({ t: `第 ${f.length + 1} 步：寫成算式，每個數字連回圖上。${m.say || ''}`, h: m.pic });
+    st[mi] = { t: 'fade', id: 'map', steps: f };
   }
-  if (C.sort) { const ni = st.findIndex(s => s.t === 'name'); st.splice(ni < 0 ? st.length : ni, 0, { t: 'sort', ...C.sort }); }
+  if (C.sort) { // 正反例分類：預設放在第一次命名之前；sortAt:'map' 放在圖式對應之後（一段裡有好幾個新詞時用）
+    const ni = C.sortAt === 'map' ? st.findIndex(s => s.id === 'map') + 1 : st.findIndex(s => s.t === 'name');
+    st.splice(ni < 0 ? st.length : ni, 0, { t: 'sort', ...C.sort });
+  }
   C.steps = st;
 }
-function runConcept(key, then, story) {
+const word6 = k => CONCEPTS[k] ? CONCEPTS[k].word : k;
+function runConcept(key, then, story, rel) {
   shapeStory(story || CONCEPTS[key]);
   const C = story || CONCEPTS[key], L = { title: C.frameTitle || '新概念小故事', sem: C.sem, who: C.who }, steps = C.steps;
-  let timer = null, hintNext = '';
+  const rec = story ? {} : cst6(key);
+  let timer = null, hintNext = '', backed = false, whyMiss = false;
   const stop = () => { if (timer) clearInterval(timer); timer = null; };
   const leave = () => { stop(); if (!story) { S.seenC = S.seenC || {}; S.seenC[key] = 1; save(); } then(); };
   const P = x => typeof x === 'function' ? x() : (x || '');
+  const relRow = i => i === 0 && rel && rel.length ? `<div class="rel6">相關小故事（選讀）：${rel.map(k => `<button class="rel6b" data-rel="${k}">${S.seenC && S.seenC[k] ? '✓ ' : ''}〈${word6(k)}〉</button>`).join('')}</div>` : '';
   const shell = (i, prompt, body) => {
     stop();
-    lessonFrame(L, prompt, `<div class="stp6">${steps.map((_, j) => `<i class="${j < i ? 'on' : j === i ? 'now' : ''}"></i>`).join('')}<i class="${i >= steps.length ? 'now' : ''}"></i></div>${body}<button class="skip6" id="cskip">${C.skipLabel || '跳過這個小故事'}</button>`);
+    lessonFrame(L, prompt, `<div class="stp6">${steps.map((_, j) => `<i class="${j < i ? 'on' : j === i ? 'now' : ''}"></i>`).join('')}<i class="${i >= steps.length ? 'now' : ''}"></i></div>${relRow(i)}${body}<button class="skip6" id="cskip">${C.skipLabel || '跳過這個小故事'}</button>`);
     document.getElementById('out').onclick = C.exit ? () => { stop(); C.exit(); } : leave;
     document.getElementById('cskip').onclick = leave;
+    document.querySelectorAll('[data-rel]').forEach(b => b.onclick = () => { stop(); runConcept(b.dataset.rel, () => runConcept(key, then, story, rel)); });
     if (hintNext) { setMsg(nums(hintNext), 'hint'); hintNext = ''; }
   };
   const next = i => i + 1 < steps.length ? show(i + 1) : quiz();
+  const btns = list => { document.getElementById('actions').innerHTML = list.map(([id, t, cls]) => `<button class="btn ${cls || ''}" id="${id}">${t}</button>`).join(''); return list.map(([id]) => document.getElementById(id)); };
   const choices = (opts, onPick) => {
     document.getElementById('actions').innerHTML = `<div class="choices col">${opts.map((h, j) => `<button class="choice" data-co="${j}">${nums(h)}</button>`).join('')}</div>`;
     document.querySelectorAll('[data-co]').forEach(b => b.onclick = () => onPick(+b.dataset.co, b));
   };
+  const why6 = (w, j) => Array.isArray(w) ? w[j] : w;
   function show(i) {
     const s = steps[i];
     if (s.t === 'say' || s.t === 'name') {
@@ -1220,12 +1237,19 @@ function runConcept(key, then, story) {
       return;
     }
     if (s.t === 'reveal') {
-      shell(i, `${C._g !== undefined && C._gq ? `你剛才猜「${C._gq[C._g]}」。` : ''}${s.say}`, `<div id="cp">${P(s.pic)}</div>`);
+      shell(i, `${C._g !== undefined && C._gq ? `你剛才選「${C._gq[C._g]}」。對照圖看看：` : ''}${s.say}`, `<div id="cp">${P(s.pic)}</div>`);
       return actionBtn('cnext', '下一步').onclick = () => next(i);
     }
-    if (s.t === 'fade') { // 三步淡化：上一步留在上面，箭頭說「同一件事」
+    if (s.t === 'fade') { // 三步淡化：上一步留在上面，箭頭說「同一件事」；可以回上一步左右對照
       let k = 0;
-      const paint = () => { const f = s.steps[k], prev = k ? `<div class="prev6">${P(s.steps[k - 1].h)}</div><div class="arr6">↓ 同一件事</div>` : ''; shell(i, f.t, `${prev}<div id="cp">${P(f.h)}</div>`); actionBtn('cnext', k < s.steps.length - 1 ? '下一步' : '好，我看懂了').onclick = () => { if (++k < s.steps.length) paint(); else next(i); }; };
+      const paint = () => {
+        const f = s.steps[k], prev = k ? `<div class="cmp6"><div class="prev6">${P(s.steps[k - 1].h)}</div><div class="arr6">↓ 同一件事</div></div>` : '';
+        shell(i, f.t, `${prev}<div id="cp">${P(f.h)}</div>`);
+        const list = k ? [['cprev', '上一步', 'ghost'], ['cnext', '下一步']] : [['cnext', '下一步']];
+        const [a, b] = btns(list);
+        if (k) a.onclick = () => { k--; paint(); };
+        (k ? b : a).onclick = () => { if (++k < s.steps.length) paint(); else next(i); };
+      };
       return paint();
     }
     if (s.t === 'sort') { // 正反例：點卡片，再點它要去的那一邊
@@ -1234,31 +1258,34 @@ function runConcept(key, then, story) {
       document.querySelectorAll('.card6').forEach(c => c.onclick = () => { document.querySelectorAll('.card6').forEach(x => x.classList.remove('sel')); sel = +c.dataset.c; c.classList.add('sel'); });
       document.querySelectorAll('.bin6').forEach(b => b.onclick = () => {
         if (sel === null) return setMsg('先點一張卡片。', 'hint');
-        if (s.items[sel][1] !== +b.dataset.b) { sfx.retry(); return setMsg(nums(s.hint), 'hint'); }
+        if (s.items[sel][1] !== +b.dataset.b) { sfx.retry(); return setMsg(nums(`「${s.items[sel][0]}」放在這邊不合適。${s.hint}`), 'hint'); }
         const card = document.querySelector(`.card6[data-c="${sel}"]`); document.getElementById('bin6' + b.dataset.b).appendChild(card); card.disabled = true; card.classList.remove('sel'); sel = null; sfx.hop();
         if (--left === 0) { setMsg(nums(s.done), 'good'); actionBtn('cnext', '下一步').onclick = () => next(i); }
       });
       return;
     }
     if (s.t === 'guess') {
-      C._gq = s.o;
-      shell(i, `先猜猜看：${s.say}`, `<div id="cp">${P(s.pic)}</div><div class="trail">猜錯也沒關係，等一下動手看看。</div>`);
-      return choices(s.o, j => { C._g = j; setMsg(nums(`你猜「${s.o[j]}」。動手看看！`), ''); actionBtn('cnext', '動手看看').onclick = () => next(i); });
+      C._gq = s.o; delete C._g;
+      shell(i, `先選一個你目前的想法：${s.say}`, `<div id="cp">${P(s.pic)}</div><div class="trail">等一下用圖確認，想法可以修正。</div>`);
+      return choices(s.o, j => { C._g = j; document.querySelectorAll('[data-co]').forEach((b, x) => b.classList.toggle('sel', x === j)); setMsg(nums(`你選「${s.o[j]}」。動手看看！`), ''); actionBtn('cnext', '動手看看').onclick = () => next(i); });
     }
     if (s.t === 'check' || s.t === 'pose') {
-      const head = s.t === 'pose' ? '<span class="tag5">換你出題</span> ' : '哪一句話意思對？';
+      const tag = s.tag || (s.t === 'check' ? '' : /^(只改|改一個)/.test(s.say || '') ? '改一個地方看看' : '選一個合適的問題');
+      const head = s.t === 'pose' ? `<span class="tag5">${tag}</span> ` : '哪一句話意思對？';
       shell(i, `${head}${s.say ? '<br>' + s.say : ''}`, `<div id="cp">${P(s.pic)}</div>`);
+      let miss = false;
       return choices(s.o, (j, b) => {
-        if (j === s.a) { setMsg(nums(s.ok || '對了！'), 'good'); sfx.good(); return actionBtn('cnext', '繼續').onclick = () => next(i); }
-        sfx.retry(); b.disabled = true; b.classList.add('no'); setMsg(nums(s.why || '再想想看。'), 'hint');
+        if (j === s.a) { if (s.t === 'check' && !miss && !whyMiss && !story) rec.why = 1; setMsg(nums(s.ok || `對了，「${s.o[j]}」。`), 'good'); sfx.good(); return actionBtn('cnext', '繼續').onclick = () => next(i); }
+        miss = true; if (s.t === 'check') whyMiss = true;
+        sfx.retry(); b.disabled = true; b.classList.add('no'); setMsg(nums(`你選了「${s.o[j]}」。${why6(s.why, j) || '回頭看看上面的圖，這句和剛才看到的結果哪裡不一樣？'}`), 'hint');
       });
     }
     if (s.t === 'build') { // 三張卡拼成一題
-      shell(i, `<span class="tag5">換你出題</span> ${s.say}`, `<div class="bld6">${s.cols.map((col, c) => `<div><small>${s.heads[c]}</small>${col.map((x, j) => `<button class="choice bc6" data-c="${c}" data-j="${j}">${nums(x)}</button>`).join('')}</div>`).join('')}</div>`);
+      shell(i, `<span class="tag5">拼成一道題</span> ${s.say}`, `<div class="bld6">${s.cols.map((col, c) => `<div><small>${s.heads[c]}</small>${col.map((x, j) => `<button class="choice bc6" data-c="${c}" data-j="${j}">${nums(x)}</button>`).join('')}</div>`).join('')}</div>`);
       const got = [];
       document.querySelectorAll('.bc6').forEach(b => b.onclick = () => {
-        const c = +b.dataset.c, j = +b.dataset.j;
-        if (j !== s.a[c]) { sfx.retry(); b.classList.add('no'); return setMsg(nums(s.why[c]), 'hint'); }
+        const c = +b.dataset.c, j = +b.dataset.j, okC = [].concat(s.a[c]);
+        if (!okC.includes(j)) { sfx.retry(); b.classList.add('no'); return setMsg(nums(`「${s.cols[c][j]}」：${s.why[c]}`), 'hint'); }
         sfx.hop(); got[c] = 1; document.querySelectorAll(`.bc6[data-c="${c}"]`).forEach(x => { x.disabled = true; }); b.classList.add('ok6');
         if (got.filter(Boolean).length === s.cols.length) { setMsg(nums(s.ok), 'good'); sfx.good(); actionBtn('cnext', '繼續').onclick = () => next(i); }
       });
@@ -1266,28 +1293,58 @@ function runConcept(key, then, story) {
     }
     act(i, s);
   }
-  function act(i, s) { // 對東西做事：示範→一起做→自己做
-    let k = 0; const role = s.who || 'self', auto = role === 'demo' ? s.n : role === 'half' ? Math.floor(s.n / 2) : 0;
+  function act(i, s) { // 對東西做事：示範→一起做→自己做（自己做時不預先發亮）
+    let k = 0, hintLv = 0; const role = s.who || 'self', auto = role === 'demo' ? s.n : role === 'half' ? Math.floor(s.n / 2) : 0, indep = role === 'self';
     const lead = `<span class="tag5">${role === 'demo' ? '看我做' : role === 'half' ? '一起做' : '換你做'}</span> ${role === 'half' ? '我先做一半，' : ''}`;
-    shell(i, lead + s.say, `<div id="cp"></div><div class="trail" id="ct"></div>`);
-    const paint = () => { setEl('cp', s.pic(k)); setEl('ct', nums(s.cap ? s.cap(k) : '')); document.getElementById('cp').classList.toggle('demo6', k < auto); };
-    const done = () => { stop(); setMsg(nums(s.done), 'good'); sfx.good(); actionBtn('cnext', '繼續').onclick = () => next(i); };
+    shell(i, lead + s.say, `<div id="cp" class="${indep ? 'indep6' : ''}"></div><div class="trail" id="ct"></div>`);
+    const cp = document.getElementById('cp');
+    const paint = () => { setEl('cp', s.pic(k)); setEl('ct', nums(s.cap ? s.cap(k) : '')); cp.classList.toggle('demo6', k < auto); };
+    const done = () => {
+      stop(); setMsg(nums(s.done), 'good'); sfx.good(); cp.classList.remove('show6');
+      if (indep && !story && steps.filter(x => x.t === 'act').pop() === s) rec.act = 1;
+      const toQuiz = backed && s.id === C.q.back; // 驗收答錯回來重做這一步，做完直接回到換情境題，不必整段重來
+      const list = role === 'demo' ? [['creplay', '重看示範', 'ghost'], ['cnext', toQuiz ? '回到換情境題' : '繼續']] : [['cnext', toQuiz ? '回到換情境題' : '繼續']];
+      const bs = btns(list);
+      if (role === 'demo') bs[0].onclick = () => act(i, s);
+      bs[bs.length - 1].onclick = () => toQuiz ? quiz() : next(i);
+    };
     const step = () => { if (k >= s.n) return; k++; sfx.hop(); paint(); if (k === s.n) done(); };
-    const hintBtn = () => { actionBtn('chint', '提示').onclick = () => { const h = document.querySelector('#cp .hot6'); if (h) { h.classList.add('hint6'); setTimeout(() => h.classList.remove('hint6'), 1500); } setMsg(nums(s.tip || '點發亮的地方。'), 'hint'); }; };
+    const hintBtn = () => { // 提示分兩層：先給數學提示，再按才指出位置
+      actionBtn('chint', '提示').onclick = () => {
+        if (!story) rec.hint = (rec.hint || 0) + 1;
+        if (!indep || hintLv >= 1) {
+          cp.classList.add('show6');
+          const h = cp.querySelector('.hot6'); if (h) { h.classList.add('hint6'); setTimeout(() => h.classList.remove('hint6'), 1500); }
+          return setMsg(nums(s.tip2 || '亮起來的地方就是下一步。'), 'hint');
+        }
+        hintLv = 1; setMsg(nums(s.tip || '先想想：這一步要分成幾份、每份多少？想好了再點圖。還需要的話，再按一次提示。'), 'hint');
+      };
+    };
     paint();
     if (auto > 0) {
       actionBtn('cwait', role === 'demo' ? '看示範⋯' : '看我先做⋯').disabled = true;
       timer = setInterval(() => { if (!document.getElementById('cp')) return stop(); step(); if (k >= auto) { stop(); if (k < s.n) { hintBtn(); setMsg('換你了：把剩下的做完。'); } } }, window.__demoMs || 1100);
     } else hintBtn();
-    const cp = document.getElementById('cp'); let dragged = false;
+    let dragged = false;
+    const near = (t, h) => { // 自己做時：點同一組裡任何一個還沒用過的東西都算
+      if (!h || t === cp || t.closest('.gone, .on, .no6, .cb6')) return false;
+      const par = h.parentElement; return par === cp ? cp.contains(t) : par.contains(t);
+    };
     cp.onclick = e => {
       if (dragged) { dragged = false; return; }
       if (k < auto || k >= s.n) return;
-      const bad = e.target.closest('.no6'); if (bad) { sfx.retry(); return setMsg(nums(bad.dataset.w || '再想想看。'), 'hint'); }
-      if (e.target.closest('.hot6')) { setMsg(''); step(); }
+      const bad = e.target.closest('.no6'); if (bad) { sfx.retry(); return setMsg(nums(bad.dataset.w || '這個和題目要的不一樣。'), 'hint'); }
+      if (e.target.closest('.hot6')) { setMsg(''); return step(); }
+      const cb = e.target.closest('.cutme6');
+      if (cb) { // 平均分：要點在下一刀的位置
+        const r = cb.getBoundingClientRect(), f = (e.clientX - r.left) / r.width, p = +cb.dataset.p, d = +cb.dataset.d, want = (d + 1) / p;
+        if (Math.abs(f - want) < 0.3 / p) { setMsg(''); return step(); }
+        sfx.retry(); return setMsg(nums(`這裡切下去，${p} 段不會一樣長。要平均分成 ${p} 段，每段占整條的 1/${p}；第 ${d + 1} 刀要切在從左邊數來第 ${d + 1} 段的尾巴。`), 'hint');
+      }
+      if (indep && near(e.target, cp.querySelector('.hot6'))) { setMsg(''); step(); }
     };
     cp.onpointerdown = e => { // 拖一個東西放進框裡
-      const h = e.target.closest('.drag6'); if (!h || k < auto) return;
+      const h = e.target.closest('.drag6') || (indep && e.target.closest('.pile6 .it6:not(.gone)')); if (!h || k < auto) return;
       e.preventDefault(); const sx = e.clientX, sy = e.clientY; let moved = false;
       try { cp.setPointerCapture(e.pointerId); } catch (x) {}
       cp.onpointermove = ev => { if (Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) > 8) moved = true; h.style.transform = `translate(${ev.clientX - sx}px,${ev.clientY - sy}px)`; };
@@ -1298,601 +1355,755 @@ function runConcept(key, then, story) {
     const q = C.q, order = Logic.shuffle(q.o.map((_, j) => j));
     shell(steps.length, `換個情境：${q.t}`, `<div id="cp">${P(q.pic)}</div>`);
     document.getElementById('actions').innerHTML = `<div class="choices col">${order.map(j => `<button class="choice" data-co="${j}">${nums(q.o[j])}</button>`).join('')}</div>`;
+    let miss = false;
     document.querySelectorAll('[data-co]').forEach(b => b.onclick = () => {
-      if (+b.dataset.co === q.a) { setMsg(nums(q.ok), 'good'); sfx.good(); return actionBtn('cdone', C.doneLabel || '開始闖關').onclick = leave; }
-      sfx.retry(); setMsg(nums(q.hint), 'hint');
-      actionBtn('cback', '回到那一步看看').onclick = () => { hintNext = q.hint; show(steps.findIndex(x => x.id === q.back)); };
+      const j = +b.dataset.co;
+      if (j === q.a) {
+        if (!story) { rec.quiz = miss || backed ? (rec.quiz === 'solo' ? 'solo' : 'help') : 'solo'; save(); }
+        setMsg(nums(q.ok), 'good'); sfx.good();
+        const later = (rel || []).filter(k => !(S.seenC || {})[k] && CONCEPTS[k]);
+        const bs = btns(later.length ? [['cmore', `再看〈${word6(later[0])}〉（選讀）`, 'ghost'], ['cdone', C.doneLabel || '開始闖關']] : [['cdone', C.doneLabel || '開始闖關']]);
+        if (later.length) bs[0].onclick = () => { stop(); if (!story) { S.seenC[key] = 1; save(); } runConcept(later[0], then); };
+        return bs[bs.length - 1].onclick = leave;
+      }
+      miss = true; sfx.retry(); b.disabled = true; b.classList.add('no');
+      const w = why6(q.why, j);
+      setMsg(nums(`你選了「${q.o[j]}」。${w ? w + ' ' : ''}${q.hint}`), 'hint');
+      actionBtn('cback', '回到那一步看看').onclick = () => { backed = true; hintNext = q.hint; show(steps.findIndex(x => x.id === q.back)); };
     });
   }
   show(0);
 }
+function cstLabel(k) { // 清單上的狀態：看過、完成操作、驗收（自己／經提示）分開標
+  const r = (S.cst || {})[k] || {}, seen = (S.seenC || {})[k];
+  if (r.quiz === 'solo') return '<small class="cs6 ok">✓ 自己完成驗收</small>';
+  if (r.quiz === 'help') return '<small class="cs6">經提示完成驗收</small>';
+  if (r.act) return '<small class="cs6">完成操作</small>';
+  return seen ? '<small class="cs6">看過</small>' : '';
+}
 function viewConcepts() {
   window.scrollTo(0, 0);
   S.seenC = S.seenC || {};
-  $app.innerHTML = `<div class="top"><button class="icon-btn" id="home" aria-label="回練習場">⌂</button><h2 class="page-h">新概念小故事</h2></div><div class="pg">${Object.entries(CONCEPTS).map(([k, C]) => `<button class="pg-btn" data-cs="${k}"><span class="sem">${C.sem}</span>${S.seenC[k] ? '✓ ' : ''}${C.word}</button>`).join('')}</div>`;
+  $app.innerHTML = `<div class="top"><button class="icon-btn" id="home" aria-label="回練習場">⌂</button><h2 class="page-h">新概念小故事</h2></div><p class="tag">「看過」只表示打開過；自己完成最後的換情境題，才標 ✓。</p><div class="pg">${Object.entries(CONCEPTS).map(([k, C]) => `<button class="pg-btn" data-cs="${k}"><span class="sem">${C.sem}</span>${C.word}${cstLabel(k)}</button>`).join('')}</div>`;
   document.getElementById('home').onclick = viewPractice;
   document.querySelectorAll('[data-cs]').forEach(b => b.onclick = () => runConcept(b.dataset.cs, viewConcepts));
 }
 const conceptsOf = q => (CONCEPT_OF[q.kind + ':' + q.mode] || []).filter(k => CONCEPTS[k]);
-function conceptThen(q, then) { // 第一次遇到才自動播
+const mainConcept = q => { const id = q.kind + ':' + q.mode, L = conceptsOf(q), m = CONCEPT_MAIN[id]; return m && CONCEPTS[m] ? m : L[L.length - 1]; };
+function conceptThen(q, then) { // 第一次遇到才自動播，而且只播這一題必需的那一段；其他相關的放在故事裡選讀
   S.seenC = S.seenC || {};
-  const k = conceptsOf(q).find(x => !S.seenC[x]);
-  if (!k) return then();
-  runConcept(k, () => conceptThen(q, then));
+  const k = mainConcept(q);
+  if (!k || S.seenC[k]) return then();
+  runConcept(k, then, null, conceptsOf(q).filter(x => x !== k));
 }
 function bindConceptBtn(q) { // 題目頁右上角可重看
-  const b = document.getElementById('cst'), L = conceptsOf(q);
+  const b = document.getElementById('cst'), k = mainConcept(q);
   if (!b) return;
-  if (!L.length) { b.hidden = true; return; }
+  if (!k) { b.hidden = true; return; }
   b.hidden = false;
-  b.onclick = () => { const rq = R.q; runConcept(L[L.length - 1], () => VIEWS[R.game](rq)); };
+  b.onclick = () => { const rq = R.q; runConcept(k, () => VIEWS[R.game](rq), null, conceptsOf(q).filter(x => x !== k)); };
 }
-/* ---------- 六年級小故事內容（鷹架版） ---------- */
+/* ---------- 六年級小故事內容（鷹架版，2026-11 依外部審查修訂） ---------- */
 const HON = '#e0a020', WAT = '#7fc4ec', C_HW = { ca: '#e0a020', cb: '#7fc4ec' };
 const twoBox6 = (L, R) => `<div class="pair6 box6"><div><small>${L[0]}</small>${L[1]}</div><div><small>${R[0]}</small>${R[1]}</div></div>`;
 const barU = (n, c, lab, w) => `<div class="bu6" style="width:${w || 100}%">${lab ? `<small>${lab}</small>` : ''}${barRow(n, n, c)}</div>`;
+const hw6 = (a, b) => `<span class="hw6">${'🥄'.repeat(a)} ${'🥛'.repeat(b)}</span>`; // 匙和杯用圖示，不畫成一樣大的色塊
+const segs6 = (n, filled, col, lab, w, val) => `<div class="bu6" style="width:${w || 100}%"><small>${lab}</small><div class="seg6" style="grid-template-columns:repeat(${n},1fr)">${Array.from({ length: n }, (_, i) => `<i style="background:${col}">${i < filled ? `<b class="num">${val}</b>` : ''}</i>`).join('')}</div></div>`;
 const CONCEPTS = {
-  prime: { sem: '六上', who: 'octopus', word: '質數', hide: ['質數', '合數', '因數'],
+  prime: { sem: '六上', who: 'octopus', word: '質數', hide: ['質數', '合數'], fs: 's7',
     steps: [
-      { t: 'say', say: '排隊你一定會：6 個小朋友，每排 3 個，排成 2 排，整整齊齊。', pic: () => rows6('🧒', 6, 3, '每排 3 個') },
-      { t: 'act', id: 'd6', who: 'demo', say: '6 塊地磚，每排 2 塊，一塊一塊放進框裡。', n: 6, pic: k => pile6('🟫', 6, k, '地磚') + rows6('🟫', k, 2, '每排 2 塊'), cap: k => k ? `放了 ${k} 塊${k % 2 ? '，這排還沒滿' : '，這排滿了'}` : '我先把一塊放進去⋯', done: '6 塊排成 3 排，每排 2 塊，沒有剩，是長方形。' },
-      { t: 'act', id: 'h5', who: 'half', say: '5 塊地磚，也是每排 2 塊。', n: 5, pic: k => pile6('🟫', 5, k, '地磚') + rows6('🟫', k, 2, '每排 2 塊'), cap: k => k ? `放了 ${k} 塊` : '', done: '最後一排只有 1 塊（紅色），排不整齊。每排 3 塊、4 塊也會剩，5 塊只能排一長條。' },
-      { t: 'guess', say: '7 塊地磚，除了排成一長條，排得成長方形嗎？', pic: () => pile6('🟫', 7, 7).replace(/gone/g, ''), o: ['排得成', '只能排一長條'] },
-      { t: 'act', id: 's7', say: '7 塊，每排 2 塊。點或拖地磚。', n: 7, pic: k => pile6('🟫', 7, k, '地磚') + rows6('🟫', k, 2, '每排 2 塊'), cap: k => k ? `放了 ${k} 塊` : '', done: '剩 1 塊。每排 3、4、5、6 塊也都會剩，7 也只能排一長條。很多人以為單數都排不成，其實 9 就排得成 3×3。' },
-      { t: 'say', id: 'map', say: '把剛才的結果分成兩堆。右邊這堆，只能「每排 1 塊」排成一長條。', pic: () => twoBox6(['排得成長方形', sym6([[6, '塊', K1], '＝', [2, '每排', K2], '×', [3, '排', K3]]) + sym6([[4, '塊', K1], '＝', [2, '每排', K2], '×', [2, '排', K3]])], ['只能排一長條', sym6([[5, '塊', K1], '＝', [1, '每排', K2], '×', [5, '排', K3]]) + `<div class="trail">2、3、5、7 都是這樣</div>`]) },
-      { t: 'name', say: '右邊那一堆的數，有自己的名字。', name: '只能排成一長條、沒辦法分成一樣多的好幾排的數，叫<b>質數</b>。2、3、5、7 都是質數。', pic: () => `<div class="trail">2、3、5、7</div>` + rows6('🟫', 5, 5) },
-      { t: 'check', o: ['質數只能排成一長條', '質數都是單數', '質數就是很小的數'], a: 0, why: '9 是單數，卻排得成 3×3；2 是雙數，卻只能排一長條。' },
-      { t: 'pose', say: '哪一張卡，是在問「11 是不是質數」？', o: ['11 顆蛋，想排成好幾排、每排一樣多，排得成嗎？', '11 顆蛋，吃掉 2 顆還剩幾顆？', '11 顆蛋，每顆 5 元要多少錢？'], a: 0, why: '要問的是：排不排得成整齊的好幾排。', ok: '對了！問排不排得成，就是在問是不是質數。' },
+      { t: 'say', say: '先看一個排隊的例子：6 個小朋友，每排 3 個，排成 2 排，沒有人落單。', pic: () => rows6('🧒', 6, 3, '每排 3 個') },
+      { t: 'act', id: 'd6', who: 'demo', say: '6 塊地磚，每排 2 塊，一塊一塊放進框裡。', n: 6, pic: k => pile6('🟫', 6, k, '地磚') + rows6('🟫', k, 2, '每排 2 塊'), cap: k => k ? `放了 ${k} 塊${k % 2 ? '，這排還沒滿' : '，這排滿了'}` : '我先把一塊放進去⋯', done: '6 塊排成 3 排、每排 2 塊，沒有缺塊。這是「至少兩排、每排至少兩塊」的長方形。' },
+      { t: 'act', id: 'h5', who: 'half', say: '5 塊地磚，也試試每排 2 塊。', n: 5, pic: k => pile6('🟫', 5, k, '地磚') + rows6('🟫', k, 2, '每排 2 塊'), cap: k => k ? `放了 ${k} 塊` : '', done: '最後一排只有 1 塊（紅色），有缺塊。每排 3 塊、4 塊也會缺。5 塊只排得成 1 排，排不成至少兩排、每排至少兩塊的長方形。' },
+      { t: 'guess', say: '7 塊地磚，排得成「至少兩排、每排至少兩塊、沒有缺塊」的長方形嗎？', pic: () => pile6('🟫', 7, 7).replace(/gone/g, ''), o: ['排得成', '排不成'] },
+      { t: 'act', id: 's7', say: '7 塊，先試每排 2 塊。點或拖地磚。', tip: '每排放 2 塊，放滿一排再放下一排；最後看最後一排有沒有缺塊。', n: 7, pic: k => pile6('🟫', 7, k, '地磚') + rows6('🟫', k, 2, '每排 2 塊'), cap: k => k ? `放了 ${k} 塊` : '', done: '最後一排缺 1 塊。改成每排 3、4、5、6 塊，也都有缺塊。7 塊排不成這種長方形。' },
+      { t: 'say', id: 'map', say: '左邊排得成；右邊只能寫成「1 排」的乘法。', pic: () => twoBox6(['排得成', sym6([[6, '塊', K1], '＝', [2, '每排', K2], '×', [3, '排', K3]]) + sym6([[4, '塊', K1], '＝', [2, '每排', K2], '×', [2, '排', K3]])], ['排不成', sym6([[7, '塊', K1], '＝', [7, '每排', K2], '×', [1, '排', K3]]) + sym6([[5, '塊', K1], '＝', [5, '每排', K2], '×', [1, '排', K3]]) + `<div class="trail">2、3 也只能排 1 排</div>`]) },
+      { t: 'name', say: '右邊這一類數，有自己的名字。', name: '大於 1 的整數中，因數只有 1 和自己兩個的數，叫<b>質數</b>。7 的因數只有 1 和 7，所以 7 是質數。1 只有 1 個因數，不是質數。', pic: () => `<div class="trail">2、3、5、7</div>` + rows6('🟫', 5, 5) },
+      { t: 'check', o: ['質數是大於 1、因數只有 1 和自己的數', '質數都是奇數', '1 是最小的質數'], a: 0, why: [, '2 是偶數，因數只有 1 和 2，也是質數；9 是奇數，卻排得成 3 排、每排 3 塊。', '1 的因數只有 1 一個，不到兩個，所以 1 不是質數。'] },
+      { t: 'pose', say: '哪一張卡在問「11 是不是質數」？', o: ['11 顆蛋，排得成至少兩排、每排一樣多、每排至少 2 顆嗎？', '11 顆蛋，吃掉 2 顆還剩幾顆？', '11 顆蛋，每顆 5 元要多少錢？'], a: 0, why: [, '這題問的是減法，和排不排得成無關。', '這題問的是總價，和排不排得成無關。'], ok: '對了！問排不排得成這種長方形，就是在問是不是質數。' },
     ],
-    q: { t: '9 個杯子要排成好幾排、每排一樣多。9 是不是質數？', pic: () => pile6('🥤', 9, 9).replace(/gone/g, ''), o: ['不是，每排 3 個排得成', '是，因為 9 是單數'], a: 0, ok: '對了！9＝3×3，排得成長方形，不是質數。', back: 's7', hint: '像 7 塊那樣一塊一塊排；9 個試試每排 3 個。' } },
+    q: { t: '9 個杯子，想排成至少兩排、每排一樣多、每排至少 2 個。9 是不是質數？', pic: () => pile6('🥤', 9, 9).replace(/gone/g, ''), o: ['不是，每排 3 個可以排成 3 排', '是，因為 9 是奇數'], a: 0, why: [, '奇數也可能排得成：試試每排 3 個。'], ok: '對了！9＝3×3，除了 1 和 9，還有因數 3，不是質數。', back: 's7', hint: '像 7 塊那樣一塊一塊排；9 個試試每排 3 個。' } },
   rate: { sem: '六上', who: 'bee', word: '比值', hide: ['比值', '前項', '後項', '當作 1', '基準'],
     steps: [
-      { t: 'say', say: '這個你會：6 杯是 2 杯的幾倍？拿 2 杯一份一份去量 6 杯，量了 3 份，就是 3 倍。', pic: () => grp6(6, 2, 3, { noHot: true, cell: WAT, lab: '6 杯水，每 2 杯圈一份' }) },
-      { t: 'act', id: 'd', who: 'demo', say: '蜂蜜 2 杯、水 6 杯。用蜂蜜那麼多，一份一份圈水。', n: 3, pic: k => `<small class="lab6">蜂蜜</small>` + grp6(2, 2, 1, { noHot: true, cell: HON }) + grp6(6, 2, k, { cell: WAT, lab: '水' }), cap: k => k ? `圈了 ${k} 份` : '我用蜂蜜的 2 杯去量⋯', done: '水是蜂蜜的 3 倍：6÷2＝3。' },
-      { t: 'say', say: '反過來問：蜂蜜是水的幾倍？蜂蜜比水少，連 1 份都不到，要把水切開。', pic: () => barU(1, WAT, '水 6 杯', 100) + barU(1, HON, '蜂蜜 2 杯', 33.4) },
-      { t: 'act', id: 'h', who: 'half', say: '把水平分成 3 段，點剪刀切。', n: 2, pic: k => cut6(3, k, { col: WAT, lab: '水' }) + barU(1, HON, '蜂蜜', 33.4), cap: k => `切了 ${k} 刀`, done: '蜂蜜剛好是 3 段裡的 1 段：蜂蜜是水的 1/3 倍。' },
+      { t: 'say', say: '先回想倍數：6 杯是 2 杯的幾倍？用 2 杯一份一份去量 6 杯，量了 3 份，所以是 3 倍。', pic: () => grp6(6, 2, 3, { noHot: true, cell: WAT, lab: '6 杯水，每 2 杯圈一份' }) },
+      { t: 'act', id: 'd', who: 'demo', say: '蜂蜜 2 杯、水 6 杯（用同一種杯子）。用蜂蜜的 2 杯，一份一份圈水。', n: 3, pic: k => `<small class="lab6">蜂蜜</small>` + grp6(2, 2, 1, { noHot: true, cell: HON }) + grp6(6, 2, k, { cell: WAT, lab: '水' }), cap: k => k ? `圈了 ${k} 份` : '我用蜂蜜的 2 杯去量⋯', done: '水是蜂蜜的 3 倍：6÷2＝3。' },
+      { t: 'say', say: '反過來問：蜂蜜 2 杯是水 6 杯的幾倍？蜂蜜比水少，連 1 份都不到，要把水平均分成幾段來量。', pic: () => barU(1, WAT, '水 6 杯', 100) + barU(1, HON, '蜂蜜 2 杯', 33.4) },
+      { t: 'act', id: 'h', who: 'half', say: '把水平均分成 3 段，點剪刀切。', n: 2, pic: k => cut6(3, k, { col: WAT, lab: '水 6 杯' }) + barU(1, HON, '蜂蜜 2 杯', 33.4), cap: k => `切了 ${k} 刀`, done: '蜂蜜剛好是 3 段裡的 1 段：蜂蜜是水的 1/3 倍。' },
       { t: 'guess', say: '蜂蜜 2 杯、水 3 杯，蜂蜜是水的幾倍？', pic: () => barU(1, WAT, '水 3 杯') + barU(1, HON, '蜂蜜 2 杯', 66.7), o: ['2/3 倍', '3/2 倍', '1 倍'] },
-      { t: 'act', id: 's', say: '把水切成 3 段（一杯一段）。', n: 2, pic: k => cut6(3, k, { col: WAT, lab: '水 3 杯' }) + barU(2, HON, '蜂蜜 2 杯', 66.7), cap: k => `切了 ${k} 刀`, done: '蜂蜜占 2 段，是水的 2/3 倍。' },
-      { t: 'say', id: 'map', say: '剛才做的事寫成算式：蜂蜜的杯數放前面，除以水的杯數。', pic: () => mini6(barU(3, WAT, '水') + barU(2, HON, '蜂蜜', 66.7), sym6([[2, '蜂蜜杯數', K1], '÷', [3, '水杯數', K2], '＝', ['2/3', '蜂蜜是水的幾倍', K3]])) },
-      { t: 'say', say: '你學過寫法「蜂蜜：水＝2：3」。把 2：3 也算成一個數：2÷3＝2/3，和剛才切出來的一樣。', pic: () => sym6([[2, '蜂蜜', K1], '：', [3, '水', K2]]) + '<div class="trail">⬇ 前面÷後面</div>' + sym6([[2, '蜂蜜', K1], '÷', [3, '水', K2], '＝', ['2/3', '', K3]]) },
-      { t: 'name', say: '這個算出來的數有名字。', name: '一個比，用前面的數除以後面的數得到的數，叫<b>比值</b>。2：3 的比值是 2/3。', pic: () => sym6([[2, '', K1], '：', [3, '', K2], '→', ['2/3', '比值', K3]]) },
-      { t: 'check', o: ['2：3 的比值是 2÷3＝2/3', '2：3 的比值是 2＋3＝5', '2：3 的比值是 3÷2'], a: 0, why: '比值是前面除以後面，不是加起來，也不是倒過來。' },
-      { t: 'build', say: '拼一題可以用「3÷4」來算的題目。', heads: ['東西', '數量', '問題'], cols: [['果汁和水', '3 個小朋友'], ['果汁 3 杯、水 4 杯', '果汁 4 杯、水 3 杯'], ['果汁是水的幾倍？', '一共有幾杯？']], a: [0, 0, 0], why: ['要有兩樣東西才能比。', '3÷4：前面是果汁 3 杯，後面是水 4 杯。', '問「幾杯」要用加的；問「幾倍」才用除的。'], ok: '果汁 3 杯、水 4 杯，果汁是水的幾倍？3÷4＝3/4。' },
+      { t: 'act', id: 's', say: '把水 3 杯平均分成 3 段（一杯一段）：點在要切的位置。', tip: '平均分成 3 段，每段一樣長；第 1 刀切在整條的 1/3 那裡。', n: 2, pic: k => cut6(3, k, { col: WAT, lab: '水 3 杯' }) + barU(2, HON, '蜂蜜 2 杯', 66.7), cap: k => `切了 ${k} 刀`, done: '蜂蜜占 2 段：蜂蜜是水的 2/3 倍。' },
+      { t: 'say', id: 'map', say: '蜂蜜的杯數除以水的杯數。', pic: () => mini6(barU(3, WAT, '水 3 杯') + barU(2, HON, '蜂蜜 2 杯', 66.7), sym6([[2, '蜂蜜杯數', K1], '÷', [3, '水杯數', K2], '＝', ['2/3', '蜂蜜是水的幾倍', K3]])) },
+      { t: 'say', say: '先回想比的寫法：蜂蜜：水＝2：3。把 2：3 也算成一個數：2÷3＝2/3，和剛才量出來的一樣。', pic: () => sym6([[2, '蜂蜜', K1], '：', [3, '水', K2]]) + '<div class="trail">⬇ 用前面的數除以後面的數</div>' + sym6([[2, '蜂蜜', K1], '÷', [3, '水', K2], '＝', ['2/3', '', K3]]) },
+      { t: 'name', say: '這個算出來的數有名字。', name: 'a：b 中，用 a 除以 b 得到的數，叫 a：b 的<b>比值</b>（b 不能是 0）。2：3 的比值是 2÷3＝2/3。', pic: () => sym6([[2, '', K1], '：', [3, '', K2], '→', ['2/3', '比值', K3]]) },
+      { t: 'check', o: ['2：3 的比值是 2÷3＝2/3', '2：3 的比值是 2＋3＝5', '2：3 的比值是 3÷2＝3/2'], a: 0, why: [, '比值要用除的，不是把兩個數加起來。', '3÷2 是 3：2 的比值，前後順序倒過來了。'] },
+      { t: 'build', say: '拼一道可以用「3÷4」來算的題目。', heads: ['東西', '數量', '問題'], cols: [['果汁和水', '3 個小朋友'], ['果汁 3 杯、水 4 杯', '果汁 4 杯、水 3 杯'], ['果汁是水的幾倍？', '一共有幾杯？']], a: [0, 0, 0], why: ['先找出要比較的兩個量：果汁的杯數和水的杯數。', '3÷4：被除數 3 是果汁的杯數，除數 4 是水的杯數。', '問「一共幾杯」要用加的；問「幾倍」才用除的。'], ok: '果汁 3 杯、水 4 杯，果汁是水的幾倍？3÷4＝3/4。' },
     ],
-    q: { t: '紅顏料 1 匙、藍顏料 4 匙，紅：藍＝1：4，比值是多少？', pic: () => barU(4, K2, '藍 4 匙') + barU(1, K4, '紅 1 匙', 25), o: ['1/4', '4', '5'], a: 0, ok: '對了！1÷4＝1/4。', back: 's', hint: '像剛才把水切成段那樣：藍的切成 4 段，紅的占幾段？' } },
-  base: { sem: '六下', who: 'goat', word: '基準量', hide: ['基準', '比較量'],
+    q: { t: '紅顏料 1 匙、藍顏料 4 匙（同一支匙），紅：藍＝1：4，比值是多少？', pic: () => barU(4, K2, '藍 4 匙') + barU(1, K4, '紅 1 匙', 25), o: ['1/4', '4', '5'], a: 0, why: [, '4 是 4÷1，是藍：紅的比值。', '5 是 1＋4，比值要用除的。'], ok: '對了！1÷4＝1/4。', back: 's', hint: '像剛才把水平均分成段那樣：藍的分成 4 段，紅的占幾段？' } },
+  base: { sem: '六下', who: 'goat', word: '基準量', hide: ['基準', '比較量'], fs: 's2',
     steps: [
-      { t: 'say', say: '這個你會：8 是 4 的幾倍？拿 4 去量 8，量 2 次，是 2 倍。拿去量的 4，就像一把尺。', pic: () => grp6(8, 4, 2, { noHot: true, lab: '拿 4 當尺量 8' }) },
-      { t: 'act', id: 'd', who: 'demo', say: '甲艙 6 箱、乙艙 3 箱。拿乙艙當尺，一份一份量甲艙。', n: 2, pic: k => `<small class="lab6">📏 乙艙（當尺）</small>` + grp6(3, 3, 1, { noHot: true, cell: K2 }) + grp6(6, 3, k, { cell: '#f7c873', lab: '甲艙' }), cap: k => k ? `量了 ${k} 次` : '我拿乙艙當尺⋯', done: '甲艙是乙艙的 2 倍。' },
-      { t: 'act', id: 'h', say: '反過來：拿甲艙當尺量乙艙。甲艙比較長，先把它切成 2 段。', n: 1, pic: k => cut6(2, k, { col: '#f7c873', lab: '📏 甲艙（當尺）' }) + barU(1, K2, '乙艙', 50), cap: k => k ? '切好了' : '', done: '乙艙是其中 1 段：乙艙是甲艙的 1/2 倍。' },
-      { t: 'guess', say: '同樣兩艙，「甲是乙的幾倍」和「乙是甲的幾倍」，答案一樣嗎？', o: ['一樣', '不一樣'] },
-      { t: 'act', id: 's1', say: '「弟弟是哥哥的幾倍？」把尺拖到要當尺的那一條（「的」後面的人）。', n: 1, pic: k => (k ? '' : pile6('📏', 1, 0)) + `<div class="${k ? '' : 'drop6'} bu6"><small>${k ? '📏 ' : ''}哥哥 4 格</small>${barRow(4, 4, '#f7c873')}</div><div class="no6 bu6" data-w="題目是「弟弟是哥哥的幾倍」，要拿哥哥當尺。" style="width:75%"><small>弟弟 3 格</small>${barRow(3, 3, K2)}</div>`, cap: k => k ? '哥哥當尺' : '拖或點尺', done: '哥哥當尺。' },
-      { t: 'act', id: 's2', say: '把哥哥這把尺切成 4 段，看弟弟占幾段。', n: 3, pic: k => cut6(4, k, { col: '#f7c873', lab: '📏 哥哥' }) + barU(3, K2, '弟弟', 75), cap: k => `切了 ${k} 刀`, done: '弟弟占 3 段：弟弟是哥哥的 3/4 倍。' },
-      { t: 'say', id: 'map', say: '寫成算式：被量的放前面，當尺的放後面。', pic: () => mini6(barU(4, '#f7c873', '📏 哥哥') + barU(3, K2, '弟弟', 75), sym6([[3, '弟弟（被量的）', K1], '÷', [4, '哥哥（當尺的）', K2], '＝', ['3/4', '幾倍', K3]])) },
-      { t: 'name', say: '當尺的那個量，有名字。', name: '拿來當尺、當作整條「1」的量，叫<b>基準量</b>。「弟弟是哥哥的幾倍」，哥哥是基準量。', pic: () => barU(4, '#f7c873', '📏 哥哥') },
-      { t: 'check', o: ['「的」後面、拿來當尺的是基準量', '比較長的那個一定是基準量'], a: 0, why: '剛才乙艙比較短，也可以當尺。' },
-      { t: 'pose', say: '只改一個地方：「甲艙是乙艙的幾倍」改成「乙艙是甲艙的幾倍」，會怎樣？', o: ['當尺的換成甲艙，答案上下顛倒', '什麼都不會變'], a: 0, why: '回想剛才：2 倍變成 1/2 倍。', ok: '對了！換了基準量，答案就上下顛倒。' },
+      { t: 'say', say: '甲艙有 6 箱物資，乙艙有 3 箱。我們先比較：甲艙的箱數是乙艙的幾倍？', pic: () => `<small class="lab6">甲艙 6 箱</small>${grp6(6, 6, 0, { noHot: true, cell: '#f7c873' })}<small class="lab6">乙艙 3 箱</small>${grp6(3, 3, 0, { noHot: true, cell: K2 })}` },
+      { t: 'act', id: 'd', who: 'demo', say: '題目是拿甲艙和乙艙比，所以把乙艙的 3 箱看作 1 份。我用每份 3 箱，在甲艙的 6 箱上圈一圈。', n: 2, pic: k => `<small class="lab6">📏 乙艙 3 箱（看作 1 份）</small>` + grp6(3, 3, 1, { noHot: true, cell: K2 }) + grp6(6, 3, k, { cell: '#f7c873', lab: '甲艙 6 箱' }), cap: k => k ? `圈了 ${k} 份` : '我把乙艙的 3 箱看作 1 份⋯', done: '圈出 2 份：6÷3＝2，甲艙的箱數是乙艙的 2 倍。' },
+      { t: 'guess', say: '交換問題：「乙艙的箱數是甲艙的幾倍？」箱數沒有改變，答案還是 2 倍嗎？', o: ['還是 2 倍', '不一樣'] },
+      { t: 'act', id: 'h', who: 'demo', say: '這次拿乙艙和甲艙比，要把甲艙的 6 箱看作 1。把甲艙平均分成 2 段。', n: 1, pic: k => cut6(2, k, { col: '#f7c873', lab: '📏 甲艙 6 箱（看作 1）' }) + barU(1, K2, '乙艙 3 箱', 50), cap: k => k ? '分好了' : '', done: '乙艙正好是 2 段裡的 1 段：乙艙的箱數是甲艙的 1/2 倍。答案從 2 變成 1/2，因為這次把甲艙看作 1。' },
+      { t: 'act', id: 's1', say: '「弟弟的身高是哥哥的幾倍？」這次要把誰的身高看作 1？', tip: '題目拿誰和誰比？「弟弟是哥哥的幾倍」是拿弟弟和哥哥比。', n: 1, pic: k => `<div class="bu6"><small>${k ? '📏 ' : ''}哥哥 4 格</small>${barRow(4, 4, '#f7c873')}</div><div class="bu6" style="width:75%"><small>弟弟 3 格</small>${barRow(3, 3, K2)}</div>` + (k ? '' : chips6(['把哥哥看作 1', '把弟弟看作 1'], (_, i) => i === 0, () => '題目是拿弟弟去和哥哥比，所以哥哥是被看作 1 的那個。')), cap: k => k ? '把哥哥的 4 格看作 1' : '', done: '把哥哥的身高看作 1。' },
+      { t: 'act', id: 's2', say: '把哥哥的 4 格看作 1，平均分成 4 段，看弟弟占幾段。點在要切的位置。', tip: '平均分成 4 段，每段是 1 格；刀子切在格子和格子的交界。', n: 3, pic: k => cut6(4, k, { col: '#f7c873', lab: '📏 哥哥 4 格（看作 1）' }) + barU(3, K2, '弟弟 3 格', 75), cap: k => `切了 ${k} 刀`, done: '弟弟占 3 段：弟弟的身高是哥哥的 3/4 倍。' },
+      { t: 'say', id: 'map', say: '拿來比的放前面，看作 1 的放後面。', pic: () => mini6(barU(4, '#f7c873', '📏 哥哥') + barU(3, K2, '弟弟', 75), sym6([[3, '弟弟（拿來比的）', K1], '÷', [4, '哥哥（看作 1）', K2], '＝', ['3/4', '倍數', K3]])) },
+      { t: 'name', say: '被看作 1 的那個量，有名字。', name: '比較時，被看作 1 的那個量，叫<b>基準量</b>。「弟弟的身高是哥哥的幾倍」，哥哥的身高是基準量。', pic: () => barU(4, '#f7c873', '📏 哥哥（基準量）') },
+      { t: 'check', o: ['基準量是比較時被看作 1 的量', '比較長或比較多的那個，一定是基準量'], a: 0, why: [, '「甲艙是乙艙的幾倍」，被看作 1 的是箱數比較少的乙艙；要看題目拿誰和誰比。'] },
+      { t: 'pose', say: '只改一個地方：「甲艙是乙艙的幾倍」改成「乙艙是甲艙的幾倍」，會怎樣？', o: ['看作 1 的換成甲艙，答案從 2 變成 1/2', '什麼都不會變'], a: 0, why: [, '回想剛才：看作 1 的量換了，2 倍就變成 1/2 倍。'], ok: '對了！換了基準量，答案就跟著變。' },
     ],
-    q: { t: '「媽媽的年齡是我的幾倍」，基準量是誰？', o: ['我', '媽媽'], a: 0, ok: '對了！拿我的年齡當尺。', back: 's1', hint: '把尺放到「的」後面那一個。' } },
+    q: { t: '以小美的 8 張卡片為基準，小安有 6 張。小安的卡片數是小美的幾倍？', pic: () => barU(8, '#f7c873', '📏 小美 8 張') + barU(6, K2, '小安 6 張', 75), o: ['3/4 倍', '4/3 倍', '2 倍'], a: 0, why: [, '8÷6 是把小安的 6 張看作 1；題目說以小美為基準。', '小安比小美少，不會是 2 倍。'], ok: '對了！你先把小美的 8 張看作 1，再算 6÷8＝3/4。基準量不一定比較小，也不一定比較大。', back: 's1', hint: '先決定把誰看作 1：題目說「以小美的卡片為基準」。' } },
 };
 // ---- 其他小故事用的畫面零件 ----
-const brk6 = st => (k = 0) => { const a = st[Math.min(k, st.length - 1)], c = a.findIndex(x => !Logic.isPrime(x)); return `<div class="parts6">${a.map((x, i) => `<b class="chip6 num ${i === c && k < st.length - 1 ? 'hot6 big' : Logic.isPrime(x) ? '' : 'big'}">${x}</b>`).join('<span>×</span>')}</div>`; };
-const ladStep6 = (A, B, divs) => k => { const rows = []; let x = A, y = B; for (let i = 0; i < k; i++) { rows.push([divs[i], x, y]); x /= divs[i]; y /= divs[i]; } const d = divs[k]; return `<div class="pair6"><div>${dotsC(A, K4)}<br>${dotsC(B, K2)}</div><div>${ladderHtml(rows, x, y)}</div></div>` + (k < divs.length ? chips6([2, 3, 5], p => p === d, p => `${x % p ? `${x} 個不能平分成 ${p} 份` : `${y} 個不能平分成 ${p} 份`}。`) : ''); };
-const tries6 = (a, b, ps) => k => `<div class="lk6">${ps.slice(0, k).map(p => `<div class="trow6">分給 <b class="num">${p}</b> 人：${a % p ? `${a} 顆剩 ${a % p}` : `${a} 顆可以`}，${b % p ? `${b} 顆剩 ${b % p}` : `${b} 顆可以`}</div>`).join('')}</div>` + (k < ps.length ? chips6(ps.map(p => p + ' 人'), (_, i) => i === k) : '');
+const brk6 = st => (k = 0) => { const a = st[Math.min(k, st.length - 1)], c = a.findIndex(x => !Logic.isPrime(x)), last = k >= st.length - 1; return `<div class="parts6">${a.map((x, i) => `<b class="chip6 num ${i === c && !last ? 'hot6 big' : Logic.isPrime(x) ? (last ? '' : 'no6') : 'big'}" data-w="${x} 是質數，不能再拆成兩個比 1 大的數相乘。">${x}</b>`).join('<span>×</span>')}</div>`; };
+const ladStep6 = (A, B, divs) => k => { const rows = []; let x = A, y = B; for (let i = 0; i < k; i++) { rows.push([divs[i], x, y]); x /= divs[i]; y /= divs[i]; } const d = divs[k]; return `<div class="pair6"><div>${dotsC(A, K4)}<br>${dotsC(B, K2)}</div><div>${ladderHtml(rows, x, y)}</div></div>` + (k < divs.length ? chips6([2, 3, 5], p => p === d, p => `${x % p ? `${x} 不能被 ${p} 整除` : `${y} 不能被 ${p} 整除`}，${p} 不能同時整除這兩個數。`) : ''); };
+const tries6 = (a, b, ps) => k => `<div class="lk6">${ps.slice(0, k).map(p => `<div class="trow6">平分給 <b class="num">${p}</b> 人：${a % p ? `${a} 顆分不完（剩 ${a % p}）` : `${a} 顆剛好分完`}，${b % p ? `${b} 顆分不完（剩 ${b % p}）` : `${b} 顆剛好分完`}</div>`).join('')}</div>` + (k < ps.length ? chips6(ps.map(p => p + ' 人'), (_, i) => i === k, (_, i) => i < k ? '這個人數已經試過了。' : `照順序從人數少的試起：先試 ${ps[k]} 人。`) : '');
 const pies6 = (n, parts, taken) => Array.from({ length: n }, (_, i) => pie6(parts, parts, Math.max(0, Math.min(parts, taken - i * parts)), { hot: taken >= i * parts && taken < (i + 1) * parts ? 'take' : '', takenCol: '#a9d0f0' })).join('');
 const rectG6 = (w, h, hot, col) => { const u = 18; let s = `<svg class="g5 ${hot ? 'hot6' : ''}" style="max-height:150px" viewBox="0 0 ${Math.max(w, 6) * u + 4} ${Math.max(h, 4) * u + 4}">`; for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) s += `<rect x="${2 + i * u}" y="${2 + j * u}" width="${u}" height="${u}" fill="${col || '#a9d0f0'}" stroke="#33405a"/>`; return s + '</svg>'; };
 const addBtn6 = (t, on) => on ? `<div class="op6s"><button class="op6 hot6">${t}</button></div>` : '';
 const pan6 = (box, ex, right) => `<div class="bal6"><span class="pan6">${'🎁'.repeat(box)}${ex ? ' ' + it6('🔴', 'hot6').repeat(1) + '🔴'.repeat(Math.max(0, ex - 1)) : ''}</span><i>＝</i><span class="pan6">${'🔴'.repeat(right)}</span></div>`;
 const road6 = (cm, k, per) => `<div class="road6">${Array.from({ length: cm }, (_, i) => `<span class="${i < k ? 'on' : i === k ? 'hot6' : ''}">${i < k ? `${per * (i + 1)} 公里` : '📏'}</span>`).join('')}</div>`;
-const slice10 = (votes, k, hot) => { const cols = { 月球: K2, 火星: K4, 土星: K3 }; const r = 44, c = 50, P = i => [c + r * Math.sin(i / 10 * 2 * Math.PI), c - r * Math.cos(i / 10 * 2 * Math.PI)]; let s = '<svg class="pz6" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#fff" stroke="#33405a"/>'; for (let i = 0; i < 10; i++) { const [x0, y0] = P(i), [x1, y1] = P(i + 1); s += `<path class="${i === k && hot ? 'hot6' : ''}" d="M50 50L${x0} ${y0}A44 44 0 0 1 ${x1} ${y1}Z" fill="${i < k ? cols[votes[i]] : i === k && hot ? '#ffd65a' : '#fff'}" stroke="#33405a"/>`; } return s + '</svg>'; };
+const slice10 = (votes, k, hot) => { const cols = { 月球: K2, 火星: K4, 土星: K3 }; const r = 44, c = 50, P = i => [c + r * Math.sin(i / 10 * 2 * Math.PI), c - r * Math.cos(i / 10 * 2 * Math.PI)]; let s = '<svg class="pz6" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#fff" stroke="#33405a"/>'; for (let i = 0; i < 10; i++) { const [x0, y0] = P(i), [x1, y1] = P(i + 1); s += `<path class="${i === k && hot ? 'hot6' : i < k ? 'gone' : ''}" d="M50 50L${x0} ${y0}A44 44 0 0 1 ${x1} ${y1}Z" fill="${i < k ? cols[votes[i]] : i === k && hot ? '#ffd65a' : '#fff'}" stroke="#33405a"/>`; } return s + '</svg>'; };
 const VOTES = ['月球', '月球', '月球', '月球', '月球', '火星', '火星', '火星', '土星', '土星'];
-const DRAWS = ['🔴', '🔴', '🔴', '🔵', '🔴', '🔴', '🔴', '🔴', '🔴', '🔴'];
+const DRAWS = ['🔴', '🔴', '🔴', '🔵', '🔴', '🔴', '🔴', '🔴', '🔴', '🔴']; // 一次示例紀錄
+const DRAWS2 = ['🔴', '🔵', '🔴', '🔴', '🔵', '🔴', '🔴', '🔵', '🔴', '🔴']; // 另一組同學的紀錄：7 紅 3 藍
+const drw6 = (a, lab) => `<div class="pile6">${lab ? `<small>${lab}</small>` : ''}${a.map(e => it6(e)).join('')}</div>`; // 摸球紀錄：一顆一個，手機上會自動換行
+const halfSvg = k => `<svg class="g5" style="max-height:130px" viewBox="0 0 200 112"><path d="M10 100 A90 90 0 0 1 190 100 Z" fill="#fde7b0" stroke="#33405a" stroke-width="2"/>${k >= 1 ? '<path d="M10 100 A90 90 0 0 1 190 100" fill="none" stroke="#d6476b" stroke-width="7"/>' : ''}${k >= 2 ? '<line x1="10" y1="100" x2="190" y2="100" stroke="#2f6fb0" stroke-width="7"/>' : ''}<text x="100" y="92" text-anchor="middle" class="pt">直徑 10 公分</text></svg>`;
+const ringSvg = (k, lab) => `<svg class="g5" style="max-height:150px" viewBox="0 0 200 160"><circle cx="100" cy="80" r="72" fill="${k >= 1 ? '#f7c873' : '#fff'}" stroke="#33405a" stroke-width="2"/>${k >= 2 ? '<circle cx="100" cy="80" r="24" fill="#fff" stroke="#d6476b" stroke-width="3"/>' : '<circle cx="100" cy="80" r="24" fill="none" stroke="#33405a" stroke-dasharray="4 3"/>'}<line x1="100" y1="80" x2="172" y2="80" stroke="#2f6fb0" stroke-width="3"/><line x1="100" y1="80" x2="100" y2="56" stroke="#d6476b" stroke-width="3"/><text x="140" y="74" text-anchor="middle" class="pt">${lab ? lab[0] : 3}</text><text x="112" y="70" class="pt">${lab ? lab[1] : 1}</text></svg>`;
+const sectorSvg = k => `<svg class="g5" style="max-height:150px" viewBox="0 0 170 170"><path d="M20 150 L20 20 A130 130 0 0 1 150 150 Z" fill="#c9e8c3" stroke="#33405a" stroke-width="2"/>${k >= 1 ? '<path d="M20 20 A130 130 0 0 1 150 150" fill="none" stroke="#d6476b" stroke-width="7"/>' : ''}${k >= 2 ? '<line x1="20" y1="150" x2="20" y2="20" stroke="#2f6fb0" stroke-width="7"/>' : ''}${k >= 3 ? '<line x1="20" y1="150" x2="150" y2="150" stroke="#2f6fb0" stroke-width="7"/>' : ''}<text x="30" y="142" class="pt">90°</text><text x="6" y="90" class="pt">6</text><text x="80" y="166" class="pt">6</text></svg>`;
+const shareRows6 = k => `<div class="rows6">${Array.from({ length: k }, (_, i) => `<div class="r6"><small>第 ${i + 1} 輪</small> 甲 ${'📦'.repeat(2)} ｜ 乙 ${'📦'.repeat(3)}</div>`).join('')}</div>` + pile6('📦', 20, 5 * k, `還沒分的：${20 - 5 * k} 箱`).replace(/hot6 drag6/, '');
 Object.assign(CONCEPTS, {
-  comp: { sem: '六上', who: 'octopus', word: '合數', hide: ['合數'],
+  comp: { sem: '六上', who: 'octopus', word: '合數', hide: ['合數'], fs: 's9',
     steps: [
-      { t: 'say', say: '質數你學過了：5 塊地磚只能排一長條。', pic: () => rows6('🟫', 5, 5) },
-      { t: 'act', id: 'd', who: 'demo', say: '6 塊地磚，每排 3 塊。', n: 6, pic: k => pile6('🟫', 6, k) + rows6('🟫', k, 3, '每排 3 塊'), cap: k => `放了 ${k} 塊`, done: '2 排剛好，排成長方形。' },
-      { t: 'act', id: 's', say: '8 塊地磚，每排 2 塊。', n: 8, pic: k => pile6('🟫', 8, k) + rows6('🟫', k, 2, '每排 2 塊'), cap: k => `放了 ${k} 塊`, done: '4 排剛好。' },
-      { t: 'guess', say: '9 塊（單數）排得成長方形嗎？', o: ['排得成', '只能排一長條'] },
-      { t: 'act', id: 's9', say: '9 塊，每排 3 塊。', n: 9, pic: k => pile6('🟫', 9, k) + rows6('🟫', k, 3, '每排 3 塊'), cap: k => `放了 ${k} 塊`, done: '3 排剛好！很多人以為單數都排不成。' },
-      { t: 'say', id: 'map', say: '把結果分兩堆：左邊除了一長條，還排得成長方形。', pic: () => twoBox6(['排得成長方形', sym6([[8, '塊', K1], '＝', [2, '每排', K2], '×', [4, '排', K3]]) + sym6([[9, '塊', K1], '＝', [3, '每排', K2], '×', [3, '排', K3]])], ['只能一長條', '<div class="trail">2、3、5、7</div>']) },
-      { t: 'name', say: '左邊這一堆有名字。', name: '除了一長條，還排得成長方形的數，叫<b>合數</b>。4、6、8、9 都是合數。1 只有一塊，不算質數也不算合數。', pic: () => rows6('🟫', 9, 3) },
-      { t: 'check', o: ['合數排得成長方形', '合數都是雙數'], a: 0, why: '9 是單數，也是合數。' },
-      { t: 'pose', say: '哪一張卡在問「10 是不是合數」？', o: ['10 片餅乾，排得成好幾排、每排一樣多嗎？', '10 片餅乾吃掉 3 片，剩幾片？'], a: 0, why: '要問排不排得成。' },
+      { t: 'say', say: '先回想質數：5 塊地磚排不成「至少兩排、每排至少兩塊」的長方形。忘了也可以先看〈質數〉。', pic: () => rows6('🟫', 5, 5) },
+      { t: 'act', id: 'd', who: 'demo', say: '6 塊地磚，每排 3 塊。', n: 6, pic: k => pile6('🟫', 6, k) + rows6('🟫', k, 3, '每排 3 塊'), cap: k => `放了 ${k} 塊`, done: '排成 2 排、每排 3 塊，沒有缺塊。6 除了 1 和 6，還有因數 2 和 3。' },
+      { t: 'act', id: 'h', who: 'half', say: '8 塊地磚，每排 2 塊。', n: 8, pic: k => pile6('🟫', 8, k) + rows6('🟫', k, 2, '每排 2 塊'), cap: k => `放了 ${k} 塊`, done: '4 排剛好。8 除了 1 和 8，還有因數 2 和 4。' },
+      { t: 'guess', say: '9 是奇數。9 塊地磚排得成「至少兩排、每排至少兩塊」的長方形嗎？', o: ['排得成', '排不成'] },
+      { t: 'act', id: 's9', say: '9 塊，試試每排 3 塊。', tip: '每排放 3 塊，放滿一排再放下一排。', n: 9, pic: k => pile6('🟫', 9, k) + rows6('🟫', k, 3, '每排 3 塊'), cap: k => `放了 ${k} 塊`, done: '3 排剛好，沒有缺塊。9 是奇數，也排得成。' },
+      { t: 'say', id: 'map', say: '左邊除了 1 排，還有別的排法。', pic: () => twoBox6(['排得成', sym6([[8, '塊', K1], '＝', [2, '每排', K2], '×', [4, '排', K3]]) + sym6([[9, '塊', K1], '＝', [3, '每排', K2], '×', [3, '排', K3]])], ['排不成', '<div class="trail">2、3、5、7</div>']) },
+      { t: 'name', say: '左邊這一類數有名字。', name: '大於 1 的整數中，除了 1 和自己，還有別的因數的數，叫<b>合數</b>。8、9、10 都是合數。1 既不是質數，也不是合數。', pic: () => rows6('🟫', 9, 3) },
+      { t: 'check', o: ['合數除了 1 和自己，還有別的因數', '合數都是偶數'], a: 0, why: [, '9 是奇數，有因數 3，也是合數。'] },
+      { t: 'pose', say: '哪一張卡在問「10 是不是合數」？', o: ['10 片餅乾，排得成至少兩排、每排一樣多、每排至少 2 片嗎？', '10 片餅乾吃掉 3 片，剩幾片？'], a: 0, why: [, '這題問的是減法，和排不排得成無關。'] },
     ],
-    q: { t: '15 顆彈珠要排成好幾排、每排一樣多。15 是？', o: ['合數，每排 3 顆排 5 排', '質數'], a: 0, ok: '對了！', back: 's9', hint: '像 9 塊那樣，每排 3 個試試。' } },
-  pfac: { sem: '六上', who: 'octopus', word: '質因數', hide: ['質因數'],
+    q: { t: '15 顆彈珠，想排成至少兩排、每排一樣多、每排至少 2 顆。15 是質數還是合數？', o: ['合數，每排 3 顆可以排成 5 排', '質數，因為 15 是奇數'], a: 0, why: [, '奇數也可能是合數：試試每排 3 顆。'], ok: '對了！15＝3×5，除了 1 和 15，還有因數 3 和 5。', back: 's9', hint: '像 9 塊那樣，每排 3 個試試。' } },
+  pfac: { sem: '六上', who: 'octopus', word: '質因數', hide: ['質因數'], fs: 's',
     steps: [
-      { t: 'say', say: '這你會：6 塊排成 2 排、每排 3 塊，6＝2×3。', pic: () => sym6([[6, '', K1], '＝', [2, '', K2], '×', [3, '', K3]]) },
-      { t: 'act', id: 'd', who: 'demo', say: '機器人的 12 號零件，敲開發亮的那顆。', n: 2, pic: brk6([[12], [2, 6], [2, 2, 3]]), cap: k => ['12 太大了，敲開⋯', '12 敲成 2 和 6，6 還敲得開', '2、2、3'][k], done: '2、2、3 都是質數，敲不開了。' },
-      { t: 'act', id: 'h', who: 'half', say: '18 號零件。', n: 2, pic: brk6([[18], [2, 9], [2, 3, 3]]), cap: k => `敲了 ${k} 次`, done: '2、3、3，都敲不開了。' },
-      { t: 'act', id: 's', say: '20 號零件，自己敲。', n: 2, pic: brk6([[20], [2, 10], [2, 2, 5]]), cap: k => `敲了 ${k} 次`, done: '2、2、5。' },
-      { t: 'guess', say: '15 號零件，最後會剩哪些？', o: ['3 和 5', '1 和 15', '15'] },
-      { t: 'act', id: 's15', say: '敲開 15。', n: 1, pic: brk6([[15], [3, 5]]), cap: k => k ? '3 和 5' : '', done: '3 和 5，都是質數。' },
-      { t: 'say', id: 'map', say: '敲到最後的零件，全都是質數：', pic: () => sym6([[20, '原來的數', K1], '→', [2, '敲不開', K3], [2, '敲不開', K3], [5, '敲不開', K3]]) },
-      { t: 'name', say: '這些敲不開的零件有名字。', name: '敲到最後、是質數的零件，叫<b>質因數</b>。20 的質因數是 2 和 5。', pic: brk6([[2, 2, 5]]) },
-      { t: 'check', o: ['質因數一定是質數', '10 也可以是 20 的質因數'], a: 0, why: '10 還敲得開，不是質數。' },
-      { t: 'pose', say: '哪一張卡在問「找 21 的質因數」？', o: ['21 號零件拆到最小，會剩哪些零件？', '21 個零件分給 3 人，每人幾個？'], a: 0, why: '要問拆到最小剩什麼。' },
+      { t: 'say', say: '先回想：6 塊排成 2 排、每排 3 塊，可以寫成 6＝3×2。3 和 2 都是 6 的因數。', pic: () => sym6([[6, '', K1], '＝', [3, '每排', K2], '×', [2, '排', K3]]) },
+      { t: 'act', id: 'd', who: 'demo', say: '機器人的 12 號零件：把它拆成兩個數相乘。點還能再拆的那個數。', n: 2, pic: brk6([[12], [2, 6], [2, 2, 3]]), cap: k => ['12 可以拆成 2×6', '6 不是質數，還能拆成 2×3', '2、2、3 都是質數，不能再拆'][k], done: '12＝2×2×3，每個數都是質數了。' },
+      { t: 'act', id: 'h', who: 'half', say: '18 號零件。', n: 2, pic: brk6([[18], [2, 9], [2, 3, 3]]), cap: k => `拆了 ${k} 次`, done: '18＝2×3×3，都是質數了。' },
+      { t: 'act', id: 's', say: '20 號零件，自己拆：點還能再拆的數。', tip: '先把 20 拆成兩個數相乘，例如 2×10；再看哪一個不是質數，還能拆。', n: 2, pic: brk6([[20], [2, 10], [2, 2, 5]]), cap: k => `拆了 ${k} 次`, done: '20＝2×2×5。' },
+      { t: 'guess', say: '15 拆到每個數都是質數，會剩下哪些數？', o: ['3 和 5', '1 和 15', '15 不能拆'] },
+      { t: 'act', id: 's15', say: '拆開 15 看看。', tip: '15 可以寫成哪兩個比 1 大的數相乘？', n: 1, pic: brk6([[15], [3, 5]]), cap: k => k ? '3 和 5' : '', done: '15＝3×5，3 和 5 都是質數。' },
+      { t: 'say', id: 'map', say: '20 拆到最後，剩下的都是質數。', pic: () => sym6([[20, '原來的數', K1], '＝', [2, '質數', K3], '×', [2, '質數', K3], '×', [5, '質數', K3]]) + '<div class="trail">20 的因數有 1、2、4、5、10、20，其中是質數的只有 2 和 5</div>' },
+      { t: 'name', say: '這些是質數的因數有名字。', name: '一個數的因數中，是質數的那些，叫這個數的<b>質因數</b>。20＝2×2×5，20 的質因數是 2 和 5（2 出現兩次，只算一種）。', pic: brk6([[2, 2, 5]]) },
+      { t: 'check', o: ['20 的質因數是 2 和 5', '10 也是 20 的質因數', '20 有 2、2、5 三個不同的質因數'], a: 0, why: [, '10 是 20 的因數，但 10＝2×5，不是質數。', '2 出現兩次，但只是同一個質因數；不同的質因數只有 2 和 5。'] },
+      { t: 'pose', say: '哪一張卡在問「找出 21 的質因數」？', o: ['21 的因數中，哪些是質數？', '21 個零件分給 3 人，每人幾個？'], a: 0, why: [, '這題在問平分，和哪些因數是質數無關。'] },
     ],
-    q: { t: '14 號零件拆到最小，質因數是？', o: ['2 和 7', '1 和 14', '14'], a: 0, ok: '對了！', back: 's', hint: '像 20 那樣一顆一顆敲開。' } },
-  pfd: { sem: '六上', who: 'octopus', word: '質因數分解', hide: ['分解'],
+    q: { t: '14 的質因數是哪些？', o: ['2 和 7', '1 和 14', '只有 14'], a: 0, why: [, '1 不是質數；14 也不是質數。', '14＝2×7，不是質數。'], ok: '對了！14＝2×7，2 和 7 都是質數。', back: 's', hint: '像 20 那樣，拆到每個數都是質數。' } },
+  pfd: { sem: '六上', who: 'octopus', word: '質因數分解', hide: ['分解'], fs: 's30',
     steps: [
-      { t: 'say', say: '質因數學過了：20 敲到最後是 2、2、5。', pic: brk6([[2, 2, 5]]) },
-      { t: 'act', id: 'd', who: 'demo', say: '敲開 12，再用乘號把零件接回去。', n: 2, pic: k => brk6([[12], [2, 6], [2, 2, 3]])(k) + (k === 2 ? sym6([[12, '', K1], '＝', [2, '', K3], '×', [2, '', K3], '×', [3, '', K3]]) : ''), cap: k => `敲了 ${k} 次`, done: '12＝2×2×3。' },
-      { t: 'act', id: 's', say: '8 號零件。', n: 2, pic: brk6([[8], [2, 4], [2, 2, 2]]), cap: k => `敲了 ${k} 次`, done: '8＝2×2×2。' },
-      { t: 'guess', say: '30 寫成零件相乘，哪個對？', o: ['30＝2×3×5', '30＝5×6'] },
-      { t: 'act', id: 's30', say: '敲開 30 看看。', n: 2, pic: brk6([[30], [2, 15], [2, 3, 5]]), cap: k => `敲了 ${k} 次`, done: '2、3、5。6 還敲得開，所以 5×6 還沒敲完。' },
-      { t: 'say', id: 'map', say: '把零件用乘號接回去：', pic: () => sym6([[30, '原來的數', K1], '＝', [2, '零件', K3], '×', [3, '零件', K3], '×', [5, '零件', K3]]) },
-      { t: 'name', say: '這樣寫有名字。', name: '把一個數寫成質因數相乘，叫<b>質因數分解</b>。30＝2×3×5。', pic: () => sym6([[30, '', K1], '＝', [2, '', K3], '×', [3, '', K3], '×', [5, '', K3]]) },
-      { t: 'check', o: ['30＝2×3×5 是質因數分解', '30＝5×6 是質因數分解'], a: 0, why: '6 不是質數，還敲得開。' },
-      { t: 'pose', say: '只改一樣：12 換成 24，會怎樣？', o: ['多一個 2：24＝2×2×2×3', '零件完全一樣'], a: 0, why: '24 是 12 的 2 倍。' },
+      { t: 'say', say: '先回想質因數：20 的質因數是 2 和 5，20＝2×2×5。忘了也可以先看〈質因數〉。', pic: brk6([[2, 2, 5]]) },
+      { t: 'act', id: 'd', who: 'demo', say: '拆開 12，再用乘號把每個數接回去。', n: 2, pic: k => brk6([[12], [2, 6], [2, 2, 3]])(k) + (k === 2 ? sym6([[12, '', K1], '＝', [2, '', K3], '×', [2, '', K3], '×', [3, '', K3]]) : ''), cap: k => `拆了 ${k} 次`, done: '12＝2×2×3。' },
+      { t: 'act', id: 's', say: '8 號零件：點還能再拆的數。', tip: '8＝2×4，4 還不是質數。', n: 2, pic: brk6([[8], [2, 4], [2, 2, 2]]), cap: k => `拆了 ${k} 次`, done: '8＝2×2×2。' },
+      { t: 'say', say: '拆的路不只一條：20 先拆成 2×10，或先拆成 4×5，拆到底都得到 2×2×5，乘起來還是 20。', pic: () => `<div class="ex6">20 → 2×10 → 2×2×5<br>20 → 4×5 → 2×2×5</div>` },
+      { t: 'guess', say: '有人寫 30＝5×6。這樣寫完了嗎？', o: ['還沒，6 還能拆', '寫完了'] },
+      { t: 'act', id: 's30', say: '把 30 拆到每個數都是質數。', tip: '30＝2×15，15 還能拆嗎？', n: 2, pic: brk6([[30], [2, 15], [2, 3, 5]]), cap: k => `拆了 ${k} 次`, done: '30＝2×3×5。5×6 的 6＝2×3 還能拆。' },
+      { t: 'say', id: 'map', say: '把每個質數用乘號接回去。', pic: () => sym6([[30, '原來的數', K1], '＝', [2, '質數', K3], '×', [3, '質數', K3], '×', [5, '質數', K3]]) },
+      { t: 'name', say: '這樣的寫法有名字。', name: '把一個大於 1 的整數寫成幾個質數相乘，叫<b>質因數分解</b>。30＝2×3×5。', pic: () => sym6([[30, '', K1], '＝', [2, '', K3], '×', [3, '', K3], '×', [5, '', K3]]) },
+      { t: 'check', o: ['30＝2×3×5 是質因數分解', '30＝5×6 是質因數分解'], a: 0, why: [, '6 不是質數，6＝2×3 還能拆。'] },
+      { t: 'pose', say: '只改一個地方：12 換成 24，質因數分解會怎樣？', o: ['多一個 2：24＝2×2×2×3', '完全一樣'], a: 0, why: [, '24＝12×2，多乘了一個 2。'] },
     ],
-    q: { t: '18 的質因數分解是？', o: ['18＝2×3×3', '18＝2×9', '18＝3×6'], a: 0, ok: '對了！', back: 's', hint: '敲到每個零件都是質數。' } },
-  short: { sem: '六上', who: 'octopus', word: '短除法', hide: ['短除'],
+    q: { t: '18 的質因數分解是？', o: ['18＝2×3×3', '18＝2×9', '18＝3×6'], a: 0, why: [, '9＝3×3，還能拆。', '6＝2×3，還能拆。'], ok: '對了！2、3、3 都是質數。', back: 's', hint: '拆到每個數都是質數。' } },
+  short: { sem: '六上', who: 'octopus', word: '短除法', hide: ['短除'], fs: 'h',
     steps: [
-      { t: 'say', say: '分東西你會：紅積木 4 塊、藍積木 6 塊，要分給幾個人，每人的紅一樣多、藍也一樣多。', pic: () => dotsC(4, K4) + '<br>' + dotsC(6, K2) },
-      { t: 'act', id: 'd', who: 'demo', say: '兩堆都分成 2 份：點 2。', n: 1, pic: ladStep6(4, 6, [2]), cap: k => k ? '每份 2 紅、3 藍' : '', done: '2 和 3 沒有一起能分的了，最多分給 2 人。' },
-      { t: 'act', id: 'h', who: 'half', say: '8 塊和 12 塊：一次拿出一個兩堆都能分的數。', n: 2, pic: ladStep6(8, 12, [2, 2]), cap: k => `拿出 ${k} 次`, done: '拿出 2、2，剩 2 和 3。' },
-      { t: 'act', id: 's', say: '6 塊和 9 塊，點兩堆都能分的數。', n: 1, pic: ladStep6(6, 9, [3]), cap: k => k ? '每份 2 紅、3 藍' : '', done: '拿出 3，剩 2 和 3。' },
-      { t: 'guess', say: '8 和 12 拿出了 2 和 2，乘起來的 4 是什麼？', o: ['最多可以分給 4 人', '一共有 4 塊'] },
-      { t: 'say', id: 'map', say: '左邊拿出的數乘起來，就是最多分給幾人：', pic: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3) + sym6([[2, '拿出', K2], '×', [2, '拿出', K2], '＝', [4, '最多分給幾人', K3]]) },
-      { t: 'name', say: '這種直直往下寫的方法有名字。', name: '一次拿出兩個數都能整除的質數、直直往下寫，叫<b>短除法</b>。左邊乘起來是最大公因數。', pic: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3) },
-      { t: 'check', o: ['短除法每次拿出兩個數都能整除的質數', '短除法要把兩個數加起來'], a: 0, why: '要兩堆都能分得剛好。' },
-      { t: 'pose', say: '哪一題可以用短除法找答案？', o: ['10 顆蘋果、15 顆橘子，最多分給幾人，每人各一樣多？', '10 顆蘋果吃掉 5 顆，剩幾顆？'], a: 0, why: '要找兩堆都能分的。' },
+      { t: 'say', say: '紅積木 8 塊、藍積木 12 塊，要分成幾份，每份的紅積木一樣多、藍積木也一樣多，都不能剩。最多可以分成幾份？先從小一點的數試。', pic: () => dotsC(8, K4) + '<br>' + dotsC(12, K2) },
+      { t: 'act', id: 'd', who: 'demo', say: '紅 4 塊、藍 6 塊：選一個能同時整除 4 和 6 的質數。我選 2。', n: 1, pic: ladStep6(4, 6, [2]), cap: k => k ? '分成 2 份：每份 2 紅、3 藍' : '', done: '剩下 2 和 3，除了 1，沒有能同時整除它們的數了，所以最多分成 2 份。' },
+      { t: 'act', id: 'h', who: 'half', say: '8 塊和 12 塊：每次選一個能同時整除這兩個數的質數，分別相除，直到剩下的兩個數只有 1 能同時整除。', n: 2, pic: ladStep6(8, 12, [2, 2]), cap: k => `除了 ${k} 次`, done: '先除以 2 得 4 和 6，再除以 2 得 2 和 3。2 和 3 只有 1 能同時整除，停下來。' },
+      { t: 'act', id: 's', say: '6 塊和 9 塊：點一個能同時整除這兩個數的質數。', tip: '2 能整除 6，可是不能整除 9；試試別的質數。', n: 1, pic: ladStep6(6, 9, [3]), cap: k => k ? '每份 2 紅、3 藍' : '', done: '除以 3，剩 2 和 3：最多分成 3 份。' },
+      { t: 'guess', say: '8 和 12，左邊的除數是 2 和 2，2×2＝4。這個 4 代表什麼？', o: ['最多可以分成 4 份', '一共有 4 塊'] },
+      { t: 'say', id: 'map', say: '左邊的除數相乘，就是最多分成幾份，也就是最大公因數。', pic: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3) + sym6([[2, '除數', K2], '×', [2, '除數', K2], '＝', [4, '最大公因數', K3]]) },
+      { t: 'name', say: '這種直直往下寫的方法有名字。', name: '每次選一個能同時整除兩個數的質數，分別相除，把商直直往下寫，叫<b>短除法</b>。這一段用它找最大公因數：除到剩下的兩個數只有 1 能同時整除時，左邊的除數相乘就是最大公因數。', pic: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3) },
+      { t: 'check', o: ['每次選一個能同時整除這兩個數的質數', '只要能整除其中一個數就可以', '把兩個數加起來再除'], a: 0, why: [, '要兩個數都能被它整除：12 能被 3 整除，8 卻不行。', '短除法是兩個數分別相除，不是相加。'] },
+      { t: 'pose', say: '哪一題可以用短除法找最大公因數？', o: ['10 顆蘋果、15 顆橘子，最多分成幾份，每份蘋果一樣多、橘子也一樣多？', '10 顆蘋果吃掉 5 顆，剩幾顆？'], a: 0, why: [, '這題是減法，不用找能同時整除的數。'], ok: '對了！短除法也能找最小公倍數，但停下來以後要乘的數不一樣，另外看〈短除法找最小公倍數〉。' },
     ],
-    q: { t: '10 和 15 用短除法，第一刀拿出哪個數？', o: ['5', '2', '3'], a: 0, ok: '對了！10 和 15 都能分成 5 份。', back: 's', hint: '要兩堆都能分得剛好。' } },
-  coprime: { sem: '六上', who: 'octopus', word: '互質', hide: ['互質'],
+    q: { t: '10 和 15 用短除法，第一個除數選哪一個？', o: ['5', '2', '3'], a: 0, why: [, '10 能被 2 整除，15 不能。', '15 能被 3 整除，10 不能。'], ok: '對了！5 能同時整除 10 和 15。', back: 's', hint: '要選能同時整除兩個數的質數。' } },
+  lcmS: { sem: '六上', who: 'octopus', word: '短除法找最小公倍數', hide: [], fs: 's2',
     steps: [
-      { t: 'say', say: '分糖你會：4 顆和 6 顆，可以分給 2 人，每人 2 顆和 3 顆。', pic: () => dotsC(4, K4) + '<br>' + dotsC(6, K2) },
-      { t: 'act', id: 'd', who: 'demo', say: '3 顆草莓糖、4 顆檸檬糖，試分給 2 人、3 人。', n: 2, pic: tries6(3, 4, [2, 3]), done: '都有剩，只能分給 1 人。' },
-      { t: 'act', id: 's', say: '5 顆和 6 顆：試 2 人、3 人、5 人。', n: 3, pic: tries6(5, 6, [2, 3, 5]), done: '也只能分給 1 人。' },
-      { t: 'guess', say: '8 顆和 9 顆，除了 1 人，分得成嗎？', o: ['分不成', '分得成'] },
-      { t: 'act', id: 's8', say: '試 2 人、3 人。', n: 2, pic: tries6(8, 9, [2, 3]), done: '分不成。' },
-      { t: 'say', id: 'map', say: '這幾對數，一起能分的只有 1：', pic: () => sym6([[3, '', K1], '和', [4, '', K2], '→', [1, '只能分給 1 人', K3]]) + '<div class="trail">5 和 6、8 和 9 也一樣</div>' },
-      { t: 'name', say: '這種兩個數有名字。', name: '兩個數除了 1，沒有一起能整除它們的數，叫這兩個數<b>互質</b>。3 和 4 互質。', pic: () => dotsC(3, K4) + '<br>' + dotsC(4, K2) },
-      { t: 'check', o: ['互質的兩個數，除了 1 沒有共同的因數', '互質的兩個數都是質數'], a: 0, why: '4 不是質數，3 和 4 還是互質。' },
-      { t: 'pose', say: '哪一題在問「是不是互質」？', o: ['7 枝筆和 9 張紙，除了 1 人，能平分給別的人數嗎？', '7 枝筆加 9 張紙，一共幾樣？'], a: 0 },
+      { t: 'say', say: '兩盞燈現在同時亮起。紅燈每 4 秒亮一次，綠燈每 6 秒亮一次。從現在算起，最早第幾秒會再一起亮？', pic: () => '<div class="it6">🔴 🟢</div>' },
+      { t: 'act', id: 'd', who: 'demo', say: '先一個一個列出來：點一下，寫出下一次亮的時間。', n: 2, pic: k => tbl6([['', '第 1 次', '第 2 次', '第 3 次'], ['紅燈（秒）', 4, k >= 1 ? 8 : '', k >= 2 ? 12 : ''], ['綠燈（秒）', 6, k >= 2 ? 12 : '', '']]) + addBtn6('寫出下一次', k < 2), cap: k => k >= 2 ? '紅燈和綠燈都有 12' : '', done: '第 12 秒最早再一起亮。12 是 4 和 6 的最小公倍數。' },
+      { t: 'act', id: 'h', who: 'demo', say: '用短除法算：4 和 6 先一起除以 2。', n: 1, pic: ladStep6(4, 6, [2]), cap: k => k ? '剩下 2 和 3' : '', done: '2 和 3 只有 1 能同時整除，停下來。' },
+      { t: 'say', say: '最小公倍數要把左邊的除數 2，和最下面剩下的 2、3 全部乘起來：2×2×3＝12，和列表找到的一樣。', pic: () => ladderHtml([[2, 4, 6]], 2, 3) + sym6([[2, '除數', K2], '×', [2, '剩下', K4], '×', [3, '剩下', K1], '＝', [12, '', K3]]) },
+      { t: 'guess', say: '8 和 12 用短除法除到剩下 2 和 3。最小公倍數要把哪些數乘起來？', o: ['左邊的除數和最下面的 2、3 全部', '只乘左邊的除數', '只乘最下面的 2 和 3'] },
+      { t: 'act', id: 's', say: '8 和 12：每次選一個能同時整除這兩個數的質數。', tip: '8 和 12 都是偶數，先試 2。', n: 2, pic: ladStep6(8, 12, [2, 2]), cap: k => `除了 ${k} 次`, done: '除到 2 和 3，停下來。' },
+      { t: 'act', id: 's2', say: '選出 8 和 12 的最小公倍數要乘哪些數。', tip: '公倍數要同時是 8 和 12 的倍數；只乘左邊得到的 4，比 8 還小。', n: 1, pic: k => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3) + (k ? sym6([[2, '除數', K2], '×', [2, '除數', K2], '×', [2, '剩下', K4], '×', [3, '剩下', K1], '＝', [24, '最小公倍數', K3]]) : chips6(['2×2×2×3＝24', '2×2＝4', '2×3＝6'], (_, i) => i === 0, (_, i) => i === 1 ? '2×2＝4 是最大公因數；4 比 8 小，不會是 8 的倍數。' : '6 不是 8 的倍數。')), cap: k => k ? '24÷8＝3，24÷12＝2' : '', done: '24 同時是 8 和 12 的倍數，而且是最小的。' },
+      { t: 'say', id: 'map', say: '共同的部分（左邊的除數）只算一次，兩邊各自剩下的數都要乘進去。', pic: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3) + sym6([[2, '除數', K2], '×', [2, '除數', K2], '×', [2, '8 剩下', K4], '×', [3, '12 剩下', K1], '＝', [24, '最小公倍數', K3]]) },
+      { t: 'name', word: '全部相乘', say: '把做法整理起來。', name: '用短除法找最小公倍數：除到兩個數只有 1 能同時整除時停下來，把左邊的除數和最下面剩下的兩個數<b>全部相乘</b>。8 和 12 的最小公倍數是 24。', pic: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3) },
+      { t: 'check', o: ['左邊的除數和最下面剩下的數都要乘', '只乘左邊的除數，就是最小公倍數'], a: 0, why: [, '只乘左邊得到 4，是最大公因數；4 比 8 小，不會是 8 的倍數。'] },
     ],
-    q: { t: '6 和 9 互質嗎？', o: ['不互質，都能分給 3 人', '互質'], a: 0, ok: '對了！', back: 's', hint: '試試分給 2 人、3 人。' } },
-  simplest: { sem: '六上', who: 'octopus', word: '最簡分數', hide: ['最簡'],
+    q: { t: '甲船每 6 分鐘開一班，乙船每 9 分鐘開一班，現在同時出發。最早再過幾分鐘又同時出發？', o: ['18 分鐘', '3 分鐘', '54 分鐘'], a: 0, why: [, '3 是 6 和 9 的最大公因數，3 分鐘時甲船還沒開下一班。', '54＝6×9 也是公倍數，但不是最小的；共同的 3 只能算一次。'], ok: '對了！6 和 9 除以 3 剩 2 和 3，3×2×3＝18。', back: 's2', hint: '短除法除到停下來以後，左邊的除數和最下面剩下的數都要乘。' } },
+  coprime: { sem: '六上', who: 'octopus', word: '互質', hide: ['互質'], fs: 's',
     steps: [
-      { t: 'say', say: '這你會：披薩切 4 片吃 2 片，和切 2 片吃 1 片，吃的一樣多。', pic: () => pie6(4, 4, 2) + pie6(2, 2, 1) },
-      { t: 'act', id: 'd', who: 'demo', say: '巧克力 6 格吃了 4 格（灰色），每 2 格圈成一大塊。', n: 3, pic: k => grp6(6, 2, k, { cell: i => i < 4 ? '#b8a99a' : '#7a4a1a' }), cap: k => `圈了 ${k} 大塊`, done: '3 大塊吃了 2 大塊：4/6 和 2/3 一樣多。' },
-      { t: 'act', id: 's', say: '9 格吃了 6 格，每 3 格圈一大塊。', n: 3, pic: k => grp6(9, 3, k, { cell: i => i < 6 ? '#b8a99a' : '#7a4a1a' }), cap: k => `圈了 ${k} 大塊`, done: '3 大塊吃了 2 大塊：6/9 和 2/3 一樣。' },
-      { t: 'guess', say: '2/3 還能圈成更大的塊嗎？', o: ['不能了', '可以'] },
-      { t: 'say', id: 'map', say: '圈大以後，分子分母都變小，大小沒變：', pic: () => sym6([[6, '吃的格', K1], '/', [9, '全部格', K2], '→', [2, '吃的大塊', K1], '/', [3, '全部大塊', K2]]) + '<div class="trail">2 和 3 只能一起被 1 整除，圈不下去了</div>' },
-      { t: 'name', say: '圈到不能再圈的分數有名字。', name: '分子分母不能再一起約的分數，叫<b>最簡分數</b>。2/3 是最簡分數。', pic: () => grp6(9, 3, 3, { noHot: true, cell: i => i < 6 ? '#b8a99a' : '#7a4a1a' }) },
-      { t: 'check', o: ['最簡分數的分子分母互質', '最簡分數一定是很小的數'], a: 0 },
-      { t: 'pose', say: '只改一樣：6/9 改成 6/8，最簡分數還是 2/3 嗎？', o: ['不是，6/8 是 3/4', '還是 2/3'], a: 0, why: '8 格每 2 格圈一塊，是 4 塊吃 3 塊。' },
+      { t: 'say', say: '先看一個例子：4 顆草莓糖、6 顆檸檬糖，可以平分給 2 人，每人 2 顆草莓糖、3 顆檸檬糖，兩種糖都剛好分完。', pic: () => dotsC(4, K4) + '<br>' + dotsC(6, K2) },
+      { t: 'act', id: 'd', who: 'demo', say: '3 顆草莓糖、4 顆檸檬糖，試著平分給 2 人、3 人。', n: 2, pic: tries6(3, 4, [2, 3]), done: '2 人、3 人都不能讓兩種糖同時剛好分完；人數再多，3 顆草莓糖就不夠每人 1 顆。只有分給 1 人可以。' },
+      { t: 'act', id: 's', say: '5 顆和 6 顆：照順序試 2 人、3 人、4 人、5 人。', tip: '平分給 2 人時，5 顆能剛好分完嗎？6 顆呢？兩種都要剛好分完才算。', n: 4, pic: tries6(5, 6, [2, 3, 4, 5]), done: '都不能讓兩種糖同時分完。5 的因數是 1、5，6 的因數是 1、2、3、6，共同的只有 1。' },
+      { t: 'guess', say: '8 顆和 9 顆，除了 1 人，還能平分給別的人數，讓兩種糖都剛好分完嗎？', o: ['不能', '能'] },
+      { t: 'act', id: 's8', say: '試 2 人、3 人、4 人。', tip: '9 是奇數，平分給 2 人會剩 1 顆嗎？', n: 3, pic: tries6(8, 9, [2, 3, 4]), done: '都不行。8 的因數 1、2、4、8，9 的因數 1、3、9，共同的只有 1。' },
+      { t: 'say', id: 'map', say: '這幾對數，能同時整除它們的只有 1。', pic: () => sym6([[5, '', K1], '和', [6, '', K2], '→', [1, '公因數只有 1', K3]]) + '<div class="trail">3 和 4、8 和 9 也一樣</div>' },
+      { t: 'name', say: '這樣的兩個數有名字。', name: '兩個正整數的公因數只有 1，這兩個數就叫<b>互質</b>。5 和 6 互質，3 和 4 也互質。', pic: () => dotsC(5, K4) + '<br>' + dotsC(6, K2) },
+      { t: 'check', o: ['互質的兩個數，公因數只有 1', '互質的兩個數一定都是質數'], a: 0, why: [, '4 和 9 都不是質數，公因數卻只有 1，所以 4 和 9 互質。'] },
+      { t: 'pose', say: '哪一題在問「7 和 9 是不是互質」？', o: ['7 枝筆和 9 張紙，除了 1 人，能平分給別的人數、兩樣都剛好分完嗎？', '7 枝筆加 9 張紙，一共幾樣？'], a: 0, why: [, '這題是加法，和能不能同時平分無關。'] },
     ],
-    q: { t: '10 格吃了 4 格，最簡分數是？', o: ['2/5', '4/10', '1/5'], a: 0, ok: '對了！每 2 格圈一塊。', back: 's', hint: '試著每 2 格圈一大塊。' } },
-  fdivm: { sem: '六上', who: 'otter', word: '除以分數', hide: ['除以分數'],
+    q: { t: '6 和 9 互質嗎？', o: ['不互質，3 能同時整除 6 和 9', '互質'], a: 0, why: [, '試平分給 3 人：6 顆每人 2 顆、9 顆每人 3 顆，都剛好分完。'], ok: '對了！6 和 9 的公因數有 1 和 3，不互質。', back: 's', hint: '試試平分給 2 人、3 人。' } },
+  simplest: { sem: '六上', who: 'octopus', word: '最簡分數', hide: ['最簡'], fs: 's',
     steps: [
-      { t: 'act', id: 'int', who: 'demo', say: '你會的：6 顆糖，每袋 2 顆，一袋一袋圈。', n: 3, pic: k => grp6(6, 2, k, { e: '🍬', cell: '#fff' }), cap: k => `${k} 袋`, done: '3 袋。' },
+      { t: 'say', say: '先看披薩：一個披薩平均分成 4 片取 2 片，和平均分成 2 片取 1 片，吃掉的部分一樣多，2/4＝1/2。', pic: () => pie6(4, 4, 2) + pie6(2, 2, 1) },
+      { t: 'act', id: 'd', who: 'demo', say: '一片巧克力平均分成 6 格，吃了 4 格（灰色）。每 2 格圈成一大塊。', n: 3, pic: k => grp6(6, 2, k, { cell: i => i < 4 ? '#b8a99a' : '#7a4a1a' }), cap: k => `圈了 ${k} 大塊`, done: '平均分成 3 大塊，吃了 2 大塊：4/6＝2/3，吃的量沒有變。' },
+      { t: 'act', id: 's', say: '9 格吃了 6 格，每 3 格圈一大塊。', tip: '每 3 格圈一大塊，圈完數一數：一共幾大塊？吃掉的是幾大塊？', n: 3, pic: k => grp6(9, 3, k, { cell: i => i < 6 ? '#b8a99a' : '#7a4a1a' }), cap: k => `圈了 ${k} 大塊`, done: '3 大塊吃了 2 大塊：6/9＝2/3。' },
+      { t: 'guess', say: '2/3 的分子 2 和分母 3，還能一起再圈成更大的塊、兩邊都剛好圈完嗎？', o: ['不能了', '可以'] },
+      { t: 'say', id: 'map', say: '分子和分母同除以 3，分數的大小沒有變。', pic: () => sym6([[6, '吃的格數', K1], '/', [9, '全部格數', K2], '→', [2, '吃的大塊', K1], '/', [3, '全部大塊', K2]]) + '<div class="trail">2 和 3 的公因數只有 1，圈不下去了</div>' },
+      { t: 'name', say: '圈到不能再圈的分數有名字。', name: '分子和分母互質的分數，叫<b>最簡分數</b>。2/3 是最簡分數；7/4 的 7 和 4 也互質，也是最簡分數。', pic: () => grp6(9, 3, 3, { noHot: true, cell: i => i < 6 ? '#b8a99a' : '#7a4a1a' }) },
+      { t: 'check', o: ['分子和分母互質的分數，是最簡分數', '最簡分數一定比 1 小'], a: 0, why: [, '7/4 比 1 大，但 7 和 4 互質，也是最簡分數。'] },
+      { t: 'pose', say: '只改一個地方：6/9 改成 6/8，最簡分數還是 2/3 嗎？', o: ['不是，6/8＝3/4', '還是 2/3'], a: 0, why: [, '8 格每 2 格圈一塊，是 4 塊吃 3 塊：3/4。'] },
+    ],
+    q: { t: '一條巧克力平均分成 10 格，吃了 4 格。用最簡分數表示吃了多少？', o: ['2/5', '4/10', '1/5'], a: 0, why: [, '4 和 10 都能被 2 整除，還能約。', '每 2 格圈一塊，共 5 塊、吃了 2 塊，不是 1 塊。'], ok: '對了！每 2 格圈一塊，5 塊吃了 2 塊。', back: 's', hint: '試著每 2 格圈一大塊。' } },
+  fdivm: { sem: '六上', who: 'otter', word: '除以分數', hide: ['除以分數'], fs: 'p2',
+    steps: [
+      { t: 'act', id: 'int', who: 'demo', say: '先看整數：6 顆糖，每袋 2 顆，一袋一袋圈。', n: 3, pic: k => grp6(6, 2, k, { e: '🍬', cell: '#fff' }), cap: k => `${k} 袋`, done: '3 袋。' },
       { t: 'say', say: '寫成算式，每個數字都有自己的位置：', pic: () => sym6([[6, '全部', K1], '÷', [2, '每份', K2], '＝', [3, '有幾份', K3]]) },
-      { t: 'act', id: 'p1', who: 'half', say: '同樣的問題換成披薩：1 個披薩，每人拿 1 片（1/4 個），一片一片拿。', n: 4, pic: k => pies6(1, 4, k), cap: k => `拿了 ${k} 片`, done: '1 個披薩有 4 片。' },
-      { t: 'act', id: 'p2', say: '2 個披薩，一個一個數。', n: 8, pic: k => pies6(2, 4, k), cap: k => `拿了 ${k} 片`, done: '2 個披薩有 8 片。' },
-      { t: 'say', say: '說說看：1 個有 4 片，2 個就是 2 個 4 片＝8 片。', pic: () => pies6(2, 4, 0) },
-      { t: 'guess', say: '3 個披薩有幾片？', o: ['12 片', '7 片', '3 片'] },
-      { t: 'reveal', say: '3 個披薩就是 3 個 4 片＝12 片。', pic: () => pies6(3, 4, 0) },
-      { t: 'say', id: 'map', say: '把「全部、每份、有幾份」放回去：', pic: () => mini6(pies6(2, 4, 8), sym6([[2, '全部：2 個披薩', K1], '÷', ['1/4', '每份：1/4 個', K2], '＝', [8, '有幾份：8 片', K3]])) },
-      { t: 'name', say: '咦，除完反而變大了？因為每份比 1 小，份數就變多。', name: '問「2 裡面有幾個 1/4」，寫成 2÷1/4＝8，叫<b>除以分數</b>。', pic: () => sym6([[2, '全部', K1], '÷', ['1/4', '每份', K2], '＝', [8, '有幾份', K3]]) },
-      { t: 'check', o: ['2÷1/4 是問 2 裡面有幾個 1/4', '除以分數一定變小'], a: 0, why: '剛才 2÷1/4＝8，變大了。' },
-      { t: 'pose', say: '哪一題可以用 3÷1/2 解？', o: ['3 公尺緞帶，每段 1/2 公尺，可以剪幾段？', '3 公尺緞帶剪掉 1/2 公尺，剩多少？', '3 公尺的一半是多少？'], a: 0, why: '要問「3 裡面有幾個 1/2」。' },
+      { t: 'act', id: 'p1', who: 'half', say: '同樣的問題換成披薩：1 個披薩平均分成 4 片，每片是 1/4 個。每人拿 1 片，一片一片拿。', n: 4, pic: k => pies6(1, 4, k), cap: k => `拿了 ${k} 片`, done: '1 個披薩有 4 片 1/4 個。' },
+      { t: 'act', id: 'p2', say: '2 個披薩，一片一片數。', tip: '1 個披薩有 4 片；數完第 1 個再數第 2 個。', n: 8, pic: k => pies6(2, 4, k), cap: k => `拿了 ${k} 片`, done: '2 個披薩有 8 片。' },
+      { t: 'say', say: '說說看：1 個有 4 片，2 個就是 4 片的 2 倍，4×2＝8 片。', pic: () => pies6(2, 4, 0) },
+      { t: 'guess', say: '3 個披薩有幾片 1/4 個？', o: ['12 片', '7 片', '3 片'] },
+      { t: 'reveal', say: '3 個披薩，每個 4 片：4×3＝12 片。', pic: () => pies6(3, 4, 0) },
+      { t: 'say', id: 'map', say: '把「全部、每份、有幾份」放回去。', pic: () => mini6(pies6(2, 4, 8), sym6([[2, '全部：2 個披薩', K1], '÷', ['1/4', '每份：1/4 個', K2], '＝', [8, '有幾份：8 片', K3]])) },
+      { t: 'name', say: '除完反而比 2 大了：每份比 1 小，份數就比全部的數大。', name: '問「2 裡面有幾個 1/4」，寫成 2÷1/4＝8。這就是<b>除以分數</b>：看全部裡面有幾個這麼大的一份。', pic: () => sym6([[2, '全部', K1], '÷', ['1/4', '每份', K2], '＝', [8, '有幾份', K3]]) },
+      { t: 'say', say: '份數也可能不是整數：3/4 公升果汁，每杯 1/2 公升。可以倒滿 1 杯，剩下的果汁是一杯的一半，相當於 1 又 1/2 杯的量。3/4÷1/2＝3/2。', pic: () => barRow(4, 3, '#f7c873') + grp6(3, 2, 2, { noHot: true, cell: '#f7c873', lab: '每 2 小格（1/2 公升）是一杯' }) },
+      { t: 'check', o: ['2÷1/4 是問 2 裡面有幾個 1/4', '除以分數，答案一定變小'], a: 0, why: [, '剛才 2÷1/4＝8，比 2 大。被除數是正數、除數在 0 和 1 之間時，商比被除數大。'] },
+      { t: 'pose', say: '哪一題可以用 3÷1/2 解？', o: ['3 公尺緞帶，每段 1/2 公尺，可以剪幾段？', '3 公尺緞帶剪掉 1/2 公尺，剩多少？', '3 公尺的一半是多少？'], a: 0, why: [, '剪掉 1/2 公尺是減法：3－1/2。', '3 公尺的一半是 3×1/2。'] },
     ],
-    q: { t: '2 公升果汁，每杯 1/3 公升，可以倒幾杯？', o: ['6 杯', '2/3 杯', '5 杯'], a: 0, ok: '對了！2÷1/3＝6。', back: 'p2', hint: '像披薩：1 公升有 3 杯，2 公升就是 2 個 3 杯。' } },
-  reciprocal: { sem: '六上', who: 'otter', word: '倒數', hide: ['倒數'],
+    q: { t: '2 公升果汁，每杯 1/3 公升，可以倒滿幾杯？', o: ['6 杯', '2/3 杯', '5 杯'], a: 0, why: [, '2/3 是 2×1/3；題目問 2 裡面有幾個 1/3。', '5 是 2＋3。'], ok: '對了！2÷1/3＝6。', back: 'p2', hint: '像披薩：1 公升有 3 杯，2 公升就是 3 杯的 2 倍。' } },
+  reciprocal: { sem: '六上', who: 'otter', word: '倒數', hide: ['倒數'], fs: 'g',
     steps: [
-      { t: 'say', say: '這你會：1 公尺緞帶，每段 1/3 公尺，剪 3 段，1÷1/3＝3。', pic: () => cut6(3, 2, { noCut: true, col: '#f4a9a0' }) },
-      { t: 'act', id: 'd', who: 'demo', say: '每段 2/3 公尺：先把 1 公尺切成 3 小段。', n: 2, pic: k => cut6(3, k, { col: '#f4a9a0', lab: '1 公尺' }), cap: k => `切了 ${k} 刀`, done: '3 小段，每段 1/3 公尺。' },
-      { t: 'act', id: 'g', say: '每 2 小段是一段緞帶，點一點圈起來。', n: 2, pic: k => grp6(3, 2, k, { cell: '#f4a9a0' }), cap: k => k === 2 ? '1 段整的，再半段' : `圈了 ${k} 次`, done: '1 公尺可以剪 1 段又半段，就是 3/2 段。' },
-      { t: 'guess', say: '每段 3/4 公尺，1 公尺可以剪幾段？', o: ['4/3 段', '3/4 段', '4 段'] },
-      { t: 'act', id: 's', say: '切成 4 小段，每 3 小段圈一段。', n: 2, pic: k => grp6(4, 3, k, { cell: '#a9d0f0' }), cap: k => `圈了 ${k} 次`, done: '1 段又 1/3 段：4/3 段。' },
-      { t: 'say', say: '說說看：2/3 變 3/2，3/4 變 4/3，上下顛倒了！', pic: () => sym6([['2/3', '每段', K2], '→', ['3/2', '幾段', K3]]) + sym6([['3/4', '每段', K2], '→', ['4/3', '幾段', K3]]) },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[1, '全部', K1], '÷', ['2/3', '每段', K2], '＝', ['3/2', '有幾段', K3]]) },
-      { t: 'name', say: '上下顛倒的數有名字。', name: '2/3 和 3/2 這樣上下顛倒的兩個數，互為<b>倒數</b>。除以 2/3，就是乘以 3/2。', pic: () => sym6([['2/3', '', K2], '⇄', ['3/2', '', K3]]) },
-      { t: 'check', o: ['2/3 的倒數是 3/2', '2/3 的倒數是 1/3'], a: 0 },
-      { t: 'pose', say: '只改一樣：每段 2/3 改成 2/5，1 公尺剪幾段？', o: ['5/2 段', '2/5 段'], a: 0, why: '上下顛倒。' },
+      { t: 'say', say: '先回想：1 公尺裡面有幾個 1/3 公尺？平均分成 3 段，有 3 個，1÷1/3＝3。', pic: () => cut6(3, 2, { noCut: true, col: '#f4a9a0', lab: '1 公尺' }) },
+      { t: 'act', id: 'd', who: 'demo', say: '1 公尺是 2/3 公尺的幾倍？先把 1 公尺平均分成 3 小段，每小段 1/3 公尺。', n: 2, pic: k => cut6(3, k, { col: '#f4a9a0', lab: '1 公尺' }), cap: k => `切了 ${k} 刀`, done: '3 小段，每段 1/3 公尺。' },
+      { t: 'act', id: 'g', who: 'half', say: '2 小段是 2/3 公尺，看作 1 份。每 2 小段圈一份。', n: 2, pic: k => grp6(3, 2, k, { cell: '#f4a9a0' }), cap: k => k === 2 ? '1 份整的，加上半份' : `圈了 ${k} 次`, done: '1 公尺裡有 1 個 2/3 公尺，剩下的 1 小段是一份的一半：1 公尺是 2/3 公尺的 1 又 1/2 倍，也就是 3/2 倍。' },
+      { t: 'guess', say: '1 公尺是 3/4 公尺的幾倍？', o: ['4/3 倍', '3/4 倍', '4 倍'] },
+      { t: 'act', id: 's', say: '1 公尺平均分成 4 小段，每 3 小段圈一份。', tip: '3 小段是 3/4 公尺；圈完一份後，剩下的小段是一份的幾分之幾？', n: 2, pic: k => grp6(4, 3, k, { cell: '#a9d0f0' }), cap: k => `圈了 ${k} 次`, done: '1 份整的，剩下 1 小段是一份的 1/3：1 公尺是 3/4 公尺的 4/3 倍。' },
+      { t: 'say', say: '說說看：2/3 對到 3/2，3/4 對到 4/3。再乘乘看：2/3×3/2＝1，3/4×4/3＝1。', pic: () => sym6([['2/3', '每份', K2], '→', ['3/2', '幾倍', K3]]) + sym6([['3/4', '每份', K2], '→', ['4/3', '幾倍', K3]]) },
+      { t: 'say', id: 'map', say: '1 公尺裡面有幾個 2/3 公尺。', pic: () => sym6([[1, '全部', K1], '÷', ['2/3', '每份', K2], '＝', ['3/2', '幾倍', K3]]) },
+      { t: 'name', say: '相乘等於 1 的兩個數，有名字。', name: '兩個數相乘等於 1，這兩個數互為<b>倒數</b>。2/3×3/2＝1，所以 2/3 和 3/2 互為倒數。0 乘任何數都是 0，所以 0 沒有倒數。', pic: () => sym6([['2/3', '', K2], '×', ['3/2', '', K3], '＝', [1, '', K1]]) },
+      { t: 'check', o: ['2/3 的倒數是 3/2，因為 2/3×3/2＝1', '2/3 的倒數是 1/3', '0 的倒數是 0'], a: 0, why: [, '2/3×1/3＝2/9，不是 1。', '0 乘任何數都是 0，乘起來不會等於 1，所以 0 沒有倒數。'] },
+      { t: 'pose', say: '只改一個地方：每份 2/3 公尺改成 2/5 公尺，1 公尺是 2/5 公尺的幾倍？', o: ['5/2 倍', '2/5 倍'], a: 0, why: [, '2/5 是一份的長度；2/5 和 5/2 相乘才是 1。'] },
     ],
-    q: { t: '每瓶 2/5 公升，1 公升可以裝幾瓶？', o: ['5/2 瓶', '2/5 瓶', '5 瓶'], a: 0, ok: '對了！', back: 's', hint: '切成 5 小段，每 2 小段圈一瓶。' } },
-  decdiv: { sem: '六上', who: 'crab', word: '除以小數', hide: ['除以小數'],
+    q: { t: '1 公升水，每瓶裝 2/5 公升。1 公升是 2/5 公升的幾倍？', o: ['5/2 倍（裝滿 2 瓶，剩下的水是第 3 瓶的一半）', '2/5 倍', '5 倍'], a: 0, why: [, '2/5 是一瓶的量，不是倍數。', '5 是 1 公升裡有幾個 1/5 公升；每瓶是 2 個 1/5 公升。'], ok: '對了！1÷2/5＝5/2：可以裝滿 2 瓶，剩下的水只夠第 3 瓶的一半。如果問「能裝滿幾瓶」，答案是 2 瓶。', back: 's', hint: '平均分成 5 小段，每 2 小段圈一瓶。' } },
+  decdiv: { sem: '六上', who: 'crab', word: '除以小數', hide: ['除以小數'], fs: 'h',
     steps: [
-      { t: 'say', say: '這你會：6 顆糖，每袋 2 顆，6÷2＝3 袋。', pic: () => sym6([[6, '全部', K1], '÷', [2, '每份', K2], '＝', [3, '有幾份', K3]]) },
-      { t: 'guess', say: '3 公尺緞帶，每段 0.5 公尺，段數比 3 多還是少？', o: ['比 3 少', '比 3 多'] },
+      { t: 'say', say: '先回想：6 顆糖，每袋 2 顆，6÷2＝3 袋。', pic: () => sym6([[6, '全部', K1], '÷', [2, '每份', K2], '＝', [3, '有幾份', K3]]) },
+      { t: 'guess', say: '3 公尺緞帶，每段 0.5 公尺，剪成的段數比 3 多還是少？', o: ['比 3 少', '比 3 多'] },
       { t: 'act', id: 'd', who: 'demo', say: '先剪 1 公尺：每 0.5 公尺剪一刀。', n: 1, pic: k => cut6(2, k, { lab: '1 公尺' }), cap: k => k ? '2 段' : '', done: '1 公尺有 2 段。' },
-      { t: 'act', id: 'h', who: 'half', say: '3 公尺，一刀一刀剪。', n: 5, pic: k => cut6(6, k, { lab: '3 公尺' }), cap: k => `剪了 ${k} 刀`, done: '6 段！很多人以為除完會變小。' },
-      { t: 'say', say: '說說看：1 公尺 2 段，3 公尺就是 3 個 2 段＝6 段。', pic: () => cut6(6, 5, { noCut: true }) },
-      { t: 'act', id: 's', say: '2 公尺水管，每根 0.4 公尺。', n: 4, pic: k => cut6(5, k, { col: '#a9d0f0', lab: '2 公尺' }), cap: k => `鋸了 ${k} 刀`, done: '5 根。' },
-      { t: 'say', id: 'map', say: '把「全部、每份、有幾份」放回去：', pic: () => mini6(cut6(6, 5, { noCut: true }), sym6([[3, '全部', K1], '÷', ['0.5', '每份', K2], '＝', [6, '有幾份', K3]])) },
-      { t: 'name', say: '每份比 1 小，份數就比全部多。', name: '問「3 裡面有幾個 0.5」，寫成 3÷0.5＝6，叫<b>除以小數</b>。', pic: () => sym6([[3, '全部', K1], '÷', ['0.5', '每份', K2], '＝', [6, '有幾份', K3]]) },
-      { t: 'check', o: ['3÷0.5 是問 3 裡面有幾個 0.5', '除以小數一定變小'], a: 0 },
-      { t: 'pose', say: '哪一題可以用 4÷0.5 解？', o: ['4 公升水，每杯 0.5 公升，可以倒幾杯？', '4 公升水倒掉 0.5 公升，剩多少？'], a: 0 },
+      { t: 'act', id: 'h', who: 'half', say: '3 公尺，一刀一刀剪。', n: 5, pic: k => cut6(6, k, { lab: '3 公尺' }), cap: k => `剪了 ${k} 刀`, done: '6 段。每段比 1 公尺短，段數就比 3 多。' },
+      { t: 'say', say: '說說看：1 公尺有 2 段，3 公尺就是 2 段的 3 倍，2×3＝6 段。', pic: () => cut6(6, 5, { noCut: true, lab: '3 公尺' }) },
+      { t: 'act', id: 's', say: '2 公尺水管，每根 0.4 公尺：點在要鋸的位置。', tip: '0.4＋0.4＋…加到 2 公尺要幾根？照這個根數平均分。', n: 4, pic: k => cut6(5, k, { col: '#a9d0f0', lab: '2 公尺' }), cap: k => `鋸了 ${k} 刀`, done: '5 根：2÷0.4＝5。' },
+      { t: 'say', id: 'map', say: '把「全部、每份、有幾份」放回去。也可以把兩個數同乘 10：30÷5＝6，商不變。', pic: () => mini6(cut6(6, 5, { noCut: true }), sym6([[3, '全部', K1], '÷', ['0.5', '每份', K2], '＝', [6, '有幾份', K3]])) },
+      { t: 'name', say: '每份比 1 小，份數就比全部的數大。', name: '問「3 裡面有幾個 0.5」，寫成 3÷0.5＝6，這就是<b>除以小數</b>。', pic: () => sym6([[3, '全部', K1], '÷', ['0.5', '每份', K2], '＝', [6, '有幾份', K3]]) },
+      { t: 'say', say: '除數比 1 大時呢？3 公尺，每段 1.5 公尺，只能剪 2 段，比 3 少。商比被除數大，只發生在除數比 1 小（而且比 0 大）的時候。', pic: () => cut6(2, 1, { noCut: true, lab: '3 公尺，每段 1.5 公尺' }) },
+      { t: 'check', o: ['3÷0.5 是問 3 裡面有幾個 0.5', '除以小數，商一定變大'], a: 0, why: [, '3÷1.5＝2，比 3 小。除數比 1 大，商就比被除數小。'] },
+      { t: 'pose', say: '哪一題可以用 4÷0.5 解？', o: ['4 公升水，每杯 0.5 公升，可以倒滿幾杯？', '4 公升水倒掉 0.5 公升，剩多少？'], a: 0, why: [, '倒掉 0.5 公升是減法：4－0.5。'] },
     ],
-    q: { t: '2 公尺水管，每根 0.5 公尺，可以鋸幾根？', o: ['4 根', '1 根', '2.5 根'], a: 0, ok: '對了！', back: 'h', hint: '1 公尺有 2 段，2 公尺呢？' } },
-  pi: { sem: '六上', who: 'fox', word: '圓周率', hide: ['圓周率', '3.14'],
+    q: { t: '2 公尺水管，每根 0.5 公尺，可以鋸成幾根？', o: ['4 根', '1 根', '2.5 根'], a: 0, why: [, '1 是 2×0.5；題目問 2 裡面有幾個 0.5。', '2.5 是 2＋0.5。'], ok: '對了！2÷0.5＝4。', back: 'h', hint: '1 公尺有 2 段，2 公尺呢？' } },
+  dshift: { sem: '六上', who: 'crab', word: '被除數和除數同乘 10', hide: [], fs: 'd',
     steps: [
-      { t: 'say', say: '直的東西你會量：用尺。圓的邊彎彎的，要怎麼量？', pic: () => rollSvg(20, 0, 1, 0) },
-      { t: 'guess', say: '杯口的寬是 1 根吸管長。繞杯口一圈，大約是幾根吸管？', o: ['2 根', '3 根多一點', '4 根多'] },
-      { t: 'act', id: 'd', who: 'demo', say: '把杯子在地上滾一圈：點杯子滾 1/4 圈。', n: 4, pic: k => wheel6(20, k), cap: k => `滾了 ${k}/4 圈`, done: '紅線就是一圈拉直。' },
-      { t: 'act', id: 's', say: '放吸管量紅線：點紅線放一根。', n: 3, pic: k => `<span class="hot6 whl6">${rollSvg(20, 1, 1, k)}</span>`, cap: k => `放了 ${k} 根`, done: '3 根還多一點點。' },
-      { t: 'act', id: 'b', say: '換大碗（寬 2 根吸管）也滾一圈。', n: 4, pic: k => wheel6(40, k), cap: k => `滾了 ${k}/4 圈`, done: '大碗一圈大約 6 根多，也是寬的 3 倍多。' },
-      { t: 'say', id: 'map', say: '小杯、大碗都是 3 倍多一點，不管大小都一樣。很多人猜 2 倍或 4 倍。', pic: () => sym6([['一圈', '繞一圈的長', K1], '÷', ['寬', '直徑', K2], '≈', ['3 倍多', '一點點', K3]]) },
-      { t: 'name', say: '這個固定的倍數有名字。', name: '圓一圈的長是直徑的幾倍，這個不變的數叫<b>圓周率</b>，大約是 3.14。', pic: () => rollSvg(20, 1, 1, 3) },
-      { t: 'check', o: ['不管多大的圓，一圈都是直徑的 3.14 倍左右', '大的圓一圈是直徑的 4 倍'], a: 0 },
-      { t: 'pose', say: '哪一題會用到圓周率？', o: ['腳踏車輪子滾一圈走多遠？', '一盒餅乾有幾片？'], a: 0 },
+      { t: 'say', say: '1.2 公尺的緞帶，每段 0.4 公尺，可以剪幾段？小數不好直接數，我們換一個單位來數。', pic: () => cut6(3, 2, { noCut: true, lab: '1.2 公尺', col: '#f4a9a0' }) },
+      { t: 'act', id: 'd', who: 'demo', say: '把 1.2 公尺看成 12 小格，每格 0.1 公尺。每段 0.4 公尺就是 4 小格，點一點圈一段。', n: 3, pic: k => grp6(12, 4, k, { cell: '#f4a9a0', lab: '1.2 公尺＝12 小格（每格 0.1 公尺）' }), cap: k => `圈了 ${k} 段`, done: '圈出 3 段。12 小格裡有幾個 4 小格：12÷4＝3。' },
+      { t: 'guess', say: '1.2÷0.4 和 12÷4，商一樣嗎？', o: ['一樣，都是 3', '不一樣'] },
+      { t: 'say', id: 'map', say: '都用 0.1 公尺當一小格來數，等於兩個數都乘 10。', pic: () => sym6([['1.2', '全部（公尺）', K1], '÷', ['0.4', '每段（公尺）', K2], '＝', [3, '段數', K3]]) + '<div class="trail">⬇ 被除數、除數都乘 10（改用小格來數）</div>' + sym6([[12, '全部（小格）', K1], '÷', [4, '每段（小格）', K2], '＝', [3, '段數', K3]]) },
+      { t: 'act', id: 's', say: '2.4 公升果汁，每杯 0.6 公升。用 0.1 公升當一小格，選出商一樣的整數除法。', tip: '2.4 公升是幾個 0.1 公升？0.6 公升呢？兩個數都要換。', n: 1, pic: k => (k ? sym6([[24, '小格', K1], '÷', [6, '小格', K2], '＝', [4, '杯', K3]]) : chips6(['24÷6', '2.4÷6', '24÷0.6'], (_, i) => i === 0, (_, i) => i === 1 ? '只把除數乘 10，被除數沒有乘，商會變：2.4÷6＝0.4。' : '只把被除數乘 10，除數沒有乘，商會變：24÷0.6＝40。')), cap: k => k ? '2.4÷0.6＝24÷6' : '', done: '24÷6＝4，所以 2.4÷0.6 也是 4 杯。' },
+      { t: 'name', word: '商不變', say: '把剛才的發現整理起來。', name: '<b>被除數和除數同乘 10</b>（或同乘 100），商不變。所以 1.2÷0.4 可以改成 12÷4 來算。小數除法的直式裡，兩個小數點一起往右移，就是這個道理。', pic: () => sym6([['1.2', '', K1], '÷', ['0.4', '', K2], '＝', [12, '', K1], '÷', [4, '', K2]]) },
+      { t: 'check', o: ['被除數和除數同乘 10，商不變', '只把除數乘 10，商也不變'], a: 0, why: [, '1.2÷4＝0.3，和 1.2÷0.4＝3 不一樣。兩個數都要乘。'] },
     ],
-    q: { t: '直徑 1 公尺的呼拉圈，一圈大約幾公尺？', o: ['3.14 公尺', '2 公尺', '1 公尺'], a: 0, ok: '對了！', back: 's', hint: '一圈大約是 3 根直徑多一點。' } },
-  circ: { sem: '六上', who: 'fox', word: '圓周長', hide: ['圓周長'],
+    q: { t: '3.5 公尺，每段 0.7 公尺，可以剪幾段？哪一個算式的商和它一樣？', o: ['35÷7', '35÷0.7', '3.5÷7'], a: 0, why: [, '只把被除數乘 10，商變成 50。', '只把除數乘 10，商變成 0.5。'], ok: '對了！35÷7＝5，3.5÷0.7 也是 5 段。', back: 's', hint: '被除數和除數要一起乘 10。' } },
+  pi: { sem: '六上', who: 'fox', word: '圓周率', hide: ['圓周率', '3.14'], fs: 's',
     steps: [
-      { t: 'say', say: '圓周率學過了：一圈是直徑的 3.14 倍。', pic: () => rollSvg(20, 1, 1, 3) },
-      { t: 'act', id: 'd', who: 'demo', say: '直徑 10 公分的盤子，滾一圈。', n: 4, pic: k => wheel6(10, k), cap: k => `滾了 ${k}/4 圈`, done: '紅線是一圈拉直。' },
-      { t: 'act', id: 's', say: '用 10 公分的直徑棒量：點紅線放一根。', n: 3, pic: k => `<span class="hot6 whl6">${rollSvg(10, 1, 1, k)}</span>`, cap: k => `放了 ${k} 根，${k * 10} 公分`, done: '30 公分還多一點，大約 31.4 公分。' },
-      { t: 'guess', say: '直徑 20 公分的盤子，一圈大約多長？', o: ['62.8 公分', '40 公分', '23.14 公分'] },
-      { t: 'say', say: '20 公分的 3.14 倍＝62.8 公分。不是加 3.14，是 3.14 倍。', pic: () => rollSvg(20, 1, 1, 3) },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[10, '直徑', K2], '×', ['3.14', '倍', K3], '＝', ['31.4', '一圈的長', K1]]) },
-      { t: 'name', say: '一圈的長有名字。', name: '繞圓一圈的長，叫<b>圓周長</b>＝直徑×3.14。', pic: () => rollSvg(10, 1, 1, 3) },
-      { t: 'check', o: ['圓周長是繞圓一圈的長', '圓周長就是直徑'], a: 0 },
-      { t: 'build', say: '拼一題用「20×3.14」算的題目。', heads: ['東西', '數量', '問題'], cols: [['車輪', '蘋果'], ['直徑 20 公分', '20 顆'], ['滾一圈走多遠？', '一共幾元？']], a: [0, 0, 0], why: ['要圓的東西。', '要知道直徑。', '問一圈多長。'], ok: '車輪直徑 20 公分，滾一圈走多遠？' },
+      { t: 'say', say: '直的長度可以用尺量。圓的邊彎彎的，要怎麼量它一圈有多長？', pic: () => rollSvg(20, 0, 1, 0) },
+      { t: 'guess', say: '一個圓紙片的直徑是 1 根吸管長。繞圓紙片一圈，大約是幾根吸管長？', o: ['2 根', '3 根多一點', '4 根多'] },
+      { t: 'act', id: 'd', who: 'demo', say: '把圓紙片立起來，沿著直線滾一圈，不滑動：點圓片，每次滾 1/4 圈。', n: 4, pic: k => wheel6(20, k), cap: k => `滾了 ${k}/4 圈`, done: '紅線就是圓紙片一圈的長，拉直了。' },
+      { t: 'act', id: 's', say: '用吸管量紅線：每根吸管和直徑一樣長，點紅線放一根。', tip: '吸管一根接一根，從紅線的左端開始放。', n: 3, pic: k => `<span class="hot6 whl6">${rollSvg(20, 1, 1, k)}</span>`, cap: k => `放了 ${k} 根`, done: '3 根還多一點點。' },
+      { t: 'act', id: 'b', say: '換一個直徑 2 根吸管長的大圓盤，也滾一圈。', tip: '點大圓盤，讓它滾 1/4 圈。', n: 4, pic: k => wheel6(40, k), cap: k => `滾了 ${k}/4 圈`, done: '大圓盤一圈大約 6 根多，也是直徑的 3 倍多一點。' },
+      { t: 'say', id: 'map', say: '小圓、大圓，一圈的長÷直徑都是 3 倍多一點。', pic: () => sym6([['一圈的長', '', K1], '÷', ['直徑', '', K2], '≈', ['3 倍多', '小圓、大圓都一樣', K3]]) },
+      { t: 'name', say: '這個不變的數有名字。', name: '圓一圈的長÷直徑，不管圓多大，得到的數都一樣，叫<b>圓周率</b>，常用 π 表示，大約是 3.14。', pic: () => rollSvg(20, 1, 1, 3) },
+      { t: 'check', o: ['不管圓多大，一圈的長÷直徑都大約是 3.14', '大的圓，一圈是直徑的 4 倍'], a: 0, why: [, '剛才大圓盤一圈大約 6 根多，直徑 2 根，還是 3 倍多一點。'] },
+      { t: 'pose', say: '哪一題會用到圓周率？', o: ['腳踏車輪子滾一圈（不打滑）走多遠？', '一盒餅乾有幾片？'], a: 0, why: [, '數餅乾片數，和圓一圈的長無關。'] },
     ],
-    q: { t: '直徑 5 公尺的水池，圓周長怎麼算？', o: ['5×3.14', '5＋3.14', '5÷3.14'], a: 0, ok: '對了！', back: 's', hint: '一圈大約是 3.14 根直徑。' } },
-  carea: { sem: '六上', who: 'fox', word: '圓面積', hide: ['圓面積'],
+    q: { t: '直徑 1 公尺的呼拉圈，一圈大約幾公尺？（圓周率取 3.14）', o: ['3.14 公尺', '2 公尺', '1 公尺'], a: 0, why: [, '2 公尺只有直徑的 2 倍，一圈比 3 倍還多一點。', '1 公尺是直徑，一圈比直徑長。'], ok: '對了！1×3.14＝3.14 公尺。', back: 's', hint: '一圈大約是 3 根直徑多一點。' } },
+  circ: { sem: '六上', who: 'fox', word: '圓周長', hide: ['圓周長'], fs: 's',
     steps: [
-      { t: 'say', say: '長方形你會：長 4、寬 3，大小是 4×3＝12。', pic: () => rectG6(4, 3) },
-      { t: 'act', id: 'd', who: 'demo', say: '把圓切成更多片，交錯排：點圖。', n: 3, pic: k => `<span class="hot6">${cutCircleSvg([4, 8, 16, 32][k], 3)}</span>`, cap: k => `切成 ${[4, 8, 16, 32][k]} 片`, done: '切得越細，越像長方形。' },
-      { t: 'act', id: 's', say: '量這個長方形：先點「長」，再點「寬」。', n: 2, pic: k => cutCircleSvg(32, 3) + chips6(['長', '寬'], (_, i) => i === k) + `<div class="trail">${k >= 1 ? '長：上下各半個圓周（藍半、黃半）' : ''}${k >= 2 ? '<br>寬：半徑 3' : ''}</div>`, done: '長是半個圓周，寬是半徑。' },
-      { t: 'guess', say: '半徑 3 的圓，長方形的長是多少？', o: ['3×3.14（半個圓周）', '3', '6×3.14'] },
-      { t: 'say', id: 'map', say: '長×寬，放回圓：', pic: () => sym6([['3×3.14', '長：半個圓周', K1], '×', [3, '寬：半徑', K2], '＝', ['28.26', '圓的大小', K3]]) },
-      { t: 'name', say: '圓的大小有名字。', name: '圓的大小叫<b>圓面積</b>＝半徑×半徑×3.14。', pic: () => cutCircleSvg(32, 3) },
-      { t: 'check', o: ['圓面積＝半徑×半徑×3.14', '圓面積＝直徑×3.14'], a: 0, why: '直徑×3.14 是一圈的長。' },
-      { t: 'pose', say: '哪一題要算圓面積？', o: ['圓桌要鋪多大的桌布？', '圓桌邊要貼多長的花邊？'], a: 0, why: '花邊是一圈的長。' },
+      { t: 'say', say: '先回想圓周率：圓一圈的長÷直徑，大約是 3.14。忘了也可以先看〈圓周率〉。', pic: () => rollSvg(20, 1, 1, 3) },
+      { t: 'act', id: 'd', who: 'demo', say: '直徑 10 公分的圓盤，沿直線滾一圈、不滑動。', n: 4, pic: k => wheel6(10, k), cap: k => `滾了 ${k}/4 圈`, done: '紅線是一圈拉直的長。' },
+      { t: 'act', id: 's', say: '用 10 公分長的直徑棒量紅線：點紅線放一根。', tip: '一根接一根放，數一數放了幾根、是幾公分。', n: 3, pic: k => `<span class="hot6 whl6">${rollSvg(10, 1, 1, k)}</span>`, cap: k => `放了 ${k} 根，${k * 10} 公分`, done: '3 根是 30 公分，還多一點：10×3.14＝31.4 公分。' },
+      { t: 'guess', say: '直徑 20 公分的盤子，一圈大約多長？（圓周率取 3.14）', o: ['62.8 公分', '40 公分', '23.14 公分'] },
+      { t: 'say', id: 'map', say: '直徑乘 3.14，就是一圈的長。', pic: () => sym6([[10, '直徑', K2], '×', ['3.14', '圓周率', K3], '＝', ['31.4', '一圈的長', K1]]) },
+      { t: 'name', say: '一圈的長有名字。', name: '繞圓一圈的長，叫<b>圓周長</b>。圓周長＝直徑×圓周率，本題把圓周率取 3.14。', pic: () => rollSvg(10, 1, 1, 3) },
+      { t: 'check', o: ['圓周長是繞圓一圈的長', '圓周長就是直徑'], a: 0, why: [, '直徑是穿過圓心的直線；一圈的長大約是直徑的 3.14 倍。'] },
+      { t: 'build', say: '拼一道用「20×3.14」算的題目。', heads: ['東西', '數量', '問題'], cols: [['車輪', '蘋果'], ['直徑 20 公分', '20 顆'], ['滾一圈（不打滑）走多遠？', '一共幾元？']], a: [0, 0, 0], why: ['要圓形的東西。', '要知道直徑。', '要問一圈的長。'], ok: '車輪直徑 20 公分，滾一圈（不打滑）走多遠？20×3.14＝62.8 公分。' },
     ],
-    q: { t: '半徑 2 公尺的花圃，圓面積怎麼算？', o: ['2×2×3.14', '2×3.14', '2×2'], a: 0, ok: '對了！', back: 's', hint: '長是半個圓周，寬是半徑。' } },
-  ratio: { sem: '六上', who: 'bee', word: '比', hide: ['1：2', '2：4', '3：6', '叫比', '讀作'],
+    q: { t: '直徑 5 公尺的圓形水池，圓周長怎麼算？（圓周率取 3.14）', o: ['5×3.14', '5＋3.14', '5÷3.14'], a: 0, why: [, '是 3.14 倍，要用乘的，不是加 3.14。', '是直徑的 3.14 倍，要用乘的。'], ok: '對了！5×3.14＝15.7 公尺。', back: 's', hint: '一圈大約是 3.14 根直徑。' },
+    rev: '20×3.14＝62.8 公分：是 20 的 3.14 倍，不是 20 加 3.14。', revPic: () => rollSvg(20, 1, 1, 3) },
+  halfc: { sem: '六上', who: 'fox', word: '半圓的周長', hide: [], fs: 'd',
     steps: [
-      { t: 'say', say: '泡蜂蜜水你會：1 匙蜂蜜配 2 杯水，剛好甜。', pic: () => dotsC(1, HON) + ' ＋ ' + dotsC(2, WAT) + ' ' + cupHtml(C_HW, 1, 2) },
-      { t: 'guess', say: '想泡多一點，蜂蜜放 2 匙，水要幾杯才一樣甜？', o: ['3 杯（多加 1）', '4 杯（再加一整組）'] },
-      { t: 'act', id: 'd', who: 'demo', say: '一組一組加：每組 1 匙蜂蜜、2 杯水。', n: 2, pic: k => `<div class="rows6">${Array.from({ length: k + 1 }, () => `<div class="r6">${dotsC(1, HON)}${dotsC(2, WAT)}</div>`).join('')}</div>` + addBtn6('＋一組', true), cap: k => `${k + 1} 組：蜂蜜 ${k + 1} 匙、水 ${2 * (k + 1)} 杯`, done: '3 組：蜂蜜 3 匙、水 6 杯，一樣甜。' },
-      { t: 'act', id: 's', say: '從 1 組開始，加到蜂蜜 2 匙。', n: 1, pic: k => `<div class="rows6">${Array.from({ length: k + 1 }, () => `<div class="r6">${dotsC(1, HON)}${dotsC(2, WAT)}</div>`).join('')}</div>` + addBtn6('＋一組', true), cap: k => `蜂蜜 ${k + 1} 匙、水 ${2 * (k + 1)} 杯`, done: '蜂蜜 2 匙要 4 杯水。' },
-      { t: 'say', say: '只多加 1 杯水（左）會太甜；加一整組（右）才一樣甜。很多人一開始也這樣想。', pic: () => `<div class="pair6"><div>${cupHtml(C_HW, 2, 3)}<small>2 匙、3 杯</small></div><div>${cupHtml(C_HW, 2, 4)}<small>2 匙、4 杯</small></div></div>` },
-      { t: 'say', id: 'map', say: '每組都是「1 匙蜂蜜對 2 杯水」：', pic: () => tbl6([['蜂蜜（匙）', 1, 2, 3], ['水（杯）', 2, 4, 6]]) + sym6([[1, '蜂蜜匙數', K1], '對', [2, '水杯數', K2]]) },
-      { t: 'name', say: '這種「幾對幾」的寫法有名字。', name: '「1 匙蜂蜜對 2 杯水」寫成 1：2，叫<b>比</b>，讀作 1 比 2。', pic: () => sym6([[1, '蜂蜜', K1], '：', [2, '水', K2]]) },
-      { t: 'check', o: ['1：2 是說蜂蜜 1 份、水 2 份', '1：2 是說水多 1 杯'], a: 0 },
-      { t: 'pose', say: '只改一樣：每組變成 1 匙蜂蜜配 3 杯水，2 組要幾杯水？', o: ['6 杯', '4 杯'], a: 0, why: '每組 3 杯，2 組。' },
+      { t: 'say', say: '先回想圓周長：直徑 10 公分的圓，圓周長＝10×3.14＝31.4 公分。', pic: () => rollSvg(10, 1, 1, 3) },
+      { t: 'guess', say: '把這個圓沿直徑對切，得到一個半圓。沿著半圓的邊走一圈，長度是多少？', o: ['15.7＋10＝25.7 公分', '15.7 公分', '31.4 公分'] },
+      { t: 'act', id: 'd', who: 'demo', say: '沿著半圓的邊走一圈：點一下走一段。', n: 2, pic: k => `<span class="${k < 2 ? 'hot6' : ''} whl6">${halfSvg(k)}</span>`, cap: k => ['', '彎的邊：半個圓周，31.4÷2＝15.7 公分', '再加直的邊：直徑 10 公分'][k], done: '半圓的周長＝15.7＋10＝25.7 公分。直的那條邊也圍在外面，也要算。' },
+      { t: 'act', id: 's', say: '直徑 4 公尺的半圓形花圃，要沿著邊圍一圈籬笆。選出正確的算式。', tip: '想一想：籬笆要圍彎的邊，還要圍哪一條邊？', n: 1, pic: k => halfSvg(2).replace('直徑 10 公分', '直徑 4 公尺') + (k ? '' : chips6(['4×3.14÷2＋4', '4×3.14÷2', '4×3.14'], (_, i) => i === 0, (_, i) => i === 1 ? '少了直的那一邊（直徑 4 公尺）。' : '這是整個圓的一圈；半圓的彎邊只有一半。')), cap: k => k ? '6.28＋4＝10.28 公尺' : '', done: '4×3.14÷2＋4＝10.28 公尺。' },
+      { t: 'say', id: 'map', say: '彎邊加直邊。', pic: () => sym6([['31.4÷2', '彎邊：半個圓周', K1], '＋', [10, '直邊：直徑', K2], '＝', ['25.7', '半圓的周長', K3]]) },
+      { t: 'name', say: '整理一下。', name: '<b>半圓的周長</b>＝圓周長÷2＋直徑。彎的邊和直的邊都要算。', pic: () => halfSvg(2) },
+      { t: 'check', o: ['半圓的周長＝圓周長÷2＋直徑', '半圓的周長＝圓周長÷2'], a: 0, why: [, '只算了彎邊；直徑那條邊也圍在外面。'] },
     ],
-    q: { t: '紅顏料 1 匙配藍顏料 3 匙。做 2 組，藍要幾匙？', o: ['6 匙', '4 匙', '3 匙'], a: 0, ok: '對了！', back: 's', hint: '一組一組加，不是只加 1。' } },
-  eqr: { sem: '六上', who: 'bee', word: '相等的比', hide: ['相等的比'],
+    q: { t: '直徑 6 公尺的半圓形舞台，周長是多少？（圓周率取 3.14）', o: ['9.42＋6＝15.42 公尺', '9.42 公尺', '18.84 公尺'], a: 0, why: [, '只算了彎邊，少了直徑 6 公尺。', '18.84 公尺是整個圓的一圈。'], ok: '對了！6×3.14÷2＋6＝15.42 公尺。', back: 's', hint: '彎邊是半個圓周，還要加上直徑。' } },
+  carea: { sem: '六上', who: 'fox', word: '圓面積', hide: ['圓面積'], fs: 's',
     steps: [
-      { t: 'say', say: '比學過了：2：3 是一組 2 匙蜂蜜配 3 杯水。', pic: () => dotsC(2, HON) + dotsC(3, WAT) },
-      { t: 'act', id: 'd', who: 'demo', say: '一組一組加，填進表格。', n: 2, pic: k => tbl6([['蜂蜜', ...Array.from({ length: k + 1 }, (_, i) => 2 * (i + 1))], ['水', ...Array.from({ length: k + 1 }, (_, i) => 3 * (i + 1))]]) + addBtn6('＋一組', true), done: '2：3、4：6、6：9，都一樣甜。' },
-      { t: 'act', id: 's', say: '1：4 的配方，加兩組。', n: 2, pic: k => tbl6([['蜂蜜', ...Array.from({ length: k + 1 }, (_, i) => i + 1)], ['水', ...Array.from({ length: k + 1 }, (_, i) => 4 * (i + 1))]]) + addBtn6('＋一組', true), done: '1：4、2：8、3：12。' },
-      { t: 'guess', say: '2：3 和 3：4（都多 1）一樣甜嗎？', o: ['一樣', '不一樣'] },
-      { t: 'say', say: '3：4 比較淡；4：6 才一樣。要前後都乘 2，不是都加 1。', pic: () => `<div class="pair6"><div>${cupHtml(C_HW, 2, 3)}<small>2：3</small></div><div>${cupHtml(C_HW, 3, 4)}<small>3：4</small></div><div>${cupHtml(C_HW, 4, 6)}<small>4：6</small></div></div>` },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[2, '', K1], '：', [3, '', K2], '×2→', [4, '', K1], '：', [6, '', K2]]) + '<div class="trail">2÷3 和 4÷6 都是 2/3</div>' },
-      { t: 'name', say: '一樣甜的比有名字。', name: '比值一樣的比，叫<b>相等的比</b>。2：3＝4：6。', pic: () => tbl6([['蜂蜜', 2, 4, 6], ['水', 3, 6, 9]]) },
-      { t: 'check', o: ['前後都乘同一個數，得到相等的比', '前後都加同一個數，得到相等的比'], a: 0 },
-      { t: 'pose', say: '哪一題可以用 2：3＝4：□ 解？', o: ['2 匙蜂蜜配 3 杯水，4 匙蜂蜜要幾杯水？', '2 匙蜂蜜加 3 杯水，一共幾樣？'], a: 0 },
+      { t: 'say', say: '先回想長方形：長 4 公分、寬 3 公分，面積是 4×3＝12 平方公分。', pic: () => rectG6(4, 3) },
+      { t: 'act', id: 'd', who: 'demo', say: '把一個半徑 3 公分的圓平均切成更多片，上下交錯排：點圖。', n: 3, pic: k => `<span class="hot6">${cutCircleSvg([4, 8, 16, 32][k], 3)}</span>`, cap: k => `平均切成 ${[4, 8, 16, 32][k]} 片`, done: '切得越細，排出來的形狀越接近長方形。' },
+      { t: 'guess', say: '排出來的近似長方形，長大約是多少？', o: ['半個圓周', '半徑', '整個圓周'] },
+      { t: 'act', id: 's', say: '量這個近似長方形：先選「長」是多少，再選「寬」是多少。', tip: '上面一排的彎邊合起來是圓周的一半；旁邊那一邊是從圓心到圓周。', n: 2, pic: k => cutCircleSvg(32, 3) + (k < 2 ? `<div class="trail">${k ? '長：半個圓周 ✓　現在選「寬」' : '先選「長」'}</div>` + chips6(['半個圓周', '半徑', '直徑'], x => x === (k ? '半徑' : '半個圓周'), x => k ? (x === '直徑' ? '寬是從圓心到圓周，只有半徑那麼長。' : '半個圓周已經是長了。') : (x === '半徑' ? '半徑在排好的形狀的旁邊，是寬那一邊。' : '上面一排的彎邊合起來只有半個圓周，不是直徑。')) : '<div class="trail">長：半個圓周（上下各一半的彎邊）<br>寬：半徑 3 公分</div>'), done: '長是半個圓周，寬是半徑。' },
+      { t: 'say', id: 'map', say: '切得越細越接近長方形：長×寬。', pic: () => sym6([['3×3.14', '長：半個圓周', K1], '×', [3, '寬：半徑', K2], '＝', ['28.26', '平方公分', K3]]) },
+      { t: 'name', say: '圓內部的大小有名字。', name: '圓內部的大小叫<b>圓面積</b>。圓面積＝半徑×半徑×圓周率，本題取 3.14：3×3×3.14＝28.26 平方公分。', pic: () => cutCircleSvg(32, 3) },
+      { t: 'check', o: ['圓面積＝半徑×半徑×3.14', '圓面積＝直徑×3.14'], a: 0, why: [, '直徑×3.14 是圓周長，是一圈的長，不是面積。'] },
+      { t: 'pose', say: '哪一題要算圓面積？', o: ['剛好蓋住圓桌桌面的圓形貼紙，要多大？', '圓桌邊要貼多長的花邊？'], a: 0, why: [, '花邊貼在邊上，算的是圓周長。'] },
     ],
-    q: { t: '1：4 和哪一個是相等的比？', o: ['3：12', '3：6', '2：5'], a: 0, ok: '對了！前後都乘 3。', back: 's', hint: '一組一組往下加。' } },
-  simpr: { sem: '六上', who: 'bee', word: '最簡單整數比', hide: ['最簡單', '質數'],
+    q: { t: '半徑 2 公尺的圓形花圃，面積怎麼算？（圓周率取 3.14）', o: ['2×2×3.14', '2×3.14', '2×2'], a: 0, why: [, '2×3.14 只是半個圓周的長。', '2×2 少乘了 3.14。'], ok: '對了！2×2×3.14＝12.56 平方公尺。', back: 's', hint: '長是半個圓周，寬是半徑。' } },
+  ringA: { sem: '六上', who: 'fox', word: '圓環面積', hide: ['圓環'], fs: 'd',
     steps: [
-      { t: 'say', say: '圈組你會：6 個每 3 個一組，是 2 組。', pic: () => grp6(6, 3, 2, { noHot: true }) },
+      { t: 'say', say: '先回想圓面積：半徑×半徑×3.14。', pic: () => ringSvg(1) },
+      { t: 'guess', say: '一個大圓餅，中間挖掉一個小圓洞。剩下的那一圈，面積怎麼算？', o: ['大圓面積－小圓面積', '大圓半徑－小圓半徑，再算面積', '大圓面積＋小圓面積'] },
+      { t: 'act', id: 'd', who: 'demo', say: '點一下：先看大圓，再挖掉小圓。', n: 2, pic: k => `<span class="${k < 2 ? 'hot6' : ''} whl6">${ringSvg(k)}</span>`, cap: k => ['', '大圓半徑 3 公分：3×3×3.14＝28.26 平方公分', '挖掉半徑 1 公分的小圓：1×1×3.14＝3.14 平方公分'][k], done: '剩下的那一圈：28.26－3.14＝25.12 平方公分。' },
+      { t: 'act', id: 's', say: '外面的圓半徑 5 公分、裡面的圓半徑 3 公分。選出剩下那一圈的面積算式。', tip: '先算整個大圓，再把挖掉的小圓減掉。', n: 1, pic: k => ringSvg(2, [5, 3]) + (k ? '' : chips6(['5×5×3.14－3×3×3.14', '（5－3）×（5－3）×3.14', '5×5×3.14＋3×3×3.14'], (_, i) => i === 0, (_, i) => i === 1 ? '（5－3）×（5－3）×3.14 是半徑 2 公分的小圓，比剩下的那一圈小很多。' : '小圓被挖掉了，要用減的。')), cap: k => k ? '78.5－28.26＝50.24 平方公分' : '', done: '78.5－28.26＝50.24 平方公分。' },
+      { t: 'say', id: 'map', say: '大圓減小圓。', pic: () => sym6([['28.26', '外圓面積', K1], '－', ['3.14', '內圓面積', K2], '＝', ['25.12', '剩下那一圈', K3]]) },
+      { t: 'name', say: '中間挖空的這種圖形有名字。', name: '大圓中間挖掉一個同圓心的小圓，剩下的圖形叫<b>圓環</b>。圓環面積＝外圓面積－內圓面積。', pic: () => ringSvg(2) },
+      { t: 'check', o: ['圓環面積＝外圓面積－內圓面積', '圓環面積＝（外圓半徑－內圓半徑）×（外圓半徑－內圓半徑）×3.14'], a: 0, why: [, '半徑相減再算，只得到一個小圓；圓環比它大很多。'] },
+    ],
+    q: { t: '外圓半徑 4 公尺、內圓半徑 2 公尺的圓環步道，面積是多少？（圓周率取 3.14）', o: ['50.24－12.56＝37.68 平方公尺', '2×2×3.14＝12.56 平方公尺', '50.24＋12.56＝62.8 平方公尺'], a: 0, why: [, '這是用半徑相減得到的小圓。', '內圓是挖掉的，要用減的。'], ok: '對了！4×4×3.14－2×2×3.14＝37.68 平方公尺。', back: 's', hint: '先算外圓面積，再減掉內圓面積。' } },
+  ratio: { sem: '六上', who: 'bee', word: '比', hide: ['1：2', '2：4', '3：6', '叫比', '讀作'], fs: 's',
+    steps: [
+      { t: 'say', say: '泡蜂蜜水：每次都用同一支湯匙、同一個杯子。1 匙蜂蜜配 2 杯水，是我們要的甜度。', pic: () => hw6(1, 2) + ' ' + cupHtml(C_HW, 1, 2) },
+      { t: 'guess', say: '想泡多一點，蜂蜜放 2 匙，水要幾杯才和原來一樣甜？', o: ['3 杯（多加 1 杯）', '4 杯（再加一整組）'] },
+      { t: 'act', id: 'd', who: 'demo', say: '一組一組加：每組 1 匙蜂蜜、2 杯水。', n: 2, pic: k => `<div class="rows6">${Array.from({ length: k + 1 }, () => `<div class="r6">${hw6(1, 2)}</div>`).join('')}</div>` + addBtn6('＋一組', true), cap: k => `${k + 1} 組：蜂蜜 ${k + 1} 匙、水 ${2 * (k + 1)} 杯`, done: '3 組：蜂蜜 3 匙、水 6 杯，甜度和原來一樣。' },
+      { t: 'act', id: 's', say: '從 1 組開始，要和原來一樣甜，下一步加什麼？', tip: '每一組都是 1 匙蜂蜜配 2 杯水。', n: 1, pic: k => `<div class="rows6">${Array.from({ length: k + 1 }, () => `<div class="r6">${hw6(1, 2)}</div>`).join('')}</div>` + (k ? '' : chips6(['＋1 匙蜂蜜、2 杯水', '＋1 杯水', '＋1 匙蜂蜜'], (_, i) => i === 0, (_, i) => i === 1 ? '只加水，蜂蜜沒有變多，會變淡。' : '只加蜂蜜，會變甜。')), cap: k => `蜂蜜 ${k + 1} 匙、水 ${2 * (k + 1)} 杯`, done: '蜂蜜 2 匙要配 4 杯水。' },
+      { t: 'say', say: '比一比：2 匙配 3 杯（左）水只多 1 杯，蜂蜜相對比較多，比較甜；2 匙配 4 杯（右）和原來一樣甜。', pic: () => `<div class="pair6"><div>${cupHtml(C_HW, 2, 3)}<small>2 匙、3 杯</small></div><div>${cupHtml(C_HW, 2, 4)}<small>2 匙、4 杯</small></div></div>` },
+      { t: 'say', id: 'map', say: '每組都是「1 匙蜂蜜對 2 杯水」。', pic: () => tbl6([['蜂蜜（匙）', 1, 2, 3], ['水（杯）', 2, 4, 6]]) + sym6([[1, '蜂蜜匙數', K1], '對', [2, '水杯數', K2]]) },
+      { t: 'name', say: '這種「幾對幾」的寫法有名字。', name: '用同一支匙、同一個杯子時，「1 匙蜂蜜對 2 杯水」可以寫成 1：2，讀作「1 比 2」，這樣的寫法叫<b>比</b>。', pic: () => sym6([[1, '蜂蜜匙數', K1], '：', [2, '水杯數', K2]]) },
+      { t: 'check', o: ['1：2 表示蜂蜜 1 匙對水 2 杯', '1：2 表示水比蜂蜜多 1 杯'], a: 0, why: [, '比說的是「幾對幾」：2 匙對 4 杯也還是同一個配方，水多了 2 杯。'] },
+      { t: 'pose', say: '只改一個地方：每組改成 1 匙蜂蜜配 3 杯水，2 組要幾杯水？', o: ['6 杯', '4 杯'], a: 0, why: [, '每組 3 杯水，2 組是 3×2＝6 杯。'] },
+    ],
+    q: { t: '紅顏料 1 匙配藍顏料 3 匙（同一支匙）。做 2 組一樣的顏色，藍顏料要幾匙？', o: ['6 匙', '4 匙', '3 匙'], a: 0, why: [, '4 匙是只多加 1 匙。', '3 匙只有 1 組。'], ok: '對了！每組 3 匙，2 組是 3×2＝6 匙。', back: 's', hint: '一組一組加：每組 1 匙紅、3 匙藍。' } },
+  eqr: { sem: '六上', who: 'bee', word: '相等的比', hide: ['相等的比'], fs: 'd',
+    steps: [
+      { t: 'say', say: '先回想比：用同樣的量杯，2 杯蜂蜜配 3 杯水，寫成 2：3。', pic: () => dotsC(2, HON) + dotsC(3, WAT) },
+      { t: 'guess', say: '想多做一倍、保持相同的配方，蜂蜜和水各要多少杯？', o: ['4 杯蜂蜜、6 杯水', '3 杯蜂蜜、4 杯水'] },
+      { t: 'act', id: 'd', who: 'demo', say: '一組一組加，填進表格。', n: 2, pic: k => tbl6([['蜂蜜（杯）', ...Array.from({ length: k + 1 }, (_, i) => 2 * (i + 1))], ['水（杯）', ...Array.from({ length: k + 1 }, (_, i) => 3 * (i + 1))]]) + addBtn6('＋一組', true), done: '2：3、4：6、6：9，都是同一個配方。' },
+      { t: 'act', id: 's', say: '1：4 的配方，再加兩組：下一組要填什麼？', tip: '每一組是 1 杯蜂蜜配 4 杯水，要一整組一起加。', n: 2, pic: k => tbl6([['蜂蜜（杯）', ...Array.from({ length: k + 1 }, (_, i) => i + 1)], ['水（杯）', ...Array.from({ length: k + 1 }, (_, i) => 4 * (i + 1))]]) + (k < 2 ? chips6(k ? ['3 和 12', '3 和 9'] : ['2 和 8', '2 和 5'], (_, i) => i === 0, () => '只多加 1 杯水不對：每組是 1 杯蜂蜜配 4 杯水，要一整組一起加。') : ''), done: '1：4、2：8、3：12。' },
+      { t: 'say', say: '如果兩邊都只加 1，變成 3：4。蜂蜜 3 杯、水 4 杯，蜂蜜相對於水的比例提高了，比 2：3 更甜，和原來不同。', pic: () => `<div class="pair6"><div>${cupHtml(C_HW, 2, 3)}<small>2：3</small></div><div>${cupHtml(C_HW, 3, 4)}<small>3：4</small></div><div>${cupHtml(C_HW, 4, 6)}<small>4：6</small></div></div>` },
+      { t: 'say', id: 'map', say: '前後都乘 2，比值不變。', pic: () => sym6([[2, '', K1], '：', [3, '', K2], '×2→', [4, '', K1], '：', [6, '', K2]]) + '<div class="trail">2÷3 和 4÷6 都是 2/3</div>' },
+      { t: 'name', say: '同一個配方的比有名字。', name: '比的前後兩個數，同乘（或同除以）同一個不是 0 的數，比值不變。比值相同的比，叫<b>相等的比</b>。2：3＝4：6。', pic: () => tbl6([['蜂蜜', 2, 4, 6], ['水', 3, 6, 9]]) },
+      { t: 'check', o: ['前後同乘同一個數，得到相等的比', '前後同加同一個數，得到相等的比'], a: 0, why: [, '2：3 都加 1 變成 3：4，比值從 2/3 變成 3/4，配方變了。'] },
+      { t: 'pose', say: '哪一題可以用 2：3＝4：□ 解？', o: ['2 杯蜂蜜配 3 杯水，4 杯蜂蜜要配幾杯水才是同一個配方？', '2 杯蜂蜜加 3 杯水，一共幾杯？'], a: 0, why: [, '這題是加法，不是找同一個配方。'] },
+    ],
+    q: { t: '1：4 和哪一個是相等的比？', o: ['3：12', '3：6', '2：5'], a: 0, why: [, '3：6 的比值是 1/2，1：4 的比值是 1/4。', '2：5 是前後都加 1，比值變了。'], ok: '對了！前後都乘 3。', back: 's', hint: '一組一組往下加：前後要乘同一個數。' } },
+  share: { sem: '六上', who: 'bee', word: '按比分配', hide: ['按比分配'], fs: 'd',
+    steps: [
+      { t: 'say', say: '先回想比：甲站和乙站的補給箱數比是 2：3，表示甲站每拿 2 箱，乙站就拿 3 箱。', pic: () => `<div class="r6">甲 ${'📦'.repeat(2)} ｜ 乙 ${'📦'.repeat(3)}</div>` },
+      { t: 'guess', say: '一共 20 箱，按 2：3 分給甲站和乙站。甲站分到幾箱？', o: ['8 箱', '10 箱（兩站一樣多）', '2 箱'] },
+      { t: 'act', id: 'd', who: 'demo', say: '一輪一輪分：每一輪甲站拿 2 箱、乙站拿 3 箱，一輪共 5 箱。點一下分一輪。', n: 4, pic: k => shareRows6(k) + addBtn6('分一輪', k < 4), cap: k => k ? `分了 ${k} 輪，用掉 5×${k}＝${5 * k} 箱` : '', done: '分 4 輪剛好分完：甲站 2×4＝8 箱，乙站 3×4＝12 箱。' },
+      { t: 'act', id: 's', say: '24 根能量棒，按 1：3 分給甲組和乙組。先想一輪分幾根，再想要分幾輪。', tip: '一輪裡，甲組拿 1 根、乙組拿 3 根，一輪一共幾根？', n: 2, pic: k => (k < 2 ? chips6(k ? ['24÷4＝6 輪', '24÷3＝8 輪'] : ['一輪 4 根（1＋3）', '一輪 3 根', '一輪 1 根'], (_, i) => i === 0, (_, i) => k ? '一輪是 4 根，不是 3 根。' : i === 1 ? '3 根只是乙組的；甲組也要拿 1 根。' : '1 根只是甲組的；乙組也要拿 3 根。') : sym6([[1, '甲每輪', K4], '×', [6, '輪', K3], '＝', [6, '甲組', K4]])), cap: k => ['', '一輪 4 根', '分 6 輪'][k], done: '6 輪：甲組 1×6＝6 根，乙組 3×6＝18 根。' },
+      { t: 'say', id: 'map', say: '先算輪數，再算各拿幾個。', pic: () => sym6([[20, '全部', K1], '÷', [5, '一輪：2＋3', K2], '＝', [4, '輪數', K3]]) + sym6([[2, '甲每輪', K4], '×', [4, '輪數', K3], '＝', [8, '甲站', K4]]) },
+      { t: 'name', say: '這樣分的方法有名字。', name: '照一個比來分東西，叫<b>按比分配</b>：先把比的兩個數加起來，看一輪分幾個；全部÷一輪的個數＝輪數；每一方每輪拿幾個×輪數，就是分到的個數。', pic: () => shareRows6(4) },
+      { t: 'check', o: ['先算一輪一共分幾個（比的兩個數相加）', '按 2：3 分，就是兩邊一樣多'], a: 0, why: [, '2：3 表示每輪甲 2 箱、乙 3 箱，乙比較多，不是一樣多。'] },
+    ],
+    q: { t: '30 顆糖按 1：2 分給弟弟和哥哥，弟弟分到幾顆？', o: ['10 顆', '15 顆', '20 顆'], a: 0, why: [, '15 是兩人一樣多；1：2 表示每輪弟弟 1 顆、哥哥 2 顆。', '20 顆是哥哥分到的。'], ok: '對了！一輪 3 顆，分 10 輪：弟弟 1×10＝10 顆。', back: 's', hint: '一輪分 1＋2＝3 顆，30 顆可以分幾輪？' } },
+  simpr: { sem: '六上', who: 'bee', word: '最簡單整數比', hide: ['最簡單', '質數'], fs: 'd',
+    steps: [
+      { t: 'say', say: '先回想圈組：6 個每 3 個圈一組，是 2 組。', pic: () => grp6(6, 3, 2, { noHot: true }) },
       { t: 'act', id: 'd', who: 'demo', say: '6 杯蜂蜜、9 杯水，每 3 杯圈一組。', n: 5, pic: k => grp6(6, 3, Math.min(k, 2), { cell: HON, lab: '蜂蜜', noHot: k >= 2 }) + grp6(9, 3, Math.max(0, k - 2), { cell: WAT, lab: '水', noHot: k < 2 }), cap: k => `圈了 ${k} 組`, done: '2 組對 3 組。' },
-      { t: 'act', id: 's', say: '4 杯蜂蜜、6 杯水，每 2 杯圈一組。', n: 5, pic: k => grp6(4, 2, Math.min(k, 2), { cell: HON, lab: '蜂蜜', noHot: k >= 2 }) + grp6(6, 2, Math.max(0, k - 2), { cell: WAT, lab: '水', noHot: k < 2 }), cap: k => `圈了 ${k} 組`, done: '也是 2 組對 3 組。' },
-      { t: 'guess', say: '2 組對 3 組，還能圈成更大的組嗎？', o: ['不能了', '可以'] },
-      { t: 'say', id: 'map', say: '圈好的組數寫成比：', pic: () => sym6([[6, '蜂蜜杯', K1], '：', [9, '水杯', K2], '→', [2, '組', K1], '：', [3, '組', K2]]) },
-      { t: 'name', say: '圈到不能再圈的比有名字。', name: '前後都是整數，而且不能再一起約的比，叫<b>最簡單整數比</b>。6：9 的是 2：3。', pic: () => sym6([[2, '', K1], '：', [3, '', K2]]) },
-      { t: 'check', o: ['最簡單整數比的兩個數不能再一起約', '最簡單整數比的數一定是 1'], a: 0 },
-      { t: 'pose', say: '只改一樣：8：12 每 4 個圈一組，會變成？', o: ['2：3', '4：6'], a: 0 },
+      { t: 'act', id: 's', say: '4 杯蜂蜜、6 杯水，每 2 杯圈一組。', tip: '先圈完蜂蜜，再圈水；每 2 杯一組。', n: 5, pic: k => grp6(4, 2, Math.min(k, 2), { cell: HON, lab: '蜂蜜', noHot: k >= 2 }) + grp6(6, 2, Math.max(0, k - 2), { cell: WAT, lab: '水', noHot: k < 2 }), cap: k => `圈了 ${k} 組`, done: '也是 2 組對 3 組。' },
+      { t: 'guess', say: '2 組對 3 組，兩邊還能一起再圈成更大的組、都剛好圈完嗎？', o: ['不能了', '可以'] },
+      { t: 'say', id: 'map', say: '圈好的組數寫成比。', pic: () => sym6([[6, '蜂蜜杯數', K1], '：', [9, '水杯數', K2], '→', [2, '組', K1], '：', [3, '組', K2]]) },
+      { t: 'name', say: '圈到不能再圈的比有名字。', name: '比的前後兩個數都是整數，而且它們的公因數只有 1，這個比叫<b>最簡單整數比</b>。6：9 的最簡單整數比是 2：3。', pic: () => sym6([[2, '', K1], '：', [3, '', K2]]) },
+      { t: 'check', o: ['最簡單整數比的前後兩個數，公因數只有 1', '最簡單整數比裡一定有一個數是 1'], a: 0, why: [, '2：3 裡沒有 1，但 2 和 3 的公因數只有 1，已經是最簡單整數比。'] },
+      { t: 'say', say: '比裡有小數時，先變成整數：0.6：0.9，前後同乘 10 得 6：9，再化成 2：3。', pic: () => sym6([['0.6', '', K1], '：', ['0.9', '', K2], '×10→', [6, '', K1], '：', [9, '', K2], '→', [2, '', K1], '：', [3, '', K2]]) },
+      { t: 'pose', say: '只改一個地方：8：12 每 4 個圈一組，會變成？', o: ['2：3', '4：6'], a: 0, why: [, '4：6 還能每 2 個再圈一組。'] },
     ],
-    q: { t: '8 桶沙、12 桶水泥，最簡單整數比？', o: ['2：3', '4：6', '8：12'], a: 0, ok: '對了！每 4 桶一組。', back: 's', hint: '圈成最大的組。' } },
-  arc: { sem: '六上', who: 'sheep', word: '弧長', hide: ['弧'],
+    q: { t: '8 桶沙、12 桶水泥，最簡單整數比是？', o: ['2：3', '4：6', '8：12'], a: 0, why: [, '4 和 6 的公因數還有 2。', '8 和 12 的公因數還有 2、4。'], ok: '對了！每 4 桶一組。', back: 's', hint: '圈成最大的組，兩邊都剛好圈完。' } },
+  arc: { sem: '六上', who: 'sheep', word: '弧長', hide: ['弧'], fs: 's',
     steps: [
-      { t: 'say', say: '圓周長你會：繞一圈的長。這個披薩一圈 40 公分。', pic: () => pie6(1, 0, 0) },
-      { t: 'guess', say: '切下 1/4 片，它彎彎的邊有多長？', o: ['10 公分', '40 公分', '20 公分'] },
-      { t: 'act', id: 'd', who: 'demo', say: '切成 4 片：點披薩切一刀。', n: 4, pic: k => pie6(4, k, 0, { hot: 'cut' }), cap: k => `切了 ${k} 刀`, done: '4 片一樣大。' },
-      { t: 'act', id: 's', say: '拿走一片，看它彎彎的邊。', n: 1, pic: k => pie6(4, 4, k, { hot: 'take', takenCol: K4 }), cap: k => k ? '彎邊是整圈的 1/4' : '', done: '40÷4＝10 公分。' },
-      { t: 'act', id: 's3', say: '換一個 30 公分的：切 3 刀，拿 1 片。', n: 4, pic: k => pie6(3, Math.min(k, 3), Math.max(0, k - 3), { hot: k < 3 ? 'cut' : 'take', takenCol: K4 }), cap: k => k > 3 ? '彎邊是 1/3 圈：10 公分' : `切了 ${Math.min(k, 3)} 刀`, done: '30×1/3＝10 公分。' },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[40, '一圈', K1], '×', ['1/4', '拿幾分之幾', K2], '＝', [10, '彎邊', K3]]) },
-      { t: 'name', say: '彎彎的邊的長有名字。', name: '扇形彎彎的那條邊的長，叫<b>弧長</b>＝圓周長×幾分之幾。', pic: () => pie6(4, 4, 1, { takenCol: K4 }) },
-      { t: 'check', o: ['弧長是彎邊的長', '弧長就是半徑'], a: 0 },
-      { t: 'pose', say: '哪一題在算弧長？', o: ['扇子張開 1/3 圈，邊上要貼多長的花邊？', '扇子的紙面有多大？'], a: 0, why: '紙面是大小，不是邊長。' },
+      { t: 'say', say: '先回想圓周長：繞圓一圈的長。這個圓形披薩一圈是 40 公分。', pic: () => pie6(1, 0, 0) },
+      { t: 'guess', say: '把披薩平均切成 4 片，拿 1 片。這片彎彎的邊有多長？', o: ['10 公分', '40 公分', '20 公分'] },
+      { t: 'act', id: 'd', who: 'demo', say: '平均切成 4 片：點披薩切一刀。', n: 4, pic: k => pie6(4, k, 0, { hot: 'cut' }), cap: k => `切了 ${k} 刀`, done: '4 片一樣大，每片的圓心角是 360÷4＝90 度。' },
+      { t: 'act', id: 's', say: '拿走一片，看它彎彎的邊。', tip: '點任何一片，把它拿走。', n: 1, pic: k => pie6(4, 4, k, { hot: 'take', takenCol: K4 }), cap: k => k ? '彎邊是整圈的 1/4' : '', done: '40÷4＝10 公分。' },
+      { t: 'act', id: 's3', say: '換一個一圈 30 公分的披薩：平均切成 3 片，拿 1 片。', tip: '先點披薩切 3 刀，再拿走 1 片。', n: 4, pic: k => pie6(3, Math.min(k, 3), Math.max(0, k - 3), { hot: k < 3 ? 'cut' : 'take', takenCol: K4 }), cap: k => k > 3 ? '彎邊是 1/3 圈：10 公分' : `切了 ${Math.min(k, 3)} 刀`, done: '30×1/3＝10 公分。' },
+      { t: 'say', id: 'map', say: '一圈的長乘「這片占一圈的幾分之幾」。', pic: () => sym6([[40, '一圈的長', K1], '×', ['90/360', '圓心角 90 度占一圈', K2], '＝', [10, '彎邊', K3]]) },
+      { t: 'name', say: '彎彎的那一段有名字。', name: '圓周上的一段叫弧，這段彎曲的長叫<b>弧長</b>。扇形的弧長＝圓周長×圓心角/360。', pic: () => pie6(4, 4, 1, { takenCol: K4 }) },
+      { t: 'check', o: ['弧長是扇形彎彎那條邊的長', '弧長就是半徑'], a: 0, why: [, '半徑是從圓心到圓周的直線；弧是彎的那一段。'] },
+      { t: 'pose', say: '哪一題在算弧長？', o: ['扇子張開 1/3 圈，只在彎彎的邊上貼花邊，要多長？', '扇子的紙面有多大？'], a: 0, why: [, '紙面有多大是面積，不是邊的長。'], ok: '對了！如果要沿著整個扇形的邊貼，還要加兩條半徑，另外看〈扇形的周長〉。' },
     ],
-    q: { t: '一圈 60 公分，張開 1/3 圈，彎邊多長？', o: ['20 公分', '60 公分', '30 公分'], a: 0, ok: '對了！', back: 's', hint: '整圈切成 3 份，拿 1 份。' } },
-  sarea: { sem: '六上', who: 'sheep', word: '扇形面積', hide: ['扇形面積'],
+    q: { t: '一圈 60 公分的圓，切下圓心角 120 度的一片，彎邊多長？', o: ['20 公分', '60 公分', '30 公分'], a: 0, why: [, '60 公分是整圈。', '30 公分是半圈（180 度）。'], ok: '對了！60×120/360＝20 公分。', back: 's', hint: '120 度是一圈 360 度的幾分之幾？' } },
+  sperim: { sem: '六上', who: 'sheep', word: '扇形的周長', hide: [], fs: 'd',
     steps: [
-      { t: 'say', say: '圓面積你會算。這個披薩的大小是 100 平方公分。', pic: () => pie6(1, 0, 0) },
-      { t: 'act', id: 'd', who: 'demo', say: '切成 4 片。', n: 4, pic: k => pie6(4, k, 0, { hot: 'cut' }), cap: k => `切了 ${k} 刀`, done: '4 片一樣大。' },
-      { t: 'act', id: 's', say: '拿走一片。', n: 1, pic: k => pie6(4, 4, k, { hot: 'take', takenCol: K3 }), done: '一片是 1/4 個：100÷4＝25 平方公分。' },
-      { t: 'guess', say: '切成 2 片，一片多大？', o: ['50', '100', '25'] },
-      { t: 'act', id: 's2', say: '切 2 刀，拿 1 片。', n: 3, pic: k => pie6(2, Math.min(k, 2), Math.max(0, k - 2), { hot: k < 2 ? 'cut' : 'take', takenCol: K3 }), done: '50 平方公分。' },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[100, '整個圓', K1], '×', ['1/4', '拿幾分之幾', K2], '＝', [25, '一片', K3]]) },
-      { t: 'name', say: '一片的大小有名字。', name: '扇形那一片的大小，叫<b>扇形面積</b>＝圓面積×幾分之幾。', pic: () => pie6(4, 4, 1, { takenCol: K3 }) },
-      { t: 'check', o: ['扇形面積是一片的大小', '扇形面積是彎邊的長'], a: 0 },
-      { t: 'pose', say: '哪一題在算扇形面積？', o: ['1/4 片披薩上要撒多少起司？', '1/4 片披薩的邊有多長？'], a: 0 },
+      { t: 'say', say: '先回想弧長：扇形彎彎那條邊的長。', pic: () => sectorSvg(1) },
+      { t: 'guess', say: '半徑 6 公分、圓心角 90 度的扇形，要沿著它的邊貼一圈緞帶。要貼哪些邊？', o: ['彎邊和兩條半徑', '只有彎邊', '兩條半徑'] },
+      { t: 'act', id: 'd', who: 'demo', say: '沿著扇形的邊走一圈：點一下走一段。', n: 3, pic: k => `<span class="${k < 3 ? 'hot6' : ''} whl6">${sectorSvg(k)}</span>`, cap: k => ['', '彎邊：6×2×3.14×90/360＝9.42 公分', '一條半徑：6 公分', '另一條半徑：6 公分'][k], done: '扇形的周長＝9.42＋6＋6＝21.42 公分。' },
+      { t: 'act', id: 's', say: '半徑 3 公分、圓心角 120 度的扇形，弧長是 6.28 公分。選出周長的算式。', tip: '數一數：扇形的邊有幾條？', n: 1, pic: k => sectorSvg(3) + (k ? '' : chips6(['6.28＋3＋3', '6.28', '6.28＋3'], (_, i) => i === 0, (_, i) => i === 1 ? '只算了彎邊，少了兩條半徑。' : '扇形有兩條半徑，少算了一條。')), cap: k => k ? '6.28＋3＋3＝12.28 公分' : '', done: '6.28＋3＋3＝12.28 公分。' },
+      { t: 'say', id: 'map', say: '彎邊加兩條半徑。', pic: () => sym6([['9.42', '弧長', K1], '＋', [6, '半徑', K2], '＋', [6, '半徑', K2], '＝', ['21.42', '周長', K3]]) },
+      { t: 'name', say: '整理一下。', name: '<b>扇形的周長</b>＝弧長＋半徑×2。', pic: () => sectorSvg(3) },
+      { t: 'check', o: ['扇形的周長＝弧長＋2 條半徑', '扇形的周長＝弧長'], a: 0, why: [, '弧長只是彎邊；兩條半徑也圍在外面。'] },
     ],
-    q: { t: '大小 300 的披薩，拿 1/3 片，扇形面積？', o: ['100', '300', '150'], a: 0, ok: '對了！', back: 's', hint: '切成 3 片，拿 1 片。' } },
-  speed: { sem: '六上', who: 'rabbit', word: '速率', hide: ['速率', '時速', '分速', '秒速'],
+    q: { t: '半徑 12 公分、圓心角 60 度的扇形，周長是多少？（圓周率取 3.14）', o: ['12.56＋24＝36.56 公分', '12.56 公分', '12.56＋12＝24.56 公分'], a: 0, why: [, '只算了弧長，少了兩條半徑。', '少算了一條半徑。'], ok: '對了！弧長 12×2×3.14×60/360＝12.56，加兩條半徑 24 公分。', back: 's', hint: '扇形的邊有一條彎邊、兩條半徑。' } },
+  sarea: { sem: '六上', who: 'sheep', word: '扇形面積', hide: ['扇形面積'], fs: 's',
     steps: [
-      { t: 'say', say: '賽跑你會：跑一樣遠，先到的快。', pic: () => raceSvg([{ d: 100, c: K4, e: '🏃' }, { d: 80, c: K2, e: '🏃' }], 100) },
-      { t: 'guess', say: '小綠 2 分鐘走 100 公尺，小藍 3 分鐘走 120 公尺，誰快？', o: ['小藍，走得遠', '小綠', '一樣'] },
-      { t: 'act', id: 'd', who: 'demo', say: '把小綠的路切成 2 段，每分鐘一段。', n: 1, pic: k => cut6(2, k, { lab: '小綠 100 公尺', col: '#f4a9a0' }), cap: k => k ? '每分鐘 50 公尺' : '', done: '小綠每分鐘 50 公尺。' },
-      { t: 'act', id: 's', say: '把小藍的路切成 3 段。', n: 2, pic: k => cut6(3, k, { lab: '小藍 120 公尺', col: '#a9d0f0' }), cap: k => k === 2 ? '每分鐘 40 公尺' : `切了 ${k} 刀`, done: '小藍每分鐘 40 公尺。' },
-      { t: 'say', say: '都看「每 1 分鐘」：小綠 50、小藍 40，小綠快！很多人只看誰走得遠。', pic: () => cut6(2, 1, { noCut: true, col: '#f4a9a0', lab: '小綠每段 50' }) + cut6(3, 2, { noCut: true, col: '#a9d0f0', lab: '小藍每段 40' }) },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[100, '路', K1], '÷', [2, '分鐘', K2], '＝', [50, '每分鐘', K3]]) },
-      { t: 'name', say: '「每 1 分鐘走多遠」有名字。', name: '每 1 單位時間走多遠，叫<b>速率</b>：距離÷時間。', pic: () => sym6([['距離', '', K1], '÷', ['時間', '', K2]]) },
-      { t: 'check', o: ['速率是每單位時間走的距離', '走得遠的速率一定大'], a: 0 },
-      { t: 'build', say: '拼一題用「30÷2」算速率的題目。', heads: ['東西', '數量', '問題'], cols: [['腳踏車', '蘋果'], ['2 小時騎 30 公里', '每箱 30 顆'], ['每小時騎幾公里？', '一共騎幾公里？']], a: [0, 0, 0], why: ['要會動的東西。', '要有時間和距離。', '問每 1 小時。'], ok: '腳踏車 2 小時騎 30 公里，每小時騎幾公里？' },
+      { t: 'say', say: '先回想圓面積。這個圓形披薩的面積是 100 平方公分。', pic: () => pie6(1, 0, 0) },
+      { t: 'act', id: 'd', who: 'demo', say: '平均切成 4 片。', n: 4, pic: k => pie6(4, k, 0, { hot: 'cut' }), cap: k => `切了 ${k} 刀`, done: '4 片一樣大，每片的圓心角是 90 度。' },
+      { t: 'act', id: 's', say: '拿走一片。', tip: '點任何一片，把它拿走。', n: 1, pic: k => pie6(4, 4, k, { hot: 'take', takenCol: K3 }), done: '一片是整個的 1/4：100÷4＝25 平方公分。' },
+      { t: 'guess', say: '如果平均切成 2 片，1 片的面積是多少？', o: ['50 平方公分', '100 平方公分', '25 平方公分'] },
+      { t: 'act', id: 's2', say: '平均切成 2 片，拿 1 片。', tip: '先點披薩切 2 刀，再拿走 1 片。', n: 3, pic: k => pie6(2, Math.min(k, 2), Math.max(0, k - 2), { hot: k < 2 ? 'cut' : 'take', takenCol: K3 }), done: '100÷2＝50 平方公分。' },
+      { t: 'say', id: 'map', say: '圓面積乘「這片占一圈的幾分之幾」。', pic: () => sym6([[100, '整個圓（平方公分）', K1], '×', ['90/360', '圓心角 90 度', K2], '＝', [25, '一片', K3]]) },
+      { t: 'name', say: '一片的大小有名字。', name: '扇形內部的大小，叫<b>扇形面積</b>。扇形面積＝圓面積×圓心角/360。', pic: () => pie6(4, 4, 1, { takenCol: K3 }) },
+      { t: 'check', o: ['扇形面積是扇形內部的大小', '扇形面積是彎邊的長'], a: 0, why: [, '彎邊的長是弧長。'] },
+      { t: 'pose', say: '哪一題在算扇形面積？', o: ['平均切成 4 片的披薩，1 片上要撒滿起司，要撒多大的地方？', '1 片披薩彎彎的邊有多長？'], a: 0, why: [, '彎邊的長是弧長。'] },
     ],
-    q: { t: '機器人 4 秒走 12 公尺，每秒走幾公尺？', o: ['3', '48', '16'], a: 0, ok: '對了！', back: 's', hint: '把路切成 4 段，每秒一段。' } },
-  shisu: { sem: '六上', who: 'rabbit', word: '時速', hide: ['時速'],
+    q: { t: '圓形披薩面積 300 平方公分，平均分成 3 片，1 片的面積是多少平方公分？', o: ['100', '300', '150'], a: 0, why: [, '300 是整個披薩。', '150 是平均分成 2 片的 1 片。'], ok: '對了！300÷3＝100 平方公分。', back: 's', hint: '平均分成 3 片，拿 1 片。' } },
+  speed: { sem: '六上', who: 'rabbit', word: '速率', hide: ['速率', '時速', '分速', '秒速'], fs: 'd',
     steps: [
-      { t: 'say', say: '速率學過了：每單位時間走多遠。', pic: () => cut6(2, 1, { noCut: true }) },
-      { t: 'act', id: 'd', who: 'demo', say: '汽車 2 小時走 120 公里，切成每小時一段。', n: 1, pic: k => cut6(2, k, { lab: '120 公里' }), done: '每小時 60 公里。' },
-      { t: 'act', id: 's', say: '腳踏車 3 小時騎 45 公里。', n: 2, pic: k => cut6(3, k, { lab: '45 公里', col: '#a9d0f0' }), done: '每小時 15 公里。' },
-      { t: 'guess', say: '高鐵 1 小時走 300 公里，還要切嗎？', o: ['不用，已經是 1 小時', '要切 300 段'] },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[120, '公里', K1], '÷', [2, '小時', K2], '＝', [60, '每 1 小時', K3]]) },
-      { t: 'name', say: '「每 1 小時」的說法有名字。', name: '每 1 小時走多遠，叫<b>時速</b>。汽車時速 60 公里。', pic: () => cut6(2, 1, { noCut: true, lab: '每段 60 公里' }) },
-      { t: 'check', o: ['時速 60 公里是每小時走 60 公里', '時速 60 公里是走了 60 小時'], a: 0 },
-      { t: 'pose', say: '哪一句在說時速？', o: ['公車每小時開 40 公里', '公車有 40 個座位'], a: 0 },
+      { t: 'say', say: '比快慢：兩人跑一樣遠，先到的比較快。', pic: () => raceSvg([{ d: 100, c: K4, e: '🏃' }, { d: 80, c: K2, e: '🏃' }], 100) },
+      { t: 'guess', say: '小綠 2 分鐘走 100 公尺，小藍 3 分鐘走 120 公尺，誰比較快？', o: ['小藍，因為走得比較遠', '小綠', '一樣快'] },
+      { t: 'act', id: 'd', who: 'demo', say: '假設小綠一路都走得一樣快。把小綠的路平均分成 2 段，每分鐘一段。', n: 1, pic: k => cut6(2, k, { lab: '小綠 2 分鐘 100 公尺', col: '#f4a9a0' }), cap: k => k ? '每分鐘 50 公尺' : '', done: '小綠每分鐘走 50 公尺。' },
+      { t: 'act', id: 's', say: '小藍也一路走得一樣快。把小藍的路平均分成 3 段：點在要切的位置。', tip: '3 分鐘要分成 3 段，每段一樣長。', n: 2, pic: k => cut6(3, k, { lab: '小藍 3 分鐘 120 公尺', col: '#a9d0f0' }), cap: k => k === 2 ? '每分鐘 40 公尺' : `切了 ${k} 刀`, done: '小藍每分鐘走 40 公尺。' },
+      { t: 'say', say: '都看「每 1 分鐘」走多遠：小綠 50 公尺、小藍 40 公尺，小綠比較快。走得比較遠，可能只是走得比較久。', pic: () => cut6(2, 1, { noCut: true, col: '#f4a9a0', lab: '小綠每段 50 公尺' }) + cut6(3, 2, { noCut: true, col: '#a9d0f0', lab: '小藍每段 40 公尺' }) },
+      { t: 'say', id: 'map', say: '路的長除以時間。', pic: () => sym6([[100, '公尺', K1], '÷', [2, '分鐘', K2], '＝', [50, '每分鐘', K3]]) },
+      { t: 'name', say: '「每 1 單位時間走多遠」有名字。', name: '每 1 單位時間走的距離，可以表示快慢，叫<b>速率</b>。速率＝距離÷時間。中間如果有快有慢，算出來的是平均速率。', pic: () => sym6([['距離', '', K1], '÷', ['時間', '', K2]]) },
+      { t: 'check', o: ['速率是每單位時間走的距離', '走得遠的，速率一定大'], a: 0, why: [, '小藍走得比較遠，但花了 3 分鐘，每分鐘只走 40 公尺。'] },
+      { t: 'build', say: '拼一道用「30÷2」算速率的題目。', heads: ['東西', '數量', '問題'], cols: [['腳踏車', '蘋果'], ['2 小時騎 30 公里', '每箱 30 顆'], ['平均每小時騎幾公里？', '一共騎幾公里？']], a: [0, 0, 0], why: ['要會移動的東西。', '要有時間和距離。', '要問每 1 小時走多遠。'], ok: '腳踏車 2 小時騎 30 公里，平均每小時騎幾公里？30÷2＝15。' },
     ],
-    q: { t: '貨車 3 小時開 180 公里，時速多少？', o: ['60 公里', '180 公里', '540 公里'], a: 0, ok: '對了！', back: 's', hint: '切成 3 段，每小時一段。' } },
-  fensu: { sem: '六上', who: 'rabbit', word: '分速', hide: ['分速'],
+    q: { t: '機器人 4 秒走 12 公尺（一路一樣快），每秒走幾公尺？', o: ['3', '48', '16'], a: 0, why: [, '48 是 12×4；要把 12 公尺平均分成 4 段。', '16 是 12＋4。'], ok: '對了！12÷4＝3 公尺。', back: 's', hint: '把路平均分成 4 段，每秒一段。' } },
+  shisu: { sem: '六上', who: 'rabbit', word: '時速', hide: ['時速'], fs: 'd',
     steps: [
-      { t: 'say', say: '時速學過了：每 1 小時走多遠。走路很慢，看 1 小時太久了。', pic: () => '🚶' },
-      { t: 'act', id: 'd', who: 'demo', say: '走路 3 分鐘走 180 公尺，切成每分鐘一段。', n: 2, pic: k => cut6(3, k, { lab: '180 公尺' }), done: '每分鐘 60 公尺。' },
-      { t: 'act', id: 's', say: '溜滑板 2 分鐘 400 公尺。', n: 1, pic: k => cut6(2, k, { lab: '400 公尺', col: '#a9d0f0' }), done: '每分鐘 200 公尺。' },
-      { t: 'guess', say: '走路的快慢，說「每小時」還是「每分鐘」比較好懂？', o: ['每分鐘', '每小時'] },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[180, '公尺', K1], '÷', [3, '分鐘', K2], '＝', [60, '每 1 分鐘', K3]]) },
-      { t: 'name', say: '「每 1 分鐘」的說法有名字。', name: '每 1 分鐘走多遠，叫<b>分速</b>。走路分速 60 公尺。', pic: () => cut6(3, 2, { noCut: true, lab: '每段 60 公尺' }) },
-      { t: 'check', o: ['分速 60 公尺是每分鐘走 60 公尺', '分速 60 公尺是走 60 分鐘'], a: 0 },
-      { t: 'pose', say: '哪一題可以算分速？', o: ['小狗 2 分鐘跑 300 公尺，每分鐘跑多遠？', '小狗 2 歲，重 3 公斤'], a: 0 },
+      { t: 'say', say: '先回想速率：每單位時間走多遠。忘了也可以先看〈速率〉。', pic: () => cut6(2, 1, { noCut: true }) },
+      { t: 'act', id: 'd', who: 'demo', say: '汽車 2 小時走 120 公里。把路程平均分成 2 段，每小時一段。', n: 1, pic: k => cut6(2, k, { lab: '120 公里' }), cap: k => k ? '每段 60 公里' : '', done: '平均每小時走 60 公里。' },
+      { t: 'guess', say: '腳踏車 3 小時騎 45 公里，平均每小時騎幾公里？', o: ['15 公里', '45 公里', '135 公里'] },
+      { t: 'act', id: 's', say: '把 45 公里平均分成 3 段：點在要切的位置。', tip: '3 小時，平均分成 3 段，每段一樣長。', n: 2, pic: k => cut6(3, k, { lab: '45 公里', col: '#a9d0f0' }), cap: k => k === 2 ? '每段 15 公里' : `切了 ${k} 刀`, done: '45÷3＝15，平均每小時 15 公里。' },
+      { t: 'say', id: 'map', say: '公里數除以小時數。', pic: () => sym6([[120, '公里', K1], '÷', [2, '小時', K2], '＝', [60, '每 1 小時', K3]]) },
+      { t: 'name', say: '用「每 1 小時」來說快慢，有名字。', name: '用每 1 小時走幾公里來表示速率，叫<b>時速</b>。汽車 2 小時走 120 公里，平均時速 60 公里。', pic: () => cut6(2, 1, { noCut: true, lab: '每段 60 公里' }) },
+      { t: 'check', o: ['時速 60 公里，是每小時走 60 公里', '時速 60 公里，是走了 60 小時'], a: 0, why: [, '時速說的是每 1 小時走多遠，不是走了多久。'] },
+      { t: 'pose', say: '哪一句在說時速？', o: ['公車平均每小時開 40 公里', '公車有 40 個座位'], a: 0, why: [, '座位數和快慢無關。'] },
     ],
-    q: { t: '跑步 5 分鐘 1000 公尺，分速多少？', o: ['200 公尺', '5000 公尺', '1005 公尺'], a: 0, ok: '對了！', back: 's', hint: '切成 5 段，每分鐘一段。' } },
-  miaosu: { sem: '六上', who: 'rabbit', word: '秒速', hide: ['秒速'],
+    q: { t: '貨車 3 小時開 180 公里，平均時速多少？', o: ['時速 60 公里', '時速 180 公里', '時速 540 公里'], a: 0, why: [, '180 公里是 3 小時一共開的。', '540 是 180×3；要把 180 公里平均分成 3 段。'], ok: '對了！180÷3＝60。', back: 's', hint: '平均分成 3 段，每小時一段。' } },
+  fensu: { sem: '六上', who: 'rabbit', word: '分速', hide: ['分速'], fs: 'd',
     steps: [
-      { t: 'say', say: '分速學過了：每 1 分鐘走多遠。跑百米很快，看 1 秒就夠了。', pic: () => '🏃' },
-      { t: 'act', id: 'd', who: 'demo', say: '跑步 2 秒跑 10 公尺，切成每秒一段。', n: 1, pic: k => cut6(2, k, { lab: '10 公尺' }), done: '每秒 5 公尺。' },
-      { t: 'act', id: 's', say: '球 3 秒滾 30 公尺。', n: 2, pic: k => cut6(3, k, { lab: '30 公尺', col: '#a9d0f0' }), done: '每秒 10 公尺。' },
-      { t: 'guess', say: '聲音很快，說「每秒」還是「每小時」比較好懂？', o: ['每秒', '每小時'] },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[10, '公尺', K1], '÷', [2, '秒', K2], '＝', [5, '每 1 秒', K3]]) },
-      { t: 'name', say: '「每 1 秒」的說法有名字。', name: '每 1 秒走多遠，叫<b>秒速</b>。聲音秒速大約 340 公尺。', pic: () => cut6(2, 1, { noCut: true, lab: '每段 5 公尺' }) },
-      { t: 'check', o: ['秒速 5 公尺是每秒走 5 公尺', '秒速 5 公尺是走 5 秒'], a: 0 },
-      { t: 'pose', say: '哪一句在說秒速？', o: ['飛機每秒飛 250 公尺', '飛機有 250 個座位'], a: 0 },
+      { t: 'say', say: '先回想時速：每 1 小時走多遠。速率也可以看每 1 分鐘走多遠。', pic: () => '<div class="it6">🚶</div>' },
+      { t: 'act', id: 'd', who: 'demo', say: '走路 3 分鐘走 180 公尺（一路一樣快）。平均分成 3 段，每分鐘一段。', n: 2, pic: k => cut6(3, k, { lab: '180 公尺' }), cap: k => k === 2 ? '每段 60 公尺' : `切了 ${k} 刀`, done: '每分鐘 60 公尺。' },
+      { t: 'guess', say: '溜滑板 2 分鐘滑 400 公尺，每分鐘滑多遠？', o: ['200 公尺', '400 公尺', '800 公尺'] },
+      { t: 'act', id: 's', say: '把 400 公尺平均分成 2 段：點在要切的位置。', tip: '2 分鐘，平均分成 2 段：一刀切在正中間。', n: 1, pic: k => cut6(2, k, { lab: '400 公尺', col: '#a9d0f0' }), cap: k => k ? '每段 200 公尺' : '', done: '400÷2＝200，每分鐘 200 公尺。' },
+      { t: 'say', id: 'map', say: '公尺數除以分鐘數。', pic: () => sym6([[180, '公尺', K1], '÷', [3, '分鐘', K2], '＝', [60, '每 1 分鐘', K3]]) },
+      { t: 'name', say: '用「每 1 分鐘」來說快慢，有名字。', name: '用每 1 分鐘走多遠來表示速率，叫<b>分速</b>。走路分速 60 公尺。同一個快慢也可以說成時速 3.6 公里。', pic: () => cut6(3, 2, { noCut: true, lab: '每段 60 公尺' }) },
+      { t: 'check', o: ['分速 60 公尺是每分鐘走 60 公尺', '分速 60 公尺是走 60 分鐘'], a: 0, why: [, '分速說的是每 1 分鐘走多遠，不是走了多久。'] },
+      { t: 'pose', say: '哪一題可以算分速？', o: ['小狗 2 分鐘跑 300 公尺，平均每分鐘跑多遠？', '小狗 2 歲，重 3 公斤'], a: 0, why: [, '年齡和體重都和快慢無關。'] },
     ],
-    q: { t: '聲音 2 秒傳 680 公尺，秒速多少？', o: ['340 公尺', '1360 公尺', '680 公尺'], a: 0, ok: '對了！', back: 's', hint: '切成 2 段，每秒一段。' } },
-  countc: { sem: '六下', who: 'wanwan', word: '乘法原理', hide: ['乘法原理'],
+    q: { t: '跑步 5 分鐘跑 1000 公尺，平均分速多少？', o: ['分速 200 公尺', '分速 5000 公尺', '分速 1005 公尺'], a: 0, why: [, '5000 是 1000×5；要平均分成 5 段。', '1005 是 1000＋5。'], ok: '對了！1000÷5＝200。', back: 's', hint: '平均分成 5 段，每分鐘一段。' } },
+  miaosu: { sem: '六上', who: 'rabbit', word: '秒速', hide: ['秒速'], fs: 'd',
     steps: [
-      { t: 'say', say: '穿衣服你會：一件上衣配一件裙子。', pic: () => '👕 ＋ 👗' },
-      { t: 'guess', say: '2 件上衣、3 件裙子，有幾種穿法？', o: ['5 種（2＋3）', '6 種'] },
-      { t: 'act', id: 'd', who: 'demo', say: '點上衣 1，連上每件裙子。', n: 1, pic: k => `<div class="tree6">${[0, 1].map(i => `<div class="tr6"><span class="op6 ${i === k ? 'hot6' : ''}">👕${i + 1}</span><span class="tr-l">${i < k ? '👗👗👗' : ''}</span></div>`).join('')}</div>`, done: '上衣 1 有 3 種。' },
-      { t: 'act', id: 's', say: '換你點上衣 2。', n: 1, pic: k => `<div class="tree6">${[0, 1].map(i => `<div class="tr6"><span class="op6 ${i === k + 1 ? 'hot6' : ''}">👕${i + 1}</span><span class="tr-l">${i < k + 1 ? '👗👗👗' : ''}</span></div>`).join('')}</div>`, done: '又 3 種，一共 6 種，不是 5 種。很多人用加的。' },
-      { t: 'act', id: 's3', say: '3 件上衣、2 件褲子：點每件上衣。', n: 3, pic: k => `<div class="tree6">${[0, 1, 2].map(i => `<div class="tr6"><span class="op6 ${i === k ? 'hot6' : ''}">👕${i + 1}</span><span class="tr-l">${i < k ? '👖👖' : ''}</span></div>`).join('')}</div>`, cap: k => `${k * 2} 種`, done: '3 個 2 種＝6 種。' },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[2, '上衣件數', K1], '×', [3, '每件配幾種', K2], '＝', [6, '穿法', K3]]) },
-      { t: 'name', say: '這種數法有名字。', name: '一步接一步選，把每一步的種數乘起來，這個想法叫<b>乘法原理</b>。', pic: () => '👕👕 × 👗👗👗' },
-      { t: 'check', o: ['先選上衣再選裙子，種數用乘的', '種數一定用加的'], a: 0 },
-      { t: 'pose', say: '哪一題用乘法原理？', o: ['3 種飯配 2 種湯，有幾種套餐？', '3 種飯和 2 種湯，總共有幾種食物？'], a: 0, why: '第二題只是數有幾樣。' },
+      { t: 'say', say: '先回想分速：每 1 分鐘走多遠。速率也可以看每 1 秒走多遠。', pic: () => '<div class="it6">🏃</div>' },
+      { t: 'act', id: 'd', who: 'demo', say: '跑步 2 秒跑 10 公尺（一路一樣快），平均分成 2 段，每秒一段。', n: 1, pic: k => cut6(2, k, { lab: '10 公尺' }), cap: k => k ? '每段 5 公尺' : '', done: '每秒 5 公尺。' },
+      { t: 'guess', say: '球 3 秒滾 30 公尺（一路一樣快），每秒滾多遠？', o: ['10 公尺', '30 公尺', '90 公尺'] },
+      { t: 'act', id: 's', say: '把 30 公尺平均分成 3 段：點在要切的位置。', tip: '3 秒，平均分成 3 段，每段一樣長。', n: 2, pic: k => cut6(3, k, { lab: '30 公尺', col: '#a9d0f0' }), cap: k => k === 2 ? '每段 10 公尺' : `切了 ${k} 刀`, done: '30÷3＝10，每秒 10 公尺。' },
+      { t: 'say', id: 'map', say: '公尺數除以秒數。', pic: () => sym6([[10, '公尺', K1], '÷', [2, '秒', K2], '＝', [5, '每 1 秒', K3]]) },
+      { t: 'name', say: '用「每 1 秒」來說快慢，有名字。', name: '用每 1 秒走多遠來表示速率，叫<b>秒速</b>。秒速 5 公尺。聲音在空氣中大約是秒速 340 公尺（會隨溫度改變，這裡取約值）。', pic: () => cut6(2, 1, { noCut: true, lab: '每段 5 公尺' }) },
+      { t: 'check', o: ['秒速 5 公尺是每秒走 5 公尺', '秒速 5 公尺是走 5 秒'], a: 0, why: [, '秒速說的是每 1 秒走多遠，不是走了多久。'] },
+      { t: 'pose', say: '哪一句在說秒速？', o: ['飛機每秒飛大約 250 公尺', '飛機有 250 個座位'], a: 0, why: [, '座位數和快慢無關。'] },
     ],
-    q: { t: '去程 3 條路、回程 2 條路，來回有幾種走法？', o: ['6 種', '5 種', '3 種'], a: 0, ok: '對了！', back: 's3', hint: '每條去程都配 2 條回程。' } },
-  rel: { sem: '六上', who: 'raccoon', word: '關係式', hide: ['關係式'],
+    q: { t: '聲音 2 秒大約傳 680 公尺，秒速大約多少？', o: ['秒速約 340 公尺', '秒速約 1360 公尺', '秒速約 680 公尺'], a: 0, why: [, '1360 是 680×2；要平均分成 2 段。', '680 公尺是 2 秒一共傳的。'], ok: '對了！680÷2＝340。', back: 's', hint: '平均分成 2 段，每秒一段。' } },
+  avgsp: { sem: '六上', who: 'rabbit', word: '平均速率', hide: [], fs: 'h',
     steps: [
-      { t: 'say', say: '這你知道：一天有 24 小時，白天加晚上。', pic: () => '🌞 ＋ 🌙 ＝ 24 小時' },
-      { t: 'act', id: 'd', who: 'demo', say: '夏天白天變長：點太陽，白天多 1 小時。', n: 2, pic: k => `<div class="hz6"><div style="flex:${10 + k}">${barRow(1, 1, '#ffd65a')}</div><div style="flex:${14 - k}">${barRow(1, 1, '#33405a')}</div></div>` + addBtn6('🌞＋1', true) + tbl6([['白天', 10 + k], ['晚上', 14 - k]]), done: '白天 12、晚上 12。' },
-      { t: 'act', id: 's', say: '再點兩次。', n: 2, pic: k => `<div class="hz6"><div style="flex:${12 + k}">${barRow(1, 1, '#ffd65a')}</div><div style="flex:${12 - k}">${barRow(1, 1, '#33405a')}</div></div>` + addBtn6('🌞＋1', true) + tbl6([['白天', 12 + k], ['晚上', 12 - k]]), done: '白天變長，晚上就變短，合起來一直是 24。' },
+      { t: 'say', say: '先回想速率：距離÷時間。如果一趟路中間有快有慢呢？', pic: () => '<div class="it6">🚴</div>' },
+      { t: 'guess', say: '小美先騎 1 小時，騎了 12 公里；再騎 2 小時，每小時 6 公里。整趟平均每小時騎幾公里？', o: ['8 公里', '9 公里（12 和 6 的平均）'] },
+      { t: 'act', id: 'd', who: 'demo', say: '把整趟的路接起來：點一下，加上一段。', n: 2, pic: k => `<div class="hz6"><div style="flex:12">${barRow(1, k >= 1 ? 1 : 0, '#f4a9a0')}<small>1 小時 12 公里</small></div><div style="flex:12">${barRow(2, k >= 2 ? 2 : 0, '#a9d0f0')}<small>2 小時，6×2＝12 公里</small></div></div>` + addBtn6('加上一段', k < 2), cap: k => ['', '第 1 段：1 小時 12 公里', '第 2 段：每小時 6 公里，2 小時 6×2＝12 公里'][k], done: '整趟 24 公里，一共 3 小時。' },
+      { t: 'act', id: 'h', who: 'half', say: '把 24 公里平均分成 3 段，每小時一段。', n: 2, pic: k => cut6(3, k, { lab: '整趟 24 公里，3 小時' }), cap: k => k === 2 ? '每段 8 公里' : `切了 ${k} 刀`, done: '24÷3＝8：平均每小時 8 公里，不是 9 公里。慢的那一段騎得比較久。' },
+      { t: 'act', id: 's', say: '小安走路：前 2 分鐘每分鐘 70 公尺，後 3 分鐘每分鐘 50 公尺。選出整趟平均分速的算式。', tip: '先算總路程（70×2 和 50×3），再除以總時間。', n: 1, pic: k => k ? sym6([['140＋150', '總路程（公尺）', K1], '÷', [5, '總時間（分鐘）', K2], '＝', [58, '平均分速', K3]]) : chips6(['（140＋150）÷5', '（70＋50）÷2', '（140＋150）÷2'], (_, i) => i === 0, (_, i) => i === 1 ? '兩段走的時間不一樣長，不能直接把兩個速率平均。' : '要除以總時間 5 分鐘，不是 2 段。'), done: '290÷5＝58，平均分速 58 公尺。' },
+      { t: 'say', id: 'map', say: '總路程除以總時間。', pic: () => sym6([[24, '總路程（公里）', K1], '÷', [3, '總時間（小時）', K2], '＝', [8, '平均每小時', K3]]) },
+      { t: 'name', say: '整理一下。', name: '整趟的<b>平均速率</b>＝總路程÷總時間。不是把各段的速率加起來再除以段數。', pic: () => sym6([['總路程', '', K1], '÷', ['總時間', '', K2]]) },
+      { t: 'check', o: ['平均速率＝總路程÷總時間', '平均速率＝各段速率加起來÷段數'], a: 0, why: [, '兩段時間不一樣長時，各段速率的平均（9）和真正的平均速率（8）不同。'] },
+    ],
+    q: { t: '貨車先開 2 小時，時速 60 公里；再開 1 小時，時速 90 公里。整趟的平均時速是多少？', o: ['時速 70 公里', '時速 75 公里', '時速 105 公里'], a: 0, why: [, '75 是 60 和 90 的平均，但兩段的時間不一樣長。', '105 是 210÷2；要除以總時間 3 小時。'], ok: '對了！60×2＋90×1＝210 公里，210÷3＝70。', back: 's', hint: '先算總路程，再除以總時間。' } },
+  countc: { sem: '六下', who: 'wanwan', word: '乘法原理', hide: ['乘法原理'], fs: 's',
+    steps: [
+      { t: 'say', say: '穿搭：一次穿一件上衣，配一件裙子。', pic: () => '<div class="it6">👕 ＋ 👗</div>' },
+      { t: 'guess', say: '2 件上衣、3 件裙子，每件上衣都可以配每件裙子。一共有幾種穿法？', o: ['5 種（2＋3）', '6 種'] },
+      { t: 'act', id: 'd', who: 'demo', say: '點上衣 1，連上每件裙子。', n: 1, pic: k => `<div class="tree6">${[0, 1].map(i => `<div class="tr6"><span class="op6 ${i === k ? 'hot6' : ''}">👕${i + 1}</span><span class="tr-l">${i < k ? '👗👗👗' : ''}</span></div>`).join('')}</div>`, done: '上衣 1 可以配 3 件裙子：3 種。' },
+      { t: 'act', id: 's', say: '換你點上衣 2。', tip: '上衣 2 也能配每一件裙子。', n: 1, pic: k => `<div class="tree6">${[0, 1].map(i => `<div class="tr6"><span class="op6 ${i === k + 1 ? 'hot6' : i < k + 1 ? 'on' : ''}">👕${i + 1}</span><span class="tr-l">${i < k + 1 ? '👗👗👗' : ''}</span></div>`).join('')}</div>`, done: '上衣 2 也有 3 種。一共 3×2＝6 種，不是 2＋3＝5 種。' },
+      { t: 'act', id: 's3', say: '3 件上衣、2 件褲子：點每件上衣。', tip: '每件上衣都要連上 2 件褲子。', n: 3, pic: k => `<div class="tree6">${[0, 1, 2].map(i => `<div class="tr6"><span class="op6 ${i === k ? 'hot6' : i < k ? 'on' : ''}">👕${i + 1}</span><span class="tr-l">${i < k ? '👖👖' : ''}</span></div>`).join('')}</div>`, cap: k => `${k * 2} 種`, done: '每件上衣配 2 件褲子，3 件上衣：2×3＝6 種。' },
+      { t: 'say', id: 'map', say: '每件上衣配幾種，乘上衣的件數。', pic: () => sym6([[3, '每件上衣配幾件裙子', K2], '×', [2, '上衣件數', K1], '＝', [6, '穿法', K3]]) },
+      { t: 'name', say: '這種數法有名字。', name: '先選一樣、再選另一樣，而且第一步的每一種，都能配同樣多種第二步，總數就是兩步的種數相乘。這個數法叫<b>乘法原理</b>。', pic: () => '<div class="it6">👕👕 × 👗👗👗</div>' },
+      { t: 'check', o: ['每件上衣都能配每件裙子時，種數用乘的', '只要選兩樣，一定用乘的'], a: 0, why: [, '「吃飯或吃麵，只選一種」是二選一，要用加的；有限制（例如紅上衣不能配紅裙子）時也要另外扣掉。'] },
+      { t: 'pose', say: '哪一題用乘法原理？', o: ['3 種飯、2 種湯，每份套餐 1 種飯配 1 種湯，有幾種套餐？', '3 種飯和 2 種湯，總共有幾種食物？'], a: 0, why: [, '這題只是數有幾樣食物，用加的。'] },
+    ],
+    q: { t: '去程有 3 條路、回程有 2 條路，每條去程都能配每條回程。來回有幾種走法？', o: ['6 種', '5 種', '3 種'], a: 0, why: [, '5 是 3＋2；每條去程都要配 2 條回程。', '3 種只算了去程。'], ok: '對了！每條去程配 2 條回程，3 條去程：2×3＝6 種。', back: 's3', hint: '每條去程都配 2 條回程。' } },
+  rel: { sem: '六上', who: 'raccoon', word: '關係式', hide: ['關係式'], fs: 's',
+    steps: [
+      { t: 'say', say: '一天有 24 小時，可以分成白天和晚上。', pic: () => '<div class="it6">🌞 ＋ 🌙 ＝ 24 小時</div>' },
+      { t: 'act', id: 'd', who: 'demo', say: '夏天白天變長：點太陽，白天多 1 小時。', n: 2, pic: k => `<div class="hz6"><div style="flex:${10 + k}">${barRow(1, 1, '#ffd65a')}</div><div style="flex:${14 - k}">${barRow(1, 1, '#33405a')}</div></div>` + addBtn6('🌞＋1', true) + tbl6([['白天（小時）', 10 + k], ['晚上（小時）', 14 - k]]), done: '白天 12 小時、晚上 12 小時。' },
+      { t: 'act', id: 's', say: '再點兩次，看看晚上怎麼變。', tip: '點「🌞＋1」，看表格裡的晚上變成幾小時。', n: 2, pic: k => `<div class="hz6"><div style="flex:${12 + k}">${barRow(1, 1, '#ffd65a')}</div><div style="flex:${12 - k}">${barRow(1, 1, '#33405a')}</div></div>` + addBtn6('🌞＋1', true) + tbl6([['白天（小時）', 12 + k], ['晚上（小時）', 12 - k]]), done: '白天變長，晚上就變短，合起來一直是 24 小時。' },
       { t: 'guess', say: '白天 15 小時，晚上幾小時？', o: ['9', '15', '24'] },
-      { t: 'say', id: 'map', say: '不管怎麼變，這個不變：', pic: () => sym6([['白天', '晝長', K1], '＋', ['晚上', '夜長', K2], '＝', [24, '小時', K3]]) },
-      { t: 'name', say: '這種式子有名字。', name: '用文字或符號，把一直不變的關係寫下來，像「晝長＋夜長＝24」，叫<b>關係式</b>。', pic: () => sym6([['晝長', '', K1], '＋', ['夜長', '', K2], '＝', [24, '', K3]]) },
-      { t: 'check', o: ['關係式寫的是一直不變的關係', '關係式只能寫數字'], a: 0 },
-      { t: 'build', say: '拼一個關係式：每枝筆 12 元。', heads: ['左邊', '中間', '右邊'], cols: [['12×枝數', '12＋枝數'], ['＝', '＞'], ['總價', '枝數']], a: [0, 0, 0], why: ['每枝 12 元，幾枝就是幾個 12。', '兩邊一樣多用等號。', '算出來的是總價。'], ok: '12×枝數＝總價。' },
+      { t: 'say', id: 'map', say: '白天和晚上會變，合起來的 24 不變。', pic: () => sym6([['白天', '白天的時數', K1], '＋', ['晚上', '晚上的時數', K2], '＝', [24, '小時', K3]]) },
+      { t: 'name', say: '這種式子有名字。', name: '用文字、數字或符號，把數量之間的關係寫出來，像「白天的時數＋晚上的時數＝24」，叫<b>關係式</b>。', pic: () => sym6([['白天', '', K1], '＋', ['晚上', '', K2], '＝', [24, '', K3]]) },
+      { t: 'check', o: ['關係式是把數量之間的關係寫出來', '關係式只能寫數字'], a: 0, why: [, '關係式可以用文字或符號，像「白天＋晚上＝24」。'] },
+      { t: 'build', say: '拼一個關係式：每枝筆 12 元。', heads: ['左邊', '中間', '右邊'], cols: [['12×枝數', '12＋枝數'], ['＝', '＞'], ['總價', '枝數']], a: [0, 0, 0], why: ['每枝 12 元，幾枝就是 12 的幾倍。', '兩邊一樣多，用等號。', '算出來的是總價。'], ok: '12×枝數＝總價。' },
     ],
-    q: { t: '哥哥永遠比弟弟大 3 歲，關係式是？', o: ['哥哥－弟弟＝3', '哥哥＋弟弟＝3'], a: 0, ok: '對了！', back: 's', hint: '看什麼一直不變。' } },
-  equal: { sem: '六上', who: 'raccoon', word: '等量', hide: ['等量'],
+    q: { t: '這對兄弟，哥哥一直比弟弟大 3 歲。哪一個是他們年齡的關係式？', o: ['哥哥的年齡－弟弟的年齡＝3', '哥哥的年齡＋弟弟的年齡＝3'], a: 0, why: [, '大 3 歲是相差 3 歲，要用減的。'], ok: '對了！不管過幾年，相差的 3 歲不變。', back: 's', hint: '看看什麼一直不變。' } },
+  equal: { sem: '六上', who: 'raccoon', word: '等量', hide: ['等量'], fs: 's2',
     steps: [
-      { t: 'say', say: '蹺蹺板你玩過：兩邊一樣重才會平。', pic: () => '⚖️' },
-      { t: 'act', id: 'd', who: 'demo', say: '左邊 2 盒＋3 顆，右邊 9 顆，平衡。兩邊同時拿走 1 顆。', n: 1, pic: k => pan6(2, 3 - k, 9 - k), done: '兩邊都少 1 顆，還是平的。' },
-      { t: 'act', id: 's', say: '兩邊再各拿走 1 顆，直到左邊只剩盒子。', n: 2, pic: k => pan6(2, 2 - k, 8 - k), done: '2 盒＝6 顆。' },
-      { t: 'guess', say: '如果只拿走左邊的，會怎樣？', o: ['會歪', '還是平'] },
-      { t: 'act', id: 's2', say: '把 6 顆分成 2 份，一盒對一份：點盒子。', n: 2, pic: k => `<div class="bal6"><span class="pan6">${it6('🎁', k < 2 ? 'hot6' : '')}🎁</span><i>＝</i><span class="pan6">${k ? '🔴🔴🔴 ｜ 🔴🔴🔴' : '🔴🔴🔴🔴🔴🔴'}</span></div>`, done: '一盒對 3 顆。' },
-      { t: 'say', id: 'map', say: '每一步兩邊都做一樣的事：', pic: () => sym6([['2盒＋3', '左', K1], '＝', [9, '右', K2]]) + sym6([['2盒', '都拿走 3', K1], '＝', [6, '', K2]]) + sym6([['1盒', '都分 2 份', K1], '＝', [3, '', K2]]) },
-      { t: 'name', say: '這種一直平衡的關係有名字。', name: '兩邊一樣多的關係叫<b>等量</b>。兩邊同時做一樣的事，還是等量。', pic: () => pan6(1, 0, 3) },
-      { t: 'check', o: ['兩邊同時拿走一樣多，還是平衡', '只拿一邊也會平衡'], a: 0 },
-      { t: 'pose', say: '只改一樣：兩邊都加 5 顆，會怎樣？', o: ['還是平', '會歪'], a: 0 },
+      { t: 'say', say: '先看一座兩邊一樣長的天平：兩邊一樣重，天平才會平。', pic: () => '<div class="it6">⚖️</div>' },
+      { t: 'act', id: 'd', who: 'demo', say: '每盒一樣重、每顆球一樣重。左邊 2 盒＋3 顆球，右邊 9 顆球，天平平衡。兩邊同時拿走 1 顆球。', n: 1, pic: k => pan6(2, 3 - k, 9 - k), done: '兩邊都少 1 顆，還是平的。' },
+      { t: 'guess', say: '如果只拿走左邊的 1 顆球，天平會怎樣？', o: ['會傾斜（右邊比較重）', '還是平的'] },
+      { t: 'act', id: 's', say: '兩邊再各拿走 1 顆，直到左邊只剩盒子：點左邊的球。', tip: '每點一次，左右兩邊都會各拿走 1 顆。', n: 2, pic: k => pan6(2, 2 - k, 8 - k), done: '2 盒和 6 顆球一樣重。' },
+      { t: 'act', id: 's2', say: '把右邊的 6 顆平均分成 2 份，一盒對一份：點盒子。', tip: '左邊 2 盒、右邊 6 顆，兩邊都平均分成 2 份。', n: 2, pic: k => `<div class="bal6"><span class="pan6">${it6('🎁', k < 2 ? 'hot6' : '')}🎁</span><i>＝</i><span class="pan6">${k ? '🔴🔴🔴 ｜ 🔴🔴🔴' : '🔴🔴🔴🔴🔴🔴'}</span></div>`, done: '一盒和 3 顆球一樣重。' },
+      { t: 'say', id: 'map', say: '每一步，兩邊都做一樣的事。', pic: () => sym6([['2盒＋3', '左', K1], '＝', [9, '右', K2]]) + sym6([['2盒', '兩邊都拿走 3', K1], '＝', [6, '', K2]]) + sym6([['1盒', '兩邊都分成 2 份', K1], '＝', [3, '', K2]]) },
+      { t: 'name', say: '兩邊一樣重的關係有名字。', name: '天平兩邊一樣重，就是<b>等量</b>，可以用等號寫：2盒＋3＝9。兩邊同時加上、拿走同樣多，或同時乘、同時除以同一個不是 0 的數，兩邊還是等量。', pic: () => pan6(1, 0, 3) },
+      { t: 'check', o: ['兩邊同時拿走一樣多，還是等量', '只拿走一邊，也還是等量'], a: 0, why: [, '只拿走一邊，那一邊變輕，天平會傾斜。'] },
+      { t: 'pose', say: '只改一個地方：兩邊都加 5 顆球，會怎樣？', o: ['還是平的', '會傾斜'], a: 0, why: [, '兩邊加得一樣多，還是一樣重。'] },
     ],
-    q: { t: '左邊一袋＋4 顆，右邊 9 顆，平衡。怎麼做還是平？', o: ['兩邊都拿走 4 顆', '只拿走左邊 4 顆'], a: 0, ok: '對了！一袋是 5 顆。', back: 's', hint: '兩邊要做一樣的事。' } },
-  cmpq: { sem: '六下', who: 'goat', word: '比較量', hide: ['比較量'],
+    q: { t: '左邊 1 袋＋4 顆球，右邊 9 顆球，平衡。怎麼做天平還是平的？', o: ['兩邊都拿走 4 顆球', '只拿走左邊 4 顆球'], a: 0, why: [, '只拿一邊，天平會傾斜。'], ok: '對了！兩邊都拿走 4 顆，1 袋和 5 顆球一樣重。', back: 's', hint: '兩邊要做一樣的事。' },
+    rev: '只拿走一邊，兩邊就不一樣重，天平會傾斜。', revPic: () => `<div class="bal6"><span class="pan6">🎁🎁 🔴🔴</span><i>≠</i><span class="pan6">🔴🔴🔴🔴🔴🔴🔴🔴🔴</span></div>` },
+  cmpq: { sem: '六下', who: 'goat', word: '比較量', hide: ['比較量'], fs: 's',
     steps: [
-      { t: 'say', say: '基準量學過了：拿來當尺的那一個。', pic: () => barU(4, '#f7c873', '📏 當尺') },
-      { t: 'act', id: 'd', who: 'demo', say: '「甲艙是乙艙的幾倍」，乙艙當尺。點被拿去量的那一條。', n: 1, pic: k => `<div class="bu6 ${k ? '' : 'hot6'}"><small>甲艙${k ? '（被量的）' : ''}</small>${barRow(6, 6, '#f7c873')}</div><div class="bu6 no6" style="width:50%" data-w="乙艙是尺。"><small>📏 乙艙</small>${barRow(3, 3, K2)}</div>`, done: '甲艙是被量的。' },
-      { t: 'act', id: 's', say: '「弟弟是哥哥的幾倍」：點被量的那一條。', n: 1, pic: k => `<div class="bu6 no6" data-w="哥哥是尺（「的」後面）。"><small>📏 哥哥</small>${barRow(4, 4, '#f7c873')}</div><div class="bu6 ${k ? '' : 'hot6'}" style="width:75%"><small>弟弟${k ? '（被量的）' : ''}</small>${barRow(3, 3, K2)}</div>`, done: '弟弟是被量的。' },
-      { t: 'guess', say: '「水是蜂蜜的幾倍」，被量的是？', o: ['水', '蜂蜜'] },
-      { t: 'say', id: 'map', say: '寫成算式：被量的放前面，尺放後面。', pic: () => sym6([['弟弟', '被量的', K1], '÷', ['哥哥', '當尺的', K2], '＝', ['3/4', '幾倍', K3]]) },
-      { t: 'name', say: '被量的那個有名字。', name: '被拿去量的量，叫<b>比較量</b>。比較量÷基準量＝幾倍。', pic: () => barU(3, K2, '弟弟（比較量）', 75) },
-      { t: 'check', o: ['「的」前面、被量的是比較量', '比較量一定比較大'], a: 0, why: '弟弟比較矮，也是比較量。' },
-      { t: 'pose', say: '哪一題的比較量是「果汁」？', o: ['果汁是水的幾倍？', '水是果汁的幾倍？'], a: 0 },
+      { t: 'say', say: '先回想基準量：比較時被看作 1 的量。忘了也可以先看〈基準量〉。', pic: () => barU(4, '#f7c873', '📏 哥哥 4 格（看作 1）') },
+      { t: 'act', id: 'd', who: 'demo', say: '「甲艙的箱數是乙艙的幾倍」：乙艙的 3 箱看作 1。點拿來和它比的那一條。', n: 1, pic: k => `<div class="bu6 ${k ? '' : 'hot6'}"><small>甲艙 6 箱${k ? '（拿來比的）' : ''}</small>${barRow(6, 6, '#f7c873')}</div><div class="bu6 no6" style="width:50%" data-w="乙艙被看作 1，是當標準的。"><small>📏 乙艙 3 箱（看作 1）</small>${barRow(3, 3, K2)}</div>`, done: '甲艙是拿來比的。' },
+      { t: 'guess', say: '「弟弟的身高是哥哥的幾倍」，拿來和哥哥比的是誰？', o: ['弟弟', '哥哥'] },
+      { t: 'act', id: 's', say: '點拿來和哥哥比的那一條。', tip: '哥哥被看作 1；另一個人是拿來比的。', n: 1, pic: k => `<div class="bu6 no6" data-w="哥哥被看作 1，是當標準的。"><small>📏 哥哥 4 格（看作 1）</small>${barRow(4, 4, '#f7c873')}</div><div class="bu6 ${k ? '' : 'hot6'}" style="width:75%"><small>弟弟 3 格${k ? '（拿來比的）' : ''}</small>${barRow(3, 3, K2)}</div>`, done: '弟弟是拿來比的。' },
+      { t: 'say', id: 'map', say: '拿來比的放前面，看作 1 的放後面。', pic: () => sym6([['3 格', '弟弟（拿來比的）', K1], '÷', ['4 格', '哥哥（看作 1）', K2], '＝', ['3/4', '倍數', K3]]) },
+      { t: 'name', say: '拿來比的那個量有名字。', name: '拿來和基準量相比的量，叫<b>比較量</b>。比較量÷基準量＝倍數。弟弟的 3 格是比較量，3÷4＝3/4。', pic: () => barU(3, K2, '弟弟 3 格（比較量）', 75) },
+      { t: 'check', o: ['比較量÷基準量＝倍數', '比較量一定比基準量大'], a: 0, why: [, '弟弟 3 格比哥哥 4 格少，弟弟還是比較量，倍數是 3/4。'] },
+      { t: 'pose', say: '哪一題的比較量是「果汁的杯數」？', o: ['果汁的杯數是水的幾倍？', '水的杯數是果汁的幾倍？'], a: 0, why: [, '這題是拿水和果汁比，果汁被看作 1，是基準量。'] },
     ],
-    q: { t: '「甲艙是乙艙的幾分之幾」，比較量是？', o: ['甲艙', '乙艙'], a: 0, ok: '對了！', back: 's', hint: '「的」前面那個被拿去量。' } },
-  zoom: { sem: '六下', who: 'seal', word: '放大圖', hide: ['放大圖'],
+    q: { t: '「甲艙的箱數是乙艙的幾分之幾」，比較量是？', o: ['甲艙的箱數', '乙艙的箱數'], a: 0, why: [, '乙艙被看作 1，是基準量。'], ok: '對了！拿甲艙去和乙艙比。', back: 's', hint: '先找被看作 1 的；另一個就是拿來比的。' } },
+  findb: { sem: '六下', who: 'goat', word: '求基準量', hide: [], fs: 'd',
     steps: [
-      { t: 'say', say: '照片放大你看過：人不會變胖也不會變瘦。', pic: () => rectG6(3, 2) },
-      { t: 'guess', say: '寬 3 格、高 2 格的旗子，寬變 6 格，高要幾格才不歪？', o: ['3 格（多 1）', '4 格（也變 2 倍）'] },
-      { t: 'act', id: 'd', who: 'demo', say: '先只把寬變 2 倍：點旗子。', n: 1, pic: k => rectG6(k ? 6 : 3, 2, !k), done: '只拉寬，旗子變扁、歪了。' },
-      { t: 'act', id: 's', say: '再點，把高也變 2 倍。', n: 1, pic: k => rectG6(6, k ? 4 : 2, !k), done: '寬高都 2 倍，形狀一樣了。' },
-      { t: 'act', id: 's2', say: '寬 2、高 1 的貼紙放大 3 倍：點兩次（寬、高）。', n: 2, pic: k => rectG6(k >= 1 ? 6 : 2, k >= 2 ? 3 : 1, k < 2), done: '寬 6、高 3。' },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[3, '原來寬', K1], '×', [2, '倍', K3], '＝', [6, '新寬', K1]]) + sym6([[2, '原來高', K2], '×', [2, '倍', K3], '＝', [4, '新高', K2]]) },
-      { t: 'name', say: '這樣的圖有名字。', name: '每條邊都乘同一個倍數、形狀不變的圖，叫<b>放大圖</b>。', pic: () => rectG6(6, 4) },
-      { t: 'check', o: ['放大圖每條邊都乘同一個倍數', '放大圖每條邊都加同一個數'], a: 0 },
-      { t: 'pose', say: '只改一樣：2 倍改成 3 倍，寬 3 高 2 的旗子，高要幾格？', o: ['6 格', '5 格'], a: 0 },
+      { t: 'say', say: '先回想：比較量÷基準量＝倍數。例如乙艙 3 箱看作 1，甲艙 6 箱是它的 2 倍。', pic: () => sym6([[6, '比較量', K1], '÷', [3, '基準量', K2], '＝', [2, '倍數', K3]]) },
+      { t: 'guess', say: '甲艙的箱數是乙艙的 3/4 倍，甲艙有 15 箱。乙艙有幾箱？', o: ['20 箱', '15×3/4 箱', '12 箱'] },
+      { t: 'act', id: 'd', who: 'demo', say: '把乙艙看作 1，平均分成 4 段；甲艙是其中 3 段，共 15 箱。點一下，把 15 箱平均放進 3 段。', n: 3, pic: k => segs6(4, 0, K2, '📏 乙艙（看作 1，平均分成 4 段）', 100, '') + segs6(3, k, '#f7c873', '甲艙 15 箱（3 段）', 75, 5) + addBtn6('放一段', k < 3), cap: k => k ? `${k} 段，每段 15÷3＝5 箱` : '', done: '每段 5 箱。乙艙有 4 段：5×4＝20 箱。' },
+      { t: 'act', id: 's', say: '補給原來有 20 箱，後來增加了原來的 1/4。增加了幾箱？選一選。', tip: '「增加了原來的 1/4」：要把原來的 20 箱看作 1。', n: 1, pic: k => segs6(4, k ? 4 : 0, K2, '📏 原來 20 箱（看作 1）', 100, 5) + (k ? segs6(5, 5, '#f7c873', '增加後：20＋5＝25 箱', 100, 5) : chips6(['原來 20 箱的 1/4：5 箱', '增加後的 1/4', '1/4 箱'], (_, i) => i === 0, (_, i) => i === 1 ? '「增加了原來的 1/4」，是以原來的量為基準。' : '1/4 是倍數，不是箱數。')), cap: k => k ? '20×1/4＝5 箱，20＋5＝25 箱' : '', done: '增加的部分以原來的 20 箱為基準：20×1/4＝5 箱，變成 25 箱。' },
+      { t: 'say', id: 'map', say: '比較量平均分成段，再算基準量。', pic: () => sym6([[15, '甲艙（比較量）', K1], '÷', [3, '占 3 段', K2], '＝', [5, '每段', K3]]) + sym6([[5, '每段', K3], '×', [4, '乙艙 4 段', K2], '＝', [20, '乙艙（基準量）', K4]]) + '<div class="trail">也可以寫成 15÷3/4＝20</div>' },
+      { t: 'name', say: '整理一下。', name: '已知比較量和倍數，求基準量：<b>基準量＝比較量÷倍數</b>。15÷3/4＝20。題目說增加或減少「原來的幾分之幾」時，原來的量就是基準量。', pic: () => segs6(4, 4, K2, '乙艙 20 箱', 100, 5) + segs6(3, 3, '#f7c873', '甲艙 15 箱', 75, 5) },
+      { t: 'check', o: ['基準量＝比較量÷倍數', '基準量＝比較量×倍數'], a: 0, why: [, '15×3/4＝11.25，比 15 還少；但甲艙只是乙艙的 3/4，乙艙應該比甲艙多。'] },
     ],
-    q: { t: '照片寬 4、高 3，做 2 倍放大圖？', o: ['寬 8、高 6', '寬 8、高 3', '寬 6、高 5'], a: 0, ok: '對了！', back: 's', hint: '寬和高都要乘 2。' } },
-  shrink: { sem: '六下', who: 'seal', word: '縮圖', hide: ['縮圖'],
+    q: { t: '一本書打折後的價錢是原價的 4/5，賣 80 元。原價是多少元？', o: ['100 元', '64 元', '96 元'], a: 0, why: [, '64 是 80×4/5；80 元只是原價的 4/5，原價應該比 80 元多。', '把原價平均分成 5 段，80 元是 4 段，每段 20 元。'], ok: '對了！80÷4/5＝100：每段 20 元，5 段是 100 元。', back: 'd', hint: '把原價看作 1，平均分成 5 段，80 元占幾段？' } },
+  zoom: { sem: '六下', who: 'seal', word: '放大圖', hide: ['放大圖'], fs: 's',
     steps: [
-      { t: 'say', say: '放大圖學過了。反過來，海報要做成小書籤。', pic: () => rectG6(6, 4) },
-      { t: 'act', id: 'd', who: 'demo', say: '寬 6 格、高 4 格，每條邊都切一半：點圖。', n: 2, pic: k => rectG6(k >= 1 ? 3 : 6, k >= 2 ? 2 : 4, k < 2), done: '寬 3、高 2，形狀一樣，變小了。' },
-      { t: 'act', id: 's', say: '寬 6、高 3 變成 1/3：點兩次。', n: 2, pic: k => rectG6(k >= 1 ? 2 : 6, k >= 2 ? 1 : 3, k < 2), done: '寬 2、高 1。' },
-      { t: 'guess', say: '只把寬變一半，形狀會怎樣？', o: ['變瘦、歪了', '一樣'] },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[6, '原來寬', K1], '×', ['1/2', '倍', K3], '＝', [3, '新寬', K1]]) + sym6([[4, '原來高', K2], '×', ['1/2', '倍', K3], '＝', [2, '新高', K2]]) },
-      { t: 'name', say: '變小的圖有名字。', name: '每條邊都乘同一個比 1 小的數、形狀不變的圖，叫<b>縮圖</b>。', pic: () => rectG6(3, 2) },
-      { t: 'check', o: ['縮圖的每條邊都變成同樣幾分之幾', '縮圖只要把寬變小'], a: 0 },
-      { t: 'pose', say: '哪一題在做縮圖？', o: ['把 12×8 的地圖，每邊都縮成 1/4', '把 12×8 的地圖剪掉一角'], a: 0 },
+      { t: 'say', say: '照片放大時，照片裡的東西，寬和高會一起變大，形狀不變。', pic: () => rectG6(3, 2) },
+      { t: 'guess', say: '寬 3 格、高 2 格的旗子，寬變成 6 格。高要幾格，形狀才和原來一樣？', o: ['3 格（多 1 格）', '4 格（也變 2 倍）'] },
+      { t: 'act', id: 'd', who: 'demo', say: '先只把寬變 2 倍：點旗子。', n: 1, pic: k => rectG6(k ? 6 : 3, 2, !k), done: '只把寬變 2 倍，寬和高的比例改變了，形狀和原來不同。' },
+      { t: 'act', id: 's', say: '再點一下，把高也變 2 倍。', tip: '點旗子，讓高也乘 2。', n: 1, pic: k => rectG6(6, k ? 4 : 2, !k), done: '寬和高都乘 2，形狀和原來一樣。' },
+      { t: 'act', id: 's2', say: '寬 2、高 1 的貼紙放大成 3 倍：點兩次（先寬、再高）。', tip: '寬和高都要乘 3。', n: 2, pic: k => rectG6(k >= 1 ? 6 : 2, k >= 2 ? 3 : 1, k < 2), done: '寬 6、高 3。' },
+      { t: 'say', id: 'map', say: '寬和高都乘同一個數。', pic: () => sym6([[3, '原來寬', K1], '×', [2, '倍', K3], '＝', [6, '新寬', K1]]) + sym6([[2, '原來高', K2], '×', [2, '倍', K3], '＝', [4, '新高', K2]]) },
+      { t: 'name', say: '這樣的圖有名字。', name: '每條邊都乘同一個大於 1 的數，角的大小不變，得到的圖叫原圖的<b>放大圖</b>。', pic: () => rectG6(6, 4) },
+      { t: 'check', o: ['放大圖的每條邊都乘同一個數', '放大圖的每條邊都加同一個數'], a: 0, why: [, '寬 3 高 2 都加 2，變成寬 5 高 4，比例變了，形狀不同。'] },
+      { t: 'pose', say: '邊長變 2 倍，面積呢？寬 3 高 2 有 6 格；放大 2 倍後寬 6 高 4。面積變成幾倍？', pic: () => rectG6(3, 2) + rectG6(6, 4), o: ['4 倍（24 格）', '2 倍（12 格）'], a: 0, why: [, '寬乘 2、高也乘 2，格子數是 2×2＝4 倍。'], tag: '想一想' },
     ],
-    q: { t: '星圖寬 12、高 8，做 1/4 倍縮圖？', o: ['寬 3、高 2', '寬 3、高 8', '寬 8、高 4'], a: 0, ok: '對了！', back: 's', hint: '寬和高都要乘同樣的分數。' } },
-  mapscale: { sem: '六下', who: 'seal', word: '比例尺', hide: ['比例尺', '1：'],
+    q: { t: '照片寬 4、高 3，做成 2 倍的放大圖，寬和高各是多少？', o: ['寬 8、高 6', '寬 8、高 3', '寬 6、高 5'], a: 0, why: [, '只放大了寬，高沒有乘 2。', '寬和高都加 2，不是乘 2。'], ok: '對了！4×2＝8，3×2＝6。', back: 's', hint: '寬和高都要乘 2。' } },
+  shrink: { sem: '六下', who: 'seal', word: '縮圖', hide: ['縮圖'], fs: 'd',
     steps: [
-      { t: 'say', say: '地圖你看過：真的路很長，畫在紙上很短。', pic: () => '🗺️' },
-      { t: 'act', id: 'd', who: 'demo', say: '這張地圖上，1 公分代表真的 1 公里。點尺，一公分一公分量。', n: 3, pic: k => road6(3, k, 1), done: '3 公分：真的 3 公里。' },
-      { t: 'act', id: 's', say: '另一條路，自己量。', n: 4, pic: k => road6(4, k, 1), done: '4 公里。' },
-      { t: 'guess', say: '換一張縮得更小的地圖（1 公分代表 2 公里），同一條 4 公里的路畫多長？', o: ['2 公分', '8 公分'] },
-      { t: 'act', id: 's2', say: '在小地圖上量。', n: 2, pic: k => road6(2, k, 2), done: '2 公分。縮得越小，畫得越短。' },
-      { t: 'say', id: 'map', say: '1 公里是 100000 公分，所以：', pic: () => sym6([[1, '圖上 1 公分', K1], '對', [100000, '真的公分', K2]]) },
-      { t: 'name', say: '圖上和真的關係有名字。', name: '圖上長度和真的長度的比，叫<b>比例尺</b>。1 公分代表 1 公里，就是 1：100000。', pic: () => road6(3, 3, 1) },
-      { t: 'check', o: ['比例尺說圖上 1 公分是真的多長', '比例尺是尺有多長'], a: 0 },
-      { t: 'pose', say: '這題能不能解？「地圖上量到 3 公分，真的有多遠？」缺什麼？', o: ['缺比例尺，不知道 1 公分代表多遠', '什麼都不缺'], a: 0 },
+      { t: 'say', say: '先回想放大圖：每條邊都乘同一個大於 1 的數。現在要把海報縮小，做成書籤。', pic: () => rectG6(6, 4) },
+      { t: 'act', id: 'd', who: 'demo', say: '寬 6 格、高 4 格，每條邊都乘 1/2：點圖。', n: 2, pic: k => rectG6(k >= 1 ? 3 : 6, k >= 2 ? 2 : 4, k < 2), done: '寬 3、高 2，形狀一樣，變小了。' },
+      { t: 'guess', say: '如果寬 6、高 4 都「減掉 2」，形狀會和原來一樣嗎？', o: ['不一樣，比例改變了', '一樣'] },
+      { t: 'act', id: 's', say: '寬 6、高 3 的海報，每條邊都乘 1/3：點兩次。', tip: '寬和高都要乘 1/3。', n: 2, pic: k => rectG6(k >= 1 ? 2 : 6, k >= 2 ? 1 : 3, k < 2), done: '寬 2、高 1。' },
+      { t: 'say', id: 'map', say: '寬和高都乘同一個比 1 小的數。', pic: () => sym6([[6, '原來寬', K1], '×', ['1/2', '倍', K3], '＝', [3, '新寬', K1]]) + sym6([[4, '原來高', K2], '×', ['1/2', '倍', K3], '＝', [2, '新高', K2]]) },
+      { t: 'name', say: '變小的圖有名字。', name: '每條邊都乘同一個大於 0、小於 1 的數，角的大小不變，得到的圖叫<b>縮圖</b>。', pic: () => rectG6(3, 2) },
+      { t: 'check', o: ['縮圖的每條邊都乘同一個比 1 小的數', '縮圖的每條邊都減掉一樣長'], a: 0, why: [, '寬 6 高 4 都減 2，變成寬 4 高 2，比例變了。'] },
+      { t: 'pose', say: '哪一題在做縮圖？', o: ['把寬 12、高 8 的地圖，每條邊都乘 1/4', '把寬 12、高 8 的地圖，剪掉一個角'], a: 0, why: [, '剪掉一角，形狀就變了。'] },
     ],
-    q: { t: '比例尺 1：50000，圖上 1 公分是真的幾公尺？', o: ['500 公尺', '50000 公尺', '50 公尺'], a: 0, ok: '對了！50000 公分＝500 公尺。', back: 's', hint: '圖上 1 公分代表真的那麼多公分。' } },
-  prismw: { sem: '六下', who: 'turtle', word: '柱體', hide: ['柱體'],
+    q: { t: '星圖寬 12、高 8，做成 1/4 倍的縮圖，寬和高各是多少？', o: ['寬 3、高 2', '寬 3、高 8', '寬 8、高 4'], a: 0, why: [, '只縮了寬，高沒有乘 1/4。', '寬和高都減 4，不是乘 1/4。'], ok: '對了！12×1/4＝3，8×1/4＝2。', back: 's', hint: '寬和高都要乘同樣的分數。' },
+    rev: '都減 2 變成寬 4、高 2：寬變成高的 2 倍，原來只有 1.5 倍，形狀不同。', revPic: () => rectG6(6, 4) + rectG6(4, 2) },
+  mapscale: { sem: '六下', who: 'seal', word: '比例尺', hide: ['比例尺', '1：'], fs: 'd',
     steps: [
-      { t: 'say', say: '疊積木你會：一層一層往上疊。', pic: () => isoSvg(2, 2, 1) },
-      { t: 'act', id: 'd', who: 'demo', say: '每層都一樣大：點積木往上疊。', n: 2, pic: k => `<span class="hot6">${isoSvg(2, 2, 3, 4 * (k + 1))}</span>`, done: '每一層一樣大。' },
-      { t: 'act', id: 's', say: '圓的也一樣：點圓盤疊上去。', n: 3, pic: k => `<span class="hot6">${cylSvg(k, 3)}</span>`, done: '圓盤一層層一樣大。' },
-      { t: 'guess', say: '冰淇淋甜筒，每一層一樣大嗎？', o: ['不一樣，越上面越大', '一樣大'] },
-      { t: 'say', id: 'map', say: '分兩堆：', pic: () => twoBox6(['每層一樣大', '<div class="it6">🥫📦🧀</div>'], ['每層不一樣', '<div class="it6">🍦🔺⚽</div>']) },
-      { t: 'name', say: '左邊那一類形體有名字。', name: '上下一樣、一層一層同樣大疊上去的形體，叫<b>柱體</b>。', pic: () => cylSvg(3, 3) },
-      { t: 'check', o: ['柱體每一層都一樣大', '柱體一定是圓的'], a: 0, why: '方的盒子也是。' },
-      { t: 'pose', say: '哪一樣是柱體？', o: ['罐頭', '甜筒', '球'], a: 0 },
+      { t: 'say', say: '地圖上的路畫得很短，實際的路很長。', pic: () => '<div class="it6">🗺️</div>' },
+      { t: 'act', id: 'd', who: 'demo', say: '這張地圖上，圖上 1 公分代表實際 1 公里。點尺，一公分一公分量。', n: 3, pic: k => road6(3, k, 1), done: '圖上 3 公分，實際 3 公里。' },
+      { t: 'act', id: 's', say: '另一條路，圖上 4 公分，自己量。', tip: '一公分一公分量：每 1 公分代表 1 公里。', n: 4, pic: k => road6(4, k, 1), done: '實際 4 公里。' },
+      { t: 'guess', say: '換一張畫得更小的地圖：圖上 1 公分代表實際 2 公里。同一條 4 公里的路，在這張圖上畫多長？', o: ['2 公分', '8 公分'] },
+      { t: 'act', id: 's2', say: '在小地圖上量。', tip: '每 1 公分代表 2 公里。', n: 2, pic: k => road6(2, k, 2), done: '2 公分。畫得越小，同一條路在圖上越短。' },
+      { t: 'say', id: 'map', say: '先把兩個長度換成相同單位（公分），再寫成比。', pic: () => sym6([[1, '圖上 1 公分', K1], '：', [100000, '實際 1 公里＝100000 公分', K2]]) },
+      { t: 'name', say: '圖上和實際長度的關係有名字。', name: '圖上長度和實際長度換成相同單位後的比，叫<b>比例尺</b>。圖上 1 公分代表實際 1 公里，比例尺是 1：100000。', pic: () => road6(3, 3, 1) },
+      { t: 'check', o: ['比例尺是圖上長度和實際長度（相同單位）的比', '比例尺是那把尺有多長'], a: 0, why: [, '比例尺說的是圖上和實際的長度關係，不是尺本身的長度。'] },
+      { t: 'pose', say: '目前的資料足夠嗎？「地圖上量到 3 公分，實際有多遠？」還需要知道什麼？', o: ['需要比例尺：圖上 1 公分代表實際多遠', '什麼都不需要'], a: 0, why: [, '不同的地圖，1 公分代表的距離不一樣。'], tag: '資料夠嗎' },
     ],
-    q: { t: '哪一個是柱體？', o: ['方形蛋糕', '金字塔', '球'], a: 0, ok: '對了！', back: 's', hint: '看每一層是不是一樣大。' } },
-  vol: { sem: '六下', who: 'turtle', word: '柱體體積', hide: ['體積'],
+    q: { t: '比例尺 1：50000，圖上 1 公分代表實際幾公尺？', o: ['500 公尺', '50000 公尺', '50 公尺'], a: 0, why: [, '50000 的單位是公分，不是公尺。', '50000 公分＝500 公尺，不是 50 公尺。'], ok: '對了！50000 公分＝500 公尺。', back: 's', hint: '圖上 1 公分代表實際 50000 公分；100 公分是 1 公尺。' } },
+  prismw: { sem: '六下', who: 'turtle', word: '柱體', hide: ['柱體'], fs: 's',
     steps: [
-      { t: 'say', say: '柱體學過了。長方體的大小你會：數有幾塊小方塊。', pic: () => isoSvg(3, 2, 1) },
-      { t: 'act', id: 'd', who: 'demo', say: '一層 6 塊（2×3），點一下疊一層。', n: 3, pic: k => `<span class="hot6">${isoSvg(3, 2, 3, 6 * k)}</span>`, cap: k => `${k} 層，${6 * k} 塊`, done: '3 層，6×3＝18 塊。' },
-      { t: 'act', id: 's', say: '圓罐子一層大約 10 塊那麼大，疊 4 層。', n: 4, pic: k => `<span class="hot6">${cylSvg(k, 4)}</span>`, cap: k => `${k} 層，${10 * k}`, done: '10×4＝40。' },
-      { t: 'guess', say: '一層 5 塊，疊 6 層，共幾塊？', o: ['30', '11'] },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[6, '一層幾塊', K2], '×', [3, '幾層（高）', K3], '＝', [18, '全部', K1]]) },
-      { t: 'name', say: '柱體的大小有名字。', name: '柱體的大小叫<b>柱體體積</b>＝一層（底面）的大小×高。', pic: () => isoSvg(3, 2, 3) },
-      { t: 'check', o: ['柱體體積是一層的大小×高', '柱體體積是長＋寬＋高'], a: 0 },
-      { t: 'pose', say: '哪一題要算柱體體積？', o: ['圓柱水桶可以裝多少水？', '水桶外面要貼多少貼紙？'], a: 0 },
+      { t: 'say', say: '疊積木：一層一層往上疊。', pic: () => isoSvg(2, 2, 1) },
+      { t: 'act', id: 'd', who: 'demo', say: '每層都一樣大：點積木往上疊。', n: 2, pic: k => `<span class="hot6">${isoSvg(2, 2, 3, 4 * (k + 1))}</span>`, done: '每一層的形狀、大小都一樣。' },
+      { t: 'act', id: 's', say: '圓的也一樣：點圓盤疊上去。', tip: '點圓盤，一層一層疊。', n: 3, pic: k => `<span class="hot6">${cylSvg(k, 3)}</span>`, done: '圓盤一層層一樣大。' },
+      { t: 'guess', say: '冰淇淋甜筒（尖的那頭朝下），從下往上，每一層一樣大嗎？', o: ['不一樣，越上面越大', '一樣大'] },
+      { t: 'say', id: 'map', say: '分成兩類。', pic: () => twoBox6(['每層一樣大', '<div class="it6">🥫📦🧀</div>'], ['每層不一樣', '<div class="it6">🍦🔺⚽</div>']) },
+      { t: 'name', say: '左邊那一類立體有名字。', name: '上下兩個底面的形狀、大小都一樣，而且從底面往上，每一層都和底面一樣的立體，叫<b>柱體</b>。這裡看的是直直往上疊的柱體。', pic: () => cylSvg(3, 3) },
+      { t: 'check', o: ['柱體每一層的形狀、大小都和底面一樣', '柱體一定是圓的'], a: 0, why: [, '方形的盒子也是一層一層同樣大，也是柱體。'] },
+      { t: 'pose', say: '哪一樣的外形可以看成柱體？', o: ['罐頭', '甜筒', '球'], a: 0, why: [, '甜筒越往上越大。', '球每一層的大小都不一樣。'] },
     ],
-    q: { t: '三角柱底面 6 平方公分，高 5 公分，體積？', o: ['30 立方公分', '11 立方公分', '6 立方公分'], a: 0, ok: '對了！', back: 's', hint: '一層的大小×層數。' } },
-  surf: { sem: '六下', who: 'turtle', word: '表面積', hide: ['表面積'],
+    q: { t: '哪一個的外形可以看成柱體？', o: ['方形蛋糕', '金字塔', '球'], a: 0, why: [, '金字塔越往上越小。', '球每一層的大小都不一樣。'], ok: '對了！方形蛋糕每一層都一樣大。', back: 's', hint: '看每一層是不是和底面一樣大。' } },
+  vol: { sem: '六下', who: 'turtle', word: '柱體體積', hide: ['體積'], fs: 'd',
     steps: [
-      { t: 'say', say: '包禮物你會：每一面都要包到。', pic: () => '🎁' },
-      { t: 'act', id: 'd', who: 'demo', say: '點盒子的每一面，把它攤開。', n: 6, pic: k => `<div class="faces6">${['上', '下', '前', '後', '左', '右'].map((f, i) => `<span class="face6 ${i < k ? 'on' : i === k ? 'hot6' : ''}">${f}</span>`).join('')}</div>`, cap: k => `攤開 ${k} 面`, done: '盒子有 6 面。' },
-      { t: 'guess', say: '一個罐頭，要包幾塊？', o: ['3 塊：外皮和上下兩個蓋', '1 塊'] },
-      { t: 'act', id: 's', say: '罐頭：點外皮、上蓋、下蓋。', n: 3, pic: k => `<div class="faces6">${['外皮（攤開是長方形）', '上蓋', '下蓋'].map((f, i) => `<span class="face6 ${i < k ? 'on' : i === k ? 'hot6' : ''}">${f}</span>`).join('')}</div>`, done: '外皮攤開是長方形，加兩個圓。' },
-      { t: 'say', id: 'map', say: '每一面的大小加起來：', pic: () => sym6([['上下', '2 面', K1], '＋', ['前後', '2 面', K2], '＋', ['左右', '2 面', K3]]) },
-      { t: 'name', say: '合起來的大小有名字。', name: '所有面的大小合起來，叫<b>表面積</b>。', pic: () => '🎁' },
-      { t: 'check', o: ['表面積是所有面加起來', '表面積是裡面可以裝多少'], a: 0, why: '裝多少是體積。' },
-      { t: 'pose', say: '哪一題要算表面積？', o: ['禮物盒要用多少包裝紙？', '禮物盒可以裝多少糖？'], a: 0 },
+      { t: 'say', say: '先回想柱體：每一層都和底面一樣大。長方體可以數有幾塊邊長 1 公分的小方塊。', pic: () => isoSvg(3, 2, 1) },
+      { t: 'act', id: 'd', who: 'demo', say: '一層 6 塊（3×2），每層厚 1 公分。點一下疊一層。', n: 3, pic: k => `<span class="hot6">${isoSvg(3, 2, 3, 6 * k)}</span>`, cap: k => `${k} 層，6×${k}＝${6 * k} 塊`, done: '3 層：6×3＝18 塊，就是 18 立方公分。' },
+      { t: 'guess', say: '一層 5 塊、每層厚 1 公分，疊 6 層，一共幾塊？', o: ['30 塊', '11 塊'] },
+      { t: 'act', id: 's', say: '一層 4 塊（2×2），每層厚 1 公分，已經放好 1 層，再疊到 5 層：點一下疊一層。', tip: '一層 4 塊，疊幾層就是 4 的幾倍。', n: 4, pic: k => `<span class="hot6">${isoSvg(2, 2, 5, 4 * (k + 1))}</span>`, cap: k => `${k + 1} 層，4×${k + 1}＝${4 * (k + 1)} 塊`, done: '4×5＝20 塊，就是 20 立方公分。' },
+      { t: 'say', id: 'map', say: '一層的塊數乘層數；每層厚 1 公分時，層數就是高。', pic: () => sym6([[6, '一層：底面積 6 平方公分', K2], '×', [3, '高 3 公分', K3], '＝', [18, '18 立方公分', K1]]) },
+      { t: 'name', say: '柱體占空間的大小有名字。', name: '柱體占空間的大小，叫柱體的<b>體積</b>。柱體體積＝底面積×高。', pic: () => isoSvg(3, 2, 3) },
+      { t: 'check', o: ['柱體體積＝底面積×高', '柱體體積＝長＋寬＋高'], a: 0, why: [, '長＋寬＋高是把三個長度加起來，不是數有幾塊小方塊。'] },
+      { t: 'pose', say: '哪一題要算柱體的體積？', o: ['一塊三角柱形的積木，占多大的空間？', '三角柱積木的表面要塗多少油漆？'], a: 0, why: [, '表面要塗多少，算的是表面積。'] },
     ],
-    q: { t: '正方體每面 4 平方公分，表面積？', o: ['24', '4', '16'], a: 0, ok: '對了！6 面×4。', back: 's', hint: '每一面都要算到。' } },
-  pie: { sem: '六下', who: 'mimi', word: '圓形圖', hide: ['圓形圖'],
+    q: { t: '三角柱的底面積 6 平方公分，高 5 公分，體積是多少？', o: ['30 立方公分', '11 立方公分', '6 立方公分'], a: 0, why: [, '11 是 6＋5。', '6 平方公分只是底面積。'], ok: '對了！6×5＝30 立方公分。', back: 's', hint: '底面積×高。' } },
+  surf: { sem: '六下', who: 'turtle', word: '表面積', hide: ['表面積'], fs: 'd',
     steps: [
-      { t: 'say', say: '分披薩你會：一個披薩分成好幾片。', pic: () => pie6(10, 10, 0) },
-      { t: 'act', id: 'd', who: 'half', say: '10 個人投票想去哪：點一片，塗上一票。', n: 10, pic: k => slice10(VOTES, k, true) + `<div class="trail">${k < 10 ? `第 ${k + 1} 票：${VOTES[k]}` : ''}</div>`, done: '月球 5 片、火星 3 片、土星 2 片。' },
+      { t: 'say', say: '包禮物：盒子的每一面都要包到。', pic: () => '<div class="it6">🎁</div>' },
+      { t: 'act', id: 'd', who: 'demo', say: '點盒子的每一面，把它攤開。', n: 6, pic: k => `<div class="faces6">${['上', '下', '前', '後', '左', '右'].map((f, i) => `<span class="face6 ${i < k ? 'on' : i === k ? 'hot6' : ''}">${f}</span>`).join('')}</div>`, cap: k => `攤開 ${k} 面`, done: '長方體盒子有 6 面。' },
+      { t: 'guess', say: '一個圓柱形的罐頭，外面要包滿紙，要包哪幾塊？', o: ['側面一塊和上下兩個圓', '只要側面一塊'] },
+      { t: 'act', id: 's', say: '罐頭：點側面、上蓋、下蓋。', tip: '外面看得到的每一塊都要點到。', n: 3, pic: k => `<div class="faces6">${['側面（攤開是長方形：長＝底面的圓周長，寬＝罐頭的高）', '上蓋（圓）', '下蓋（圓）'].map((f, i) => `<span class="face6 ${i < k ? 'on' : i === k ? 'hot6' : ''}">${f}</span>`).join('')}</div>`, done: '側面攤開是長方形，再加兩個圓。' },
+      { t: 'say', id: 'map', say: '每一面的面積加起來。', pic: () => sym6([['上下', '2 面', K1], '＋', ['前後', '2 面', K2], '＋', ['左右', '2 面', K3]]) },
+      { t: 'name', say: '合起來的大小有名字。', name: '立體外表各個面的面積合起來，叫<b>表面積</b>。', pic: () => '<div class="it6">🎁</div>' },
+      { t: 'check', o: ['表面積是外表各個面的面積加起來', '表面積是裡面可以裝多少'], a: 0, why: [, '裡面可以裝多少，是容積。'] },
+      { t: 'pose', say: '哪一題要算表面積？', o: ['禮物盒外面全部包住，要用多少包裝紙（不算重疊）？', '禮物盒可以裝多少糖？'], a: 0, why: [, '裝多少是容積，不是表面積。'] },
+    ],
+    q: { t: '正方體每一面的面積是 4 平方公分，表面積是多少？', o: ['24 平方公分', '4 平方公分', '16 平方公分'], a: 0, why: [, '4 平方公分只是一面。', '16 是 4 面；正方體有 6 面。'], ok: '對了！每面 4 平方公分，6 面：4×6＝24 平方公分。', back: 's', hint: '每一面都要算到。' } },
+  pie: { sem: '六下', who: 'mimi', word: '圓形圖', hide: ['圓形圖'], fs: 'd',
+    steps: [
+      { t: 'say', say: '一個圓可以平均分成好幾片，像披薩。', pic: () => pie6(10, 10, 0) },
+      { t: 'act', id: 'd', who: 'half', say: '10 個人投票，每人只投一票，從月球、火星、土星選一個最想去的地方。點一片，塗上一票。', n: 10, pic: k => slice10(VOTES, k, true) + `<div class="trail">${k < 10 ? `第 ${k + 1} 票：${VOTES[k]}` : ''}</div>`, done: '月球 5 片、火星 3 片、土星 2 片，10 票剛好塗滿整個圓。' },
       { t: 'guess', say: '月球占全部的幾分之幾？', o: ['5/10，一半', '5'] },
-      { t: 'act', id: 's', say: '點月球的每一片，數一數。', n: 5, pic: k => `<div class="op6s">${Array.from({ length: 5 }, (_, i) => `<span class="op6 ${i < k ? 'on' : i === k ? 'hot6' : ''}">🌕</span>`).join('')}</div>` + slice10(VOTES, 10), done: '5 片，是 10 片的一半。' },
-      { t: 'say', id: 'map', say: '寫成算式：', pic: () => sym6([[5, '月球片數', K2], '/', [10, '全部片數', K1], '＝', ['50%', '占全部', K3]]) },
-      { t: 'name', say: '這種圖有名字。', name: '用一個圓分出每一部分占全部多少，叫<b>圓形圖</b>。', pic: () => slice10(VOTES, 10) },
-      { t: 'check', o: ['圓形圖看每部分占全部多少', '圓形圖看東西怎麼隨時間變'], a: 0 },
-      { t: 'pose', say: '哪一題適合畫圓形圖？', o: ['全班最喜歡的水果，各占全班多少？', '一天的氣溫怎麼變？'], a: 0 },
+      { t: 'act', id: 's', say: '點月球的每一片，數一數。', tip: '藍色的片是月球；每點一片數一次。', n: 5, pic: k => `<div class="op6s">${Array.from({ length: 5 }, (_, i) => `<span class="op6 ${i < k ? 'on' : i === k ? 'hot6' : ''}">🌕</span>`).join('')}</div>` + slice10(VOTES, 10), done: '5 片，是 10 片的一半。' },
+      { t: 'say', id: 'map', say: '片數除以全部的片數；全部加起來是 100%。', pic: () => sym6([[5, '月球片數', K2], '/', [10, '全部片數', K1], '＝', ['50%', '占全部', K3]]) + '<div class="trail">月球 50%＋火星 30%＋土星 20%＝100%</div>' },
+      { t: 'name', say: '這種圖有名字。', name: '用整個圓表示全部，每個扇形表示各部分占全部多少，這種圖叫<b>圓形圖</b>。', pic: () => slice10(VOTES, 10) },
+      { t: 'check', o: ['圓形圖看每部分占全部多少', '圓形圖看東西怎麼隨時間變'], a: 0, why: [, '隨時間的變化適合用折線圖。'] },
+      { t: 'pose', say: '哪一題適合畫圓形圖？', o: ['全班每人選一種最喜歡的水果，各占全班多少？', '一天的氣溫怎麼變？'], a: 0, why: [, '跟著時間變化，適合用折線圖。'] },
     ],
-    q: { t: '20 人投票，圓形圖上「麵」占一半，有幾人？', o: ['10 人', '20 人', '5 人'], a: 0, ok: '對了！', back: 's', hint: '一半就是全部的 1/2。' } },
-  likely: { sem: '六下', who: 'mimi', word: '可能性', hide: ['可能'],
+    q: { t: '20 人投票，每人一票。圓形圖上「麵」占一半，有幾人選麵？', o: ['10 人', '20 人', '5 人'], a: 0, why: [, '20 人是全部。', '5 人是 20 人的 1/4。'], ok: '對了！20 的一半是 10。', back: 's', hint: '一半就是全部的 1/2。' } },
+  likely: { sem: '六下', who: 'mimi', word: '可能性', hide: ['可能性'], fs: 's',
     steps: [
-      { t: 'say', say: '天氣預報你聽過：「明天八成會下雨」。', pic: () => '🌧️' },
-      { t: 'guess', say: '袋子裡 9 顆紅球、1 顆藍球，摸一顆，比較會摸到哪一種？', o: ['紅球', '藍球', '一樣'] },
-      { t: 'act', id: 'd', who: 'half', say: '摸一顆、記下來、放回去：點袋子。', n: 6, pic: k => addBtn6('👜 摸一顆', true) + `<div class="it6">${DRAWS.slice(0, k).join('')}</div>`, done: '6 次裡，紅的 5 次。' },
-      { t: 'act', id: 's', say: '再摸 4 次。', n: 4, pic: k => addBtn6('👜 摸一顆', true) + `<div class="it6">${DRAWS.slice(0, 6 + k).join('')}</div>`, done: '10 次裡，紅的 9 次。' },
-      { t: 'say', id: 'map', say: '看資料的多少：', pic: () => sym6([[9, '紅', K4], '對', [1, '藍', K2]]) + '<div class="trail">差很多，就能有把握地說</div>' },
-      { t: 'name', say: '這種說法有名字。', name: '「很有可能」「很不可能」「紅比藍容易摸到」，說的是一件事的<b>可能性</b>。', pic: () => `<div class="it6">${DRAWS.join('')}</div>` },
-      { t: 'check', o: ['資料差很多時，多的那個很有可能', '摸到藍球一定不會發生'], a: 0, why: '藍的少，但還是摸到過。' },
-      { t: 'pose', say: '這題能不能回答？「袋子裡有紅球和藍球，摸到紅的可能性大嗎？」缺什麼？', o: ['缺各有幾顆，或摸過的記錄', '什麼都不缺'], a: 0 },
+      { t: 'say', say: '袋中有 9 顆紅球和 1 顆藍球，球的大小和材質相同。每次先搖勻，不看袋內摸 1 顆，記錄後放回。', pic: () => dotsC(9, K4) + dotsC(1, K2) },
+      { t: 'guess', say: '下一次摸，哪種顏色比較容易摸到？', o: ['紅球', '藍球', '一樣'] },
+      { t: 'act', id: 'd', who: 'half', say: '摸一顆、記下來、放回、搖勻：點袋子。', n: 6, pic: k => addBtn6('👜 摸一顆', true) + drw6(DRAWS.slice(0, k)), done: '6 次裡，紅的 5 次。' },
+      { t: 'act', id: 's', say: '再摸 4 次。', tip: '點「摸一顆」，每次都放回、搖勻。', n: 4, pic: k => addBtn6('👜 摸一顆', true) + drw6(DRAWS.slice(0, 6 + k)), done: '這一次的 10 次紀錄：紅 9 次、藍 1 次。' },
+      { t: 'say', say: '這只是一次示例紀錄，每次結果可能不同。另一組同學也摸了 10 次：紅 7 次、藍 3 次。兩組都是紅的比較多，但次數不一樣。', pic: () => drw6(DRAWS, '第一組：紅 9 次、藍 1 次') + drw6(DRAWS2, '第二組：紅 7 次、藍 3 次') },
+      { t: 'say', id: 'map', say: '袋子裡紅球多很多，所以紅球比較容易摸到；藍球只有 1 顆，仍然可能被摸到。', pic: () => sym6([[9, '紅球顆數', K4], '對', [1, '藍球顆數', K2]]) },
+      { t: 'name', say: '這種說法有名字。', name: '一件事發生的機會有多大，叫這件事的<b>可能性</b>。紅球比較容易摸到，表示摸到紅球的可能性比較大，但不是一定會摸到。', pic: () => dotsC(9, K4) + dotsC(1, K2) },
+      { t: 'check', o: ['紅球的可能性比較大，但下一次也可能摸到藍球', '摸 10 次，一定剛好 9 紅 1 藍'], a: 0, why: [, '兩組紀錄就不一樣：一組 9 紅 1 藍、一組 7 紅 3 藍。可能性大，不是保證。'] },
+      { t: 'pose', say: '目前的資料足夠嗎？「袋子裡有紅球和藍球，摸到紅球的可能性大嗎？」還需要知道什麼？', o: ['各有幾顆，而且球的大小、材質一樣', '什麼都不需要'], a: 0, why: [, '不知道各有幾顆，就沒辦法比。'], tag: '資料夠嗎' },
     ],
-    q: { t: '30 天裡 27 天晴天，明天可以怎麼說？', o: ['很有可能是晴天', '很不可能是晴天'], a: 0, ok: '對了！', back: 's', hint: '看資料哪一種多很多。' } },
+    q: { t: '盒子裡有 8 張星星卡、2 張月亮卡，卡片的大小和材質相同。洗勻後不看，抽 1 張。哪一句話對？', o: ['星星卡比較可能被抽到，月亮卡也可能被抽到', '一定會抽到星星卡', '月亮卡不可能被抽到'], a: 0, why: [, '月亮卡有 2 張，還是可能被抽到，所以不是「一定」。', '月亮卡有 2 張，有可能被抽到。'], ok: '對了！星星卡比較多，比較可能；但月亮卡也可能。', back: 's', hint: '比一比各有幾張；比較可能，不等於一定。' } },
 });
+// 每一種題型連到哪些小故事；自動只播 CONCEPT_MAIN（沒寫就是最後一個），其他放在故事裡選讀
 const CONCEPT_OF = {
-  'prime:tile': ['prime'], 'prime:tree': ['prime', 'pfac', 'pfd'], 'prime:by25': [], 'prime:by3': [], 'prime:gcf': ['short'], 'prime:lcm': ['short'], 'prime:simp': ['simplest'], 'prime:coprime': ['coprime'],
+  'prime:tile': ['prime', 'comp'], 'prime:tree': ['prime', 'pfac', 'pfd'], 'prime:by25': [], 'prime:by3': [], 'prime:gcf': ['short'], 'prime:lcm': ['short', 'lcmS'], 'prime:simp': ['coprime', 'simplest'], 'prime:coprime': ['coprime'],
   'fdiv:whole': ['fdivm'], 'fdiv:intfrac': ['fdivm'], 'fdiv:same': ['fdivm'], 'fdiv:unlike': ['fdivm'], 'fdiv:partial': ['fdivm'], 'fdiv:flip': ['fdivm', 'reciprocal'], 'fdiv:bigger': ['fdivm'],
-  'ddiv:cut': ['decdiv'], 'ddiv:shift': ['decdiv'], 'ddiv:two': ['decdiv'], 'ddiv:long': ['decdiv'], 'ddiv:bigger': ['decdiv'],
-  'circle:pi': ['pi'], 'circle:circ': ['pi', 'circ'], 'circle:wheel': ['pi', 'circ'], 'circle:half': ['pi', 'circ'], 'circle:area': ['carea'], 'circle:ring': ['carea'],
-  'ratio:mix': ['ratio'], 'ratio:rate': ['ratio', 'rate'], 'ratio:equal': ['ratio', 'eqr'], 'ratio:vert': ['ratio', 'eqr'], 'ratio:simp': ['ratio', 'simpr'], 'ratio:fd': ['ratio', 'simpr'], 'ratio:share': ['ratio'], 'ratio:same': ['ratio', 'eqr'],
-  'sector:frac': [], 'sector:arc': ['arc'], 'sector:perim': ['arc'], 'sector:three': ['arc', 'sarea'], 'sector:area': ['sarea'], 'sector:word': ['sarea'],
-  'speed:sameT': ['speed'], 'speed:sameD': ['speed'], 'speed:rate': ['speed', 'shisu'], 'speed:dist': ['speed', 'shisu', 'fensu'], 'speed:prop': ['speed', 'shisu', 'fensu'], 'speed:unit': ['speed', 'shisu', 'fensu', 'miaosu'], 'speed:avg': ['speed', 'shisu'],
+  'ddiv:cut': ['decdiv'], 'ddiv:shift': ['decdiv', 'dshift'], 'ddiv:two': ['decdiv'], 'ddiv:long': ['decdiv', 'dshift'], 'ddiv:bigger': ['decdiv'],
+  'circle:pi': ['pi'], 'circle:circ': ['pi', 'circ'], 'circle:wheel': ['pi', 'circ'], 'circle:half': ['circ', 'halfc'], 'circle:area': ['carea'], 'circle:ring': ['carea', 'ringA'],
+  'ratio:mix': ['ratio'], 'ratio:rate': ['ratio', 'rate'], 'ratio:equal': ['ratio', 'eqr'], 'ratio:vert': ['ratio', 'eqr'], 'ratio:simp': ['ratio', 'simpr'], 'ratio:fd': ['ratio', 'simpr'], 'ratio:share': ['ratio', 'share'], 'ratio:same': ['ratio', 'eqr'],
+  'sector:frac': ['arc'], 'sector:arc': ['arc'], 'sector:perim': ['arc', 'sperim'], 'sector:three': ['arc', 'sarea'], 'sector:area': ['sarea'], 'sector:word': ['sarea'],
+  'speed:sameT': ['speed'], 'speed:sameD': ['speed'], 'speed:rate': ['speed', 'shisu'], 'speed:dist': ['speed', 'shisu', 'fensu'], 'speed:prop': ['speed', 'shisu', 'fensu'], 'speed:unit': ['speed', 'shisu', 'fensu', 'miaosu'], 'speed:avg': ['speed', 'avgsp'],
   'relation:sum': ['rel'], 'relation:diff': ['rel'], 'relation:each': ['rel'], 'relation:seat': ['rel'], 'relation:write': ['rel'], 'relation:balance': ['equal'],
   'prism:stack': ['prismw', 'vol'], 'prism:tri': ['prismw', 'vol'], 'prism:cyl': ['prismw', 'vol'], 'prism:comp': ['prismw', 'vol'], 'prism:net': ['surf'], 'prism:surf': ['surf'],
-  'base:read': ['base', 'cmpq'], 'base:swap': ['base', 'cmpq'], 'base:cmp': ['base', 'cmpq'], 'base:findbase': ['base', 'cmpq'], 'base:change': ['base', 'cmpq'],
-  'scale:zoom': ['zoom'], 'scale:keep': ['zoom'], 'scale:which': ['zoom'], 'scale:shrink': ['shrink'], 'scale:ruler': ['mapscale'], 'scale:mapn': ['mapscale'], 'scale:mis': ['mapscale'], 'scale:twomap': ['mapscale'],
+  'base:read': ['base', 'cmpq'], 'base:swap': ['base', 'cmpq'], 'base:cmp': ['base', 'cmpq'], 'base:findbase': ['base', 'cmpq', 'findb'], 'base:change': ['base', 'cmpq', 'findb'],
+  'scale:zoom': ['zoom'], 'scale:keep': ['zoom'], 'scale:which': ['zoom'], 'scale:shrink': ['zoom', 'shrink'], 'scale:ruler': ['mapscale'], 'scale:mapn': ['mapscale'], 'scale:mis': ['mapscale'], 'scale:twomap': ['mapscale'],
   'puzzle:hen': [], 'puzzle:sumdiff': [], 'puzzle:age': [], 'puzzle:chase': [], 'puzzle:stream': [], 'puzzle:count': ['countc'], 'puzzle:odd': ['countc'], 'puzzle:addc': ['countc'],
   'mix:order': [], 'mix:fdeq': [], 'mix:cancel': ['reciprocal'], 'mix:word': [], 'mix:est': [], 'mix:dist': [],
   'pie:read': ['pie'], 'pie:make': ['pie'], 'pie:pct': ['pie'], 'pie:which': ['pie'], 'pie:likely': ['likely'],
 };
-/* ---------- 各段的揭曉、簡圖、正反例分類（依五年級樣本模板） ---------- */
+const CONCEPT_MAIN = { 'prime:tile': 'prime', 'prime:simp': 'simplest', 'speed:rate': 'speed', 'speed:dist': 'speed', 'speed:prop': 'speed', 'speed:unit': 'fensu', 'base:read': 'base', 'base:swap': 'base', 'scale:shrink': 'shrink' };
+/* ---------- 各段的揭曉、簡圖、正反例分類（依五年級樣本模板；簡圖和第 1 步操作、第 3 步算式用同一個例子） ---------- */
 const GRY = '#c9ced8';
 const S6 = (q, bins, items, hint, done) => ({ q, bins, items, hint, done });
 const AUG = {
-  prime: { rev: '7 塊每排 2 塊、3 塊都會剩，只能排一長條。', dia: () => twoBox6(['6 塊', rectG6(2, 3, false, GRY)], ['7 塊', rectG6(7, 1, false, GRY)]), sort: S6('這些地磚，排得成長方形，還是只能排一長條？', ['排得成長方形', '只能一長條'], [['4 塊', 0], ['5 塊', 1], ['6 塊', 0], ['7 塊', 1], ['9 塊', 0], ['11 塊', 1]], '試試每排 2 塊或 3 塊，能不能排完。', '4、6、9 排得成；5、7、11 只能一長條。') },
-  comp: { rev: '9 塊排得成 3 排、每排 3 塊。單數也可以。', dia: () => rectG6(3, 3, false, GRY), sort: S6('分一分：', ['排得成長方形', '只能一長條'], [['8 塊', 0], ['9 塊', 0], ['13 塊', 1], ['10 塊', 0], ['2 塊', 1], ['15 塊', 0]], '試試每排 2、3、5 塊。', '8、9、10、15 排得成；2、13 只能一長條。') },
-  pfac: { rev: '15 敲成 3 和 5，都敲不開了。', dia: () => '<div class="parts6"><b class="chip6 num">2</b><b class="chip6 num">2</b><b class="chip6 num">5</b></div>', sort: S6('哪些可以當最後的零件（敲不開）？', ['敲不開', '還敲得開'], [['2', 0], ['3', 0], ['6', 1], ['5', 0], ['9', 1], ['10', 1]], '能排成長方形的數，還敲得開。', '2、3、5 敲不開；6、9、10 還敲得開。') },
-  pfd: { rev: '30＝2×3×5。5×6 的 6 還敲得開，還沒敲完。', dia: () => '<div class="parts6"><b class="chip6 num">2</b>×<b class="chip6 num">3</b>×<b class="chip6 num">5</b></div>', sort: S6('哪些已經敲到最小？', ['全部敲不開', '還有敲得開的'], [['12＝2×2×3', 0], ['12＝3×4', 1], ['8＝2×2×2', 0], ['8＝2×4', 1]], '每個零件都要敲不開才算。', '對了！') },
-  short: { rev: '左邊 2×2＝4，就是最多分給 4 人。', dia: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3), sort: S6('8 和 12：哪個數可以當第一刀？', ['兩堆都能分', '有一堆不行'], [['2', 0], ['3', 1], ['5', 1]], '8 和 12 都要能分得剛好。', '只有 2 兩堆都能分。') },
-  coprime: { rev: '8 和 9 分不成，只能分給 1 人。', dia: () => dotsC(3, '#999') + '<br>' + dotsC(4, '#bbb'), sort: S6('分一分：', ['只能分給 1 人', '分得成更多人'], [['3 和 4', 0], ['4 和 6', 1], ['5 和 6', 0], ['6 和 9', 1], ['8 和 9', 0]], '試試能不能一起分給 2 人、3 人。', '3 和 4、5 和 6、8 和 9 只能分給 1 人。') },
-  simplest: { rev: '2/3 不能再圈大了。', dia: () => grp6(9, 3, 3, { noHot: true, cell: i => i < 6 ? '#999' : '#ddd' }), sort: S6('分一分：', ['還能圈大', '圈不下去了'], [['4/6', 0], ['2/3', 1], ['6/9', 0], ['3/4', 1], ['2/5', 1]], '分子分母能不能一起每 2 個或 3 個圈？', '4/6、6/9 還能圈；2/3、3/4、2/5 圈不下去了。') },
-  fdivm: { keepGuess: true, dia: () => barRow(4, 4, groupCol(1)) + barRow(4, 4, groupCol(1)), sort: S6('哪些題目在問「裡面有幾個那麼多」？', ['問裡面有幾個', '不是'], [['2 個披薩，每人 1/4 個，可以分給幾人？', 0], ['2 個披薩吃掉 1/4 個，剩多少？', 1], ['3 公尺，每段 1/2 公尺，剪幾段？', 0], ['3 公尺的一半是多少？', 1]], '看是不是在問「可以分成幾份」。', '對了！') },
-  reciprocal: { rev: '每段 3/4 公尺，1 公尺剪 4/3 段：3/4 上下顛倒。', dia: () => barRow(4, 4, groupCol(3)), sort: S6('哪些是上下顛倒的一對？', ['上下顛倒', '不是'], [['2/3 和 3/2', 0], ['3/4 和 4/3', 0], ['2/3 和 1/3', 1], ['3/5 和 5/3', 0], ['3/5 和 3/10', 1]], '分子分母互換位置才算。', '對了！') },
-  decdiv: { rev: '3 公尺剪成 6 段，比 3 多。', dia: () => barRow(6, 6, groupCol(1)), sort: S6('答案會比全部多還是少？', ['比全部多', '比全部少'], [['3÷0.5', 0], ['3÷2', 1], ['2÷0.4', 0], ['6÷3', 1]], '每份比 1 小，份數就多。', '對了！') },
-  pi: { rev: '小杯、大碗，一圈都是寬的 3 倍多一點。', dia: () => rollSvg(20, 1, 1, 3), sort: S6('這些圓，一圈大約是寬的 3 倍多嗎？', ['是', '不是圓'], [['小杯子', 0], ['大碗', 0], ['呼拉圈', 0], ['正方形手帕', 1]], '只要是圓都一樣。', '圓都一樣，手帕不是圓。') },
-  circ: { rev: '62.8 公分：是 20 的 3.14 倍，不是 20 加 3.14。', dia: () => rollSvg(10, 1, 1, 3), sort: S6('哪些是在問一圈的長？', ['一圈的長', '不是'], [['輪子滾一圈走的路', 0], ['盤子邊的花邊', 0], ['盤子的寬', 1], ['桌布要多大', 1]], '繞著邊走一圈的長。', '對了！') },
-  carea: { rev: '長是半個圓周，半徑 3 就是 3×3.14。', dia: () => rectG6(6, 3, false, GRY), sort: S6('要算鋪滿的大小，還是一圈的長？', ['鋪滿的大小', '一圈的長'], [['鋪圓桌巾', 0], ['圓桌邊的花邊', 1], ['圓形草地要種多少草', 0], ['圓形跑道跑一圈', 1]], '鋪滿要算大小。', '對了！') },
-  ratio: { rev: '要 4 杯：一整組一整組加，不是多加 1 杯。', dia: () => `<div class="rows6">${[1, 2].map(() => `<div class="r6">${dotsC(1, '#999')}${dotsC(2, '#ccc')}</div>`).join('')}</div>`, sort: S6('和「1 匙配 2 杯」一樣甜嗎？', ['一樣甜', '不一樣'], [['蜂蜜 2 匙、水 4 杯', 0], ['蜂蜜 2 匙、水 3 杯', 1], ['蜂蜜 3 匙、水 6 杯', 0], ['蜂蜜 3 匙、水 4 杯', 1]], '要整組一起加。', '對了！') },
+  prime: { rev: '7 塊試每排 2、3、4、5、6 塊都有缺塊，只排得成 1 排。', dia: () => twoBox6(['6 塊', rectG6(2, 3, false, GRY)], ['7 塊', rectG6(7, 1, false, GRY)]), sort: S6('這些地磚，排得成「至少兩排、每排至少兩塊」的長方形嗎？', ['排得成', '排不成'], [['4 塊', 0], ['5 塊', 1], ['6 塊', 0], ['7 塊', 1], ['9 塊', 0], ['11 塊', 1]], '試試每排 2 塊、3 塊⋯，看最後一排有沒有缺塊。', '4、6、9 排得成；5、7、11 排不成。') },
+  comp: { rev: '9 塊排得成 3 排、每排 3 塊。9 是奇數，也排得成。', dia: () => rectG6(3, 3, false, GRY), sort: S6('分一分：排得成「至少兩排、每排至少兩塊」的長方形嗎？', ['排得成', '排不成'], [['8 塊', 0], ['9 塊', 0], ['13 塊', 1], ['10 塊', 0], ['2 塊', 1], ['15 塊', 0]], '試試每排 2、3、5 塊，看有沒有缺塊。', '8、9、10、15 排得成；2、13 排不成。') },
+  pfac: { rev: '15＝3×5，3 和 5 都是質數。', dia: () => '<div class="parts6"><b class="chip6 num">2</b>×<b class="chip6 num">2</b>×<b class="chip6 num">5</b></div><div class="trail">20 拆到最後</div>', sort: S6('哪些數已經是質數、不能再拆？', ['是質數，不能再拆', '還能拆成兩個數相乘'], [['2', 0], ['3', 0], ['6', 1], ['5', 0], ['9', 1], ['10', 1]], '試試能不能寫成兩個比 1 大的數相乘。', '2、3、5 不能再拆；6、9、10 還能拆。') },
+  pfd: { rev: '5×6 還沒寫完：6＝2×3，所以 30＝2×3×5。', dia: () => '<div class="parts6"><b class="chip6 num">2</b>×<b class="chip6 num">3</b>×<b class="chip6 num">5</b></div><div class="trail">30 拆到最後</div>', sort: S6('哪些已經寫成質數相乘？', ['每個乘數都是質數', '還有不是質數的'], [['12＝2×2×3', 0], ['12＝3×4', 1], ['8＝2×2×2', 0], ['8＝2×4', 1]], '每個乘數都要是質數才算。', '對了！4 還能拆成 2×2。') },
+  short: { rev: '2×2＝4：8 和 12 最多分成 4 份，每份 2 紅、3 藍。', dia: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3), sort: S6('8 和 12：哪個質數可以當第一個除數？', ['能同時整除 8 和 12', '不能'], [['2', 0], ['3', 1], ['5', 1]], '8 和 12 都要能被它整除。', '只有 2 能同時整除 8 和 12。') },
+  lcmS: { rev: '要全部乘：2×2×2×3＝24。只乘左邊得到的 4 是最大公因數。', dia: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3) },
+  coprime: { rev: '8 和 9 只有 1 能同時整除，分不成別的人數。', dia: () => dotsC(5, '#999') + '<br>' + dotsC(6, '#bbb'), sort: S6('分一分：', ['公因數只有 1', '還有別的公因數'], [['3 和 4', 0], ['4 和 6', 1], ['5 和 6', 0], ['6 和 9', 1], ['8 和 9', 0]], '試試 2 或 3 能不能同時整除這兩個數。', '3 和 4、5 和 6、8 和 9 的公因數只有 1。') },
+  simplest: { rev: '2 和 3 只有 1 能同時整除，不能再一起圈了。', dia: () => grp6(9, 3, 3, { noHot: true, cell: i => i < 6 ? '#999' : '#ddd' }), sort: S6('分一分：', ['還能一起圈', '分子分母互質了'], [['4/6', 0], ['2/3', 1], ['6/9', 0], ['3/4', 1], ['7/4', 1]], '分子分母能不能一起每 2 個或 3 個圈？', '4/6、6/9 還能圈；2/3、3/4、7/4 圈不下去了。') },
+  fdivm: { dia: () => barRow(4, 4, groupCol(1)) + barRow(4, 4, groupCol(1)), sort: S6('哪些題目在問「裡面有幾個那麼多」？', ['問裡面有幾個', '不是'], [['2 個披薩，每人 1/4 個，可以分給幾人？', 0], ['2 個披薩吃掉 1/4 個，剩多少？', 1], ['3 公尺，每段 1/2 公尺，剪幾段？', 0], ['3 公尺的一半是多少？', 1]], '看是不是在問「全部裡面有幾份這麼多」。', '對了！') },
+  reciprocal: { rev: '1 公尺是 3/4 公尺的 4/3 倍：1 份整的，再加 1/3 份。', dia: () => barRow(3, 3, groupCol(2)), sort: S6('哪些兩個數相乘等於 1？', ['相乘等於 1', '相乘不等於 1'], [['2/3 和 3/2', 0], ['3/4 和 4/3', 0], ['2/3 和 1/3', 1], ['3/5 和 5/3', 0], ['3/5 和 3/10', 1]], '把兩個數相乘看看是不是 1：分子分母互換位置才會。', '對了！') },
+  decdiv: { rev: '3 公尺剪成 6 段，比 3 多。', dia: () => barRow(6, 6, groupCol(1)), sort: S6('商會比被除數大，還是小？', ['比被除數大', '比被除數小'], [['3÷0.5', 0], ['3÷1.5', 1], ['2÷0.4', 0], ['6÷3', 1]], '除數比 1 小，商比被除數大；除數比 1 大，商比被除數小。', '對了！') },
+  dshift: { rev: '一樣：都用 0.1 公尺當一小格來數，12 小格裡有 3 個 4 小格。', dia: () => grp6(12, 4, 3, { noHot: true, cell: '#ddd' }) },
+  pi: { rev: '小圓、大圓，一圈都是直徑的 3 倍多一點。', dia: () => rollSvg(20, 1, 1, 3), sort: S6('這些東西的邊，一圈的長÷直徑都是 3 倍多一點嗎？', ['是圓，3 倍多一點', '不是圓'], [['小杯子的杯口', 0], ['大碗的碗口', 0], ['呼拉圈', 0], ['正方形手帕', 1]], '只要是圓都一樣。', '圓都一樣；手帕是正方形，不是圓。') },
+  circ: { dia: () => rollSvg(10, 1, 1, 3), sort: S6('哪些是在問一圈的長？', ['一圈的長', '不是'], [['輪子滾一圈（不打滑）走的路', 0], ['盤子邊的花邊', 0], ['盤子的直徑', 1], ['桌布要蓋住多大的桌面', 1]], '繞著邊走一圈的長。', '對了！') },
+  halfc: { rev: '彎邊 15.7 公分，還要加上直的直徑 10 公分：25.7 公分。', revPic: () => halfSvg(2), dia: () => halfSvg(2) },
+  carea: { rev: '長是半個圓周（3×3.14），寬是半徑 3。', dia: () => rectG6(6, 3, false, GRY), sort: S6('要算內部的大小，還是一圈的長？', ['內部的大小', '一圈的長'], [['剛好蓋住圓桌桌面的圓形貼紙', 0], ['圓桌邊的花邊', 1], ['圓形草地要種多少草', 0], ['圓形跑道跑一圈', 1]], '蓋住、鋪滿，算的是內部的大小。', '對了！') },
+  ringA: { rev: '大圓面積減小圓面積：28.26－3.14＝25.12。', dia: () => ringSvg(2) },
+  ratio: { rev: '2 匙要 4 杯：一整組一整組加，不是只多加 1 杯。', dia: () => `<div class="rows6">${[1, 2].map(() => `<div class="r6">${hw6(1, 2)}</div>`).join('')}</div>`, sort: S6('和「1 匙蜂蜜配 2 杯水」一樣甜嗎？（同一支匙、同一個杯子）', ['一樣甜', '不一樣'], [['蜂蜜 2 匙、水 4 杯', 0], ['蜂蜜 2 匙、水 3 杯', 1], ['蜂蜜 3 匙、水 6 杯', 0], ['蜂蜜 3 匙、水 4 杯', 1]], '要一整組一起加：每 1 匙蜂蜜都配 2 杯水。', '對了！') },
   rate: { rev: '蜂蜜 2 杯是水 3 杯的 2/3 倍。', dia: () => barU(3, GRY, '水') + barU(2, '#999', '蜂蜜', 66.7), sort: S6('哪些算式在算「蜂蜜是水的幾倍」？', ['蜂蜜÷水', '不是'], [['蜂蜜 1、水 2：1÷2', 0], ['蜂蜜 3、水 4：3÷4', 0], ['蜂蜜 2、水 3：3÷2', 1], ['蜂蜜 2、水 3：2＋3', 1]], '蜂蜜的杯數放前面，除以水的杯數。', '對了！') },
-  eqr: { rev: '不一樣：3：4 比較淡，4：6 才一樣甜。', dia: () => tbl6([['蜂蜜', 2, 4, 6], ['水', 3, 6, 9]]), sort: S6('和 2：3 一樣甜嗎？', ['一樣甜', '不一樣'], [['4：6', 0], ['3：4', 1], ['6：9', 0], ['5：6', 1]], '前後要乘同一個數。', '對了！') },
-  simpr: { rev: '2 組對 3 組，不能再圈大了。', dia: () => grp6(6, 3, 2, { noHot: true, cell: '#bbb' }) + grp6(9, 3, 3, { noHot: true, cell: '#ddd' }), sort: S6('分一分：', ['不能再圈大', '還能圈大'], [['2：3', 0], ['4：6', 1], ['3：5', 0], ['6：9', 1]], '兩邊能不能一起每 2 個或 3 個圈？', '對了！') },
-  arc: { rev: '10 公分：整圈 40 公分的 1/4。', dia: () => pie6(4, 4, 1, { takenCol: '#999' }), sort: S6('要算彎邊的長，還是一片的大小？', ['彎邊的長', '一片的大小'], [['披薩邊要多少餅皮', 0], ['扇子邊的花邊', 0], ['披薩上撒多少起司', 1], ['扇子紙面要多少紙', 1]], '沿著邊走的是長。', '對了！') },
-  sarea: { rev: '切成 2 片，一片 50。', dia: () => pie6(4, 4, 1, { takenCol: '#999' }), sort: S6('要算一片的大小，還是彎邊的長？', ['一片的大小', '彎邊的長'], [['撒多少起司', 0], ['邊要多少餅皮', 1], ['扇子紙面要多少紙', 0], ['扇子邊的花邊', 1]], '鋪滿的是大小。', '對了！') },
+  eqr: { rev: '多做一倍：前後都乘 2，是 4 杯蜂蜜、6 杯水。都加 1 的 3：4，蜂蜜的比例比較高，比較甜。', dia: () => tbl6([['蜂蜜', 2, 4, 6], ['水', 3, 6, 9]]), sort: S6('和 2：3 是同一個配方嗎？', ['同一個配方', '不一樣'], [['4：6', 0], ['3：4', 1], ['6：9', 0], ['5：6', 1]], '前後要乘同一個數，不是加同一個數。', '對了！') },
+  share: { rev: '一輪 2＋3＝5 箱，20 箱分 4 輪：甲站 2×4＝8 箱。', dia: () => `<div class="rows6">${[1, 2, 3, 4].map(() => `<div class="r6">${dotsC(2, '#999')}｜${dotsC(3, '#ccc')}</div>`).join('')}</div>` },
+  simpr: { rev: '2 和 3 的公因數只有 1，不能再一起圈了。', dia: () => grp6(6, 3, 2, { noHot: true, cell: '#bbb' }) + grp6(9, 3, 3, { noHot: true, cell: '#ddd' }), sort: S6('分一分：', ['不能再一起圈', '還能一起圈'], [['2：3', 0], ['4：6', 1], ['3：5', 0], ['6：9', 1]], '兩邊能不能一起每 2 個或 3 個圈？', '對了！') },
+  arc: { rev: '平均切成 4 片，一片的彎邊是 40÷4＝10 公分。', dia: () => pie6(4, 4, 1, { takenCol: '#999' }), sort: S6('要算彎邊的長，還是一片的大小？', ['彎邊的長', '一片的大小'], [['一片披薩彎彎的邊有多長', 0], ['扇子彎邊上的花邊', 0], ['披薩上撒滿起司的地方', 1], ['扇子紙面要多少紙', 1]], '沿著邊量的是長；鋪滿的是大小。', '對了！') },
+  sperim: { rev: '彎邊和兩條半徑都要貼：9.42＋6＋6＝21.42 公分。', dia: () => sectorSvg(3) },
+  sarea: { rev: '平均切成 2 片，一片 100÷2＝50 平方公分。', dia: () => pie6(4, 4, 1, { takenCol: '#999' }), sort: S6('要算一片的大小，還是彎邊的長？', ['一片的大小', '彎邊的長'], [['撒滿起司的地方', 0], ['彎邊要多少餅皮', 1], ['扇子紙面要多少紙', 0], ['扇子彎邊上的花邊', 1]], '鋪滿的是大小。', '對了！') },
   speed: { rev: '小綠比較快：每分鐘 50 公尺比 40 公尺多。', dia: () => barU(2, GRY, '小綠：2 段') + barU(3, '#999', '小藍：3 段'), sort: S6('哪些算式在算「每 1 分鐘走多遠」？', ['距離÷時間', '不是'], [['100 公尺÷2 分鐘', 0], ['100 公尺＋2 分鐘', 1], ['120 公尺÷3 分鐘', 0], ['3 分鐘÷120 公尺', 1]], '路的長除以時間。', '對了！') },
-  shisu: { rev: '不用切：已經是 1 小時。', dia: () => barRow(2, 2, GRY), sort: S6('哪些是在說每 1 小時走多遠？', ['每 1 小時', '不是'], [['汽車每小時 60 公里', 0], ['汽車開了 60 小時', 1], ['高鐵 1 小時 300 公里', 0], ['高鐵有 300 個座位', 1]], '要有「每 1 小時」和距離。', '對了！') },
-  fensu: { rev: '走路看每分鐘比較好懂。', dia: () => barRow(3, 3, GRY), sort: S6('哪些是在說每 1 分鐘走多遠？', ['每 1 分鐘', '不是'], [['走路每分鐘 60 公尺', 0], ['走了 60 分鐘', 1], ['溜滑板每分鐘 200 公尺', 0], ['滑板重 2 公斤', 1]], '要有「每 1 分鐘」和距離。', '對了！') },
-  miaosu: { rev: '聲音看每秒比較好懂。', dia: () => barRow(2, 2, GRY), sort: S6('哪些是在說每 1 秒走多遠？', ['每 1 秒', '不是'], [['跑步每秒 5 公尺', 0], ['跑了 5 秒', 1], ['球每秒滾 10 公尺', 0], ['球有 10 顆', 1]], '要有「每 1 秒」和距離。', '對了！') },
-  countc: { rev: '是 6 種，不是 5 種：每件上衣都有 3 種配法。', dia: () => '<div class="tree6"><div>1 ─ ○○○</div><div>2 ─ ○○○</div></div>', sort: S6('用乘的，還是用加的？', ['一步接一步（乘）', '只選一樣（加）'], [['上衣配裙子', 0], ['飯配湯', 0], ['吃飯或吃麵，選一種', 1], ['去程配回程', 0], ['選一種球類或一種音樂社', 1]], '要選兩樣配在一起，才用乘的。', '對了！') },
-  rel: { rev: '晚上 9 小時：15＋9＝24。', dia: () => `<div class="hz6"><div style="flex:15">${barRow(1, 1, '#ccc')}</div><div style="flex:9">${barRow(1, 1, '#777')}</div></div>`, sort: S6('哪些是一直不變的關係？', ['一直不變', '會變的數'], [['白天＋晚上＝24', 0], ['今天白天有幾小時', 1], ['哥哥－弟弟＝3', 0], ['弟弟今年幾歲', 1]], '不管哪一天、哪一年都對的才算。', '對了！') },
-  equal: { rev: '只拿一邊，天平就歪了。', dia: () => '<div class="bal6"><span class="pan6">▢▢ ●●●</span><i>＝</i><span class="pan6">●●●●●●●●●</span></div>', sort: S6('這樣做，還會平衡嗎？', ['還是平', '會歪'], [['兩邊都拿走 1 顆', 0], ['只拿走左邊 1 顆', 1], ['兩邊都放 2 顆', 0], ['只放右邊 2 顆', 1]], '兩邊要做一樣的事。', '對了！') },
-  base: { rev: '不一樣！乙當尺，甲是 2 倍；甲當尺，乙是 1/2 倍。換誰當尺，答案就換了。很多人以為長的那個一定當尺。', dia: () => barU(4, GRY, '📏 哥哥') + barU(3, '#999', '弟弟', 75), sort: S6('誰是尺（「的」後面那一個）？', ['當尺的', '被量的'], [['「哥哥是弟弟的幾倍」的弟弟', 0], ['「哥哥是弟弟的幾倍」的哥哥', 1], ['「甲是乙的幾倍」的乙', 0], ['「甲是乙的幾倍」的甲', 1]], '「的」後面那一個當尺。', '對了！') },
-  cmpq: { rev: '被量的是水。', dia: () => barU(4, GRY, '📏 哥哥') + barU(3, '#999', '弟弟', 75), sort: S6('誰是被量的（「的」前面那一個）？', ['被量的', '當尺的'], [['「水是蜂蜜的幾倍」的水', 0], ['「水是蜂蜜的幾倍」的蜂蜜', 1], ['「甲是乙的幾倍」的甲', 0], ['「甲是乙的幾倍」的乙', 1]], '「的」前面那一個被量。', '對了！') },
-  zoom: { rev: '高要 4 格：寬變 2 倍，高也要變 2 倍。', dia: () => rectG6(6, 4, false, GRY), sort: S6('寬 3 高 2 的旗子變大，哪些沒變形？', ['沒變形', '歪了'], [['寬 6、高 4', 0], ['寬 6、高 3', 1], ['寬 9、高 6', 0], ['寬 4、高 4', 1]], '寬和高要乘同一個數。', '對了！') },
-  shrink: { rev: '只縮寬，形狀會變瘦、歪了。', dia: () => rectG6(3, 2, false, GRY), sort: S6('寬 6 高 4 的海報變小，哪些沒變形？', ['沒變形', '歪了'], [['寬 3、高 2', 0], ['寬 3、高 4', 1], ['寬 6、高 2', 1], ['寬 1.5、高 1', 0]], '寬和高要乘同一個分數。', '對了！') },
-  mapscale: { rev: '2 公分：縮得越小，畫得越短。', dia: () => road6(3, 3, 1), sort: S6('分一分：', ['1 公分代表 1 公里', '1 公分代表 2 公里'], [['畫 3 公分是 3 公里', 0], ['畫 2 公分是 4 公里', 1], ['畫 4 公分是 4 公里', 0], ['畫 1 公分是 2 公里', 1]], '算算每 1 公分代表多遠。', '對了！') },
-  prismw: { rev: '甜筒越上面越大，每層不一樣大。', dia: () => isoSvg(2, 2, 3, undefined, ['#ddd', '#bbb', '#999']), sort: S6('每一層一樣大嗎？', ['每層一樣大', '每層不一樣'], [['罐頭', 0], ['甜筒', 1], ['盒子', 0], ['金字塔', 1], ['方形蛋糕', 0]], '從下往上，每一層是不是同樣大？', '對了！') },
-  vol: { rev: '一層 5 塊、6 層：5×6＝30 塊。', dia: () => isoSvg(3, 2, 3, undefined, ['#ddd', '#bbb', '#999']), sort: S6('哪些算式是「一層×層數」？', ['一層×層數', '不是'], [['6×3', 0], ['6＋3', 1], ['10×4', 0], ['10＋4', 1]], '一層的塊數乘幾層。', '對了！') },
-  surf: { rev: '罐頭要包 3 塊：外皮和上下兩個蓋。', dia: () => `<div class="faces6">${['上', '下', '前', '後', '左', '右'].map(f => `<span class="face6">${f}</span>`).join('')}</div>`, sort: S6('哪些是要包的面？', ['要包的面', '裡面的空間'], [['盒子的上面', 0], ['盒子的側面', 0], ['盒子裝的糖', 1], ['罐頭的外皮', 0], ['罐頭裝的湯', 1]], '包裝紙包的是外面。', '對了！') },
-  pie: { rev: '月球 5 片，是 10 片的一半。', dia: () => slice10(VOTES, 10), sort: S6('想看什麼？', ['每部分占全部多少', '隨時間怎麼變'], [['票選各占多少', 0], ['零用錢怎麼分', 0], ['一天的氣溫', 1], ['每年的身高', 1]], '部分合起來是全部的，才分到左邊。', '對了！') },
-  likely: { rev: '紅球比較會摸到：10 次裡 9 次紅。', dia: () => dotsC(9, '#999') + dotsC(1, '#ddd'), sort: S6('分一分：', ['很容易發生', '很難發生'], [['袋子 9 紅 1 藍，摸到紅球', 0], ['袋子 9 紅 1 藍，摸到藍球', 1], ['30 天有 27 天晴，明天晴', 0], ['30 天只有 1 天下雪，明天下雪', 1]], '看資料哪一種多很多。', '對了！') },
+  shisu: { rev: '45÷3＝15：平均每小時 15 公里。', dia: () => barRow(2, 2, GRY), sort: S6('哪些是在說每 1 小時走多遠？', ['每 1 小時', '不是'], [['汽車平均每小時 60 公里', 0], ['汽車開了 60 小時', 1], ['高鐵 1 小時大約 300 公里', 0], ['高鐵有 300 個座位', 1]], '要有「每 1 小時」和距離。', '對了！') },
+  fensu: { rev: '400÷2＝200：每分鐘 200 公尺。', dia: () => barRow(3, 3, GRY), sort: S6('哪些是在說每 1 分鐘走多遠？', ['每 1 分鐘', '不是'], [['走路每分鐘 60 公尺', 0], ['走了 60 分鐘', 1], ['溜滑板每分鐘 200 公尺', 0], ['滑板重 2 公斤', 1]], '要有「每 1 分鐘」和距離。', '對了！') },
+  miaosu: { rev: '30÷3＝10：每秒 10 公尺。', dia: () => barRow(2, 2, GRY), sort: S6('哪些是在說每 1 秒走多遠？', ['每 1 秒', '不是'], [['跑步每秒 5 公尺', 0], ['跑了 5 秒', 1], ['球每秒滾 10 公尺', 0], ['球有 10 顆', 1]], '要有「每 1 秒」和距離。', '對了！') },
+  avgsp: { rev: '整趟 24 公里、3 小時：24÷3＝8，不是 12 和 6 的平均 9。', dia: () => barRow(3, 3, GRY) },
+  countc: { rev: '是 6 種：每件上衣都能配 3 件裙子，3×2＝6。', dia: () => '<div class="tree6"><div>1 ─ ○○○</div><div>2 ─ ○○○</div></div>', sort: S6('用乘的，還是用加的？', ['一步接一步配在一起（乘）', '只選一樣（加）'], [['上衣配裙子', 0], ['一份套餐：飯配湯', 0], ['吃飯或吃麵，選一種', 1], ['去程配回程', 0], ['選一種球類或一種音樂社團', 1]], '要選兩樣配在一起，而且每一種都能配，才用乘的。', '對了！') },
+  rel: { rev: '晚上 9 小時：15＋9＝24。', dia: () => `<div class="hz6"><div style="flex:15">${barRow(1, 1, '#ccc')}</div><div style="flex:9">${barRow(1, 1, '#777')}</div></div>`, sort: S6('哪些是一直不變的關係？', ['一直不變', '會變的數'], [['白天＋晚上＝24', 0], ['今天白天有幾小時', 1], ['這對兄弟：哥哥－弟弟＝3', 0], ['弟弟今年幾歲', 1]], '不管哪一天、哪一年都對的才算。', '對了！') },
+  equal: { dia: () => '<div class="bal6"><span class="pan6">▢ ●●●</span><i>＝</i><span class="pan6">●●●</span></div>', sort: S6('這樣做，天平還會平嗎？', ['還是平的', '會傾斜'], [['兩邊都拿走 1 顆', 0], ['只拿走左邊 1 顆', 1], ['兩邊都放 2 顆', 0], ['只放右邊 2 顆', 1]], '兩邊要做一樣的事。', '對了！') },
+  base: { rev: '不一樣！把乙艙看作 1，甲艙是 2 倍；把甲艙看作 1，乙艙是 1/2 倍。看作 1 的量換了，答案就換了。', dia: () => barU(4, GRY, '📏 哥哥（看作 1）') + barU(3, '#999', '弟弟', 75), sort: S6('這一題要把誰看作 1？', ['看作 1 的', '拿來比的'], [['「哥哥是弟弟的幾倍」：弟弟', 0], ['「哥哥是弟弟的幾倍」：哥哥', 1], ['「以小美的卡片數為準，小安有幾倍」：小美', 0], ['「以小美的卡片數為準，小安有幾倍」：小安', 1]], '先看題目拿誰和誰比；被拿來當標準的，就是看作 1 的。', '對了！') },
+  cmpq: { rev: '拿來和哥哥比的是弟弟。', dia: () => barU(4, GRY, '📏 哥哥') + barU(3, '#999', '弟弟', 75), sort: S6('誰是拿來比的量？', ['拿來比的', '看作 1 的'], [['「水是蜂蜜的幾倍」：水', 0], ['「水是蜂蜜的幾倍」：蜂蜜', 1], ['「甲是乙的幾倍」：甲', 0], ['「甲是乙的幾倍」：乙', 1]], '先找被看作 1 的；另一個就是拿來比的。', '對了！') },
+  findb: { rev: '甲艙 15 箱是 3 段，每段 5 箱；乙艙 4 段是 20 箱。', dia: () => segs6(4, 4, GRY, '乙艙 4 段', 100, '') + segs6(3, 3, '#999', '甲艙 3 段', 75, '') },
+  zoom: { rev: '高要 4 格：寬乘 2，高也要乘 2。', dia: () => rectG6(6, 4, false, GRY), sort: S6('寬 3 高 2 的旗子變大，哪些形狀和原來一樣？', ['形狀一樣', '比例變了'], [['寬 6、高 4', 0], ['寬 6、高 3', 1], ['寬 9、高 6', 0], ['寬 4、高 4', 1]], '寬和高要乘同一個數。', '對了！') },
+  shrink: { dia: () => rectG6(3, 2, false, GRY), sort: S6('寬 6 高 4 的海報變小，哪些形狀和原來一樣？', ['形狀一樣', '比例變了'], [['寬 3、高 2', 0], ['寬 3、高 4', 1], ['寬 6、高 2', 1], ['寬 1.5、高 1', 0]], '寬和高要乘同一個分數。', '對了！') },
+  mapscale: { rev: '2 公分：圖上 1 公分代表的距離越長，同一條路在圖上越短。', dia: () => road6(3, 3, 1), sort: S6('分一分：', ['圖上 1 公分代表 1 公里', '圖上 1 公分代表 2 公里'], [['圖上 3 公分是 3 公里', 0], ['圖上 2 公分是 4 公里', 1], ['圖上 4 公分是 4 公里', 0], ['圖上 1 公分是 2 公里', 1]], '算算圖上每 1 公分代表多遠。', '對了！') },
+  prismw: { rev: '甜筒越上面越大，每一層不一樣大。', dia: () => isoSvg(2, 2, 3, undefined, ['#ddd', '#bbb', '#999']), sort: S6('從下往上，每一層都和底面一樣大嗎？', ['每層一樣大', '每層不一樣'], [['罐頭', 0], ['甜筒', 1], ['盒子', 0], ['金字塔', 1], ['方形蛋糕', 0]], '從下往上，每一層是不是同樣大？', '對了！') },
+  vol: { rev: '一層 5 塊、6 層：5×6＝30 塊。', dia: () => isoSvg(3, 2, 3, undefined, ['#ddd', '#bbb', '#999']), sort: S6('哪些算式是「一層的塊數×層數」？', ['一層×層數', '不是'], [['6×3', 0], ['6＋3', 1], ['10×4', 0], ['10＋4', 1]], '一層的塊數乘幾層。', '對了！') },
+  surf: { rev: '罐頭要包 3 塊：側面和上下兩個圓。', dia: () => `<div class="faces6">${['上', '下', '前', '後', '左', '右'].map(f => `<span class="face6">${f}</span>`).join('')}</div>`, sort: S6('哪些是要包的面？', ['要包的面', '裡面的空間'], [['盒子的上面', 0], ['盒子的側面', 0], ['盒子裝的糖', 1], ['罐頭的側面', 0], ['罐頭裝的湯', 1]], '包裝紙包的是外面。', '對了！') },
+  pie: { rev: '月球 5 片，是 10 片的一半。', dia: () => slice10(VOTES, 10), sort: S6('想看什麼？', ['每部分占全部多少', '隨時間怎麼變'], [['每人一票，各星球各占多少', 0], ['零用錢的各種花費各占多少', 0], ['一天的氣溫', 1], ['每年的身高', 1]], '各部分合起來剛好是全部的，才分到左邊。', '對了！') },
+  likely: { rev: '紅球有 9 顆、藍球只有 1 顆，紅球比較容易摸到。', dia: () => dotsC(9, '#999') + dotsC(1, '#ddd'), sort: S6('分一分：', ['比較容易發生', '比較不容易發生'], [['袋中 9 紅 1 藍（搖勻、不看），摸到紅球', 0], ['同一個袋子，摸到藍球', 1], ['公平轉盤 10 格中 8 格黃，轉到黃色', 0], ['同一個轉盤，轉到不是黃色', 1]], '比一比：顆數或格數，哪一種多？', '對了！比較不容易，也還是可能發生。') },
 };
 for (const [k, v] of Object.entries(AUG)) if (CONCEPTS[k]) Object.assign(CONCEPTS[k], v);
+// 揭曉畫面用和揭曉句子同一個例子（預設是最後一個操作的畫面，例子不同時在這裡指定）
+const REVPIC = {
+  short: () => ladderHtml([[2, 8, 12], [2, 4, 6]], 2, 3),
+  base: () => cut6(2, 1, { noCut: true, col: '#f7c873', lab: '📏 甲艙 6 箱（看作 1）' }) + barU(1, K2, '乙艙 3 箱', 50),
+  decdiv: () => cut6(6, 5, { noCut: true, lab: '3 公尺，每段 0.5 公尺' }),
+  ringA: () => ringSvg(2),
+  eqr: () => `<div class="pair6"><div>${cupHtml(C_HW, 2, 3)}<small>2：3</small></div><div>${cupHtml(C_HW, 4, 6)}<small>4：6</small></div><div>${cupHtml(C_HW, 3, 4)}<small>3：4</small></div></div>`,
+  share: () => shareRows6(4),
+  arc: () => pie6(4, 4, 1, { takenCol: K4 }),
+  sperim: () => sectorSvg(3),
+  speed: () => cut6(2, 1, { noCut: true, col: '#f4a9a0', lab: '小綠每段 50 公尺' }) + cut6(3, 2, { noCut: true, col: '#a9d0f0', lab: '小藍每段 40 公尺' }),
+  avgsp: () => cut6(3, 2, { noCut: true, lab: '整趟 24 公里，3 小時：每段 8 公里' }),
+  countc: () => `<div class="tree6">${[0, 1].map(i => `<div class="tr6"><span class="op6 on">👕${i + 1}</span><span class="tr-l">👗👗👗</span></div>`).join('')}</div>`,
+  findb: () => segs6(4, 4, K2, '📏 乙艙 20 箱（4 段）', 100, 5) + segs6(3, 3, '#f7c873', '甲艙 15 箱（3 段）', 75, 5),
+  zoom: () => rectG6(3, 2) + rectG6(6, 4),
+  vol: () => isoSvg(5, 1, 6),
+};
+for (const [k, f] of Object.entries(REVPIC)) if (CONCEPTS[k]) CONCEPTS[k].revPic = f;
 /* ---------- 單位教室 ---------- */
 const LESSONS = {
   dist: {
     title: '距離', sem: '六下', icon: '📏', who: 'seal', name: '波波', say: '地圖上的 1 公分，實際可能很遠。先記得每個單位多長。',
     cards: [
-      { e: '✏️', u: '公分', t: '大約食指的寬。一枝鉛筆大約 18 公分。' },
+      { e: '✏️', u: '公分', t: '尺上的 1 大格。很多人的食指寬大約 1 公分，可以用來估測。一枝鉛筆大約 18 公分。' },
       { e: '🚪', u: '公尺', t: '1 公尺＝100 公分。門大約 2 公尺高。' },
-      { e: '🚶', u: '公里', t: '1 公里＝1000 公尺。走路大約 15 分鐘。' },
+      { e: '🚶', u: '公里', t: '1 公里＝1000 公尺。用一般的步速估算，大約要走 15 分鐘。' },
     ],
     labs: [{ n: 10, each: 100, from: '公尺', to: '1000 公尺', btn: '走 100 公尺', done: '1000 公尺就是 1 公里！' }],
   },
   spd: {
-    title: '快慢', sem: '六上', icon: '🚄', who: 'rabbit', name: '派派', say: '時速看 1 小時走多遠，分速看 1 分鐘，秒速看 1 秒。',
+    title: '快慢', sem: '六上', icon: '🚄', who: 'rabbit', name: '派派', say: '時速看 1 小時走多遠，分速看 1 分鐘，秒速看 1 秒。同一個快慢，三種說法都可以。',
     cards: [
-      { e: '🚶', u: '分速', t: '每 1 分鐘走多遠。小朋友走路大約分速 60 公尺。' },
+      { e: '🚶', u: '分速', t: '每 1 分鐘走多遠。小朋友走路大約分速 60 公尺，也就是每秒約 1 公尺。' },
       { e: '🏃', u: '秒速', t: '每 1 秒走多遠。快跑大約秒速 5 公尺。' },
-      { e: '🚄', u: '時速', t: '每 1 小時走多遠。高鐵大約時速 300 公里。' },
+      { e: '🚄', u: '時速', t: '每 1 小時走多遠。高鐵大約時速 300 公里，也就是每秒約 83 公尺。' },
     ],
-    labs: [{ view: 'clock', n: 6, each: 10, from: '分鐘', to: '60 分鐘', btn: '走 10 分鐘', done: '60 分鐘就是 1 小時。分速 60 公尺，1 小時走 3600 公尺，就是時速 3.6 公里！' }],
+    labs: [{ view: 'clock', n: 6, each: 10, from: '分鐘', to: '60 分鐘', btn: '走 10 分鐘', done: '60 分鐘就是 1 小時。分速 60 公尺，1 小時走 60×60＝3600 公尺，就是時速 3.6 公里！' }],
   },
   vol: {
     title: '裝多少', sem: '六下', icon: '🛢️', who: 'turtle', name: '阿穩', say: '燃料槽裝多少？先看看這些單位有多大。',
     cards: [
-      { e: '🎲', u: '立方公分', t: '一顆小骰子，每邊 1 公分。' },
-      { e: '🍼', u: '公升', t: '1 公升＝1000 立方公分。每邊 10 公分的盒子剛好裝滿。' },
-      { e: '📦', u: '立方公尺', t: '每邊 1 公尺的大方塊，大約一台大冰箱。' },
+      { e: '🎲', u: '立方公分', t: '一個模型小方塊，每邊 1 公分。' },
+      { e: '🧊', u: '公升', t: '1 公升＝1000 立方公分。內部每邊 10 公分的正方體容器，裝滿剛好 1 公升。' },
+      { e: '📦', u: '立方公尺', t: '每邊 1 公尺的大正方體，可以裝 1000 公升。' },
     ],
     labs: [{ n: 10, each: 100, from: '立方公分', to: '1000 立方公分', btn: '再疊一層（100 立方公分）', done: '10 層共 1000 立方公分，就是 1 公升！' }],
   },
@@ -1900,56 +2111,57 @@ const LESSONS = {
 const ms6 = (e, n, k, lab) => `<div class="road6">${Array.from({ length: n }, (_, i) => `<span class="${i < k ? 'on' : i === k ? 'hot6' : ''}">${i < k ? e : '　'}</span>`).join('')}</div>${lab ? `<div class="trail">${lab}</div>` : ''}`;
 // 單位教室的開場（和小故事同一結構）：舊經驗 → 動手（單位名稱先不出現）→ 一次命名一個單位 → 圖對應 → 選對的話 → 換你出題 → 驗收；之後才接原本的量感與換算練習
 const LESSON_STORY = {
-  dist: { sem: '六下', who: 'seal', word: '公分、公尺、公里', hide: ['公分', '公尺', '公里'],
+  dist: { sem: '六下', who: 'seal', word: '公分、公尺、公里', hide: ['公分', '公尺', '公里'], fs: 's2', sortAt: 'map',
     steps: [
-      { t: 'say', say: '量東西你會：用手指一指一指量，用腳一步一步量。', pic: () => '<div class="it6">✋ 👣</div>' },
-      { t: 'act', id: 'd', who: 'demo', say: '量橡皮擦：一指一指放上去。', n: 4, pic: k => ms6('☝️', 4, k), cap: k => `${k} 個手指寬`, done: '橡皮擦是 4 個手指寬。' },
-      { t: 'name', word: '公分', say: '一個手指寬，有名字。', name: '一個手指寬大約是 1 <b>公分</b>。橡皮擦大約 4 公分。', pic: () => ms6('☝️', 4, 4) },
-      { t: 'act', id: 's', say: '量走廊：手指太小了，改用大步，點腳印。', n: 6, pic: k => ms6('👣', 6, k), cap: k => `${k} 大步，用手指要 ${k * 100} 指`, done: '6 大步。用手指要 600 指，太多了！' },
-      { t: 'name', word: '公尺', say: '一大步，也有名字。', name: '一大步大約是 1 <b>公尺</b>，就是 100 公分。', pic: () => ms6('👣', 6, 6) },
-      { t: 'guess', say: '學校到車站，用大步量方便嗎？', o: ['步數太多了，要更大的單位', '剛剛好'] },
-      { t: 'act', id: 's2', say: '走 15 分鐘的路：點時鐘，每點一次走 5 分鐘。', n: 3, pic: k => ms6('⏰', 3, k), cap: k => `走了 ${k * 5} 分鐘，大約 ${Math.round(k * 1000 / 3)} 大步`, done: '大約 1000 大步。' },
-      { t: 'name', word: '公里', say: '這麼長的一段，也有名字。', name: '走 15 分鐘、大約 1000 大步，是 1 <b>公里</b>＝1000 公尺。', pic: () => ms6('⏰', 3, 3) },
-      { t: 'say', id: 'map', say: '三個單位接起來：', pic: () => sym6([[100, '公分', K1], '＝', [1, '公尺', K2]]) + sym6([[1000, '公尺', K2], '＝', [1, '公里', K3]]) },
-      { t: 'check', o: ['越長的東西用越大的單位', '什麼都用公分最好'], a: 0 },
-      { t: 'pose', say: '哪一題用公里來說最合適？', o: ['臺北到臺中有多遠？', '鉛筆有多長？'], a: 0 },
+      { t: 'say', say: '先看一個量長度的方法：用手指一指一指量，或用腳一步一步量。', pic: () => '<div class="it6">✋ 👣</div>' },
+      { t: 'act', id: 'd', who: 'demo', say: '量橡皮擦：一指一指放上去。', n: 4, pic: k => ms6('☝️', 4, k), cap: k => `${k} 個手指寬`, done: '這塊橡皮擦大約是 4 個手指寬。' },
+      { t: 'say', say: '可是每個人的手指寬不一樣，大人的手指比較寬。要讓大家量得一樣，就要用共同的標準單位，用尺來量。', pic: () => '<div class="it6">☝️ ≠ 👆　📏</div>' },
+      { t: 'name', word: '公分', say: '尺上每一大格的長度，有名字。', name: '尺上每一大格的長度是 1 <b>公分</b>。很多人的食指寬大約 1 公分，可以用來估測；精確的長度要用尺量。', pic: () => ms6('📏', 4, 4) },
+      { t: 'act', id: 's', say: '量走廊：用公分一格一格量太多了。改用一條 100 公分長的捲尺，一段一段量：點一下量一段。', tip: '點下一個空格，量下一段 100 公分。', n: 6, pic: k => ms6('📏', 6, k), cap: k => `量了 ${k} 段，每段 100 公分，100×${k}＝${k * 100} 公分`, done: '6 段，600 公分。' },
+      { t: 'name', word: '公尺', say: '100 公分的長度，也有名字。', name: '100 公分的長度叫 1 <b>公尺</b>，1 公尺＝100 公分。大人走一大步大約 1 公尺，可以用來估測。', pic: () => ms6('📏', 6, 6) },
+      { t: 'guess', say: '學校到車站，用 1 公尺一段一段量，方便嗎？', o: ['太多段了，要更大的單位', '剛剛好'] },
+      { t: 'act', id: 's2', say: '從學校走到車站，路邊每 100 公尺有一塊標示牌：點一下走過一塊。', tip: '點下一個空格，走過下一塊標示牌。', n: 10, pic: k => ms6('🪧', 10, k), cap: k => `走過 ${k} 塊，100×${k}＝${k * 100} 公尺`, done: '走過 10 塊標示牌，是 1000 公尺。用一般的步速估算，大約要走 15 分鐘。' },
+      { t: 'name', word: '公里', say: '1000 公尺的長度，也有名字。', name: '1000 公尺的長度叫 1 <b>公里</b>，1 公里＝1000 公尺。', pic: () => ms6('🪧', 10, 10) },
+      { t: 'say', id: 'map', say: '三個單位接起來；手指寬、步長只能幫忙估測。', pic: () => sym6([[100, '公分', K1], '＝', [1, '公尺', K2]]) + sym6([[1000, '公尺', K2], '＝', [1, '公里', K3]]) },
+      { t: 'check', o: ['越長的距離，用越大的單位比較方便', '什麼都用公分最好'], a: 0, why: [, '用公分說臺北到臺中，數字會非常大，不方便。'] },
+      { t: 'pose', say: '哪一題用公里來說最合適？', o: ['臺北到臺中有多遠？', '鉛筆有多長？'], a: 0, why: [, '鉛筆很短，用公分比較合適。'] },
     ],
-    q: { t: '繞操場一圈，用哪個說最合適？', o: ['200 公尺', '200 公分', '200 公里'], a: 0, ok: '對了！大約 200 大步。', back: 's', hint: '想想要走幾大步。' } },
-  spd: { sem: '六上', who: 'rabbit', word: '時速、分速、秒速', hide: ['時速', '分速', '秒速'],
+    q: { t: '學校操場一圈大約多長？哪一個最合理？', o: ['200 公尺', '200 公分', '200 公里'], a: 0, why: [, '200 公分只有大約兩個大人那麼長，太短了。', '200 公里比臺北到臺中還遠，太長了。'], ok: '對了！很多學校的操場一圈是 200 公尺。', back: 's', hint: '想想 1 公尺一段要量幾段。' } },
+  spd: { sem: '六上', who: 'rabbit', word: '時速、分速、秒速', hide: ['時速', '分速', '秒速'], fs: 's', sortAt: 'map',
     steps: [
-      { t: 'say', say: '快慢你會比：看每 1 段時間走多遠。可是要看 1 秒、1 分鐘，還是 1 小時呢？', pic: () => '<div class="it6">⏱️ ⏰ 🕐</div>' },
-      { t: 'act', id: 'd', who: 'demo', say: '小朋友走路：選數字最好說的那一段時間。', n: 1, pic: k => tbl6([['時間', '1 秒', '1 分鐘', '1 小時'], ['走多遠', '1 公尺', '60 公尺', '3600 公尺']]) + chips6(['1 秒', '1 分鐘', '1 小時'], (_, i) => i === 1 && !k, x => `看${x}，數字太${x === '1 秒' ? '小' : '大'}了。`), done: '1 分鐘 60 公尺，最好說。' },
-      { t: 'name', word: '分速', say: '「每 1 分鐘走多遠」有名字。', name: '每 1 分鐘走多遠，叫<b>分速</b>。走路分速 60 公尺。', pic: () => '<div class="it6">🚶</div>' },
-      { t: 'act', id: 's', say: '高鐵：選最好說的那一段。', n: 1, pic: k => tbl6([['時間', '1 秒', '1 分鐘', '1 小時'], ['走多遠', '83 公尺', '5000 公尺', '300 公里']]) + chips6(['1 秒', '1 分鐘', '1 小時'], (_, i) => i === 2 && !k, x => `看${x}，數字不好說。`), done: '1 小時 300 公里。' },
-      { t: 'name', word: '時速', say: '「每 1 小時走多遠」有名字。', name: '每 1 小時走多遠，叫<b>時速</b>。高鐵時速 300 公里。', pic: () => '<div class="it6">🚄</div>' },
-      { t: 'guess', say: '聲音非常快，看哪一段時間最好說？', o: ['1 秒', '1 小時'] },
-      { t: 'act', id: 's2', say: '聲音：選最好說的那一段。', n: 1, pic: k => tbl6([['時間', '1 秒', '1 分鐘', '1 小時'], ['走多遠', '340 公尺', '20400 公尺', '1224 公里']]) + chips6(['1 秒', '1 分鐘', '1 小時'], (_, i) => i === 0 && !k, x => `看${x}，數字太大了。`), done: '1 秒 340 公尺。' },
-      { t: 'name', word: '秒速', say: '「每 1 秒走多遠」有名字。', name: '每 1 秒走多遠，叫<b>秒速</b>。聲音秒速 340 公尺。', pic: () => '<div class="it6">🔊</div>' },
-      { t: 'say', id: 'map', say: '慢的看長一點的時間，快的看短一點的時間：', pic: () => sym6([['走路', '分速 60 公尺', K1]]) + sym6([['高鐵', '時速 300 公里', K2]]) + sym6([['聲音', '秒速 340 公尺', K3]]) },
-      { t: 'check', o: ['時速是看每 1 小時走多遠', '時速是看走了幾小時'], a: 0 },
-      { t: 'pose', say: '哪一題用時速說最合適？', o: ['汽車在高速公路上多快？', '蝸牛多快？'], a: 0 },
+      { t: 'say', say: '比快慢時，可以看每 1 秒、每 1 分鐘或每 1 小時走多遠。同一個快慢，可以用不同的時間來說。', pic: () => '<div class="it6">⏱️ ⏰ 🕐</div>' },
+      { t: 'act', id: 'd', who: 'demo', say: '小朋友走路，一路一樣快。表格說的是同一個走法：點「1 分鐘」那一格看看。', n: 1, pic: k => tbl6([['時間', '1 秒', '1 分鐘', '1 小時'], ['走多遠', '約 1 公尺', '60 公尺', '3600 公尺']]) + chips6(['1 秒', '1 分鐘', '1 小時'], (_, i) => i === 1 && !k, () => '這一格也對，說的是同一個快慢；這次先看 1 分鐘。'), done: '1 分鐘走 60 公尺。三格說的是同一個快慢，用哪一格都對。' },
+      { t: 'name', word: '分速', say: '「每 1 分鐘走多遠」有名字。', name: '用每 1 分鐘走多遠來說快慢，叫<b>分速</b>。走路大約分速 60 公尺，也可以說每秒約 1 公尺。', pic: () => '<div class="it6">🚶</div>' },
+      { t: 'act', id: 's', say: '高鐵，一路一樣快。從表格選出「每 1 小時走多遠」那一格。', tip: '先找表格裡「1 小時」那一欄。', n: 1, pic: k => tbl6([['時間', '1 秒', '1 分鐘', '1 小時'], ['走多遠', '約 83 公尺', '5 公里', '300 公里']]) + (k ? '' : chips6(['約 83 公尺', '5 公里', '300 公里'], (_, i) => i === 2, (_, i) => i === 0 ? '這是 1 秒走的距離；題目要每 1 小時。' : '這是 1 分鐘走的距離；題目要每 1 小時。')), done: '1 小時大約 300 公里。' },
+      { t: 'name', word: '時速', say: '「每 1 小時走多遠」有名字。', name: '用每 1 小時走多遠來說快慢，叫<b>時速</b>。高鐵大約時速 300 公里，也就是每分鐘約 5 公里。', pic: () => '<div class="it6">🚄</div>' },
+      { t: 'guess', say: '聲音在空氣中大約 1 秒傳 340 公尺。說成每 1 小時，大約多遠？', o: ['約 1224 公里', '約 340 公里'] },
+      { t: 'act', id: 's2', say: '聲音：從表格選出「每 1 秒傳多遠」那一格。', tip: '先找表格裡「1 秒」那一欄。', n: 1, pic: k => tbl6([['時間', '1 秒', '1 分鐘', '1 小時'], ['傳多遠', '約 340 公尺', '約 20400 公尺', '約 1224 公里']]) + (k ? '' : chips6(['約 340 公尺', '約 20400 公尺', '約 1224 公里'], (_, i) => i === 0, (_, i) => i === 1 ? '這是 1 分鐘傳的距離；題目要每 1 秒。' : '這是 1 小時傳的距離；題目要每 1 秒。')), done: '1 秒大約 340 公尺。' },
+      { t: 'name', word: '秒速', say: '「每 1 秒走多遠」有名字。', name: '用每 1 秒走多遠來說快慢，叫<b>秒速</b>。聲音在空氣中大約秒速 340 公尺。', pic: () => '<div class="it6">🔊</div>' },
+      { t: 'say', id: 'map', say: '同一個快慢，可以換成不同的說法；要比較兩個快慢，先換成相同的單位。', pic: () => sym6([['分速 60 公尺', '走路', K1], '＝', ['秒速 1 公尺', '', K2], '＝', ['時速 3.6 公里', '', K3]]) },
+      { t: 'check', o: ['同一個快慢，可以用時速、分速或秒速來說', '走路只能用分速來說'], a: 0, why: [, '走路每秒約 1 公尺、時速約 3.6 公里，也都對；看哪一種方便。'] },
+      { t: 'pose', say: '要比較腳踏車「時速 15 公里」和走路「分速 60 公尺」誰快，要先做什麼？', o: ['先換成相同的單位再比', '直接比 15 和 60'], a: 0, why: [, '單位不同，不能直接比數字：分速 60 公尺是時速 3.6 公里，比時速 15 公里慢。'] },
     ],
-    q: { t: '腳踏車 1 小時騎 15 公里，怎麼說？', o: ['時速 15 公里', '分速 15 公里', '秒速 15 公里'], a: 0, ok: '對了！', back: 's', hint: '15 公里是看 1 小時。' } },
-  vol: { sem: '六下', who: 'turtle', word: '立方公分、公升、立方公尺', hide: ['立方', '公升', '毫升'],
+    q: { t: '腳踏車 1 小時騎 15 公里，一路一樣快。哪一個說法對？', o: ['時速 15 公里', '分速 15 公里', '秒速 15 公里'], a: 0, why: [, '15 公里是 1 小時騎的，不是 1 分鐘。', '15 公里是 1 小時騎的，不是 1 秒。'], ok: '對了！', back: 's', hint: '15 公里是騎了多久的距離？' } },
+  vol: { sem: '六下', who: 'turtle', word: '立方公分、公升、立方公尺', hide: ['立方', '公升', '毫升'], fs: 's', sortAt: 'map',
     steps: [
-      { t: 'say', say: '數方塊你會：一塊一塊數，看占多大的地方。', pic: () => isoSvg(2, 1, 1) },
-      { t: 'act', id: 'd', who: 'demo', say: '一顆小骰子，每邊 1 個手指寬。點骰子放進盒子。', n: 3, pic: k => ms6('🎲', 3, k), cap: k => `${k} 顆`, done: '3 顆小骰子那麼大。' },
-      { t: 'name', word: '立方公分', say: '一顆小骰子的大小有名字。', name: '每邊 1 公分的小骰子，大小是 1 <b>立方公分</b>。', pic: () => '<div class="it6">🎲</div>' },
-      { t: 'act', id: 's', say: '一盒牛奶，用小骰子裝滿：點一下放一層（每層 100 顆）。', n: 10, pic: k => `<span class="hot6">${isoSvg(4, 4, 10, k * 16)}</span>`, cap: k => `${k} 層，${k * 100} 顆`, done: '10 層，1000 顆！' },
-      { t: 'name', word: '公升', say: '一盒牛奶的大小有名字。', name: '1000 顆小骰子那麼大，就是 1 <b>公升</b>。一大盒牛奶大約 1 公升。', pic: () => '<div class="it6">🥛</div>' },
-      { t: 'guess', say: '每邊一大步的大方塊，要裝幾盒牛奶？', o: ['1000 盒', '10 盒'] },
-      { t: 'act', id: 's2', say: '用牛奶盒排滿大方塊：點一下放一層（每層 100 盒）。', n: 10, pic: k => `<span class="hot6">${isoSvg(4, 4, 10, k * 16, ['#f7dc8c', '#f0c040', '#d6a020'])}</span>`, cap: k => `${k} 層，${k * 100} 盒`, done: '1000 盒！' },
-      { t: 'name', word: '立方公尺', say: '大方塊的大小有名字。', name: '每邊 1 公尺的大方塊，是 1 <b>立方公尺</b>，可以裝 1000 公升。', pic: () => '<div class="it6">📦</div>' },
-      { t: 'say', id: 'map', say: '每大一級，都是 1000 個小的：', pic: () => sym6([[1000, '立方公分', K1], '＝', [1, '公升', K2]]) + sym6([[1000, '公升', K2], '＝', [1, '立方公尺', K3]]) },
-      { t: 'check', o: ['1 公升是 1000 立方公分', '1 公升是 10 立方公分'], a: 0 },
-      { t: 'pose', say: '哪一個用公升說最合適？', o: ['一桶水有多少？', '一顆骰子有多大？'], a: 0 },
+      { t: 'say', say: '數方塊：一塊一塊數，看占多大的空間。', pic: () => isoSvg(2, 1, 1) },
+      { t: 'act', id: 'd', who: 'demo', say: '每個模型小方塊，邊長都是 1 公分。點小方塊放進盒子。', n: 3, pic: k => ms6('🎲', 3, k), cap: k => `${k} 個`, done: '3 個小方塊那麼大。' },
+      { t: 'name', word: '立方公分', say: '一個小方塊的大小有名字。', name: '邊長 1 公分的正方體，體積是 1 <b>立方公分</b>。', pic: () => '<div class="it6">🎲</div>' },
+      { t: 'act', id: 's', say: '內部邊長都是 10 公分的正方體盒子，用小方塊裝滿：每層 10×10＝100 個，點一下放一層。', tip: '點盒子，放下一層。', n: 10, pic: k => `<span class="hot6">${isoSvg(10, 10, 10, k * 100)}</span>`, cap: k => `${k} 層，100×${k}＝${k * 100} 個`, done: '10 層，1000 個小方塊，就是 1000 立方公分。' },
+      { t: 'name', word: '公升', say: '這個盒子裝滿的量有名字。', name: '內部邊長 10 公分的正方體容器，裝滿是 1000 立方公分，叫 1 <b>公升</b>。1 公升＝1000 立方公分。', pic: () => '<div class="it6">🧊</div>' },
+      { t: 'guess', say: '邊長 1 公尺（100 公分）的大正方體，可以放幾個 1 公升的正方體盒子？', o: ['1000 個', '10 個'] },
+      { t: 'act', id: 's2', say: '用 1 公升的盒子排滿大正方體：每邊放 10 個，每層 10×10＝100 個，點一下放一層。', tip: '點大正方體，放下一層。', n: 10, pic: k => `<span class="hot6">${isoSvg(10, 10, 10, k * 100, ['#f7dc8c', '#f0c040', '#d6a020'])}</span>`, cap: k => `${k} 層，100×${k}＝${k * 100} 個`, done: '10 層，1000 個 1 公升的盒子。' },
+      { t: 'name', word: '立方公尺', say: '大正方體的大小有名字。', name: '邊長 1 公尺的正方體，體積是 1 <b>立方公尺</b>。1 立方公尺＝1000 公升。', pic: () => '<div class="it6">📦</div>' },
+      { t: 'say', id: 'map', say: '每大一級，都是 1000 個小的。', pic: () => sym6([[1000, '立方公分', K1], '＝', [1, '公升', K2]]) + sym6([[1000, '公升', K2], '＝', [1, '立方公尺', K3]]) },
+      { t: 'check', o: ['1 公升＝1000 立方公分', '1 公升＝10 立方公分'], a: 0, why: [, '1 公升的盒子每層 100 個、共 10 層，是 1000 個 1 立方公分。'] },
+      { t: 'pose', say: '哪一個用公升說最合適？', o: ['一桶水有多少？', '一顆骰子有多大？'], a: 0, why: [, '骰子很小，用立方公分比較合適。'] },
     ],
-    q: { t: '一桶水大約是 10 盒牛奶那麼多，怎麼說？', o: ['10 公升', '10 立方公分', '10 立方公尺'], a: 0, ok: '對了！', back: 's', hint: '一盒牛奶是多少？' } },
+    q: { t: '一桶水大約可以倒滿 10 個 1 公升的盒子，怎麼說？', o: ['大約 10 公升', '大約 10 立方公分', '大約 10 立方公尺'], a: 0, why: [, '10 立方公分只有 10 個小方塊那麼大，太少了。', '10 立方公尺是 10 個大正方體，太多了。'], ok: '對了！', back: 's', hint: '1 個盒子是 1 公升。' } },
 };
 const LESSON_AUG = {
-  dist: { rev: '步數太多了，所以要更大的單位。', dia: () => ms6('│', 6, 6), sort: { q: '這些東西很短，還是很長？', bins: ['很短的東西', '很長的路'], items: [['橡皮擦', 0], ['鉛筆', 0], ['臺北到臺中', 1], ['學校到車站', 1]], hint: '想想用手指量，還是要走很久。', done: '短的用小單位，長的用大單位。' } },
-  spd: { rev: '聲音太快了，看 1 秒最好說。', dia: () => tbl6([['', '慢', '快'], ['看', '長一點的時間', '短一點的時間']]), sort: { q: '這些東西很慢，還是很快？', bins: ['很慢：看長一點的時間', '很快：看短一點的時間'], items: [['蝸牛', 0], ['走路', 0], ['聲音', 1], ['光', 1]], hint: '越快的東西，看越短的時間就夠了。', done: '對了！' } },
-  vol: { rev: '1000 盒：每邊 10 盒，10×10×10。', dia: () => isoSvg(3, 3, 3, undefined, ['#ddd', '#bbb', '#999']), sort: { q: '這些東西很小，還是很大？', bins: ['小東西', '很大的東西'], items: [['骰子', 0], ['橡皮擦', 0], ['貨櫃', 1], ['房間', 1]], hint: '想想要用骰子量，還是要用大方塊量。', done: '對了！' } },
+  dist: { rev: '太多段了，所以要更大的單位。', dia: () => ms6('│', 10, 10), sort: { q: '這些東西很短，還是很長？', bins: ['用公分、公尺', '用公里'], items: [['橡皮擦', 0], ['鉛筆', 0], ['臺北到臺中', 1], ['學校到車站', 1]], hint: '想想用尺就量得完，還是要走很久。', done: '短的用小單位，長的用大單位。' } },
+  spd: { rev: '約 1224 公里：1 小時有 3600 秒，340×3600＝1224000 公尺。', dia: () => tbl6([['時間', '1 秒', '1 分鐘', '1 小時'], ['走路', '約 1 公尺', '60 公尺', '3.6 公里']]), sort: { q: '和「走路分速 60 公尺」一樣快嗎？', bins: ['一樣快', '不一樣快'], items: [['秒速 1 公尺', 0], ['時速 3.6 公里', 0], ['時速 60 公里', 1], ['秒速 60 公尺', 1]], hint: '先換成相同的單位：1 分鐘有 60 秒，1 小時有 60 分鐘。', done: '對了！' } },
+  vol: { rev: '1000 個：每邊 10 個，10×10×10。', dia: () => isoSvg(3, 3, 3, undefined, ['#ddd', '#bbb', '#999']) + '<div class="trail">縮小的示意圖：每邊其實是 10 個</div>', sort: { q: '這些東西很小，還是很大？', bins: ['用立方公分', '用立方公尺'], items: [['骰子', 0], ['橡皮擦', 0], ['貨櫃', 1], ['房間', 1]], hint: '想想要用小方塊量，還是要用大正方體量。', done: '對了！' } },
 };
 for (const [k, v] of Object.entries(LESSON_AUG)) Object.assign(LESSON_STORY[k], v);
 function clockSvg(from, cur) {
@@ -2167,7 +2379,7 @@ function runQuiz(b, U, lv, only) {
     const done = ok => {
       if (ok && tries === 0) { right++; S.stars += QUIZ_STAR; } else if (tries === 0 || !ok) wrong.push(list[i]);
       save();
-      setMsg(`${ok ? (tries ? '對了。' : '答對了！') : '再看一次：'}${nums(esc(q.why))}`, ok ? 'good' : 'hint');
+      setMsg(`${ok ? '對了。' : '一起看看怎麼想：'}${nums(esc(q.why))}`, ok ? 'good' : 'hint');
       if (ok && tries === 0) sfx.good(); else if (ok) sfx.ok();
       const pad = document.getElementById('pad'); if (pad) pad.style.display = 'none';
       document.getElementById('actions').innerHTML = `<button class="btn" id="qn">${i + 1 < list.length ? '下一題' : '看成績'}</button>`;
@@ -2178,20 +2390,20 @@ function runQuiz(b, U, lv, only) {
     if (q.t === 'num') {
       bindKeypad((val, clear) => {
         if (val === q.a) return done(true);
-        clear(); miss2(nums(`你按的 ${val} 不對，再想想。`));
+        clear(); miss2(nums(`${val} 和答案不一樣。先看題目問的是哪一個量，再算一次。`));
       });
     } else {
       document.getElementById('actions').innerHTML = `<div class="choices col">${q.o.map((o, n) => `<button class="choice" data-c="${n}">${nums(esc(o))}</button>`).join('')}</div>`;
       document.querySelectorAll('[data-c]').forEach(c => c.onclick = () => {
         if (+c.dataset.c === q.a) return done(true);
-        c.classList.add('no'); c.disabled = true; miss2('再想想，換一個答案。');
+        c.classList.add('no'); c.disabled = true; miss2('這個選項不對。先找出題目問的是什麼，再選一次。');
       });
     }
   }
   function result() {
     const score = Math.round(right / list.length * 100);
     if (!only) { S.quiz = S.quiz || {}; const k = `${b.id}-${U.u}-${lv}`; S.quiz[k] = Math.max(S.quiz[k] || 0, score); save(); }
-    quizShell(`${QUIZ_LV[lv][0]}成績`, back, `<div class="end pop"><h2>${nums(`第一次就答對 ${right} / ${list.length} 題`)}</h2><p>${score === 100 ? '全部答對，太棒了！' : score >= 80 ? '很不錯，只差一點點。' : '沒關係，把錯的再做一次就會更熟。'}</p><div class="actions" id="ra"></div></div>`);
+    quizShell(`${QUIZ_LV[lv][0]}成績`, back, `<div class="end pop"><h2>${nums(`第一次就答對 ${right} / ${list.length} 題`)}</h2><p>${score === 100 ? '每一題第一次就答對了。' : score >= 80 ? '大部分都答對了，可以挑錯的那幾題，再看一次解說。' : '先挑一題錯的，看解說是哪一步卡住，再試一次。'}</p><div class="actions" id="ra"></div></div>`);
     document.getElementById('ra').innerHTML = `${wrong.length ? '<button class="btn" id="rw">再做一次錯的</button>' : ''}<button class="btn alt" id="rb">回單元</button>`;
     if (wrong.length) document.getElementById('rw').onclick = () => runQuiz(b, U, lv, wrong);
     document.getElementById('rb').onclick = back;
@@ -2326,7 +2538,7 @@ function viewParent() {
   </div>`;
   document.getElementById('snd').onchange = e => { S.sound = e.target.checked; save(); };
   document.getElementById('reset').onclick = () => {
-    if (confirm('確定清除所有星星和紀錄？')) { S.stars = 0; S.rec = {}; S.log = []; S.prog = {}; S.opened = false; S.bossDone = false; S.bossSeen = false; S.s2Seen = false; S.stamps = {}; S.fast = {}; S.seenC = {}; S.quiz = {}; S.grandSeen = false; S.learned = {}; save(); viewParent(); }
+    if (confirm('確定清除所有星星和紀錄？')) { S.stars = 0; S.rec = {}; S.log = []; S.prog = {}; S.opened = false; S.bossDone = false; S.bossSeen = false; S.s2Seen = false; S.stamps = {}; S.fast = {}; S.seenC = {}; S.cst = {}; S.quiz = {}; S.grandSeen = false; S.learned = {}; save(); viewParent(); }
   };
   document.getElementById('out').onclick = () => go('');
 }

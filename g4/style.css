@@ -746,6 +746,12 @@ button.hc4 { padding: 0; border: 0; border-radius: 0; min-height: 28px; }
 @keyframes c4nudge { 50% { transform: translateX(10px); } }
 .skip5 { display: block; margin: 6px auto 0; background: none; border: 0; color: var(--soft); text-decoration: underline; font: inherit; font-size: 14px; padding: 4px 12px; }
 .prompt small { font-size: 16px; color: var(--soft); }
+.cpt-st { flex: none; font-size: 13px; color: #5a6478; background: #eef1f6; border-radius: 10px; padding: 2px 8px; }
+/* 文字對比（WCAG 4.5:1）：灰字、成功、提示字加深；在米色紙底與卡片底都達標 */
+:root { --soft: #5f6880; --good: #1f7a4f; --warn: #a64d14; }
+.btn { background: #2b7a57; } /* 白字綠鈕 5.2:1（原 --leaf 只有 3.5:1） */
+.term { color: #a8284a; } .term .num { color: inherit; } /* 新詞標示 5.5:1 */
+.entry .blank { color: #8a7a5c; } /* 空格的問號仍淡，但達大字 3:1 */
 
 /* 單元數感測驗 */
 .quiz-entry { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,253,247,.97); border-radius: 16px; border-bottom: 4px solid #d8c9a6; padding: 8px 14px; margin-bottom: 10px; min-height: 58px; }

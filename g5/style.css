@@ -884,6 +884,14 @@ button.hc4 { padding: 0; border: 0; border-radius: 0; min-height: 28px; }
 .sols5 { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
 .sol5 { background: #fff; border: 2px solid var(--line); border-radius: 10px; padding: 2px; width: 80px; font-family: inherit; }
 .sol5.on { background: #ffd65a; } .sol5 small { display: block; font-size: 13px; } .solmini { max-height: 64px !important; }
+/* 審查修訂：看過／驗收分開、迷你展開圖、樹與人、放大長條 */
+.cst5 { margin-left: auto; font-size: 12px; border-radius: 10px; padding: 1px 7px; white-space: nowrap; background: #eef1f6; color: var(--soft); }
+.cst5.done { background: #d9f2dc; color: #1f6b33; } .cst5.help { background: #fff1c9; color: #7a5b0e; } .cst5.ops { background: #e3eefc; color: #2f5f9e; }
+.cst5-note { font-size: 13px; color: var(--soft); margin: -4px 0 8px; text-align: center; }
+.netmini svg { width: 74px; height: auto; max-height: 64px; display: block; }
+.t5 { display: inline-block; position: relative; border-radius: 8px; padding: 0 1px; } .t5.on { background: #ffd9d4; } .t5 i { position: absolute; right: -2px; top: -4px; font-style: normal; color: #d6476b; font-size: 14px; }
+.zl5 { display: block; font-size: 12px; color: var(--soft); margin: 2px 0 1px; }
+.ln5 { flex-basis: 100%; text-align: center; line-height: 1.6; }
 
 /* 單元數感測驗 */
 .quiz-entry { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,253,247,.97); border-radius: 16px; border-bottom: 4px solid #d8c9a6; padding: 8px 14px; margin-bottom: 10px; min-height: 58px; }

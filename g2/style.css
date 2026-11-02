@@ -518,3 +518,12 @@ body { line-height: 1.75; }
 .dock button .zc { font-size: 14px; }
 .dock small .zc { font-size: 12px; }
 .quiz-entry .bp span { font-family: inherit; font-size: inherit; }
+/* 小故事：每一步都可以按鈕到達；看過、做完操作、答對分開標 */
+.c2steps { display: flex; justify-content: center; gap: 12px; margin: 6px 0 2px; }
+.c2step { width: 46px; height: 40px; border-radius: 12px; background: #fff; border: 2px solid var(--line); font-size: 20px; color: var(--soft); }
+.c2step.seen { border-color: var(--sun); color: var(--ink); }
+.c2step.on { background: var(--sun); border-color: var(--sun); color: #fff; }
+.c2back { display: block; margin: 10px auto 0; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 4px 14px; font-size: 18px; color: var(--ink); }
+.c-st { display: inline-block; margin-left: 6px; font-style: normal; font-size: 14px; padding: 0 8px; border-radius: 10px; background: #eee; color: var(--soft); }
+.c-st.op { background: #fff3cf; color: #8a5a00; }
+.c-st.ok { background: #d9f3e4; color: var(--good); }
