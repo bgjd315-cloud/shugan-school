@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>數感小學堂</title><link rel="icon" href="assets/badge1.webp">
+<meta name="description" content="國小一到六年級的數感遊戲，先動手再作答。">
+<link rel="stylesheet" href="school.css?v=202611021426"></head><body>
+<header class="hero">
+  <picture><source media="(min-width:760px)" srcset="assets/cover.webp"><img src="assets/cover_m.webp" alt="山坡上的小學堂"></picture>
+  <div class="hero-t"><p class="kick">一到六年級的數感遊戲</p><h1>數感小學堂</h1><p class="sub">先動手，再作答。</p>
+  <div class="hero-b"><a class="btn" id="cont" hidden></a><a class="btn alt" href="#map">選年級</a></div></div>
+  <img class="hero-l" src="assets/liang_hi.webp" alt="亮亮">
+</header>
+<main>
+<section id="map"><h2>亮亮的成長路線</h2><p class="lead">從森林走到銀河。每一站都開放，想玩哪一站就點哪一站。</p>
+  <div class="map"><picture><source media="(min-width:760px)" srcset="assets/map_w.webp"><img src="assets/map_m.webp" alt="從森林到銀河的路線圖"></picture><div id="pins"></div></div></section>
+<section><h2>六個年級</h2><div class="cards" id="cards"></div></section>
+<section class="fam" id="fam"><h2><img src="assets/icon_parent.webp" alt="">給家長和老師</h2>
+  <p>每個年級都依南一版單元與 107 年數學領域課綱設計。孩子先拿真實東西動手，看懂為什麼，最後才收成算式。每單元另有基礎、進階、益智三組測驗。五、六年級同時替國中鋪路，但不提前教國中內容。</p>
+  <div class="tbl"><table><thead><tr><th>年級</th><th>遊戲</th><th>單元</th><th>測驗</th><th>完成測驗</th></tr></thead><tbody id="rows"></tbody></table></div>
+  <p class="note">進度存在這台裝置的瀏覽器裡，換裝置或清除瀏覽資料就不會留著。</p></section>
+</main>
+<footer><img src="assets/liang_book.webp" alt=""><p>題目與插圖皆為自編，供學習使用。</p></footer>
+<script src="school.js?v=202611021426"></script></body></html>
