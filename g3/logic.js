@@ -122,7 +122,13 @@
   /* ---------- 五：角角山 ---------- */
   const angleKind = d => d === 90 ? 'right' : d < 90 ? 'acute' : 'obtuse';
   function genAngle(lv) {
-    const L = Math.min(lv, 3);
+    const L = Math.min(lv, 6);
+    if (L === 4) { const w = ri(2, 6), h = ri(2, 4); return { kind: 'angle', mode: 'pwalk', w, h, ans: 2 * (w + h), why: `一圈是 ${w}＋${h}＋${w}＋${h}。` }; }
+    if (L === 5) {
+      if (Math.random() < 0.3) { const s = ri(3, 12); return { kind: 'angle', mode: 'padd', w: s, h: s, square: true, steps: [s * 4], why: `每邊 ${s} 公尺，有 4 邊，${s}×4。` }; }
+      const a = ri(4, 12), b = ri(2, a - 1); return { kind: 'angle', mode: 'padd', w: a, h: b, steps: [a + b, 2 * (a + b)], why: `一圈是 ${a}＋${b}＋${a}＋${b}。` };
+    }
+    if (L === 6) { let A, B; do { A = [ri(2, 8), ri(1, 4)]; B = [ri(2, 8), ri(1, 4)]; } while (A[0] + A[1] === B[0] + B[1]); return { kind: 'angle', mode: 'pline', A, B, ans: A[0] + A[1] > B[0] + B[1] ? 0 : 1 }; }
     if (L === 0) {
       const a = ri(5, 15) * 10; let b; do { b = ri(5, 15) * 10; } while (Math.abs(a - b) < 20);
       return { kind: 'angle', mode: 'cmp', a, b, la: ri(40, 95), lb: ri(40, 95), ans: a > b ? 'L' : 'R', why: '角的大小看兩邊張開多少，和邊畫多長沒有關係。' };
@@ -279,7 +285,7 @@
     if (game === 'ship') return unit >= 2 ? 4 : 2;
     if (game === 'fact') return unit >= 14 ? 5 : unit >= 3 ? 4 : 0;
     if (game === 'mm') return unit >= 4 ? 5 : 0;
-    if (game === 'angle') return 3;
+    if (game === 'angle') return 6;
     if (game === 'div') return unit >= 18 ? 6 : unit >= 11 ? 5 : unit >= 6 ? 4 : 0;
     if (game === 'rule') return unit >= 7 ? 4 : 1;
     if (game === 'frac') return unit >= 17 ? 6 : unit >= 8 ? 3 : 0;

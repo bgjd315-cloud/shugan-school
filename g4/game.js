@@ -1796,6 +1796,40 @@ const CONCEPTS = [
     found: '從半夜一直數到隔天半夜，就不會弄混上午和下午。', name: `一天從 0 時數到 24 時，叫${c4T('24 小時制')}。下午的時刻多加 12。`, loop: [0, 2],
     check: { q: '晚上 8 時 20 分，用 24 小時制怎麼寫？', pic: () => '<div class="u-big">🌙</div>', opts: ['8:20', '18:20', '20:20'], a: 2, why: '晚上的時刻要加 12。', ok: '對了！8＋12＝20，是 20:20。' } },
 ];
+/* 單位教室的開場：同一結構。名稱出現之後才接原本的卡片（量感）、動手、換算練習 */
+const c4tags = (...ts) => c4s(34, ts.map((t, i) => c4tag(160 + (i - (ts.length - 1) / 2) * 130, 20, t)).join(''));
+const UCONCEPTS = [
+  { key: 'u_km', lesson: 'km', title: '公里', terms: ['公里'], game: 'km', who: 'otter', sem: '四上',
+    ask: '路標要寫「到車站還有 5000 公尺」，字好長，開車也看不清楚。可以怎麼說？', tryIt: '操場一圈 200 公尺。往右拖，多跑幾圈。', states: [1, 5, 10],
+    pic: (k, tg) => c4s(150, Array.from({ length: 10 }, (_, i) => `<ellipse cx="${36 + (i % 5) * 62}" cy="${28 + Math.floor(i / 5) * 42}" rx="26" ry="16" fill="${i < k ? '#a9d0a0' : '#f4f6fa'}" stroke="${i < k ? '#3d9970' : '#b9c2d0'}" stroke-width="5"/>`).join('') + c4x(160, 126, `${fmt(k * 200)} 公尺`, { s: 24, f: '#d6476b' }) + (tg && k > 1 ? c4tag(270, 122, `${k * 200 / 1000} 公里`) : '')),
+    note: k => k === 1 ? '跑 1 圈：200 公尺' : k === 5 ? '跑 5 圈：1000 公尺，已經要 4 個數字' : '跑 10 圈：2000 公尺，走路要半小時',
+    found: '每滿 1000 公尺就換一個大單位，數字就變短了。', name: `1000 公尺，叫 1 ${c4T('公里')}。5000 公尺就是 5 公里。`, loop: [1, 2],
+    check: { q: '從家到車站 3000 公尺。是幾公里？', pic: () => '<div class="u-big">🚉</div>', opts: ['3 公里', '30 公里', '300 公里'], a: 0, why: '1000 公尺是 1 公里，3000 公尺有幾個 1000？', ok: '對了！3000 公尺是 3 公里。' } },
+  { key: 'u_deg', lesson: 'deg', title: '度', terms: ['度'], game: 'deg', who: 'goat', sem: '四上',
+    ask: '「門開一點點」，每個人想的都不一樣。角有多大，要怎麼說才清楚？', tryIt: '把一整圈切成 360 小片。往右拖，用小片拼角。', states: [30, 90, 180], tween: 1,
+    pic: (d, tg) => { const C = [160, 130], R = 110; let o = c4wedge(C[0], C[1], R, 0, d, '#ffb3a7'); for (let a = 0; a <= Math.floor(d); a += 10) o += c4L(C, c4pol(C[0], C[1], R, a), '#d6476b', 1); return c4s(150, o + c4L(C, [C[0] + R, C[1]], '#33405a', 5) + c4L(C, c4pol(C[0], C[1], R, d), '#d6476b', 5) + c4x(160, 147, `${Math.round(d)} 小片`, { s: 16 }) + (tg ? c4tag(52, 26, `${Math.round(d)} 度`) : '')); },
+    note: d => d === 30 ? '30 小片：三角板最小的角' : d === 90 ? '90 小片：剛好是直角' : d === 180 ? '180 小片：半圈，變成一直線' : '',
+    found: '只要說「幾小片」，大家想的角就一樣大了。', name: `把一整圈切成 360 份，1 份的大小叫 1 ${c4T('度')}。直角是 90 度。`, loop: [0, 1, 2],
+    check: { q: '書本打開的角，拼進去剛好 45 小片。這個角是幾度？', pic: () => c4s(120, c4wedge(160, 110, 95, 0, 45, '#ffb3a7') + c4L([160, 110], [255, 110], '#33405a', 5) + c4L([160, 110], c4pol(160, 110, 95, 45), '#d6476b', 5)), opts: ['4 度', '45 度', '450 度'], a: 1, why: '1 小片是 1 度。', ok: '對了！45 小片就是 45 度。' } },
+  { key: 'u_m2', lesson: 'm2', title: '平方公尺', terms: ['平方公尺'], game: 'deck', who: 'sheep', sem: '四下',
+    ask: '教室地板要鋪墊子。用 1 平方公分的小格來數，數到明天也數不完！有大一點的格子嗎？', tryIt: '有一塊每邊 100 公分的大墊子。往右拖，鋪上小格。', states: [100, 5000, 10000],
+    pic: (v, tg) => c4s(172, c4grid(10, 6, v / 100) + c4x(248, 60, fmt(v), { s: 26, f: '#d6476b' }) + c4x(248, 84, '平方公分', { s: 15 }) + c4x(248, 22, '每邊 100 公分', { s: 14 }) + (tg && v === 10000 ? c4tag(248, 124, '1 平方公尺') : '')),
+    note: v => v === 100 ? '鋪一排：100 個小格' : v === 5000 ? '鋪 50 排：每排 100 格 × 50 排' : '鋪滿 100 排：每排 100 格 × 100 排＝10000 格',
+    found: '一塊大墊子就有 10000 個小格。量大地方用它，好算多了。', name: `每邊 1 公尺的正方形，叫 1 ${c4T('平方公尺')}，等於 10000 平方公分。`, loop: [0, 2],
+    check: { q: '小房間剛好鋪滿 12 塊每邊 1 公尺的大墊子。地板有多大？', pic: () => c4s(110, Array.from({ length: 12 }, (_, i) => `<rect x="${64 + (i % 4) * 48}" y="${6 + Math.floor(i / 4) * 32}" width="48" height="32" fill="#bfe3b4" stroke="#3d9970"/>`).join('')), opts: ['12 平方公分', '12 平方公尺', '12 公尺'], a: 1, why: '一塊每邊 1 公尺的墊子，有多大？', ok: '對了！12 塊就是 12 平方公尺。' } },
+  { key: 'u_cm3', lesson: 'cm3', title: '體積和立方公分', terms: ['體積', '立方公分'], game: 'vol', who: 'octopus', sem: '四下',
+    ask: '一個盒子又長又扁，一個又高又瘦。哪一個占的空間大？直接看比不出來。', tryIt: '拿每邊 1 公分的小方塊來堆。往右拖，堆堆看。', states: [3, 9, 18],
+    pic: (n, tg) => `${isoSvg(3, 3, 2, n)}${tg ? c4tags('體積', `${n} 立方公分`) : c4s(34, c4x(160, 24, `${n} 塊小方塊`, { s: 18 }))}`,
+    note: n => n === 3 ? '一排 3 塊' : n === 9 ? '每排 3 塊 × 3 排：一層 9 塊' : '每層 9 塊 × 2 層：18 塊',
+    found: '數有幾塊小方塊，就知道占多少空間。形狀不同也能比。', name: `東西占的空間大小叫${c4T('體積')}。每邊 1 公分的小方塊是 1 ${c4T('立方公分')}。`, loop: [1, 2],
+    check: { q: '積木每層 4 塊，疊 3 層，每塊 1 立方公分。體積是多少？', pic: () => isoSvg(2, 2, 3), opts: ['7 立方公分', '12 立方公分', '12 公分'], a: 1, why: '每層 4 塊 × 3 層，一共幾塊？', ok: '對了！4×3＝12 立方公分。' } },
+  { key: 'u_time', lesson: 'time', title: '分鐘、小時、日', terms: ['分鐘', '小時', '日'], game: 'time', who: 'raccoon', sem: '四下',
+    ask: '飛船今天早上 8 點出發，明天早上 8 點到。鐘面上的針一共走了多少？', tryIt: '往右拖，讓鐘走起來。', states: [1, 12, 24], tween: 1,
+    pic: (h, tg) => { const C = [110, 92], R = 84; let o = `<circle cx="${C[0]}" cy="${C[1]}" r="${R}" fill="#fff" stroke="#33405a" stroke-width="3"/>`; for (let i = 1; i <= 12; i++) { const a = i * 30 * Math.PI / 180; o += c4x(C[0] + 68 * Math.sin(a), C[1] + 5 - 68 * Math.cos(a), i, { s: 13 }); } const a = (8 + h) * 30 * Math.PI / 180; o += c4L(C, [C[0], C[1] - 58], '#2f5f9e', 4) + c4L(C, [C[0] + 40 * Math.sin(a), C[1] - 40 * Math.cos(a)], '#d6476b', 7) + `<circle cx="${C[0]}" cy="${C[1]}" r="6" fill="#33405a"/>`; const H = Math.round(h); return c4s(186, o + c4x(255, 60, '短針走了', { s: 15 }) + c4x(255, 92, H, { s: 30, f: '#d6476b' }) + c4x(255, 116, '大格', { s: 15 }) + (tg ? (H === 1 ? c4tag(255, 28, '60 分鐘') + c4tag(255, 150, '1 小時') : H === 24 ? c4tag(255, 150, '1 日') : '') : '')); },
+    note: h => h === 1 ? '長針走一圈 60 小格，短針才走 1 大格' : h === 12 ? '短針走 12 大格：早上 8 點到晚上 8 點' : h === 24 ? '短針走 24 大格：到了明天這個時候' : '',
+    found: '時間不是滿 100 才換：60 小格換 1 大格，24 大格換一天。', name: `長針走 1 小格是 1 ${c4T('分鐘')}，60 分鐘是 1 ${c4T('小時')}；24 小時是 1 ${c4T('日')}。`, loop: [0, 2],
+    check: { q: '露營從星期六晚上 8 點，到星期天晚上 8 點。一共過了多久？', pic: () => '<div class="u-big">⛺</div>', opts: ['1 日', '1 小時', '1 分鐘'], a: 0, why: '短針走了幾大格？', ok: '對了！24 小時就是 1 日。' } },
+];
 const conceptsOf = g => CONCEPTS.filter(c => c.game === g);
 const seenCpt = () => S.seenCpt || (S.seenCpt = {});
 let cptTimer = null, cptAnim = 0;
@@ -1813,11 +1847,11 @@ function cptDrag(el, cb) { // 在圖和拉桿上都可以拖
   el.onpointermove = e => { if (el._on) { const b = el.getBoundingClientRect(); cb((e.clientX - b.left) / b.width); } };
   el.onpointerup = el.onpointercancel = () => { el._on = false; };
 }
-function runConcept(key, then, replay) {
-  const C = CONCEPTS.find(c => c.key === key), who = STORY[C.game].who, L = { title: C.title, sem: C.sem, who }, L0 = { title: '小故事', sem: C.sem, who };
+function runConcept(key, then, replay, exit) {
+  const C = CONCEPTS.concat(UCONCEPTS).find(c => c.key === key), who = C.who || STORY[C.game].who, L = { title: C.title, sem: C.sem, who }, L0 = { title: '小故事', sem: C.sem, who };
   const done = () => { cptStop(); if (!replay) { seenCpt()[key] = 1; save(); } then(); };
   const skipBtn = `<button class="skip5" id="skipc">${replay ? '不看了' : '跳過'}</button>`;
-  const wire = () => { document.getElementById('out').onclick = () => { cptStop(); if (replay) return then(); R = null; go(''); }; document.getElementById('skipc').onclick = () => { seenCpt()[key] = 1; save(); cptStop(); then(); }; };
+  const wire = () => { document.getElementById('out').onclick = () => { cptStop(); if (exit) return exit(); if (replay) return then(); R = null; go(''); }; document.getElementById('skipc').onclick = () => { seenCpt()[key] = 1; save(); cptStop(); then(); }; };
   function op() { // 第二步：動手試，全程不出現新詞（連標題也不出現）
     cptStop();
     lessonFrame(L0, `${nums(C.ask)}<br><small>${nums(C.tryIt)}</small>`, `<div class="cp" id="cpw"><div id="cp"></div><div class="cslide" id="cs">${C.states.map((_, i) => `<u style="left:${i / (C.states.length - 1) * 100}%"></u>`).join('')}<i id="csk" class="hint">👉</i></div></div><div class="trail" id="ct"></div>${skipBtn}`); wire();
@@ -1839,12 +1873,14 @@ function runConcept(key, then, replay) {
     lessonFrame(L, nums(K.q), `<div class="cp2">${K.pic()}</div>${skipBtn}`); wire();
     document.getElementById('actions').innerHTML = `<div class="choices${K.opts.some(o => o.length > 6) || K.opts.length > 3 ? ' col' : ''}">${K.opts.map((o, i) => `<button class="choice" data-c4="${i}">${nums(o)}</button>`).join('')}</div>`;
     document.querySelectorAll('[data-c4]').forEach(b => b.onclick = () => {
-      if (+b.dataset.c4 === K.a) { sfx.good(); setMsg(nums(K.ok), 'good'); seenCpt()[key] = 1; save(); document.getElementById('skipc').hidden = true; actionBtn('fin', replay ? '看完了' : '開始玩').onclick = done; return; }
+      if (+b.dataset.c4 === K.a) { sfx.good(); setMsg(nums(K.ok), 'good'); seenCpt()[key] = 1; save(); document.getElementById('skipc').hidden = true; actionBtn('fin', exit ? '繼續上課' : replay ? '看完了' : '開始玩').onclick = done; return; }
       sfx.retry(); setMsg(nums(K.why), 'hint'); actionBtn('bk', '回去再動手看看').onclick = op;
     });
   }
   op();
 }
+const LESSON_ASK = { km: '路有多長', deg: '角有多大', m2: '地有多大', cm3: '占多少空間', time: '過了多久' };
+const lessonName = k => (S.learned || {})[k] ? LESSONS[k].title : LESSON_ASK[k]; // 還沒上過課，選單先不露出單位名稱
 const clamp4 = (v, a, b) => Math.max(a, Math.min(b, v));
 function conceptThen(q, then) { // 第一次碰到這個題型自動播；已看過就不再播；舊存檔沒有 seenCpt 也可以
   const key = q.kind + ':' + q.mode, C = CONCEPTS.find(c => c.when.includes(key) && !seenCpt()[c.key] && (!c.test || c.test(q)));
@@ -1854,7 +1890,7 @@ function conceptThen(q, then) { // 第一次碰到這個題型自動播；已看
 function viewConcepts(g, back) { // 重看；單位教室教過的單位，接回單位教室
   const list = g ? conceptsOf(g) : CONCEPTS, lk = g ? (LESSON_BEFORE[g] || []) : [];
   window.scrollTo(0, 0);
-  $app.innerHTML = `<div class="top"><button class="icon-btn" id="bkc" aria-label="回去">⌂</button><h2 class="page-h">新概念小故事</h2></div><p class="tag">想再看一次哪一個？</p><div class="lessons">${lk.map(k => `<button class="lesson" data-rl="${k}"><span class="l-t"><b>單位教室：${LESSONS[k].title}</b><small>${LESSONS[k].cards.map(c => c.u).join('、')}</small></span><em class="sem">${LESSONS[k].sem}</em></button>`).join('')}${list.map(c => `<button class="lesson" data-rc="${c.key}"><span class="l-t"><b>${c.title}</b><small>${c.terms.join('、')}・${GAMES[c.game].name}</small></span><em class="sem">${c.sem}</em>${seenCpt()[c.key] ? '<span class="badge in">✓</span>' : ''}</button>`).join('')}</div>`;
+  $app.innerHTML = `<div class="top"><button class="icon-btn" id="bkc" aria-label="回去">⌂</button><h2 class="page-h">新概念小故事</h2></div><p class="tag">想再看一次哪一個？</p><div class="lessons">${lk.map(k => `<button class="lesson" data-rl="${k}"><span class="l-t"><b>單位教室：${lessonName(k)}</b><small>${(S.learned || {})[k] ? LESSONS[k].cards.map(c => c.u).join('、') : '從小故事開始'}</small></span><em class="sem">${LESSONS[k].sem}</em></button>`).join('')}${list.map(c => `<button class="lesson" data-rc="${c.key}"><span class="l-t"><b>${c.title}</b><small>${c.terms.join('、')}・${GAMES[c.game].name}</small></span><em class="sem">${c.sem}</em>${seenCpt()[c.key] ? '<span class="badge in">✓</span>' : ''}</button>`).join('')}</div>`;
   document.getElementById('bkc').onclick = back;
   document.querySelectorAll('[data-rc]').forEach(b => b.onclick = () => runConcept(b.dataset.rc, () => viewConcepts(g, back), true));
   document.querySelectorAll('[data-rl]').forEach(b => b.onclick = () => runLesson(b.dataset.rl, () => viewConcepts(g, back)));
@@ -1863,7 +1899,7 @@ function viewLessons() {
   window.scrollTo(0, 0);
   $app.innerHTML = `<div class="top"><button class="icon-btn" id="home" aria-label="回地圖">⌂</button><h2 class="page-h">單位教室</h2></div>
     <p class="tag">先認識單位，再去島上用它。</p>
-    <div class="lessons">${Object.entries(LESSONS).map(([k, L]) => `<div class="lesson-row"><button class="lesson" data-l="${k}"><span class="l-e">${L.icon}</span><span class="l-t"><b>${L.title}</b><small>${L.cards.map(c => c.u).join('、')}</small></span><em class="sem">${L.sem}</em>${(S.learned || {})[k] ? '<span class="badge in">✓</span>' : ''}</button><button class="drill-btn" data-d="${k}">練習</button></div>`).join('')}</div>`;
+    <div class="lessons">${Object.entries(LESSONS).map(([k, L]) => `<div class="lesson-row"><button class="lesson" data-l="${k}"><span class="l-e">${L.icon}</span><span class="l-t"><b>${lessonName(k)}</b><small>${(S.learned || {})[k] ? L.cards.map(c => c.u).join('、') : '從小故事開始'}</small></span><em class="sem">${L.sem}</em>${(S.learned || {})[k] ? '<span class="badge in">✓</span>' : ''}</button><button class="drill-btn" data-d="${k}">練習</button></div>`).join('')}</div>`;
   document.getElementById('home').onclick = () => go('');
   document.querySelectorAll('[data-l]').forEach(b => b.onclick = () => runLesson(b.dataset.l, viewLessons));
   document.querySelectorAll('[data-d]').forEach(b => b.onclick = () => runDrill(b.dataset.d, viewLessons));
@@ -1952,7 +1988,7 @@ function runLesson(key, then) {
     document.getElementById('actions').innerHTML = '<button class="btn" id="end">好！</button>';
     document.getElementById('end').onclick = leave;
   }
-  cards();
+  runConcept('u_' + key, cards, false, leave);
 }
 // 單位練習：sort 替東西選單位、order 由小排到大、quiz 大約多少
 function unitDrill(key, plan, leave, done) {
@@ -2023,7 +2059,7 @@ function lessonsThen(ch, then) {
   const need = (LESSON_BEFORE[ch] || []).find(k => !(S.learned || {})[k]);
   if (!need) return then();
   const L = LESSONS[need];
-  lessonFrame(L, `先認識${L.title}的單位，<br>等一下用起來就不怕了！`, `<div class="u-big">${L.icon}</div>`);
+  lessonFrame({ ...L, title: '小故事' }, `先來看一個小故事，<br>等一下用起來就不怕了！`, `<div class="u-big">${L.icon}</div>`);
   document.getElementById('out').onclick = () => go('');
   document.getElementById('actions').innerHTML = '<button class="btn" id="yes">去上課</button><button class="btn alt" id="no">先跳過</button>';
   document.getElementById('yes').onclick = () => runLesson(need, () => lessonsThen(ch, then));

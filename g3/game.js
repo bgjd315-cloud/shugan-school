@@ -285,7 +285,7 @@ function practiceTopics() {
     ['ship', 1, '加 1999 想成加 2000', 1], ['ship', 2, '減 1999 想成減 2000', 1], ['ship', 3, '算式心算', 2], ['ship', 4, '整百估算', 2],
     ['fact', 0, '幾十乘以一位數', 3], ['fact', 2, '二位數拆開乘', 3], ['fact', 3, '三位數拆開乘', 3], ['fact', 4, '乘法估算', 3], ['fact', 5, '兩步驟', 14],
     ['mm', 1, '讀毫米', 4], ['mm', 2, '剪出毫米', 4], ['mm', 3, '公分換毫米', 4], ['mm', 4, '毫米換公分', 4], ['mm', 5, '長度量感', 4],
-    ['angle', 0, '比角的大小', 1], ['angle', 2, '銳角、直角、鈍角', 5], ['angle', 3, '正方形和長方形', 5],
+    ['angle', 0, '比角的大小', 1], ['angle', 2, '銳角、直角、鈍角', 5], ['angle', 3, '正方形和長方形', 5], ['angle', 4, '沿著邊走一圈', 5], ['angle', 5, '每邊加起來', 5], ['angle', 6, '拉直比長短', 5],
     ['div', 1, '除法', 6], ['div', 2, '有餘數的除法', 6], ['div', 3, '偶數和奇數', 6], ['div', 5, '先分大的再分小的', 11], ['div', 6, '找出 □', 18],
     ['rule', 0, '每次多多少', 1], ['rule', 1, '每次少多少', 1], ['rule', 3, '相差會變', 7], ['rule', 4, '花瓣規律', 7],
     ['frac', 1, '幾分之幾', 8], ['frac', 2, '做出分數', 8], ['frac', 3, '分數累加', 8], ['frac', 4, '同分母比大小', 17], ['frac', 5, '分數加法', 17], ['frac', 6, '分數減法', 17],
@@ -712,7 +712,35 @@ function angleSvg(d, len, tilt, ref) {
   else if (typeof ref === 'number') { const [o1, o2] = p(ref, len + 12); over = `<path d="M${cx} ${cy}L${o1} ${o2}" stroke="#d9772b" stroke-width="4" stroke-dasharray="6 4" stroke-linecap="round"/>`; }
   return `<svg class="ang" viewBox="-20 -30 180 150">${over}<path d="M${a1} ${b1}A20 20 0 ${large} 0 ${a2} ${b2}" fill="none" stroke="#d6476b" stroke-width="3"/><path d="M${x1} ${y1}L${cx} ${cy}L${x2} ${y2}" fill="none" stroke="#33405a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
+/* 周長：菜園圍籬笆，小羊沿著邊走 */
+function perimPic(w, h, t, grid, nums2) {
+  const s = Math.min(240 / w, 120 / h, 40), W = w * s, H = h * s, x0 = (320 - W) / 2, y0 = (170 - H) / 2, P = 2 * (W + H);
+  let r = t * P, x = x0, y = y0, d = `M${x0} ${y0}`, g = '';
+  [[1, 0, W], [0, 1, H], [-1, 0, W], [0, -1, H]].forEach(([a, b, n]) => { const m = Math.min(r, n); x += a * m; y += b * m; if (m > 0) d += `L${x} ${y}`; r -= m; });
+  if (grid) { for (let i = 0; i <= w; i++) for (let j = 0; j <= h; j++) if (i === 0 || j === 0 || i === w || j === h) g += `<circle cx="${x0 + i * s}" cy="${y0 + j * s}" r="3.5" fill="#33405a"/>`; }
+  return c3s(`<rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="#cfe6c6" stroke="#7a9a62" stroke-width="3"/>${g}<path d="${d}" fill="none" stroke="#d6476b" stroke-width="6" stroke-linejoin="round"/>${nums2 ? c3t(160, y0 - 11, w, 18) + c3t(x0 - 14, 85, h, 18) : ''}${c3e(x, y, '🐑', 26)}`);
+}
+function pullPic(q, t) { // 兩塊地的繩子，拉直來比
+  const C = ['#d6476b', '#3b82c4'], sh = (R, x, c) => `<rect x="${x}" y="8" width="${R[0] * 16}" height="${R[1] * 16}" fill="${c}" fill-opacity=".12" stroke="${c}" stroke-width="4"/>${c3t(x + R[0] * 8, 8 + R[1] * 16 + 12, R[0], 14)}${c3t(x + R[0] * 16 + 9, 8 + R[1] * 8, R[1], 14)}`;
+  let o = t ? '' : sh(q.A, 22, C[0]) + sh(q.B, 180, C[1]);
+  if (t) [q.A, q.B].forEach((R, i) => { const L = 2 * (R[0] + R[1]); o += `<path d="M14 ${50 + i * 62}H${14 + L * 11.5}" stroke="${C[i]}" stroke-width="9" stroke-linecap="round"/>${c3t(14 + L * 11.5 + 14, 50 + i * 62, L, 16)}`; });
+  return c3s(o);
+}
+function viewPerim(q) {
+  if (q.mode === 'pwalk') {
+    frame('小羊沿著菜園的邊走一圈，<br>一小段是 1 公尺。共走幾公尺？', `<div class="cp" id="pw">${perimPic(q.w, q.h, 0, true)}</div><div class="trail" id="ct">拖小羊走，看紅線</div>${padHidden()}`);
+    return gate(q, ['走半圈', '走完一圈'], 2, k => { setEl('pw', perimPic(q.w, q.h, k / 2, true)); setEl('ct', k === 2 ? '回到原點了，數數紅線！' : nums(`走了半圈：${q.w}＋${q.h}`)); }, () => stepKeypad(['一圈是幾公尺？'], [q.ans], q.why, `對了！一圈是 ${q.ans} 公尺。`, 'pwalk'), { el: document.getElementById('pw'), map: x => x * 2 });
+  }
+  if (q.mode === 'padd') {
+    frame(q.square ? `花圃是正方形，每邊 ${N(q.w)} 公尺，<br>要圍一圈籬笆。要買幾公尺？` : `菜園長 ${N(q.w)} 公尺、寬 ${N(q.h)} 公尺，<br>要圍一圈籬笆。要買幾公尺？`, `<div class="cp" id="pw">${perimPic(q.w, q.h, 0, false, true)}</div><div class="trail" id="ct">拖小羊沿著邊走</div>${padHidden()}`);
+    return gate(q, '沿著邊走一圈', 1, () => { setEl('pw', perimPic(q.w, q.h, 1, false, true)); setEl('ct', q.square ? '4 條邊都一樣長' : '長和寬各走了兩次'); }, () => stepKeypad(q.square ? ['一圈是幾公尺？'] : ['走半圈：長＋寬是幾公尺？', '走一圈是幾公尺？'], q.steps, q.why, `對了！要買 ${q.steps[q.steps.length - 1]} 公尺。`, 'padd', null, { shortcut: true }), { el: document.getElementById('pw'), map: x => x });
+  }
+  frame('兩塊地各用一條繩子圍起來。<br>拉直以後，哪一條比較長？', `<div class="cp" id="pw">${pullPic(q, 0)}</div><div class="trail" id="ct">拖一拖，把繩子拉直</div>`);
+  const la = 2 * (q.A[0] + q.A[1]), lb = 2 * (q.B[0] + q.B[1]);
+  gate(q, '把繩子拉直', 1, () => { setEl('pw', pullPic(q, 1)); setEl('ct', '看起來大的地，繩子不一定長'); }, () => pickOne(['紅色', '藍色'], q.ans, '看拉直以後的長度，不是看地多大。', `對了！紅色 ${la} 公尺，藍色 ${lb} 公尺。`, 'pline'), { el: document.getElementById('pw'), map: x => x });
+}
 function viewAngle(q) {
+  if (['pwalk', 'padd', 'pline'].includes(q.mode)) return viewPerim(q);
   if (q.mode === 'cmp') {
     frame('哪一個角比較大？<br>疊起來比比看。', `<div class="vs" id="av">${angleSvg(q.a, q.la)}${angleSvg(q.b, q.lb)}</div>`);
     return gate(q, '把兩個角疊起來', 1, () => { setEl('av', angleSvg(q.a, 85, 0, q.b)); setMsg('黑線是左邊的角，橘色虛線是右邊的角。看誰張得比較開。'); }, () => pickOne(['左邊的角', '右邊的角'], q.ans === 'L' ? 0 : 1, '不要看邊多長，看兩條邊張開多少。', `對了！${q.why}`, 'cmp'));
@@ -1121,9 +1149,9 @@ const VIEWS = { port: viewPort, ship: viewShip, fact: viewFact, mm: viewMm, angl
 const LESSONS = {
   len: {
     title: '長度', sem: '三上', icon: '📏', who: 'crab', name: '夾夾',
-    say: '做衣服要量得準。先來認識三個量長度的單位！',
+    say: '毫米、公分、公尺各有多長？點卡片，感覺一下！',
     cards: [
-      { e: '🐜', u: '毫米', t: '很小很小。一隻小螞蟻大約長 4 毫米，尺上最小的一格就是 1 毫米。' },
+      { e: '🐜', u: '毫米', t: '很小很小。一隻小螞蟻大約長 4 毫米。' },
       { e: '☝️', u: '公分', t: '小指頭大約 1 公分寬。鉛筆、書本用公分量。' },
       { e: '🚪', u: '公尺', t: '張開雙手大約 1 公尺。教室、跑道用公尺量。' },
     ],
@@ -1134,7 +1162,7 @@ const LESSONS = {
   },
   vol: {
     title: '容量', sem: '三下', icon: '🥛', who: 'raccoon', name: '秤秤',
-    say: '瓶子能裝多少水，就是容量。先來認識公升和毫升！',
+    say: '公升和毫升能裝多少？點卡片，感覺一下！',
     cards: [
       { e: '💧', u: '毫升', t: '很少很少。量藥的小杯用毫升，一小瓶養樂多大約 100 毫升。' },
       { e: '🧃', u: '公升', t: '一大瓶鮮奶大約 1 公升。水壺、水桶用公升量。' },
@@ -1143,7 +1171,7 @@ const LESSONS = {
   },
   weight: {
     title: '重量', sem: '三下', icon: '⚖️', who: 'raccoon', name: '秤秤',
-    say: '東西有多重，用公克和公斤來說。拿起來感覺看看！',
+    say: '公克和公斤有多重？點卡片，感覺一下！',
     cards: [
       { e: '📎', u: '公克', t: '很輕很輕。一根迴紋針大約 1 公克。' },
       { e: '🍚', u: '公斤', t: '一包大砂糖大約 1 公斤。書包、體重用公斤量。' },
@@ -1152,7 +1180,7 @@ const LESSONS = {
   },
   time: {
     title: '時間', sem: '三下', icon: '⏱️', who: 'liang', name: '亮亮',
-    say: '時間看不到，但可以拍拍手感覺。先來認識秒、分、小時！',
+    say: '秒、分、小時、日有多久？點卡片，感覺一下！',
     cards: [
       { e: '👏', u: '秒', t: '拍一下手大約 1 秒。戴帽子大約 10 秒。' },
       { e: '🪥', u: '分', t: '刷牙大約 4 分鐘。1 分鐘比想像中久喔。' },
@@ -1166,7 +1194,7 @@ const LESSONS = {
   },
   area: {
     title: '面積', sem: '三下', icon: '🟩', who: 'sheep', name: '咩咩',
-    say: '一塊草地有多大，就是面積。先認識平方公分！',
+    say: '1 平方公分有多大？點卡片，感覺一下！',
     cards: [
       { e: '👆', u: '平方公分', t: '你的食指指腹大約 1 平方公分。一張悠遊卡大約 46 平方公分。' },
     ],
@@ -1177,7 +1205,7 @@ function viewLessons() {
   window.scrollTo(0, 0);
   $app.innerHTML = `<div class="top"><button class="icon-btn" id="home" aria-label="回小鎮">⌂</button><h2 class="page-h">單位教室</h2></div>
     <p class="tag">先認識單位，再去島上用它。</p>
-    <div class="lessons">${Object.entries(LESSONS).map(([k, L]) => `<div class="lesson-row"><button class="lesson" data-l="${k}"><span class="l-e">${L.icon}</span><span class="l-t"><b>${L.title}</b><small>${L.cards.map(c => c.u).join('、')}</small></span><em class="sem">${L.sem}</em>${(S.learned || {})[k] ? '<span class="badge in">✓</span>' : ''}</button><button class="drill-btn" data-d="${k}">練習</button></div>`).join('')}</div>`;
+    <div class="lessons">${Object.entries(LESSONS).map(([k, L]) => { const st = LESSON_STORY[k], fresh = st && !seenCpt()[st]; return `<div class="lesson-row"><button class="lesson" data-l="${k}"><span class="l-e">${L.icon}</span><span class="l-t"><b>${fresh ? CONCEPTS.find(c => c.key === st).hook : L.title}</b><small>${fresh ? '先看小故事' : L.cards.map(c => c.u).join('、')}</small></span><em class="sem">${L.sem}</em>${(S.learned || {})[k] ? '<span class="badge in">✓</span>' : ''}</button><button class="drill-btn" data-d="${k}">練習</button></div>`; }).join('')}</div>`;
   document.getElementById('home').onclick = () => go('');
   document.querySelectorAll('[data-l]').forEach(b => b.onclick = () => runLesson(b.dataset.l, viewLessons));
   document.querySelectorAll('[data-d]').forEach(b => b.onclick = () => runDrill(b.dataset.d, viewLessons));
@@ -1328,7 +1356,8 @@ function unitDrill(key, plan, leave, done) {
   }
   ask();
 }
-function runDrill(key, then) { // 單獨練習一輪
+function runDrill(key, then) { // 單獨練習一輪；還沒認識單位先看小故事
+  if (LESSON_STORY[key] && !seenCpt()[LESSON_STORY[key]]) return storyFirst(key, () => runDrill(key, then), then);
   const L = LESSONS[key], base = key === 'area' ? ['order', 'quiz', 'quiz', 'quiz', 'order', 'quiz'] : ['sort', 'quiz', 'order', 'sort', 'quiz', 'sort', 'order', 'quiz'];
   unitDrill(key, base, then, firstTry => {
     lessonFrame(L, `練習完成！`, `<div class="u-big">${L.icon}</div><div class="u-count"><b class="num">${firstTry}</b> ／ ${base.length} 題第一次就對</div><div class="trail">${nums(`夜空多亮了 ${firstTry * 25} 顆星`)}</div>`);
@@ -1448,7 +1477,7 @@ const CONCEPTS = [
     note: v => ({ 45: '比摺紙小', 90: '和摺紙剛好一樣！', 135: '比摺紙大' }[v]),
     found: '有的比摺紙小，有的剛好，有的比摺紙大。', name: `和摺紙一樣的叫${cT('直角')}，比它小的叫${cT('銳角')}，比它大的叫${cT('鈍角')}。`, loop: [0, 1, 2],
     check: { q: '時鐘 2 點，長短針張開比直角小。這是什麼角？', pic: () => { let o = '<circle cx="160" cy="85" r="76" fill="#fff" stroke="#33405a" stroke-width="5"/><path d="M160 85V22" stroke="#33405a" stroke-width="5" stroke-linecap="round"/><path d="M160 85L200 62" stroke="#33405a" stroke-width="7" stroke-linecap="round"/>'; return c3s(o); }, opts: ['銳角', '直角', '鈍角'], a: 0, why: '比直角小的，叫什麼？', ok: '對了！比直角小，就是銳角。' } },
-  { key: 'perim', title: '周長', terms: ['周長'], sem: '三上', game: 'angle', hook: '菜園的籬笆', when: [],
+  { key: 'perim', title: '周長', terms: ['周長'], sem: '三上', game: 'angle', hook: '菜園的籬笆', when: ['angle:pwalk', 'angle:padd', 'angle:pline'],
     ask: '菜園長 6 公尺、寬 4 公尺，要圍一圈籬笆。要買多長？', tryIt: '拖小羊，沿著邊走。', states: [6, 10, 20],
     pic: (v, n) => { const W = 180, H = 120, x0 = 70, y0 = 25, u = 30, L = v * u; let d = `M${x0} ${y0}`, x = x0, y = y0, r = L; [[1, 0, W], [0, 1, H], [-1, 0, W], [0, -1, H]].forEach(([a, b, s]) => { const t = Math.min(r, s); x += a * t; y += b * t; if (t > 0) d += `L${x} ${y}`; r -= t; }); return c3s(`<rect x="${x0}" y="${y0}" width="${W}" height="${H}" fill="#cfe6c6" stroke="#7a9a62" stroke-width="3"/><path d="${d}" fill="none" stroke="#d6476b" stroke-width="6"/>${c3e(x, y, '🐑', 30)}${c3t(160, 12, 6, 16)}${c3t(50, 85, 4, 16)}`, n ? [['周長', 160, 85, 'stick']] : []); },
     note: v => v === 20 ? '回到原點，6＋4＋6＋4＝20 公尺' : `走了 ${v} 公尺`,
@@ -1550,11 +1579,11 @@ const CONCEPTS = [
     note: v => v === 3 ? '3 個鐵塊，兩邊一樣平！' : `${v} 個鐵塊，書包還比較重`,
     found: '書包和 3 個鐵塊一樣重。鐵塊要大家都一樣，才說得清楚。', name: `大家約好的這種鐵塊重 1 ${cT('公斤')}，很輕的東西用${cT('公克')}說。1 公斤是 1000 公克。`, loop: [2],
     check: { q: '西瓜放上去，和 5 個 1 公斤鐵塊一樣平。西瓜多重？', pic: () => c3s(c3e(160, 80, '🍉', 80)), opts: ['5 公斤', '5 公克', '1 公斤'], a: 0, why: '每塊 1 公斤，有 5 塊。', ok: '對了！1×5＝5 公斤。' } },
-  { key: 'area', title: '面積', terms: ['面積'], sem: '三下', game: 'area', hook: '兩塊草地', when: ['area:pick', 'area:count', 'area:same', 'area:cut', 'area:half'],
+  { key: 'area', title: '面積', terms: ['面積', '平方公分'], sem: '三下', game: 'area', hook: '兩塊草地', when: ['area:pick', 'area:count', 'area:same', 'area:cut', 'area:half'],
     ask: '甲、乙兩塊草地形狀不一樣，疊不起來。哪一塊草比較多？', tryIt: '拖一拖，用一樣大的方格鋪滿。', states: [0, 1, 2],
-    pic: (v, n) => { const f = v / 2; return c3s(c3cells(26, 30, 4, 3, 30, Math.round(12 * f), '#8fce7a') + c3cells(176, 45, 5, 2, 26, Math.round(10 * f), '#8fce7a'), [['甲', 86, 14], ['乙', 240, 26]].concat(n ? [['面積', 160, 150, 'stick']] : [])); },
+    pic: (v, n) => { const f = v / 2; return c3s(c3cells(26, 30, 4, 3, 30, Math.round(12 * f), '#8fce7a') + c3cells(176, 45, 5, 2, 26, Math.round(10 * f), '#8fce7a'), [['甲', 86, 14], ['乙', 240, 26]].concat(n ? [['面積', 86, 150, 'stick'], ['平方公分', 240, 130, 'stick']] : [])); },
     note: v => ['形狀不一樣，看不出來', '鋪一鋪，數一數', '甲有 12 格，乙有 10 格'][v],
-    found: '都用一樣大的方格鋪，數格子就能比。', name: `一塊地方有多大，叫${cT('面積')}。甲的面積比乙大。`, loop: [1, 2],
+    found: '都用一樣大的方格鋪，數格子就能比。', name: `一塊地方有多大，叫${cT('面積')}。一小格叫 1 ${cT('平方公分')}。甲的面積比乙大。`, loop: [1, 2],
     check: { q: '藍色貼紙鋪 9 格，黃色貼紙鋪 8 格。誰的面積比較大？', pic: () => c3s(c3cells(30, 30, 3, 3, 30, 9, '#6ea8dc') + c3cells(180, 45, 4, 2, 30, 8, '#f7dc8c')), opts: ['藍色', '黃色'], a: 0, why: '方格一樣大，數一數誰多。', ok: '對了！9 格比 8 格多。' } },
   { key: 'deci', title: '小數', terms: ['小數', '小數點'], sem: '三下', game: 'deci', hook: '多出來的魚乾', when: ['deci:color', 'deci:count'],
     ask: '大嘴的魚乾比 1 條多，比 2 條少。要怎麼說才準？', tryIt: '拖一拖，把第二條切開來數。', states: [0, 1, 2],
@@ -1644,7 +1673,7 @@ function viewConcepts(g, back) { // 重看：沒看過的先不露新詞
 const LESSON_STORY = { len: 'mm', vol: 'ml', weight: 'kg', time: 'sec', area: 'area' };
 function storyFirst(key, then, leave) {
   const c = LESSON_STORY[key];
-  if (c && !seenCpt()[c]) return runConcept(c, then, { leave, doneText: '去單位教室' });
+  if (c && !seenCpt()[c]) return runConcept(c, then, { leave, doneText: '繼續' });
   then();
 }
 const QUIZ_STAR = 25;

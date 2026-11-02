@@ -1864,9 +1864,12 @@ let cptTimer = null;
 const cptStop = () => { if (cptTimer) { clearInterval(cptTimer); cptTimer = null; } };
 function runConcept(key, then) {
   const C = CONCEPTS.find(c => c.key === key), L = { title: C.title, sem: GAMES[C.game].sem, who: C.who };
-  const done = () => { cptStop(); seenCpt()[key] = 1; save(); then(); };
+  storyFlow(C, L, { done: () => { seenCpt()[key] = 1; save(); then(); }, right: () => { seenCpt()[key] = 1; save(); }, out: () => { R = null; go(''); }, last: '開始玩' });
+}
+function storyFlow(C, L, o) { // 四步共用：新概念小故事、單位教室都走這裡
+  const done = () => { cptStop(); o.done(); };
   const skipBtn = '<button class="skip5" id="skipc">跳過</button>';
-  const wire = () => { document.getElementById('out').onclick = () => { cptStop(); R = null; go(''); }; document.getElementById('skipc').onclick = done; };
+  const wire = () => { document.getElementById('out').onclick = () => { cptStop(); o.out(); }; document.getElementById('skipc').onclick = done; };
   function op() { // 第二步：動手試，全程不出現新詞
     cptStop();
     lessonFrame(L, `${C.ask}<br><small>${C.tryIt}</small>`, `<div class="cp" id="cp"></div><div class="trail" id="ct"></div>${skipBtn}`); wire();
@@ -1887,11 +1890,32 @@ function runConcept(key, then) {
     lessonFrame(L, K.q, `<div class="cp">${K.pic()}</div>${skipBtn}`); wire();
     document.getElementById('actions').innerHTML = `<div class="choices">${K.opts.map((o, i) => `<button class="choice" data-c5="${i}">${nums(o)}</button>`).join('')}</div>`;
     document.querySelectorAll('[data-c5]').forEach(b => b.onclick = () => {
-      if (+b.dataset.c5 === K.a) { sfx.good(); setMsg(nums(K.ok), 'good'); seenCpt()[key] = 1; save(); document.getElementById('skipc').hidden = true; actionBtn('fin', '開始玩').onclick = done; return; }
+      if (+b.dataset.c5 === K.a) { sfx.good(); setMsg(nums(K.ok), 'good'); if (o.right) o.right(); document.getElementById('skipc').hidden = true; actionBtn('fin', o.last).onclick = done; return; }
       sfx.retry(); setMsg(nums(K.why), 'hint'); actionBtn('bk', '回去再動手看看').onclick = op;
     });
   }
   op();
+}
+/* ---------- 單位教室的故事：單位名稱命名前不出現；標題也先不寫單位。命名後接原本的量感卡、換算操作與練習 ---------- */
+const LESSON_STORY = {
+  deg: { terms: ['度'], ask: '門開一點點和門全開，差多少？要怎麼說才清楚？', tryIt: '把一整圈切成 360 小格。拖一拖，轉轉看。', states: [30, 90, 180], pic: d => protractor(d, { knob: d }), note: d => `轉了 ${d} 小格${d === 90 ? '，像門全開' : d === 180 ? '，變成一條直線' : ''}`, found: '數小格就比得出來了。半圈 180 小格，一圈 360 小格。', name: `一整圈切成 360 份，1 份就叫 1 ${T('度')}。`, loop: [0, 1, 2],
+    check: { q: '時鐘 3 點，兩根針夾多大？', pic: () => clockSvg(0, 3), opts: ['30 度', '90 度', '180 度'], a: 1, why: '三點鐘像門全開，是一個直角。', ok: '對了！直角是 90 度。' } },
+  m2: { terms: ['平方公分', '平方公尺'], ask: '三塊地毯形狀都不一樣，哪一塊比較大？', tryIt: '拖一拖，用小方格鋪鋪看。', states: [4, 6, 12], pic: w => tilesSvg(12, w), note: w => `每排 ${w} 格，共 12 格`, found: '形狀不一樣，都是 12 格，一樣大。數方格就比得出來。', name: `每邊 1 公分的小方格叫 1 ${T('平方公分')}；每邊 1 公尺的大方格叫 1 ${T('平方公尺')}。`, loop: [0, 1, 2],
+    check: { q: '教室的地板要用哪一種方格來量？', pic: () => '<div class="u-big">🏫</div>', opts: ['平方公分', '平方公尺'], a: 1, why: '教室很大，要用大方格。', ok: '對了！教室大約 70 平方公尺。' } },
+  time: { terms: ['秒', '分鐘', '小時', '日'], ask: '拍手一下很快，看電影很久。要怎麼說「多久」才方便？', tryIt: '拖一拖，看時鐘的針怎麼走。', states: [3, 6, 12], pic: h => `<div class="vs">${clockSvg(0, h % 12)}</div>`, note: h => h === 12 ? '長針走滿一圈了' : `長針走了 ${h} 大格`, found: '最細的針走一圈，長針走一小格；長針走一圈，短針走一大格；短針走兩圈，太陽又回到同一個地方。', name: `拍一下手是 1 ${T('秒')}；60 秒是 1 ${T('分鐘')}；60 分鐘是 1 ${T('小時')}；24 小時是 1 ${T('日')}。`, loop: [0, 1, 2],
+    check: { q: '看一部電影大約要多久？', pic: () => '<div class="u-big">🎬</div>', opts: ['2 秒', '2 分鐘', '2 小時'], a: 2, why: '60 秒才 1 分鐘，電影很長。', ok: '對了！大約 2 小時。' } },
+  land: { terms: ['公畝', '公頃', '平方公里'], ask: '月球城要蓋大公園，用小地磚一塊塊數太累了。有更大的算法嗎？', tryIt: '拖一拖，把地圖一排排鋪起來。每小格 100 平方公尺。', states: [3, 6, 10], pic: k => mapSvg(10, 10, k * 10), note: k => `鋪了 ${k * 10} 小格，${fmt(k * 1000)} 平方公尺`, found: '100 小格是 10000 平方公尺，數字太長。把一片片包起來，就好說了。', name: `每邊 10 公尺的一小格叫 1 ${T('公畝')}；100 公畝叫 1 ${T('公頃')}；100 公頃叫 1 ${T('平方公里')}。`, loop: [0, 1, 2],
+    check: { q: '一座足球場大約多大？', pic: () => '<div class="u-big">⚽</div>', opts: ['1 公畝', '1 公頃', '1 平方公里'], a: 1, why: '足球場每邊大約一百公尺。', ok: '對了！大約 1 公頃。' } },
+  ton: { terms: ['公噸'], ask: '大象太重了，用公斤說，數字好長。有更好說的嗎？', tryIt: '拖一拖，把 100 公斤的沙包放上秤。', states: [3, 6, 10], pic: k => `<div class="pics5">${'🛍️'.repeat(k)}</div>`, note: k => `${k * 100} 公斤`, found: '10 包是 1000 公斤。如果 1000 公斤有一個新名字就好了。', name: `1000 公斤叫 1 ${T('公噸')}。`, loop: [0, 1, 2],
+    check: { q: '一頭大象 5000 公斤，是幾公噸？', pic: () => '<div class="u-big">🐘</div>', opts: ['5', '50', '500'], a: 0, why: '每 1000 公斤圈一堆，有幾堆？', ok: '對了！5 公噸。' } },
+  cap: { terms: ['毫升', '公升'], ask: '水箱能裝多少水？水沒有形狀，要怎麼量？', tryIt: '拖一拖，往每邊 10 公分的方盒倒水。', states: [3, 6, 10], pic: k => tankSvg(k / 10), note: k => `倒了 ${k} 層，每層 100 個小方格那麼多`, found: '10 層倒滿，水占的空間是 10×10×10＝1000 立方公分。', name: `1 立方公分那麼多的水叫 1 ${T('毫升')}；1000 毫升叫 1 ${T('公升')}。`, loop: [0, 1, 2],
+    check: { q: '一瓶 2 公升的牛奶，是幾毫升？', pic: () => '<div class="u-big">🍼</div>', opts: ['20', '200', '2000'], a: 2, why: '1 公升是 1000 毫升，有 2 個。', ok: '對了！2000 毫升。' } },
+  m3: { terms: ['立方公分', '立方公尺'], ask: '貨櫃太大了，用小骰子一顆一顆堆，堆到什麼時候？', tryIt: '拖一拖，用 1 公尺長的棍子搭一個大方框。', states: [4, 8, 12], pic: k => labPic({ view: 'frame', each: 1 }, k), note: k => `搭了 ${k} 根棍子`, found: '12 根棍子搭成每邊 1 公尺的大方框，用它來量大東西就快多了。', name: `小骰子每邊 1 公分，叫 1 ${T('立方公分')}；這個大方框每邊 1 公尺，叫 1 ${T('立方公尺')}。`, loop: [0, 1, 2],
+    check: { q: '一個大貨櫃要用哪一個來量？', pic: () => '<div class="u-big">🚢</div>', opts: ['立方公分', '立方公尺'], a: 1, why: '貨櫃很大，用大方框。', ok: '對了！大約 30 立方公尺。' } },
+};
+function lessonStory(key, L, next, leave) {
+  const C = LESSON_STORY[key]; if (!C) return next();
+  storyFlow(C, { title: '單位教室', sem: L.sem, who: L.who }, { done: next, out: leave, last: '再多認識一點' });
 }
 function conceptThen(q, then) { // 第一次碰到這個題型，自動播；已看過就不再播
   const key = q.kind + ':' + q.mode, C = CONCEPTS.find(c => c.when.includes(key) && !seenCpt()[c.key]);
@@ -1998,7 +2022,7 @@ function runLesson(key, then) {
     document.getElementById('actions').innerHTML = '<button class="btn" id="end">好！</button>';
     document.getElementById('end').onclick = leave;
   }
-  cards();
+  lessonStory(key, L, cards, leave); // 先走情境→動手→命名→換情境，再接原本的量感與練習
 }
 // 單位練習：sort 替東西選單位、order 由小排到大、quiz 大約多少
 function unitDrill(key, plan, leave, done) {

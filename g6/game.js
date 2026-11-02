@@ -1382,12 +1382,12 @@ function bindConceptBtn(q) { // 題目頁右上角可重看
   b.hidden = false;
   b.onclick = () => { const rq = R.q; runConcept(L[L.length - 1], () => VIEWS[R.game](rq)); };
 }
-function runConcept(key, then) {
-  const C = CONCEPTS[key], L = { title: '新概念小故事', sem: C.sem, who: C.who };
+function runConcept(key, then, story) { // story：單位教室共用同一結構，不記入小故事的存檔
+  const C = story || CONCEPTS[key], L = { title: C.frameTitle || '新概念小故事', sem: C.sem, who: C.who };
   let timer = null;
   const stop = () => { if (timer) clearInterval(timer); timer = null; };
-  const leave = () => { stop(); S.seenC = S.seenC || {}; S.seenC[key] = 1; save(); then(); };
-  const shell = (prompt, body) => { stop(); lessonFrame(L, prompt, `${body}<button class="skip6" id="cskip">跳過這個小故事</button>`); document.getElementById('out').onclick = leave; document.getElementById('cskip').onclick = leave; };
+  const leave = () => { stop(); if (!story) { S.seenC = S.seenC || {}; S.seenC[key] = 1; save(); } then(); };
+  const shell = (prompt, body) => { stop(); lessonFrame(L, prompt, `${body}<button class="skip6" id="cskip">${C.skipLabel || '跳過這個小故事'}</button>`); document.getElementById('out').onclick = C.exit ? () => { stop(); C.exit(); } : leave; document.getElementById('cskip').onclick = leave; };
   function intro() {
     const T = C.tries[0], step = T.step || 1, back = T.target < T.start ? -step : step;
     shell(C.intro, '<div id="cp" class="cmv"></div>');
@@ -1413,7 +1413,7 @@ function runConcept(key, then) {
     shell(q.t, '<div class="u-big">🤔</div>');
     document.getElementById('actions').innerHTML = `<div class="choices col">${order.map(i => `<button class="choice" data-co="${i}">${nums(q.o[i])}</button>`).join('')}</div>`;
     document.querySelectorAll('[data-co]').forEach(b => b.onclick = () => {
-      if (+b.dataset.co === q.a) { setMsg(nums(q.ok), 'good'); sfx.good(); return actionBtn('cdone', '開始闖關').onclick = leave; }
+      if (+b.dataset.co === q.a) { setMsg(nums(q.ok), 'good'); sfx.good(); return actionBtn('cdone', C.doneLabel || '開始闖關').onclick = leave; }
       sfx.retry(); setMsg(nums('再動手看一次，答案就在操作裡。'), 'hint');
       actionBtn('cback', '回去動手').onclick = () => tryIt(0);
     });
@@ -1439,7 +1439,7 @@ const LESSONS = {
     labs: [{ n: 10, each: 100, from: '公尺', to: '1000 公尺', btn: '走 100 公尺', done: '1000 公尺就是 1 公里！' }],
   },
   spd: {
-    title: '速率', sem: '六上', icon: '🚄', who: 'rabbit', name: '派派', say: '時速看 1 小時走多遠，分速看 1 分鐘，秒速看 1 秒。',
+    title: '快慢', sem: '六上', icon: '🚄', who: 'rabbit', name: '派派', say: '時速看 1 小時走多遠，分速看 1 分鐘，秒速看 1 秒。',
     cards: [
       { e: '🚶', u: '分速', t: '每 1 分鐘走多遠。小朋友走路大約分速 60 公尺。' },
       { e: '🏃', u: '秒速', t: '每 1 秒走多遠。快跑大約秒速 5 公尺。' },
@@ -1448,7 +1448,7 @@ const LESSONS = {
     labs: [{ view: 'clock', n: 6, each: 10, from: '分鐘', to: '60 分鐘', btn: '走 10 分鐘', done: '60 分鐘就是 1 小時。分速 60 公尺，1 小時走 3600 公尺，就是時速 3.6 公里！' }],
   },
   vol: {
-    title: '體積和容量', sem: '六下', icon: '🛢️', who: 'turtle', name: '阿穩', say: '燃料槽裝多少？先看看這些單位有多大。',
+    title: '裝多少', sem: '六下', icon: '🛢️', who: 'turtle', name: '阿穩', say: '燃料槽裝多少？先看看這些單位有多大。',
     cards: [
       { e: '🎲', u: '立方公分', t: '一顆小骰子，每邊 1 公分。' },
       { e: '🍼', u: '公升', t: '1 公升＝1000 立方公分。每邊 10 公分的盒子剛好裝滿。' },
@@ -1456,6 +1456,37 @@ const LESSONS = {
     ],
     labs: [{ n: 10, each: 100, from: '立方公分', to: '1000 立方公分', btn: '再疊一層（100 立方公分）', done: '10 層共 1000 立方公分，就是 1 公升！' }],
   },
+};
+const U_row = (L2, i) => `<table class="tb6">${L2.map((r, j) => `<tr class="${j === i ? 'hi6' : ''}"><td>${r[0]}</td><td class="num">${r[1]}</td></tr>`).join('')}</table>`;
+const U_wk = [['走 1 秒', '1 公尺'], ['走 1 分鐘', '60 公尺'], ['走 1 小時', '3600 公尺']], U_tr = [['1 秒', '83 公尺'], ['1 分鐘', '5000 公尺'], ['1 小時', '300 公里']], U_sd = [['1 秒', '340 公尺'], ['1 分鐘', '20400 公尺'], ['1 小時', '1224 公里']];
+// 單位教室的開場：情境提問 → 動手（單位名稱先不出現）→ 命名 → 換情境答一題，答錯回操作；之後才接原本的量感與換算練習
+const LESSON_STORY = {
+  dist: { sem: '六下', who: 'seal', word: '公分、公尺、公里', hide: ['公分', '公尺', '公里'],
+    intro: '要告訴朋友三件事有多長：一枝鉛筆、一間教室、學校到車站。全都用手指頭量，行得通嗎？',
+    tries: [
+      { say: '量鉛筆：一指一指量。拖黃鈕到 18 指。', lo: 0, hi: 24, start: 0, target: 18, draw: k => barRow(24, k, '#ffd65a') + `<div class="trail">${k} 個手指寬</div>`, find: '鉛筆大約 18 個手指寬，數字剛剛好。' },
+      { say: '量教室：手指太小了，改用一大步。拖到 9 步。', lo: 0, hi: 12, start: 0, target: 9, draw: k => barRow(12, k, '#6ea8dc') + `<div class="trail">${k} 大步，換成手指要 ${k * 100} 指！</div>`, find: '9 大步就好，用手指要 900 指。' },
+      { say: '學校到車站：大步也太小了，改算走路。拖到 15 分鐘。', lo: 0, hi: 20, start: 0, target: 15, draw: k => barRow(20, k, '#3fae5a') + `<div class="trail">走 ${k} 分鐘，大約 ${Math.round(k / 15 * 1000)} 大步</div>`, find: '走 15 分鐘大約 1000 大步，這一段可以當一份。' },
+    ],
+    back: '東西越長，就要換越大的尺，數字才好說。', name: '一個手指寬大約 1 <b>公分</b>，一大步大約 1 <b>公尺</b>，走 15 分鐘大約 1 <b>公里</b>。', pic: () => barRow(20, 15, '#3fae5a'),
+    q: { t: '換成操場：繞操場一圈，用哪個單位說最合適？', o: ['200 公尺', '200 公分', '200 公里'], a: 0, ok: '對了！200 大步左右，用公尺剛好。' } },
+  spd: { sem: '六上', who: 'rabbit', word: '時速、分速、秒速', hide: ['時速', '分速', '秒速'],
+    intro: '走路、高鐵、聲音，都有人問「多快」。全都看同一段時間，數字會不會太大或太小？',
+    tries: [
+      { say: '小朋友走路：拖黃鈕，選一段說起來剛好的時間。拖到 1 分鐘。', lo: 0, hi: 2, start: 0, target: 1, draw: i => U_row(U_wk, i), find: '1 分鐘 60 公尺，數字剛好；看 1 秒太小，看 1 小時太長。' },
+      { say: '高鐵：拖到 1 小時。', lo: 0, hi: 2, start: 0, target: 2, draw: i => U_row(U_tr, i), find: '1 小時 300 公里最好說。' },
+      { say: '聲音：拖到 1 秒。', lo: 0, hi: 2, start: 2, target: 0, draw: i => U_row(U_sd, i), find: '聲音太快了，看 1 秒就夠。' },
+    ],
+    back: '慢的看長一點，快的看短一點，要選數字好說的那一段。', name: '看 1 小時走多遠叫<b>時速</b>，看 1 分鐘叫<b>分速</b>，看 1 秒叫<b>秒速</b>。', pic: () => U_row(U_tr, 2),
+    q: { t: '換成騎腳踏車：1 小時大約騎 15 公里，怎麼說才對？', o: ['時速 15 公里', '分速 15 公里', '秒速 15 公里'], a: 0, ok: '對了！1 秒騎 15 公里就比火箭還快了。' } },
+  vol: { sem: '六下', who: 'turtle', word: '立方公分、公升、立方公尺', hide: ['立方', '公升', '毫升'],
+    intro: '小骰子、一盒牛奶、一個大貨櫃，要說各占多大的地方。用小骰子一顆一顆數，行得通嗎？',
+    tries: [
+      { say: '用小骰子排滿牛奶盒：每邊放幾顆？拖到每邊 10 顆。', lo: 1, hi: 10, start: 1, target: 10, draw: k => isoSvg(k, k, k) + `<div class="trail">每邊 ${k} 顆，共 ${k * k * k} 顆</div>`, find: '一盒牛奶就要 1000 顆骰子！' },
+      { say: '用牛奶盒排滿大方塊：每邊排到 10 盒。', lo: 1, hi: 10, start: 1, target: 10, draw: k => isoSvg(k, k, k, undefined, ['#f7dc8c', '#f0c040', '#d6a020']) + `<div class="trail">每邊 ${k} 盒，共 ${k * k * k} 盒</div>`, find: '大方塊要 1000 盒牛奶，每邊大約一大步。' },
+    ],
+    back: '每大一級，就是 1000 個小的，所以要換更大的單位。', name: '一顆小骰子是 1 <b>立方公分</b>，一盒牛奶的大小是 1 <b>公升</b>，每邊一大步的大方塊是 1 <b>立方公尺</b>。', pic: () => isoSvg(5, 5, 5),
+    q: { t: '換成水桶：一桶水大約 10 盒牛奶那麼多，用哪個說最合適？', o: ['10 公升', '10 立方公分', '10 立方公尺'], a: 0, ok: '對了！10 立方公分只有 10 顆骰子大。' } },
 };
 function clockSvg(from, cur) {
   let s = '<svg class="g5" style="max-height:190px" viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="#fff" stroke="#33405a" stroke-width="4"/>';
@@ -1485,7 +1516,10 @@ function exList(key, unit) { // 同單位的生活例子
   const ex = Logic.UNIT_ITEMS[key].filter(x => x.u === (FAM_UNIT[unit] || unit));
   return ex.length ? `<span class="u-ex">${ex.map(x => `<span>${x.e} ${x.name} ${Logic.fmtU(x)}</span>`).join('')}</span>` : '';
 }
-function runLesson(key, then) {
+function runLesson(key, then) { // 先走情境、動手、命名，再接量感與換算；存檔 S.learned 不變
+  runConcept(key, () => runLessonBody(key, then), { ...LESSON_STORY[key], frameTitle: '單位教室', skipLabel: '跳過，直接看單位', doneLabel: '認識更多', exit: then });
+}
+function runLessonBody(key, then) {
   const L = LESSONS[key];
   const leave = () => { document.body.classList.remove('in-cine'); then(); };
   // 第一步：一張一張看實物
