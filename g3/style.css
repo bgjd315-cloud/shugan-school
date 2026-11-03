@@ -606,6 +606,11 @@ body { line-height: 1.75; }
 .seg-h { position: absolute; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; align-items: center; gap: 6px; white-space: nowrap; background: rgba(39,42,82,.88); color: #fff6e3; border: 2px solid #ffd65a; border-radius: 99px; padding: 2px 12px 2px 4px; font-size: 14px; line-height: 1.6; box-shadow: 0 3px 10px rgba(10,10,40,.45); }
 .seg-h b { background: #ffd65a; color: #272a52; border-radius: 99px; padding: 0 8px; font-size: 14px; }
 
+/* 注音縮小（2026-11-03 老師要求：版面更好讀）；聲調比例放大，保持看得清楚 */
+.bp { font-size: max(0.4em, 10px); line-height: 1.05; width: 1.62em; padding-right: .7em; margin-right: .06em; }
+.bp .tone { width: .7em; font-size: 1.45em; line-height: .8; }
+.bp .qing { font-size: 1.35em; line-height: .55; }
+
 /* 單元數感測驗 */
 .quiz-entry { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,253,247,.97); border-radius: 16px; border-bottom: 4px solid #d8c9a6; padding: 8px 14px; margin-bottom: 10px; min-height: 58px; }
 .quiz-entry b { font-size: 21px; flex: 0 0 auto; white-space: nowrap; text-align: left; }

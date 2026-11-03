@@ -535,6 +535,11 @@ body { line-height: 1.75; }
 .l-t small { display: block; font-size: 15px; color: var(--soft); }
 .wp-in { margin-top: 12px; }
 
+/* 注音縮小（2026-11-03 老師要求：版面更好讀）；聲調比例放大，保持看得清楚 */
+.bp { font-size: max(0.4em, 10px); line-height: 1.05; width: 1.62em; padding-right: .7em; margin-right: .06em; }
+.bp .tone { width: .7em; font-size: 1.45em; line-height: .8; }
+.bp .qing { font-size: 1.35em; line-height: .55; }
+
 /* 應用題（讀題驗收） */
 .wp-in { margin-top: 10px; }
 .wp-item .sem { font-size: 14px; white-space: normal; text-align: right; max-width: 42%; font-style: normal; }
