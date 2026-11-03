@@ -610,6 +610,7 @@ body { line-height: 1.75; }
 .bp { font-size: max(.34em, 9px); line-height: 1.05; width: 1.62em; padding-right: .7em; margin-right: .06em; }
 .bp .tone { width: .7em; font-size: 1.55em; line-height: .8; }
 .bp .qing { font-size: 1.35em; line-height: .55; }
+button.quiz-entry b, button.lesson-entry b { font-size: 19px; }  /* 地圖上的「單元測驗」「單位教室」卡片字小一點 */
 
 /* 單元數感測驗 */
 .quiz-entry { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,253,247,.97); border-radius: 16px; border-bottom: 4px solid #d8c9a6; padding: 8px 14px; margin-bottom: 10px; min-height: 58px; }
