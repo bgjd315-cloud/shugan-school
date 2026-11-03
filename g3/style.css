@@ -607,9 +607,10 @@ body { line-height: 1.75; }
 .seg-h b { background: #ffd65a; color: #272a52; border-radius: 99px; padding: 0 8px; font-size: 14px; }
 
 /* 注音縮小（2026-11-03 老師要求：版面更好讀）；聲調比例放大，保持看得清楚 */
-.bp { font-size: max(.34em, 9px); line-height: 1.05; width: 1.62em; padding-right: .7em; margin-right: .06em; }
-.bp .tone { width: .7em; font-size: 1.55em; line-height: .8; }
+.bp { font-size: max(.28em, 8px); line-height: 1.05; width: 1.6em; padding-right: .68em; margin-right: .06em; }
+.bp .tone { width: .68em; font-size: 1.5em; line-height: .8; }
 .bp .qing { font-size: 1.35em; line-height: .55; }
+.sem .bp, .dock .bp, small .bp, .pan-t .bp, .c3l .bp, .quiz-entry small .bp { font-size: 8px; width: 1.6em; padding-right: .68em; }  /* 小字區的注音也一樣小，以國字為主 */
 /* 注音換顏色：跟國字分開，想看字的一眼就看到字（和原本字色混一點藍，深淺背景都看得清楚） */
 .bp { color: inherit; color: color-mix(in srgb, currentColor 55%, #2f7fd0); opacity: 1; }
 :is(h1, .btn, .keypad .go, .hero, .daily-btn, .logo, .title-note, .skip, .badge, .lock, .dock .hot, .ctag, .wood, .cal-g, .c2step.on, .drill-btn, .termtag, .c3l.stick, .seg-h, .sem, .bdg, .pad-ok, .home-head, .stn-n, .cover) .bp { color: inherit; }  /* 白字、彩色底的地方維持原色才看得清楚 */
