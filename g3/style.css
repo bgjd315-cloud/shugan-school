@@ -607,8 +607,8 @@ body { line-height: 1.75; }
 .seg-h b { background: #ffd65a; color: #272a52; border-radius: 99px; padding: 0 8px; font-size: 14px; }
 
 /* 注音縮小（2026-11-03 老師要求：版面更好讀）；聲調比例放大，保持看得清楚 */
-.bp { font-size: max(0.4em, 10px); line-height: 1.05; width: 1.62em; padding-right: .7em; margin-right: .06em; }
-.bp .tone { width: .7em; font-size: 1.45em; line-height: .8; }
+.bp { font-size: max(.34em, 9px); line-height: 1.05; width: 1.62em; padding-right: .7em; margin-right: .06em; }
+.bp .tone { width: .7em; font-size: 1.55em; line-height: .8; }
 .bp .qing { font-size: 1.35em; line-height: .55; }
 
 /* 單元數感測驗 */
