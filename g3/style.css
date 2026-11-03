@@ -610,6 +610,7 @@ body { line-height: 1.75; }
 .bp { font-size: max(.28em, 8px); line-height: 1.05; width: 1.6em; padding-right: .68em; margin-right: .06em; }
 .bp .tone { width: .68em; font-size: 1.5em; line-height: .8; }
 .bp .qing { font-size: 1.35em; line-height: .55; }
+h1.logo { white-space: nowrap; }  h1.logo:not(.small) { font-size: min(50px, 13.5vw); }  /* 標題不換行，小手機上自動縮小 */
 .sem .bp, .dock .bp, small .bp, .pan-t .bp, .c3l .bp, .quiz-entry small .bp { font-size: 8px; width: 1.6em; padding-right: .68em; }  /* 小字區的注音也一樣小，以國字為主 */
 /* 注音換顏色：跟國字分開，想看字的一眼就看到字（和原本字色混一點藍，深淺背景都看得清楚） */
 .bp { color: inherit; color: color-mix(in srgb, currentColor 55%, #2f7fd0); opacity: 1; }
